@@ -1,115 +1,125 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'AppName' | trans }}{% endblock %}
+{% block title %}
+	{{ 'AppName' | trans }}
+{% endblock %}
 
 {% block stylesheets %}
 
-    {{ parent() }}
+	{{ parent() }}
 
-    <!-- DataTables -->
-    <link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
+	<!-- DataTables -->
+	<link href="{{ asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css"/>
+	<link
+	href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css"/>
 
-     <!-- Sweet Alert-->
-    <link href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+	<!-- Sweet Alert-->
+	<link
+	href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
 
-    <!-- App Css-->
-    <link href="{{ asset('assets/css/miacargo.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+	<!-- App Css-->
+	<link href="{{ asset('assets/css/miacargo.css') }}" id="app-style" rel="stylesheet" type="text/css"/>
+
+	{% if files_css is defined %}
+
+		{% for file_css in files_css %}
+			<link href="{{ asset('assets/css/'~ file_css) }}" rel="stylesheet" type="text/css"/>
+		{% endfor %}
+
+	{% endif %}
 
 {% endblock %}
 
 {% block body %}
 
-<!-- <body data-layout="horizontal"> -->
+	<!-- <body data-layout="horizontal"> -->
 
-        <!-- loading overlay -->
-        <div class="loader-container" style="display: none;">
-            <div class="loader-element">
-                <div class="loader">Loading...</div> 
-                <i class="loader-icon bx bx-hourglass bx-spin align-middle me-2 text-white"></i>                   
-            </div>
-        </div>
-        <!-- end loading overlay -->
+	<!-- loading overlay -->
+		<div class="loader-container" style="display: none;"> <div class="loader-element">
+			<div class="loader">Loading...</div>
+			<i class="loader-icon bx bx-hourglass bx-spin align-middle me-2 text-white"></i>
+		</div>
+	</div>
+	<!-- end loading overlay -->
 
-        <!-- Begin page -->
-        <div id="layout-wrapper">
+	<!-- Begin page -->
+	<div
+		id="layout-wrapper">
 
-            <!-- ========== Top Bar Start ========== -->
-            {% include 'home/top.bar.html.twig' %}
-            <!-- Top Bar End -->            
+		<!-- ========== Top Bar Start ========== -->
+		{% include 'home/top.bar.html.twig' %}
+		<!-- Top Bar End -->
 
-            <!-- ========== Left Sidebar Start ========== -->
-            {% include 'home/left.sidebar.html.twig' %}
-            <!-- Left Sidebar End -->
+		<!-- ========== Left Sidebar Start ========== -->
+		{% include 'home/left.sidebar.html.twig' %}
+		<!-- Left Sidebar End -->
 
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="main-content">
-                <div class="page-content">
+		<!-- ============================================================== -->
+		<!-- Start right Content here -->
+			<!-- ============================================================== --> <div class="main-content"><div class="page-content">
 
-                    {% block content %}{% endblock %}
-                    
-                </div>
-                <!-- End Page-content -->
+				{% block content %}{% endblock %}
 
-                <!-- ========== Footer Start ========== -->
-                    {% include 'home/footer.html.twig' %}
-                <!-- Footer End -->
-                
-            </div>
-            <!-- end main content-->
+			</div>
+			<!-- End Page-content -->
 
-        </div>
-        <!-- END layout-wrapper -->
-        
-        <!-- Right Sidebar -->
-        {% include 'home/right.sidebar.html.twig' %}
-        <!-- /Right-bar -->
+			<!-- ========== Footer Start ========== -->
+			{% include 'home/footer.html.twig' %}
+			<!-- Footer End -->
 
-        <!-- Right bar overlay-->
-        <div class="rightbar-overlay"></div>
+		</div>
+		<!-- end main content-->
+
+	</div>
+	<!-- END layout-wrapper -->
+
+	<!-- Right Sidebar -->
+	{% include 'home/right.sidebar.html.twig' %}<!-- /Right-bar -->
+
+	<!-- Right bar overlay--><div class="rightbar-overlay"> </div>
 
 {% endblock %}
 
 {% block javascripts %}
 
-    {{ parent() }}
+	{{ parent() }}
 
-    <!-- axios -->
-    <script src="{{ asset('assets/libs/axios/axios.min.js') }}"></script>
+	<!-- axios -->
+	<script src="{{ asset('assets/libs/axios/axios.min.js') }}"></script>
 
-    <!-- Luxo -->
-    <script src="{{ asset('assets/js/luxo.min.js') }}"></script>
+	<!-- Luxo -->
+	<script src="{{ asset('assets/js/luxo.min.js') }}"></script>
 
-    <!-- Required datatable js -->
-    <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- Buttons examples -->
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/jszip/jszip.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
+	<!-- Required datatable js -->
+	<script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+	<!-- Buttons examples -->
+	<script src="{{ asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/jszip/jszip.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/pdfmake/build/pdfmake.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/pdfmake/build/vfs_fonts.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 
-     <!-- Sweet Alerts js -->
-    <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+	<!-- Sweet Alerts js -->
+	<script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 
-    <!-- pristine js -->
-    <script src="{{ asset('assets/libs/pristinejs/pristine.min.js') }}"></script>
+	<!-- pristine js -->
+	<script src="{{ asset('assets/libs/pristinejs/pristine.min.js') }}"></script>
 
-     <!-- App js-->
-    <script src="{{ asset('assets/js/app.js') }}"></script>
-    <script src="{{ asset('assets/js/miacargo.js') }}"></script>
+	<!-- App js-->
+	<script src="{{ asset('assets/js/app.js') }}"></script>
+	<script src="{{ asset('assets/js/miacargo.js') }}"></script>
 
-    <script>
 
-        {#axios.defaults.baseURL = "{{ APP_API_URL }}";#}
-        {#axios.defaults.headers.common['Authorization'] = 'Bearer {{ app.session.get('API_TOKEN') }}';#}
+	{% if files_js is defined %}
 
-    </script>
+		{% for file_js in files_js %}
+			<script src="{{ asset('assets/js/pages/'~ file_js) }}"></script>
+		{% endfor %}
+
+	{% endif %}
 
 {% endblock %}

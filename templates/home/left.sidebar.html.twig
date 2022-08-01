@@ -1,185 +1,192 @@
 <div class="vertical-menu text-white red-background">
-    <div data-simplebar class="h-100">
-        <!--- Sidemenu -->
-        <div id="sidebar-menu">
-            <!-- Left Menu Start -->
-            <ul class="metismenu list-unstyled" id="side-menu">
-                <li class="text-white">
-                    <a href="javascript: void(0);" class="has-arrow text-white red-background">
-                        <i class="bx bxs-spreadsheet text-white"></i>
-                        <span data-key="t-static" class="text-white">{{ 'Static' | trans }}</span>
-                    </a>
-                    <ul class="sub-menu red-background" aria-expanded="true">
-{#                        <li>#}
-{#                            <a href="{{ path('secure_payment_method') }}">#}
-{#                                <i class="fab fa-cc-visa text-white"></i>#}
-{#                                <span data-key="t-metodo-pago" class="text-white">{{ 'Metodos de pago' | trans }}</span>#}
-{#                            </a>#}
-{#                        </li>#}
-                        <li>
-                            <a href="{{ path('contact_us') }}">
-                                <i class="bx bx-phone-incoming text-white"></i>
-                                <span data-key="t-contact" class="text-white">Contáctenos</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('about_us') }}">
-                                <i class="bx bxs-info-circle text-white"></i>
-                                <span data-key="t-about-us"class="text-white">Sobre nosotros</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('terms_conditions') }}">
-                                <i class="fas fa-gavel text-white"></i>
-                                <span data-key="t-terms-conditions" class="text-white">Término y condiciones</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('secure_crud_social_network_index') }}">
-                                <i class="bx bxl-twitter text-white"></i>
-                                <span data-key="t-social-network" class="text-white">Red social</span>
-                            </a>
-                        </li>
-{#                        <li>#}
-{#                            <a href="{{ path('app_newsletter') }}">#}
-{#                                <i class="fas fa-envelope-open-text text-white"></i>#}
-{#                                <span data-key="t-newsletter" class="text-white">{{ 'Newsletter' | trans }}</span>#}
-{#                            </a>#}
-{#                        </li>#}
-                        <li>
-                            <a class="red-background" href="{{ path('secure_configuration_index') }}">
-                                <i class="fas fa-icons text-white"></i>
-                                <span data-key="t-configuration" class="text-white">{{ 'Configurations' | trans }}</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="red-background" href="{{ path('secure_cover_image_index') }}">
-                                <i class="fas fa-images text-white"></i>
-                                <span data-key="t-cover-images" class="text-white">Imágenes de la portada</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="red-background" href="{{ path('secure_crud_advertisements_new') }}">
-                                <i class="fas fa-images text-white"></i>
-                                <span data-key="t-advertisements-images" class="text-white">Imágenes promociones</span>
-                            </a>
-                        </li>
+	<div
+		data-simplebar class="h-100">
+		<!--- Sidemenu -->
+		<div
+			id="sidebar-menu">
+			<!-- Left Menu Start -->
+			<ul class="metismenu list-unstyled" id="side-menu">
+				<li class="text-white">
+					<a href="javascript: void(0);" class="has-arrow text-white red-background">
+						<i class="bx bxs-spreadsheet text-white"></i>
+						<span data-key="t-static" class="text-white">{{ 'Static' | trans }}</span>
+					</a>
+					<ul class="sub-menu red-background" aria-expanded="true">
+						{#                        <li>#}
+						{#                            <a href="{{ path('secure_payment_method') }}">#}
+						{#                                <i class="fab fa-cc-visa text-white"></i>#}
+						{#                                <span data-key="t-metodo-pago" class="text-white">{{ 'Metodos de pago' | trans }}</span>#}
+						{#                            </a>#}
+						{#                        </li>#}
+							<li>
+								<a href="{{ path('contact_us') }}"> <i class="bx bx-phone-incoming text-white"></i>
+								<span data-key="t-contact" class="text-white">Contáctenos</span>
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('about_us') }}">
+								<i class="bx bxs-info-circle text-white"></i>
+								<span data-key="t-about-us" class="text-white">Sobre nosotros</span>
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('terms_conditions') }}">
+								<i class="fas fa-gavel text-white"></i>
+								<span data-key="t-terms-conditions" class="text-white">Término y condiciones</span>
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('secure_crud_social_network_index') }}">
+								<i class="bx bxl-twitter text-white"></i>
+								<span data-key="t-social-network" class="text-white">Red social</span>
+							</a>
+						</li>
+						{#                        <li>#}
+						{#                            <a href="{{ path('app_newsletter') }}">#}
+						{#                                <i class="fas fa-envelope-open-text text-white"></i>#}
+						{#                                <span data-key="t-newsletter" class="text-white">{{ 'Newsletter' | trans }}</span>#}
+						{#                            </a>#}
+						{#                        </li>#}
+							<li>
+								<a class="red-background" href="{{ path('secure_configuration_index') }}"> <i class="fas fa-icons text-white"></i>
+								<span data-key="t-configuration" class="text-white">{{ 'Configurations' | trans }}</span>
+							</a>
+						</li>
+						<li>
+							<a class="red-background" href="{{ path('secure_cover_image_index') }}">
+								<i class="fas fa-images text-white"></i>
+								<span data-key="t-cover-images" class="text-white">Imágenes de la portada</span>
+							</a>
+						</li>
+						<li>
+							<a class="red-background" href="{{ path('secure_crud_advertisements_new') }}">
+								<i class="fas fa-images text-white"></i>
+								<span data-key="t-advertisements-images" class="text-white">Imágenes promociones</span>
+							</a>
+						</li>
 
-                    </ul>
-                </li>
+					</ul>
+				</li>
 
-                <li>
-                    <a class="red-background" href="{{ path('secure_crud_user_index') }}">
-                        <i class="fas fa-users text-white"></i>
-                        <span data-key="t-users" class="text-white">Usuarios</span>
-                    </a>
-                </li>
-{#                <li>#}
-{#                    <a class="red-background" href="{{ path('app_tiempo_demora_almacen') }}">#}
-{#                        <i class="fas fa-business-time text-white"></i>#}
-{#                        <span data-key="t-tiempo-demora" class="text-white">{{ 'TiempoDemora' | trans }}</span>#}
-{#                    </a>#}
-{#                </li>#}
-                <li>
-                    <a class="red-background" href="{{ path('secure_crud_coupon_discount_index') }}">
-                        <i class="fab fa-aws text-white"></i>
-                        <span data-key="t-offert-coupon" class="text-white">Cupones de descuento</span>
-                    </a>
-                </li>
+				<li>
+					<a class="red-background" href="{{ path('secure_crud_user_index') }}">
+						<i class="fas fa-users text-white"></i>
+						<span data-key="t-operators" class="text-white">Operadores</span>
+					</a>
+				</li>
+				{#                <li>#}
+				{#                    <a class="red-background" href="{{ path('app_tiempo_demora_almacen') }}">#}
+				{#                        <i class="fas fa-business-time text-white"></i>#}
+				{#                        <span data-key="t-tiempo-demora" class="text-white">{{ 'TiempoDemora' | trans }}</span>#}
+				{#                    </a>#}
+				{#                </li>#}
+					<li>
+						<a class="red-background" href="{{ path('secure_crud_coupon_discount_index') }}"> <i class="fab fa-aws text-white"></i>
+						<span data-key="t-offert-coupon" class="text-white">Cupones de descuento</span>
+					</a>
+				</li>
 
-{#                <li>#}
-{#                    <a class="red-background" href="{{ path('app_currencies') }}">#}
-{#                        <i class="fas fa-coins text-white"></i>#}
-{#                        <span data-key="t-currencies" class="text-white">{{ 'Currencies' | trans }}</span>#}
-{#                    </a>#}
-{#                </li>#}
-{#                <li>#}
-{#                    <a class="red-background"  href="{{ path('app_currency_changes') }}">#}
-{#                        <i class="fas fa-exchange-alt text-white"></i>#}
-{#                        <span data-key="t-currency-changes" class="text-white">{{ 'CurrencyChanges' | trans }}</span>#}
-{#                    </a>#}
-{#                </li>#}
-                <li>
-                    <a class="red-background" href="{{ path('secure_crud_customer_index') }}">
-                        <i class="fas fa-user-tie text-white"></i>
-                        <span data-key="t-customers" class="text-white">Clientes</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow text-white red-background">
-                        <i class="bx bxs-spreadsheet text-white"></i>
-                        <span data-key="t-products" class="text-white">Productos</span>
-                    </a>
-                    <ul class="sub-menu red-background" aria-expanded="true">
-                        <li>
-                            <a href="{{ path('secure_crud_brand_index') }}">
-                                <i class="fas fa-tags text-white"></i>
-                                <span data-key="t-brands" class="text-white">Marcas</span>
-                            </a>
-                        </li>
+				{#                <li>#}
+				{#                    <a class="red-background" href="{{ path('app_currencies') }}">#}
+				{#                        <i class="fas fa-coins text-white"></i>#}
+				{#                        <span data-key="t-currencies" class="text-white">{{ 'Currencies' | trans }}</span>#}
+				{#                    </a>#}
+				{#                </li>#}
+				{#                <li>#}
+				{#                    <a class="red-background"  href="{{ path('app_currency_changes') }}">#}
+				{#                        <i class="fas fa-exchange-alt text-white"></i>#}
+				{#                        <span data-key="t-currency-changes" class="text-white">{{ 'CurrencyChanges' | trans }}</span>#}
+				{#                    </a>#}
+				{#                </li>#}
+					<li>
+						<a class="red-background" href="{{ path('secure_crud_customer_index') }}"> <i class="fas fa-user-tie text-white"></i>
+						<span data-key="t-customers" class="text-white">Clientes</span>
+					</a>
+				</li>
+				<li>
+					<a href="javascript: void(0);" class="has-arrow text-white red-background">
+						<i class="bx bxs-spreadsheet text-white"></i>
+						<span data-key="t-products" class="text-white">Productos</span>
+					</a>
+					<ul class="sub-menu red-background" aria-expanded="true">
+						<li>
+							<a href="{{ path('secure_crud_brand_index') }}">
+								<i class="fas fa-tags text-white"></i>
+								<span data-key="t-brands" class="text-white">Marcas</span>
+							</a>
+						</li>
 
-                        <li>
-                            <a href="{{ path('secure_crud_category_index') }}">
-                                <i class="fas fa-share-alt-square text-white"></i>
-                                <span data-key="t-categorys" class="text-white">Categorías</span>
-                            </a>
-                        </li>
+						<li>
+							<a href="{{ path('secure_crud_category_index') }}">
+								<i class="fas fa-share-alt-square text-white"></i>
+								<span data-key="t-categorys" class="text-white">Categorías</span>
+							</a>
+						</li>
 
-                        <li>
-                            <a href="{{ path('secure_crud_tag_index') }}">
-                                <i class="fas fa-tag text-white"></i>
-                                <span data-key="t-tags" class="text-white">Etiquetas</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('secure_crud_specification_index') }}">
-                                <i class="fas fa-tools text-white"></i>
-                                <span class="text-white">Especificaciones</span>
-                            </a>
-                        </li>
-                        <li>
-{#                            <a href="{{ path('secure_crud_product_index') }}">#}
-                            <a href="{{ path('_secure_crud_product_index') }}">
-                                <i class="fas fa-tv text-white"></i>
-                                <span data-key="t-products" class="text-white">Productos</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="{{ path('order') }}">
-                        <i class="fas fa-money-check-alt text-white"></i>
-                        <span data-key="t-orders" class="text-white">Ordenes</span>
-                    </a>
-                </li>
-{#                <li>#}
-{#                    <a href="javascript: void(0);" class="has-arrow text-white red-background">#}
-{#                        <i class="bx bx-file text-white"></i>#}
-{#                        <span data-key="t-reports" class="text-white">{{ 'Reports' | trans }}</span>#}
-{#                    </a>#}
-{#                    <ul class="sub-menu red-background" aria-expanded="true">#}
-{#                        <li>#}
-{#                            <a #}{#href="{{ path('app_reports_products_best_seller') }}"#}{#>#}
-{#                                #}{# <i class="fas fa-tags text-white"></i> #}
-{#                                <span data-key="t-products-best-seller" class="text-white">{{ 'ProductBestSeller' | trans }}</span>#}
-{#                            </a>#}
-{#                        </li>#}
-{#                         <li>#}
-{#                            <a #}{#href="{{ path('app_reports_brands_best_seller') }}"#}{#>#}
-{#                                #}{# <i class="fas fa-tags text-white"></i> #}
-{#                                <span data-key="t-brands-best-seller" class="text-white">{{ 'BrandBestSeller' | trans }}</span>#}
-{#                            </a>#}
-{#                        </li>#}
-{#                         <li>#}
-{#                            <a #}{#href="{{ path('app_reports_products_in_offert') }}"#}{#>#}
-{#                                #}{# <i class="fas fa-tags text-white"></i> #}
-{#                                <span data-key="t-products-in-offert" class="text-white">{{ 'ProductInOffert' | trans }}</span>#}
-{#                            </a>#}
-{#                        </li>#}
-{#                    </ul>#}
-{#                </li>#}
-            </ul>            
-        </div>
-        <!-- Sidebar -->
-    </div>
+						<li>
+							<a href="{{ path('secure_crud_tag_index') }}">
+								<i class="fas fa-tag text-white"></i>
+								<span data-key="t-tags" class="text-white">Etiquetas</span>
+							</a>
+						</li>
+						<li>
+							<a href="{{ path('secure_crud_specification_index') }}">
+								<i class="fas fa-tools text-white"></i>
+								<span class="text-white">Especificaciones</span>
+							</a>
+						</li>
+						<li>
+							{#                            <a href="{{ path('secure_crud_product_index') }}">#}
+							<a href="{{ path('_secure_crud_product_index') }}">
+								<i class="fas fa-tv text-white"></i>
+								<span data-key="t-products" class="text-white">Productos</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="{{ path('order') }}">
+						<i class="fas fa-money-check-alt text-white"></i>
+						<span data-key="t-orders" class="text-white">Ordenes</span>
+					</a>
+				</li>
+				{#                <li>#}
+			{#                    <a href="javascript: void(0);" class="has-arrow text-white red-background">#}
+				{#                        <i class="bx bx-file text-white"></i>#}
+				{#                        <span data-key="t-reports" class="text-white">{{ 'Reports' | trans }}</span>#}
+				{#                    </a>#}
+				{#                    <ul class="sub-menu red-background" aria-expanded="true">#}
+				{#                        <li>#}
+				{#                            <a #}
+				{#href="{{ path('app_reports_products_best_seller') }}"#}
+				{#>#}
+				{#                                #}
+				{# <i class="fas fa-tags text-white"></i> #}
+				{#                                <span data-key="t-products-best-seller" class="text-white">{{ 'ProductBestSeller' | trans }}</span>#}
+				{#                            </a>#}
+				{#                        </li>#}
+				{#                         <li>#}
+				{#                            <a #}
+				{#href="{{ path('app_reports_brands_best_seller') }}"#}
+				{#>#}
+				{#                                #}
+				{# <i class="fas fa-tags text-white"></i> #}
+				{#                                <span data-key="t-brands-best-seller" class="text-white">{{ 'BrandBestSeller' | trans }}</span>#}
+				{#                            </a>#}
+				{#                        </li>#}
+				{#                         <li>#}
+				{#                            <a #}
+				{#href="{{ path('app_reports_products_in_offert') }}"#}
+				{#>#}
+				{#                                #}
+				{# <i class="fas fa-tags text-white"></i> #}
+				{#                                <span data-key="t-products-in-offert" class="text-white">{{ 'ProductInOffert' | trans }}</span>#}
+				{#                            </a>#}
+				{#                        </li>#}
+				{#                    </ul>#}
+				{#                </li>#}
+			</ul>
+		</div>
+		<!-- Sidebar -->
+	</div>
 </div>

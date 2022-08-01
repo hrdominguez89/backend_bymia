@@ -170,12 +170,12 @@
   "t-t-settings": "Settings",
   "t-logout": "Logout",
 
-  "t-ofert-cups":"Ofert Cupons",
-  "t-cathegory":"Cathegory",
-  "t-subcathegory":"Subcathegory",
+  "t-ofert-cups": "Ofert Cupons",
+  "t-cathegory": "Cathegory",
+  "t-subcathegory": "Subcathegory",
   "t-newsletter": "Newsletter",
 
-  "t-contact":"Contact Us",
+  "t-contact": "Contact Us",
   "t-metodo-pago": "Method of Payment",
   "t-social-network": "Social Network",
   "t-home": "Home",
@@ -195,7 +195,7 @@
   "t-invalid-field": "Invalid field!.",
   "t-id": "Id",
   "t-name": "Name",
-  
+
   "t-users": "Users",
   "t-add-user": "Add User",
   "t-image": "Image",
@@ -212,7 +212,7 @@
   "t-image-lg": "Img Large",
   "t-image-sm": "Img Small",
   "t-main": "Main",
-  "t-title": "Title",    
+  "t-title": "Title",
   "t-description": "Description",
   "t-name-btn": "Button Name",
   "t-link-btn": "Button Link",
@@ -257,11 +257,11 @@
 
   "t-number-order": "Sales",
   "t-amount-order": "Income",
-  "t-sales-month": "Sales by month",    
-  "t-amount-month": "Income by month",  
+  "t-sales-month": "Sales by month",
+  "t-amount-month": "Income by month",
   "t-since-last-week": "Since Last Week",
   "t-better-customer": "Better Customer",
-  "t-stock": "Stock",    
+  "t-stock": "Stock",
   "t-info-customer": "Customer Information",
   "t-phone": "Phone Number(s)",
   "t-retire-office": "Retire office",
@@ -284,5 +284,6 @@
   "t-subtotal": "Subtotal",
   "t-change-status": "Change Status",
   "t-better-categorys": "Better Categorys",
-  "t-last-orders": "Last Orders" 
+  "t-last-orders": "Last Orders",
+  "t-operators": "Operators"
 }

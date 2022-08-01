@@ -1,41 +1,54 @@
 {% extends 'home/index.html.twig' %}
-{% block title %}Usuario{% endblock %}
+{% block title %}Operadores
+{% endblock %}
 
 {% block content %}
-    <div class="d-flex justify-content-between">
-        <h1 class="mr-auto mb-0 title-table">Usuario</h1>
-        <a class="btn btn-success" href="{{ path('secure_crud_user_new') }}">Crear nuevo</a>
-    </div>
-    <table class="table imagen">
-        <thead>
-        <tr>
-            <th>Imagen</th>
-            <th>Correo</th>
-            <th>Nombre</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                {% if user.image %}
-                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset(user.image) }}"/></td>
-                {% else %}
-                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
-                {% endif %} 
-                <td>{{ user.email }}</td>
-                <td>{{ user.name }}</td>
-                {#                <td>{{ user.roles }}</td>#}
-                <td style="width: 200px">
-                    <a style="width: 70px" class="btn btn-info" href="{{ path('secure_crud_user_show', {'id': user.id}) }}">Mostrar</a>
-                    <a style="width: 70px" class="btn btn-warning" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}">Editar</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no se encontraron datos</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<div class="d-flex justify-content-between">
+		<h1 class="mr-auto mb-0 title-table">Operadores</h1>
+		<a class="btn btn-success" href="{{ path('secure_crud_user_new') }}">Nuevo operador</a>
+	</div>
+	<div class="row mt-5">
+		<div class="col-12">
+			<table id="datatable-operators" class="table imagen" data-order="[[ 2, &quot;asc&quot; ],[ 3, &quot;asc&quot; ]]">
+				<thead>
+					<tr>
+						<th data-orderable="false">Imagen</th>
+						<th>Correo</th>
+						<th>Nombre</th>
+						<th>Apellido</th>
+						<th>Rol</th>
+						<th data-orderable="false">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user in users %}
+						<tr>
+							{% if user.image %}
+								<td><img class="imagen-grid" alt="Imagen" src="{{ asset(user.image) }}"/></td>
+							{% else %}
+								<td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+							{% endif %}
+							<td>{{ user.email }}</td>
+							<td>{{ user.name }}</td>
+							<td>{{ user.lastname }}</td>
+							<td>
+								{% for nameRole in user.nameRoles %}
+									{{ nameRole }}
+								{% endfor %}
+
+							</td>
+							<td>
+								<a class="btn btn-warning" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}">Editar</a>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="7">no se encontraron datos</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+		</div>
+	</div>
 {% endblock %}

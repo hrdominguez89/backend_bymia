@@ -14,7 +14,7 @@ File: Main Js File
 
     var language = localStorage.getItem('language');
     // Default Language
-    var default_lang = 'en';
+    var default_lang = 'sp';
 
     function setLanguage(lang) {
         if (document.getElementById("header-lang-img")) {

@@ -157,11 +157,12 @@
 /* camilo no tokes parker */
 
 body {
-  --mia-red-color: #bf1725;
+  --mia-red-color: #080814;
 }
 
 .red-background {
   background-color: var(--mia-red-color) !important;
+  color: #15FED4
 }
 
 .imagen-grid {
