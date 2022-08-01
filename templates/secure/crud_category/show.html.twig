@@ -1,0 +1,35 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Categoría{% endblock %}
+
+{% block content %}
+    <h1>Categoría {{ category.name }}</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Imagen</th>
+            {% if category.image %}
+                <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ asset(category.image) }}"/></td>
+            {% else %}
+                <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+            {% endif %} 
+        </tr>
+        <tr>
+            <th>Id de la Api</th>
+            <td>{{ category.apiId }}</td>
+        </tr>
+        <tr>
+            <th>Cantidad de productos</th>
+            <td>{{ category.items }}</td>
+        </tr>        
+        </tbody>
+    </table>
+    <div class="d-inline-flex">
+        <a style="width: 80px" class="btn btn-secondary m-1" href="{{ path('secure_crud_category_index') }}">Regresar</a>
+
+        <a style="width: 80px" class="btn btn-warning m-1" href="{{ path('secure_crud_category_edit', {'id': category.id}) }}">Editar</a>
+
+        {{ include('secure/crud_category/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

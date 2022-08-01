@@ -1,0 +1,26 @@
+{{ form_start(form, {'attr': {'id': 'product_search'}}) }}
+    <div class="my-custom-class-for-errors">
+        {{ form_errors(form) }}
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-2">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-2">
+            {{ form_row(form.category) }}
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-2">
+            {{ form_row(form.subcategory) }}
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-2">
+            {{ form_row(form.state) }}
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="mb-3">
+                <label class="form-label" for="product_search">&nbsp;</label>
+                <button class="btn btn-primary form-control">Buscar</button>
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}

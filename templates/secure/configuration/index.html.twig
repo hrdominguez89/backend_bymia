@@ -1,0 +1,43 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between">
+    <h1 class="mr-auto mb-0 title-table">Configuración</h1>
+    <a class="btn btn-success" href="{{ path('secure_configuration_new') }}">Crear nueva</a>
+</div>
+    <table class="table imagen">
+        <thead>
+            <tr>                
+                <th>Imagen</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for configuration in configurations %}
+            <tr>
+                {% if configuration.image %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ configuration.image }}"/></td>
+                {% else %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+                {% endif %}                
+                <td>{{ configuration.title }}</td>
+                <td>{{ configuration.description }}</td>
+                <td style="width: 200px;">
+                    <a style="width: 70px" class="btn btn-info"
+                       href="{{ path('secure_configuration_show', {'id': configuration.id}) }}">Ver</a>
+                    <a style="width: 70px" class="btn btn-warning"
+                       href="{{ path('secure_configuration_edit', {'id': configuration.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no se encontraron datos</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

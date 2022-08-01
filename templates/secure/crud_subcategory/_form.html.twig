@@ -1,0 +1,5 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button style="width: 80px" class="btn btn-primary">Guardar</button>
+    <a style="width: 80px" class="btn btn-secondary m-1" href="{{ path('secure_crud_subcategory_index',{'id_category':id_category}) }}">Regresar</a>
+{{ form_end(form) }}

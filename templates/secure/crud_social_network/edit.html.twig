@@ -1,0 +1,17 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Editar Red Social{% endblock %}
+
+{% block content %}
+    <h1>Editar Red Social</h1>
+        {{ include('secure/crud_social_network/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#social_network_name').on('change',()=>{
+            $('#social_network_type').val($('#social_network_name option:selected').text())
+        })
+    </script>
+{% endblock %}

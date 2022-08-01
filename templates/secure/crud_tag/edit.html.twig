@@ -1,0 +1,8 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Editar Etiqueta{% endblock %}
+
+{% block content %}
+    <h1>Editar Etiqueta</h1>
+    {{ include('secure/crud_tag/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

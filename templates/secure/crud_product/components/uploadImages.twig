@@ -1,0 +1,38 @@
+<div class="card-header pt-1 pl-2 pb-1 pr-0"
+     style="background-color: rgba(242,242,242,0.32)">
+    <h5 class="modal-title">Otras imagenes del producto</h5>
+</div>
+<div class="card-body m-0 p-1 pt-1">
+    <form method="post" action="#" enctype="multipart/form-data" id="form-image-{{ product.id }}">
+        <div class="row">
+            <input type="hidden" value="{{ product.id }}" name="id_producto" id="id-producto-{{ product.id }}">
+            <div class="col-10">
+                <input type="file" class="form-control" name="image"
+                       id="productImage-{{ product.id }}">
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary"
+                        onclick="asociarImagen({{ product.id }})">Asociar
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row" id="div-images-variants-{{ product.id }}">
+        {% for element in aux_arrar_childrens %}
+            {% if element.id == product.id %}
+                {% for image in  element.images %}
+                    <div class="col-lg-2 col-md-3 col-sm-4 m-2 text-center"
+                         style="border-radius: 5px; background-color: gainsboro">
+										<span style="font-size: 14px; cursor: pointer;"
+                                              class="mdi mdi-close-circle text-danger"
+                                              onclick="deleteImagenVariations({{ image.id }},{{ product.id }})">Eliminar</span>
+                        <img style=" height: 60px;width: 60px;border: 2px solid darkgray;"
+                             alt="Imagen"
+                             src="{{ image.src }}">
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

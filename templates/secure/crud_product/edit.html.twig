@@ -1,0 +1,100 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Edit Product{% endblock %}
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    <!-- dropzone css -->
+    <link href="{{ asset('assets/libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
+
+    <!-- page -->
+    <link href="{{ asset('assets/css/pages/product.init.css') }}" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+
+{% block content %}
+    <h1>{{ product.name }}</h1>
+    {{ include('secure/crud_product/form_products.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('assets/libs/momentjs/moment.min.js') }}"></script>
+    <!-- page -->
+    <script src="{{ asset('assets/js/pages/products.init.js') }}"></script>
+    
+	<script src="{{ asset('assets/js/pages/product/utils.js') }}"></script>
+
+    {# Specification #}
+	<script src="{{ asset('assets/js/pages/product/specification/_init.js') }}"></script>
+	<script src="{{ asset('assets/js/pages/product/specification/components.js') }}"></script>
+	<script src="{{ asset('assets/js/pages/product/specification/function.js') }}"></script>
+	<script src="{{ asset('assets/js/pages/product/specification/handler.js') }}"></script>
+
+    
+    {# Vatians #}
+{#    {% if childrens|length > 0 %}#}
+        <!-- variants options -->
+        <script src="{{ asset('assets/js/pages/product/variant/_init.js') }}"></script>
+        <script src="{{ asset('assets/js/pages/product/variant/function.js') }}"></script>
+        <script src="{{ asset('assets/js/pages/product/variant/handler.js') }}"></script>
+        <script src="{{ asset('assets/js/pages/product/variant/http.js') }}"></script>
+{#    {% endif %}#}
+    <script src="{{ asset('assets/js/pages/product/product-edit.js') }}"></script>
+{#    <script src="{{ asset('assets/js/pages/products.init.js') }}"></script>#}
+
+    <script>
+        let text_areas_array = $('textarea')
+        let ckeditors = {}
+        for (let i = 0; i < text_areas_array.length; i++) {
+            ClassicEditor
+                .create(text_areas_array[i])
+                .then(editor=>{
+                    ckeditors[text_areas_array[i].id] = editor
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        }
+        let listBackendSpecifications = {{ specifications|json_encode()|raw }};
+        let listBackendVariations = {{ aux_arrar_childrens|json_encode()|raw }};
+        //asignent data
+        list__specifications = JSON.parse('{{ product_specifications|json_encode()|raw }}');
+        list__variatns = JSON.parse('{{ childrens|json_encode()|raw }}');
+        let index_spscifications = 0;
+        
+        {# product_childrens.forEach((chield)=>{
+            list__variatns_specification.push({
+                id: chield.id,
+                specifications: list__specifications
+            })
+        }) #}
+
+        list__variatns_specification = JSON.parse('{{ variatns_specification|json_encode()|raw }}');
+
+        let offerPrice = '{{ product.offerPrice }}'
+        let fecha_inicio_oferta = '{{ product.offerStartDate|date }}'
+        let fecha_fin_oferta = '{{ product.offerEndDate|date }}'
+        drawDateTimeFieldParentProduct(offerPrice,fecha_inicio_oferta,fecha_fin_oferta)
+
+        let array_element = JSON.parse('{{ product_subcategory|json_encode()|raw }}');
+        let array_tag = [];
+        let data_product_tag = JSON.parse('{{ product_tags|json_encode()|raw }}');
+        let index = 0;
+        data_product_tag.forEach((valor)=>{
+            array_tag[index]=valor.id
+            index++
+        })
+        cargarEspecificaciones()
+        drawSpecificationSelectCmp()
+        drawAllVariantSpecifications()
+        updateSpeceficationSelectCmp()
+
+        {# loadVariantForSpecifications(variatns_specification) #}
+
+
+    </script>
+
+{% endblock %}

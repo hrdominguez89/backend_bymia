@@ -1,0 +1,142 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Orden{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid p-5"> 
+        <!-- form orders details -->
+        <form id="form-orders" class="form form-orders " novalidate>
+            <input type="hidden" id="id" name="id">
+            <div class="card">
+                <div class="card-header p-2">
+                    <div class="d-flex flex-wrap gap-2">
+                        <h5 class="modal-title">Detalles de la Orden</h5>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <h5 class="card-title" data-key="t-nro-order">Nro. Orden</h5>
+                                    <p id="t-nro-order" class="card-text">{{ order.checkoutId }}</p>
+                                    <h5 class="card-title" data-key="t-status">Estado</h5>
+    {#                                <select name="status" id="updated_statut" class="form-select mb-2">#}
+    {#                                    <option value="procesando" id="option-1" selected>Procesando</option>#}
+    {#                                    <option value="completado" id="option-2">Completado</option>#}
+    {#                                    <option value="cancelado" id="option-3">Cancelado</option>#}
+    {#                                    <option value="reembolsado" id="option-4">Reembolsado</option>#}
+    {#                                    <option value="fallido" id="option-5">Fallido</option>#}
+    {#                                </select>#}
+                                    <p id="t-date" class="card-text">{{ order.checkoutStatus | upper }}</p>
+                                    <h5 class="card-title" data-key="t-date">Fecha</h5>
+                                    <p id="t-date" class="card-text">{{ order.date | date }}</p>
+                                    <h5 class="card-title"
+                                        data-key="t-sale-amount">Importe</h5>
+                                    <p id="t-sale-amount" class="card-text">${{ order.total }}</p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <h5 class="card-title" data-key="t-name">Nombre</h5>
+                                    <p id="t-name" class="card-text">{{ order.checkoutBillingFirstName }} {{ order.checkoutBillingLastName }}</p>
+                                    <h5 class="card-title" data-key="t-email">Correo</h5>
+                                    <p id="t-email" class="card-text">{{ order.checkoutBillingEmail }}</p>
+                                    <h5 class="card-title" data-key="t-phone">Número(s) de teléfono</h5>
+                                    <p id="t-phone" class="card-text">{{ order.checkoutBillingPhone }}</p>
+                                    <h5 class="card-title" data-key="t-retire-office">Oficina de retiro</h5>
+                                    <p id="t-retire-office" class="card-text">{{ order.checkoutBillingCompanyName }}</p>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <h5 class="card-title" data-key="t-country">País</h5>
+                                    <p id="t-country" class="card-text">{{ order.checkoutBillingCountry }}</p>
+                                    <h5 class="card-title" data-key="t-province">Provincia</h5>
+                                    <p id="t-province" class="card-text">{{ order.checkoutBillingState }}</p>
+                                    <h5 class="card-title" data-key="t-municipality">Municipio</h5>
+                                    <p id="t-municipality" class="card-text">{{ order.checkoutBillingCity }}</p>
+                                    <h5 class="card-title" data-key="t-direction">Dirección</h5>
+                                    <p id="t-direction" class="card-text">{{ order.checkoutBillingAddress }}</p>
+                                    <h5 class="card-title" data-key="t-postal-code">Código postal</h5>
+                                    <p id="t-postal-code" class="card-text">{{ order.checkoutBillingPostcode }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if order.checkoutComment %}
+                <div class="card" id="div-note">
+                    <div class="card-header p-2">
+                        <div class="d-flex flex-wrap gap-2">
+                            <h5 class="modal-title" data-key="t-note">Nota</h5>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <p id="t-note" class="card-text">{{ order.checkoutComment }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header p-2">
+                    <div class="d-flex flex-wrap gap-2">
+                        <h5 class="modal-title">Productos</h5>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <table id="datatable-brands" class="table">
+                        <thead>
+                        <tr>
+    {#                        <th data-key="t-image"><i class="fas fa-images"></i>{{ item.image }}</th>#}
+                            <th data-key="t-name">Nombre</th>
+                            <th data-key="t-price">Precio</th>
+                            <th data-key="t-cant">Cantidad</th>
+                            <th data-key="t-subtotal" class="text-right">Subtotal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in order.orderItems %}
+                            <tr>
+                                <td class="text-left">{{ item.name }}</td>
+                                <td class="text-right">${{ item.price }}</td>
+                                <td class="text-right">{{ item.quantity }}</td>
+                                <td class="text-right">${{ item.total }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer p-0">
+                    <div class="row">
+                        <div class="col-4"></div>
+                        <div class="col-4"></div>
+                        <div class="col-4 w-25">
+                            <table id="datatable-brands" class="table">
+                                <tbody>
+                                <tr>
+                                    <td class="text-left"><strong>Subtotal</strong></td>
+                                    <td class="text-right">${{ order.subtotal }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left"><strong>Descuento</strong></td>
+                                    <td class="text-right">${{ order.discount }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left"><strong>Total</strong></td>
+                                    <td class="text-right">${{ order.total }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- end form customer -->
+
+        <div class="d-inline-flex">
+            <a style="width: 80px" class="btn btn-secondary m-1" href="{{ path('order') }}">Regresar</a>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Bymia | Comprobante de pago</title>
+</head>
+
+<body>
+{% apply inline_css(source('secure/order/styles.css')) %}
+
+    <table class="body-wrap">
+        <tr>
+            <td></td>
+            <td class="container" width="600">
+                <div class="content">
+                    <table class="main" width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td class="content-wrap aligncenter">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td class="">
+                                            <img src="{{ urlSite ~ '/assets/images/bymia_png.png' }}" alt=""
+                                                 style="width: 300px; height: 100px;"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content-block">
+                                            <div class="order-success">
+                                                <div class="order-success__body">
+                                                    <div>
+                                                        <div class="order-success__header">
+                                                            <h1 class="order-success__title">Gracias</h1>
+                                                            <div class="order-success__subtitle"
+                                                                 style="margin-top: 10px">
+                                                                Hola {{ eemail.toName }}
+                                                            </div>
+                                                            <div class="order-success__subtitle"
+                                                                 style="margin-top: 10px">tu orden ha pasado al estado {{status}}
+                                                            </div>
+                                                            <div class="order-success__subtitle"
+                                                                 style="margin-top: 10px">
+                                                                {{ order.checkoutId }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="order-success__meta">
+                                                            <table style="width: 100%">
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td class="dashed" style=" width: 33%">
+                                                                        <span class="order-success__meta-title">Fecha:</span>
+                                                                        <span class="order-success__meta-value">{{ order.date|date('d/m/Y') }}</span>
+                                                                    </td>
+                                                                    <td class="dashed" style="width: 33%">
+                                                                        <span class="order-success__meta-title">Total:</span>
+                                                                        <span class="order-success__meta-value">$ {{ order.total|number_format(2) }}</span>
+                                                                    </td>
+                                                                    <td style="width: 33%">
+                                                                        <span class="order-success__meta-title">Método de pago:</span>
+                                                                        <span class="order-success__meta-value">{{ order.paymentMethod }}</span>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content-block">
+                                            <table class="invoice">
+                                                <tr>
+                                                    <td>
+                                                        <table class="invoice-items" cellpadding="0" cellspacing="0">
+                                                            {% for item in order.items %}
+                                                                <tr>
+                                                                    <td>{{ item.name }} x {{ item.quantity }}</td>
+                                                                    <td class="alignright">
+                                                                        $ {{ item.total|number_format(2) }}</td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                            <tr class="total">
+                                                                <td class="alignright" width="80%">Total</td>
+                                                                <td class="alignright">
+                                                                    $ {{ order.total|number_format(2) }}</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content-block">
+                                            <a target="_blank"
+                                               href="{{ urlFront ~ '/shop/cart/checkout/success/' ~ order.checkoutId }}">Visitar
+                                                mi perfil</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content-block">
+                                            {{ contact.address }}<br/>{{ contact.phone }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="footer">
+                        <table width="100%">
+                            <tr>
+                                <td class="aligncenter content-block">¿Preguntas? Correo <a
+                                            href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+{% endapply %}
+</body>
+
+</html>

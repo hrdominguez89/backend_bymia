@@ -1,0 +1,88 @@
+<header id="page-topbar" style="background-color: #1a4173" class="text-white">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box text-white" style="background-color: #1a4173">
+                <a href="{{ path('app_homepage') }}" class="logo logo-dark">
+                    <span class="logo-sm">
+                        <img src="{{ asset('assets/images/favico_bymia.ico') }}" alt="" height="36">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="{{ asset('assets/images/logo-movil2.svg') }}" alt="" height="45">
+{#                        <span class="logo-txt">#}
+{#                            {{ 'AppName' | trans }}#}
+{#                        </span>#}
+                    </span>
+                </a>
+
+                <a href="{{ path('app_homepage') }}" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="{{ asset('assets/images/logo-movil2.svg') }}" alt="" height="24">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="{{ asset('assets/images/logo-movil2.svg') }}" alt="" height="24">
+{#                        <span class="logo-txt">{{ 'AppName' | trans }}</span>#}
+                    </span>
+                </a>
+            </div>
+{#            <div class="d-block d-sm-block d-md-none">#}
+                <button type="button" class="btn btn-sm px-3 font-size-16 header-item text-white" id="vertical-menu-btn">
+                    <i class="fa fa-fw fa-bars"></i>
+                </button>
+{#            </div>#}
+
+        </div>
+
+        <div class="d-flex">
+
+{#            <div class="dropdown d-none d-sm-inline-block">#}
+{#                <button type="button" class="btn header-item"#}
+{#                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                    <img id="header-lang-img" src="{{ asset('assets/images/flags/us.jpg') }}" alt="Header Language" height="16">#}
+{#                </button>#}
+{#                <div class="dropdown-menu dropdown-menu-end">#}
+
+{#                    <!-- item-->#}
+{#                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="en">#}
+{#                        <img src="{{ asset('assets/images/flags/us.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">{{ 'English' | trans }}</span>#}
+{#                    </a>#}
+{#                    <!-- item-->#}
+{#                    <a href="javascript:void(0);" class="dropdown-item notify-item language" data-lang="sp">#}
+{#                        <img src="{{ asset('assets/images/flags/spain.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">{{ 'Spanish' | trans }}</span>#}
+{#                    </a>#}
+{#                                       #}
+{#                </div>#}
+{#            </div>#}
+
+            <div class="dropdown d-none d-sm-inline-block">
+                <button type="button" class="btn header-item" id="mode-setting-btn">
+                    <i data-feather="moon" class="icon-lg layout-mode-dark text-white"></i>
+                    <i data-feather="sun" class="icon-lg layout-mode-light text-white"></i>
+                </button>
+            </div>
+
+{#            <div class="dropdown d-inline-block">#}
+{#                <button type="button" class="btn header-item right-bar-toggle me-2">#}
+{#                    <i data-feather="settings" class="icon-lg text-white"></i>#}
+{#                </button>#}
+{#            </div>#}
+
+            <div class="dropdown d-inline-block text-white">
+                <button type="button" class="btn header-item bg-soft-light border-start border-end" id="page-header-user-dropdown"
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="{{ asset(app.user.image) }}"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium text-white"> {{ app.user.name }}</span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block text-white"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end text-white">
+                    <!-- item-->
+                    <a class="dropdown-item" href="{{ path('app_reset_password_current') }}"><i class="mdi mdi-key-chain-variant font-size-16 align-middle me-1"></i>{{ 'ChangePassword' | trans }} </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ path('app_security_logout') }}"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i>{{ 'Logout' | trans }} </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>

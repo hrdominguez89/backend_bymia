@@ -1,0 +1,48 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Subcategoría{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between">
+        <h1 class="mr-auto mb-0 title-table"><a href="{{ path('secure_crud_category_index') }}">{{ category_name }}</a>/Subcategoría
+        </h1>
+        <a href="{{ path('secure_crud_subcategory_new',{'id_category': id_category  }) }}" class="btn btn-success">Crear
+            nueva</a>
+    </div>
+
+    <table class="table imagen">
+        <thead>
+        <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>Id de la Api</th>
+            <th>Cantidad de productos</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for subcategory in subcategories %}
+            <tr>
+                {% if subcategory.image %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset(subcategory.image) }}"/></td>
+                {% else %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+                {% endif %}
+                <td>{{ subcategory.name }}</td>
+                <td>{{ subcategory.apiId }}</td>
+                <td>{{ subcategory.items }}</td>
+                <td style="width: 170px">
+                    <a style="width: 70px" class="btn btn-info"
+                       href="{{ path('secure_crud_subcategory_show', {'id': subcategory.id}) }}">Mostrar</a>
+                    <a style="width: 70px" class="btn btn-warning"
+                       href="{{ path('secure_crud_subcategory_edit', {'id': subcategory.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

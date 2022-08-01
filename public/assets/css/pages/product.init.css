@@ -1,0 +1,106 @@
+.image-brands {
+    height: 60px;
+    width: 60px;
+    border: 2px solid darkgray;
+}
+
+.image-brands:hover {
+    height: 250px;
+    width: 250px;
+    position: absolute;
+    margin: -100px;
+    border: 4px solid darkgray;
+    z-index: 9999;
+    background-color: #fff;
+}
+
+tr {
+    vertical-align: middle;
+}
+
+tbody tr {
+    height: 90px;
+}
+
+.dropzone {
+    padding: 10px 10px!Important;
+}
+
+.dropzone .dz-message {
+    margin: 0!Important;
+}
+
+.dropzone.dz-started .dz-message {
+    display: block!Important;
+}
+
+.dropzone .dz-preview {
+    margin: 1px!Important;
+    min-height: 50px;
+}
+
+ul,
+#myUL {
+    list-style-type: none;
+}
+
+#myUL {
+    margin: 0;
+    padding: 0;
+}
+
+.box {
+    cursor: pointer;
+    -webkit-user-select: none;
+    /* Safari 3.1+ */
+    -moz-user-select: none;
+    /* Firefox 2+ */
+    -ms-user-select: none;
+    /* IE 10+ */
+    user-select: none;
+}
+
+.box::before {
+    content: "\2610";
+    color: black;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.check-box::before {
+    content: "\2611";
+    color: dodgerblue;
+}
+
+.nested {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.width-12rem {
+    width: 12rem;
+}
+
+.color-cmp {
+    width: 8rem;
+    height: 1.4rem;
+    border-radius: .3rem;
+}
+
+.p-top-0 {
+    top: 0;
+}
+
+.p-right-0 {
+    right: 0;
+}
+
+.mouse-hand {
+    cursor: pointer;
+}
+.title-property-card{
+font-weight: 500;
+margin-bottom: 1rem;}

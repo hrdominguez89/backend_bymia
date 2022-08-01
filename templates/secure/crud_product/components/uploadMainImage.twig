@@ -1,0 +1,23 @@
+<div class="card">
+    <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
+        <h5 class="modal-title">Imagen principal</h5>
+    </div>
+    <div class="card-body p-1">
+        <form method="post" action="#" enctype="multipart/form-data" id="form-main-image-{{ product.id }}">
+            <div id="uploadMain" class="form-group mt-1">
+                <input type="file" class="form-control" name="image" id="mainImage-{{ product.id }}">
+            </div>
+            <button type="button" class="btn btn-primary w-100 mt-1"  onclick="asociarMainImagen({{ product.id }})">Guardar</button>
+        </form>
+            <div id="main-image-{{ product.id }}">
+                {% if product.image is not null  %}
+                <div class="text-center mt-2" style="border-radius: 5px; background-color: gainsboro">
+                        <span style="font-size: 14px; cursor: pointer;" class="mdi mdi-close-circle text-danger"
+                              onclick="deleteMainImagen({{ product.id }})">Eliminar</span>
+                    <img style=" height: 60px;width: 60px;border: 2px solid darkgray;" alt="Imagen"
+                         src="{{ product.image }}">
+                </div>
+                {% endif %}
+            </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Nuevo Cupón de Descuento{% endblock %}
+
+{% block content %}
+    <h1>Crear nuevo cupón de descuento</h1>
+    {{ include('secure/crud_coupon_discount/_form.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <script>
+        $('#coupon_discount_value').prop('type','number')
+        $('#cantidad').on('keyup',function (e) {
+            var cantidad_usos = $('#cantidad').val()
+            if(cantidad_usos>1){
+                $('#coupon_discount_nro').val('')
+                $('#coupon_discount_nro').prop('disabled',true)
+            }
+            else
+                $('#coupon_discount_nro').prop('disabled',false)
+        })
+    </script>
+{% endblock %}

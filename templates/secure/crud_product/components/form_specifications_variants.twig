@@ -1,0 +1,31 @@
+<div class="card">
+	<div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
+		<h5 class="modal-title">Especificaciones propias</h5>
+	</div>
+	<div class="card-body p-1">
+		<form method="post" action="#" enctype="multipart/form-data" id="form-main-image-{{ product.id }}">
+			<div class="row">
+				<div class="col-sm-12 col-md-4">
+					<select name="select-specifications-{{ product.id }}" class="form-select slected-specifications" id="select-specifications-{{ product.id }}" onchange="changeSpecification('{{ product.id }}')">
+						<option value="0" selected disabled>-Especificación-</option>
+					</select>
+				</div>
+				<div class="col-sm-12 col-md-4">
+					<select name="select-atributo-{{ product.id }}" class="form-select atribute-specifications" id="select-atributo-{{ product.id }}">
+						<option value="0" selected disabled>-Nombre-</option>
+					</select>
+				</div>
+				<div class="col-sm-12 col-md-4">
+					<button type="button" class="btn btn-primary w-100" onclick="addSpecificationVariant({{ product.id }})">
+						Asociar
+					</button>
+				</div>
+			</div>
+		</form>
+		<hr>
+		{#        {% if product.image is not null  %}#}
+		<div id="product-specifications-{{ product.id }}" class="mt-2">
+		</div>
+		{#        {% endif %}#}
+	</div>
+</div>

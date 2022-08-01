@@ -1,0 +1,8 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Editar categoría{% endblock %}
+
+{% block content %}
+    <h1>Editar categoría</h1>
+    {{ include('secure/crud_category/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

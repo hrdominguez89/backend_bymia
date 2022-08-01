@@ -1,0 +1,35 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Subcategoría {% endblock %}
+
+{% block content %}
+    <h1>Subcategoría {{ subcategory.name }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Imagen</th>
+                 {% if subcategory.image %}
+                    <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ asset(subcategory.image) }}"/></td>
+                {% else %}
+                    <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+                {% endif %} 
+            </tr>
+            <tr>
+                <th>Id de la Api</th>
+                <td>{{ subcategory.apiId }}</td>
+            </tr>
+            <tr>
+                <th>Cantidad de productos</th>
+                <td>{{ subcategory.items }}</td>
+            </tr>
+        </tbody>
+    </table>
+<div class="d-inline-flex">
+    <a style="width: 80px" class="btn btn-secondary m-1"  href="{{ path('secure_crud_subcategory_index',{'id_category':id_category}) }}">Regresar</a>
+
+    <a style="width: 80px" class="btn btn-warning m-1" href="{{ path('secure_crud_subcategory_edit', {'id': subcategory.id}) }}">Editar</a>
+
+    {{ include('secure/crud_subcategory/_delete_form.html.twig') }}
+</div>
+{% endblock %}

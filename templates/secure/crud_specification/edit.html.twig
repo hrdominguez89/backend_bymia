@@ -1,0 +1,8 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Editar especificación{% endblock %}
+
+{% block content %}
+    <h1>Editar especificación</h1>
+    {{ include('secure/crud_specification/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

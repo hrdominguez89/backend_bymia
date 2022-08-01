@@ -1,0 +1,17 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Nueva Red Social{% endblock %}
+
+{% block content %}
+    <h1>Crear nueva Red Social</h1>
+    {{ include('secure/crud_social_network/_form.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#social_network_name').on('change',()=>{
+            $('#social_network_type').val($('#social_network_name option:selected').text())
+        })
+    </script>
+{% endblock %}

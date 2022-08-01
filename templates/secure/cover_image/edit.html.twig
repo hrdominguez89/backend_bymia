@@ -1,0 +1,12 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Editar Imagen de Portada{% endblock %}
+
+{% block content %}
+    <h1>Editar Imagen de Portada</h1>
+
+    {{ include('secure/cover_image/_form.html.twig', {'button_label': 'Guardar'}) }}
+
+    {{ include('secure/cover_image/_delete_form.html.twig') }}
+
+{% endblock %}

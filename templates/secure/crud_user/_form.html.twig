@@ -1,0 +1,5 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary">{{ button_label|default('Guardar') }}</button>
+<a class="btn btn-secondary" href="{{ path('secure_crud_user_index') }}">Regresar</a>
+{{ form_end(form) }}

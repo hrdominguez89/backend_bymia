@@ -1,0 +1,8 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Editar marca{% endblock %}
+
+{% block content %}
+    <h1>Editar marca</h1>
+    {{ include('secure/crud_brand/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

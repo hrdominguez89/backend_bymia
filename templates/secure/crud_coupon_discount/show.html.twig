@@ -1,0 +1,37 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}CouponDiscount{% endblock %}
+
+{% block content %}
+    <h1>Detalles del cupón de descuento</h1>
+
+    <table class="table">
+        <tbody>
+            {# <tr>
+                <th>Id</th>
+                <td>{{ coupon_discount.id }}</td>
+            </tr> #}
+             <tr>
+                <th>Número</th>
+                <td>{{ coupon_discount.nro }}</td>
+            </tr>
+             <tr>
+                <th>Cantidad de usos</th>
+                <td>{{ coupon_discount.numberOfUses }}</td>
+            </tr>
+            <tr>
+                <th>Porciento?</th>
+                <td>{{ coupon_discount.percent ? 'Yes' : 'No' }}</td>
+            </tr>          
+            <tr>
+                <th>Valor</th>
+                <td>{{ coupon_discount.value }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-inline-flex">
+        <a style="width: 80px" class="btn btn-secondary m-1" href="{{ path('secure_crud_coupon_discount_index') }}">Regresar</a>
+        <a style="width: 80px" class="btn btn-warning m-1" href="{{ path('secure_crud_coupon_discount_edit', {'id': coupon_discount.id}) }}">Editar</a>
+        {{ include('secure/crud_coupon_discount/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

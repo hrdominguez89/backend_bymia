@@ -1,0 +1,8 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Nueva especificación{% endblock %}
+
+{% block content %}
+    <h1>Crear nueva especificación</h1>
+    {{ include('secure/crud_specification/_form.html.twig') }}
+{% endblock %}

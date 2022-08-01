@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'ResetPassword' | trans }} | {{ 'AppName' | trans }}{% endblock %}
+
+{% block body %}  
+
+    <!-- <body data-layout="horizontal"> -->
+        <div class="auth-page">
+            <div class="container-fluid p-0">
+                <div class="row g-0">
+                    <div class="col-xxl-3 col-lg-4 col-md-5">
+                        <div class="auth-full-page-content d-flex p-sm-5 p-4">
+                            <div class="w-100">
+                                <div class="d-flex flex-column h-100">
+                                    <div class="mb-4 mb-md-5 text-center">
+                                        <a href="index.html" class="d-block auth-logo">
+                                            <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">{{ 'AppName' | trans }}</span>
+                                        </a>
+                                    </div>
+                                    <div class="auth-content my-auto">
+                                        <div class="text-center">
+                                            <div class="avatar-lg mx-auto">
+                                                <div class="avatar-title rounded-circle bg-light">
+                                                    <i class="bx bxs-envelope h2 mb-0 text-primary"></i>
+                                                </div>
+                                            </div>
+                                            <div class="p-2 mt-4">
+                                                <h4>{{ 'VerifyEmail' | trans }}</h4>
+                                                <p>{{ 'EmailSendVerification' | trans }}</p>
+                                                <p>{{ 'WillExpire' | trans }} <span class="fw-bold">{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}</span>   .
+                                                <div class="mt-4">
+                                                    <a href="{{ path('app_login') }}" class="btn btn-primary w-10">{{ 'SignIn' | trans }}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-5 text-center">
+                                            <p class="text-muted mb-0">{{ 'DidNotReceiveEmail' | trans }} <a href="{{ path('app_forgot_password_request') }}"
+                                                    class="text-primary fw-semibold"> {{ 'Resend' | trans }} </a> </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 mt-md-5 text-center">
+                                        <p class="mb-0">© <script>document.write(new Date().getFullYear())</script> {{ 'AppName' | trans }}   . {{ 'DesignDevelopedBy' | trans }} {{ 'AppAuthor' | trans }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end auth full page content -->
+                    </div>
+                    <!-- end col -->
+                    <div class="col-xxl-9 col-lg-8 col-md-7">
+                        {% include 'security\\cover.security.html.twig' %}
+                    </div>
+                    <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container fluid -->
+        </div>
+
+{% endblock %}

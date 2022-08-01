@@ -1,0 +1,257 @@
+{% extends 'home/index.html.twig' %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+
+    <!-- page -->
+    <link href="{{ asset('assets/css/pages/dashboard.init.css') }}" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0 font-size-18">{{ 'Home' | trans }}</h4>
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            <div class="col-md-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <h5 class="card-title me-2 mb-3 lh-1 d-block text-truncate" data-key="t-number-order">Sales</h5>                                
+                                <h4 id="mini-chart1-val" class="mb-3">
+                                </h4>
+                            </div>
+
+                            <div class="col-6">
+                                <div id="mini-chart1" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                        <div class="text-nowrap">
+                            <span id="mini-chart1-var"></span>
+                            <span class="ms-1 text-muted font-size-13" data-key="t-since-last-week">Since last week</span>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col -->
+
+            <div class="col-md-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <h5 class="card-title me-2 mb-3 lh-1 d-block text-truncate" data-key="t-amount-order">Income</h5>
+                                <h4 id="mini-chart2-val" class="mb-3">
+                                </h4>
+                            </div>
+                            <div class="col-6">
+                                <div id="mini-chart2" data-colors='["#5156be"]' class="apex-charts mb-2"></div>
+                            </div>
+                        </div>
+                        <div class="text-nowrap">
+                            <span id="mini-chart2-var"></span>
+                            <span class="ms-1 text-muted font-size-13" data-key="t-since-last-week">Since last week</span>
+                        </div>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+            </div><!-- end col-->
+        </div><!-- end row-->
+    
+        <div class="row">
+            <div class="col-xl-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                            <h5 class="card-title me-2" data-key="t-sales-month">Sales by Month</h5>
+                        </div>
+                        <div class="row align-items-center">
+                            <div id="column_chart_datalabel1" data-colors='["#5156be"]' class="apex-charts" dir="ltr"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+
+            <div class="col-xl-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                            <h5 class="card-title me-2" data-key="t-amount-month">Income by month</h5>
+                        </div>
+                        <div class="row align-items-center">
+                            <div id="column_chart_datalabel2" data-colors='["#5156be"]' class="apex-charts" dir="ltr"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        </div>
+
+        <div class="row">            
+            <div class="col-xl-6">
+                <div class="card card-h-100">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                            <h5 class="card-title me-2" data-key="t-products-best-seller">Products Best Seller</h5>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-sm">
+                                <div id="product-best-seller" data-colors='["#575ab3", "#585d9c", "#797aaa", "#898bc9", "#373c9e"]' class="apex-charts"></div>
+                            </div>
+                            <div class="col-sm align-self-center">
+                                <div id="product-best-seller-legend" class="mt-4 mt-sm-0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# <div class="col-xl-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                            <h5 class="card-title me-2" data-key="t-products-best-seller">Products Best Seller</h5>
+                        </div>
+                        <div class="row align-items-center">
+                            <div id="bar_chart1" data-colors='["#2ab57d"]' class="apex-charts" dir="ltr"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div> #}
+
+            <div class="col-xl-6">
+                <div class="card card-h-100">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                             <h5 class="card-title me-2" data-key="t-better-categorys">Better Categorys</h5>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-sm">
+                                <div id="better-categorys" data-colors='["#575ab3", "#585d9c", "#797aaa", "#898bc9", "#373c9e"]' class="apex-charts"></div>
+                            </div>
+                            <div class="col-sm align-self-center">
+                                <div id="better-categorys-legend" class="mt-4 mt-sm-0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# <div class="col-xl-6">
+                <!-- card -->
+                <div class="card card-h-100">
+                    <!-- card body -->
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                            <h5 class="card-title me-2" data-key="t-better-category">Better Category</h5>
+                        </div>
+                        <div class="row align-items-center">
+                            <div id="bar_chart2" data-colors='["#2ab57d"]' class="apex-charts" dir="ltr"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div> #}
+        </div>
+        
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                             <h5 class="card-title me-2" data-key="t-better-customer">Better Customer</h5>
+                        </div>
+                        <div class="px-3" data-simplebar style="max-height: 352px;">
+                            <ul id="better-cstomers-list" class="list-unstyled activity-wid mb-0">
+                            </ul>
+                        </div>    
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap align-items-center mb-4">
+                             <h5 class="card-title me-2" data-key="t-last-orders">Last Orders</h5>
+                        </div>
+                        <div class="px-3" data-simplebar style="max-height: 352px;">
+                            <ul id="last-orders" class="list-unstyled activity-wid mb-0">
+                            </ul>
+                        </div>    
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+
+            {# <div class="col-xl-6">
+                <!-- card -->
+                <div class="card bg-primary text-white shadow-primary card-h-100">
+                    <!-- card body -->
+                    <div class="card-body p-0">
+                        <div id="bestBrand" class="carousel slide text-center widget-carousel" data-bs-ride="carousel">                                                   
+                            <div id="bestBrandInner" class="carousel-inner">
+                                
+                            </div>
+                            <!-- end carousel-inner -->
+                            
+                            <div id="bestBrandIndicator" class="carousel-indicators carousel-indicators-rounded">
+                                <button type="button" data-bs-target="#bestBrand" data-bs-slide-to="0" class="active"
+                                    aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#bestBrand" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                <button type="button" data-bs-target="#bestBrand" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            </div>
+                            <!-- end carousel-indicators -->
+                        </div>
+                        <!-- end carousel -->
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col --> #}
+               
+        </div> <!-- end row-->
+
+    </div>
+    <!-- container-fluid -->
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <!-- page -->
+    <script src="{{ asset('assets/js/pages/dashboard.init.js') }}"></script>
+
+{% endblock %}

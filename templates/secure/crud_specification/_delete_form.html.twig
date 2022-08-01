@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('secure_crud_specification_delete', {'id': specification.id}) }}" onsubmit="return confirm('Está usted seguro que desea eliminar este elemento?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ specification.id) }}">
+    <button class="btn btn-danger m-1">Delete</button>
+</form>

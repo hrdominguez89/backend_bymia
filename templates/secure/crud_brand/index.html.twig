@@ -1,0 +1,41 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Marca{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between">
+    <h1 class="mr-auto mb-0 title-table">Marca</h1>
+    <a class="btn btn-success" href="{{ path('secure_crud_brand_new') }}">Crear nueva</a>
+</div>
+    <table class="table imagen">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Id de la Api</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for brand in brands %}
+            <tr>
+                {% if brand.image %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset(brand.image) }}"/></td>
+                {% else %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+                {% endif %} 
+                <td>{{ brand.apiId }}</td>
+                <td>{{ brand.name }}</td>
+                <td style="width: 200px">
+                    <a  style="width: 70px" class="btn btn-info" href="{{ path('secure_crud_brand_show', {'id': brand.id}) }}">Mostrar</a>
+                    <a style="width: 70px" class="btn btn-warning" href="{{ path('secure_crud_brand_edit', {'id': brand.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Sin datos para mostrar</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

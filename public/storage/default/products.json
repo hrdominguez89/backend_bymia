@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Electric Planer Brandix KL370090G 300 Watts",
+    "sku": "",
+    "price": "",
+    "stock": 20,
+    "specifications": [
+      {
+        "name": "color",
+        "id_api": "123",
+        "type": "color",
+        "values": [
+          {
+            "value": "green",
+            "custum_value": "#00000"
+          },
+          {
+            "value": "yellow",
+            "custum_value": "#111111"
+          }
+        ]
+      }
+    ],
+    "childrens": [
+      {
+        "name": "Electric Planer Brandix KL370090G 300 Watts Yellow",
+        "sku": "sss-ssss-sss",
+        "price": "10",
+        "stock": 5,
+        "specifications": [
+          {
+            "name": "color",
+            "id_api": "123",
+            "type": "color",
+            "values": [
+              {
+                "value": "yellow",
+                "custum_value": "#111111"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Electric Planer Brandix KL370090G 300 Watts Green",
+        "sku": "sss1-ssss1-sss1",
+        "price": "12",
+        "stock": 15,
+        "specifications": [
+          {
+            "name": "color",
+            "id_api": "123",
+            "type": "color",
+            "values": [
+              {
+                "value": "green",
+                "custum_value": "#00000"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Bike",
+    "sku": "sdsdsdsd",
+    "price": "120.00",
+    "stock": 10,
+    "specifications": [
+      {
+        "name": "color",
+        "id_api": "123",
+        "type": "color",
+        "values": [
+          {
+            "value": "blue",
+            "custum_value": "#222222"
+          }
+        ]
+      }
+    ],
+    "childrens": []
+  }
+]

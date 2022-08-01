@@ -1,0 +1,7 @@
+{{ form_start(form) }}
+<label for="coupon_discount_numberOfUses" class="form-label required">Cantidad de cupones</label>
+<input type="number" id="cantidad" name="cantidad" required="required" class="form-control mb-2" value="1">
+{{ form_widget(form) }}
+    <button style="width: 90px" class="btn btn-primary">Guardar</button>
+    <a style="width: 90px" class="btn btn-secondary" href="{{ path('secure_crud_coupon_discount_index') }}">Regresar</a>
+{{ form_end(form) }}

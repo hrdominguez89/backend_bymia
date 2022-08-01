@@ -1,0 +1,7 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="d-inline-flex">
+        <button type="submit" class="btn btn-primary m-1">{{ button_label|default('Guardar') }}</button>
+        <a class="btn btn-secondary m-1" href="{{ path('secure_cover_image_index') }}">Regresar</a>
+    <div>
+{{ form_end(form) }}

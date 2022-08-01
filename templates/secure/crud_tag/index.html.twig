@@ -1,0 +1,35 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Etiqueta{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between">
+    <h1 class="mr-auto mb-0 title-table">Etiqueta</h1>
+    <a class="btn btn-success" href="{{ path('secure_crud_tag_new') }}">Crear nueva</a>
+</div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Id de API</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.name }}</td>
+                <td>{{ tag.apiId }}</td>
+                <td style="width: 200px">
+                    <a style="width: 70px" class="btn btn-info" href="{{ path('secure_crud_tag_show', {'id': tag.id}) }}">Mostrar</a>
+                    <a style="width: 70px" class="btn btn-warning" href="{{ path('secure_crud_tag_edit', {'id': tag.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Sin datos para mostrar</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

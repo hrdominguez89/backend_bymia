@@ -1,0 +1,18 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}{{ 'About Us' | trans }}{% endblock %}
+
+
+{% block content %}
+    <div>
+        <h1>{{ 'About Us' | trans }}</h1>
+        {{ form_start(form, {'attr':{'id':'about_us','autocomplete':"off"}}) }}
+        <div class="row">
+            <div class="col-12">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

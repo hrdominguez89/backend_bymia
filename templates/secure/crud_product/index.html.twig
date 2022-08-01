@@ -1,0 +1,66 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Product index
+{% endblock %}
+
+{% block content %}
+	<h1>Productos</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Stock</th>
+                <th>Precio</th>
+                <th>Descripción corta</th>
+                <th>Rating</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            {% if product.stock ==   0 %}
+                <tr class="text-danger">
+            {% else %}
+                <tr>
+            {% endif %}
+            <td><img style=" height: 60px;width: 60px;border: 2px solid darkgray;" alt="Imagen" src="{{ product.image }}"></td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.stock }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.shortDescription }}</td>
+            <td>{{ product.rating }}</td>
+            <td style="width: 190px">
+                <a style="width: 70px" class="btn btn-warning"
+                   href="{{ path('secure_crud_product_edit_crud', {'id': product.id}) }}">Editar</a>
+            </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="27">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(products) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        var busy = false;
+        $('#product_search_name').on('keyup',Send);   
+        $('#product_search_category').on('keyup',Send);   
+        $('#product_search_subcategory').on('keyup',Send);   
+        function Send(){
+            if(!busy){
+                setTimeout(function(){ $("#product_search").submit();  busy = false; }, 2000);
+                busy = true;
+            }
+        } 
+    </script>
+{% endblock %}

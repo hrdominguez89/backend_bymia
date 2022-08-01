@@ -1,0 +1,32 @@
+[
+    {
+        "id_producto": "3",
+        "short_description": "<p>corta</p>",
+        "large_description": "<p>larga</p>",
+        "offer_price": "2",
+        "offer_start_date": "",
+        "offer_end_date": "",
+        "dimensions": "2",
+        "weight": "2",
+        "specification": [
+            {
+                "specification": "1",
+                "specification_name": "Green",
+                "type": "imagen",
+                "property": "imagen",
+                "value": {}
+            }
+        ]
+    },
+    {
+        "id_producto": "2",
+        "short_description": "<p>Lorem ipsum dolor&nbsp;</p>",
+        "large_description": "<p>Lorem ipsum dolor sit amet, consecte</p><h3>Etiam lacus lacus mollis in mattis</h3><p>Praesent mattis eget augue ac elementum. Maecenas vel ante ut em, tristique ac lobortis sit amet, dapibus sit amet purus. Nam sed lorem nisi. Vestibulum ultrices tincidunt turpis, sit amet fringilla odio scelerisque non.</p>",
+        "offer_price": "2",
+        "offer_start_date": "",
+        "offer_end_date": "",
+        "dimensions": "2",
+        "weight": "2",
+        "specification": []
+    }
+]

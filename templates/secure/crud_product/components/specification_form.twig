@@ -1,0 +1,61 @@
+<div class="col-sm-12">
+	<div class="card" id="card__specification_form_id">
+		<div class="card-body">
+			<div
+				class="row">
+				{# list of specifications #}
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<div class="mb-3">
+						<label class="form-label" data-key="t-especifications">{{ 'Especifications' | trans }}</label>
+						<select class="form-select" id="select__especifications_id" name="especifications">
+							{% for specification in specifications %}
+								<option value="{{ specification.id }}">{{ specification.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+
+				{# type of specification #}
+				<div class="col-lg-6 col-md-6 col-sm-12">
+					<div class="mb-3">
+						<label class="form-label">Tipo</label>
+						<select class="form-select" id="select__type_especificacion_id" name="type_especificacion">
+							<option value="select">Select</option>
+							<option value="boton">Botón</option>
+							<option value="color">Color</option>
+							<option value="imagen">Imagen</option>
+						</select>
+					</div>
+				</div>
+
+
+				 {{ include('secure/crud_product/components/property_form.twig') }}
+				<section id="section__list_property" class="mb-4">
+				{#{{ include('secure/crud_product/components/property_value.twig') }}
+				{{ include('secure/crud_product/components/property_color.twig') }}
+				{{ include('secure/crud_product/components/property_img.twig') }} #}
+				
+				</section>
+
+				{# form items specification #}
+				<input
+					ref="uploader"
+					class="d-none"
+					type="file"
+					accept=".jpg,.png"
+					@change="onFileChanged"
+				/>
+				{# Buttons #}
+
+					<div class="col-sm-12 d-flex justify-content-between"> 
+					<button type="button" id="btn__exit_specification_id" class="btn btn-outline-secondary btn-width">
+						Salir
+					</button>
+					<button type="button" id="btn__save_specification_id" class="btn btn-success btn-width">
+						Guardar
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

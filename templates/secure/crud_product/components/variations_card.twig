@@ -1,0 +1,89 @@
+<div class="card">
+    <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
+        <h4 class="card-title mt-2">Variaciones del producto</h4>
+    </div>
+    <div class="card-body">
+        <div class="accordion" id="accordionExample">
+        {% for product in childrens %}
+        
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-{{ product.id }}">
+                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse-{{ product.id }}"
+                            aria-expanded="true" aria-controls="collapse-{{ product.id }}">
+                       <h6 class="p-0">{{ product.sku }}</h6>
+                    </button>
+                </h2>
+                <div id="collapse-{{ product.id }}" class="accordion-collapse collapse"
+                     aria-labelledby="heading-{{ product.id }}"
+                     data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <label class="form-label" data-key="t-ofert-price">Descripción corta</label>
+                                <textarea class="form-control" id="shortDescription-{{ product.id }}">{{ product.shortDescription }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" data-key="t-ofert-price">Descripción larga</label>
+                                <textarea style="height: 20px !important;" id="largeDescription-{{ product.id }}" class="form-control" id="description-{{ product.id }}"> {{ product.description }}</textarea>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">Precio</label>
+                                <input type="text" class="form-control" readonly value="{{ product.price }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">SKU</label>
+                                <input type="text" class="form-control" readonly
+                                       value="{{ product.sku }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">Existencia</label>
+                                <input type="number" id="stock-{{ product.id }}" class="form-control" readonly
+                                       value="{{ product.stock }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">Precio de oferta</label>
+                                <input type="number" class="form-control" id="offerPrice-{{ product.id }}"
+                                       value="{{ product.offerPrice }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">Fecha de inicio oferta</label>
+                                <input type="datetime-local" class="form-control" id="offerStartDate-{{ product.id }}"
+                                       value="{{ product.offerStartDate|date('Y-m-d') }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">Fecha de fin oferta</label>
+                                <input type="datetime-local" class="form-control" id="offerEndDate-{{ product.id }}"
+                                       value="{{ product.offerEndDate|date('Y-m-d') }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">Dimensiones</label>
+                                <input type="text" class="form-control" id="dimensions-{{ product.id }}"
+                                       value="{{ product.dimensions }}">
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label class="form-label" data-key="t-ofert-price">Peso(kg)</label>
+                                <input type="number" class="form-control" id="weight-{{ product.id }}"
+                                       value="{{ product.weight }}">
+                            </div>
+                            <div class="col-12">
+                                {{ include('secure/crud_product/components/uploadMainImageVariation.twig') }}
+                            </div>
+                            <div class="col-12">
+                                <div class="card mt-2">
+                                    {{ include('secure/crud_product/components/uploadImages.twig') }}
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="card mt-2">
+                                    {{ include('secure/crud_product/components/form_specifications_variants.twig') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>

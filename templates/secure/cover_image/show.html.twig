@@ -1,0 +1,58 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Imagen de Portada{% endblock %}
+
+{% block content %}
+    <h1>Imagen de Portada</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Imagen Grande</th>
+                {% if cover_image.imageLg %}
+                    <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ cover_image.imageLg }}"/></td>
+                {% else %}
+                    <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+                {% endif %} 
+            </tr>
+            <tr>
+                <th>Imagen Pequeña</th>
+                {% if cover_image.imageSm %}
+                    <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ cover_image.imageSm }}"/></td>
+                {% else %}
+                    <td><img class="img-fluid rounded " width="120px" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+                {% endif %} 
+            </tr>
+            <tr>
+                <th>Título</th>
+                <td>{{ cover_image.title }}</td>
+            </tr>
+            <tr>
+                <th>Descripción</th>
+                <td>{{ cover_image.description }}</td>
+            </tr>
+            <tr>
+                <th>Nombre del Botón</th>
+                <td>{{ cover_image.nameBtn }}</td>
+            </tr>
+            <tr>
+                <th>Vínculo del Botón</th>
+                <td>{{ cover_image.linkBtn }}</td>
+            </tr>
+            <tr>
+                <th>Principal</th>
+                <td>{{ cover_image.main ? 'Si' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-inline-flex">
+
+        <a class="btn btn-secondary w-100 m-1" href="{{ path('secure_cover_image_index') }}">Regresar</a>
+
+        <a class="btn btn-warning m-1" href="{{ path('secure_cover_image_edit', {'id': cover_image.id}) }}">Editar</a>
+
+        {{ include('secure/cover_image/_delete_form.html.twig') }}
+
+    </div>
+{% endblock %}

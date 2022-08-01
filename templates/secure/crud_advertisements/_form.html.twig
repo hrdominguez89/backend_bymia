@@ -1,0 +1,65 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-sm-12 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Imágen 1</h5>
+            </div>
+            <div class="card-body">
+                {{ form_label(form.src1) }}
+                {% if data.src1 %}
+                    <div><img class="imagen-grid" alt="Imagen" src="{{ data.src1 }}"/></div>
+                {% endif %}
+                {{ form_widget(form.src1) }}
+                <br>
+                {{ form_label(form.srcSm1) }}
+                {% if data.srcSm1 %}
+                    <div><img class="imagen-grid" alt="Imagen" src="{{ data.srcSm1 }}"/></div>
+                {% endif %}
+                {{ form_widget(form.srcSm1) }}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Imágen 2</h5>
+            </div>
+            <div class="card-body">
+                {{ form_label(form.src2) }}
+                 {% if data.srcSm1 %}
+                    <div><img class="imagen-grid" alt="Imagen" src="{{ data.src2 }}"/></div>
+                {% endif %}
+                {{ form_widget(form.src2) }}
+                <br>
+                {{ form_label(form.srcSm2) }}
+                 {% if data.srcSm1 %}
+                    <div><img class="imagen-grid" alt="Imagen" src="{{ data.srcSm2 }}"/></div>
+                {% endif %}
+                {{ form_widget(form.srcSm2) }}
+               </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Imágen 3</h5>
+            </div>
+            <div class="card-body">
+                {{ form_label(form.src3) }}
+                 {% if data.srcSm1 %}
+                    <div><img class="imagen-grid" alt="Imagen" src="{{ data.src3 }}"/></div>
+                {% endif %}
+                {{ form_widget(form.src3) }}
+                <br>
+                {{ form_label(form.srcSm3) }}
+                 {% if data.srcSm1 %}
+                    <div><img class="imagen-grid" alt="Imagen" src="{{ data.srcSm3 }}"/></div>
+                {% endif %}
+                {{ form_widget(form.srcSm3) }}
+               </div>
+        </div>
+    </div>
+</div>
+    <button class="btn btn-primary m-2">Guardar</button>
+{{ form_end(form) }}

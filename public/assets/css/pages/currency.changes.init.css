@@ -1,0 +1,16 @@
+.choices[data-type*="select-one"] .choices__inner {
+  padding-bottom: 0px;
+}
+
+.choices[data-type*="select-one"] .choices__inner {
+  padding-bottom: 0rem;
+}
+
+.choices__inner {
+  padding: 0.25rem 0.75rem;
+  min-height: 38px;
+}
+
+.choices {
+  margin-bottom: 0;
+}

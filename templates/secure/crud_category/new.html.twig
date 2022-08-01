@@ -1,0 +1,8 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Nueva Categoría{% endblock %}
+
+{% block content %}
+    <h1>Crear nueva categoría</h1>
+    {{ include('secure/crud_category/_form.html.twig') }}
+{% endblock %}

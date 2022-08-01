@@ -1,0 +1,120 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Product{% endblock %}
+
+{% block content %}
+    <h1>Product</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ product.id }}</td>
+            </tr>
+            <tr>
+                <th>ParentId</th>
+                <td>{{ product.parentId }}</td>
+            </tr>
+            <tr>
+                <th>Sku</th>
+                <td>{{ product.sku }}</td>
+            </tr>
+            <tr>
+                <th>Badges</th>
+                <td>{{ product.badges }}</td>
+            </tr>
+            <tr>
+                <th>Availability</th>
+                <td>{{ product.availability }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ product.name }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ product.slug }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ product.image }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ product.description }}</td>
+            </tr>
+            <tr>
+                <th>Stock</th>
+                <td>{{ product.stock }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ product.url }}</td>
+            </tr>
+            <tr>
+                <th>Weight</th>
+                <td>{{ product.weight }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ product.price }}</td>
+            </tr>
+            <tr>
+                <th>OfferPrice</th>
+                <td>{{ product.offerPrice }}</td>
+            </tr>
+            <tr>
+                <th>OfferStartDate</th>
+                <td>{{ product.offerStartDate ? product.offerStartDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>OfferEndDate</th>
+                <td>{{ product.offerEndDate ? product.offerEndDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>HtmlDescription</th>
+                <td>{{ product.htmlDescription }}</td>
+            </tr>
+            <tr>
+                <th>ShortDescription</th>
+                <td>{{ product.shortDescription }}</td>
+            </tr>
+            <tr>
+                <th>Color</th>
+                <td>{{ product.color }}</td>
+            </tr>
+            <tr>
+                <th>Length</th>
+                <td>{{ product.length }}</td>
+            </tr>
+            <tr>
+                <th>Dimensions</th>
+                <td>{{ product.dimensions }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ product.date ? product.date|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Featured</th>
+                <td>{{ product.featured ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Sales</th>
+                <td>{{ product.sales }}</td>
+            </tr>
+            <tr>
+                <th>Reviews</th>
+                <td>{{ product.reviews }}</td>
+            </tr>
+            <tr>
+                <th>Rating</th>
+                <td>{{ product.rating }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-inline-flex">
+        <a style="width: 90px" class="btn btn-secondary m-1" href="{{ path('secure_crud_product_index') }}">Regresar</a>
+        <a style="width: 90px"  class="btn btn-warning m-1" href="{{ path('secure_crud_product_edit', {'id': product.id}) }}">Editar</a>
+    </div>
+{% endblock %}

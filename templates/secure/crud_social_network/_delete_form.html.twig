@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('secure_crud_social_network_delete', {'id': social_network.id}) }}"
+      onsubmit="return confirm('Está usted seguro que desea eliminar este elemento?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ social_network.id) }}">
+    <button style="width: 90px" class="btn btn-danger m-1">Borrar</button>
+</form>

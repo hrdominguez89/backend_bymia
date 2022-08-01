@@ -1,0 +1,51 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}CouponDiscount index{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between">
+    <h1 class="mr-auto mb-0 title-table">Cupón de Descuento</h1>
+    <a class="btn btn-success" href="{{ path('secure_crud_coupon_discount_new') }}">Crear nuevo</a>
+</div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Cantidad de usos</th>
+                <th>Porciento?</th>
+                <th>Valor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for coupon_discount in coupon_discounts %}
+            <tr>
+                <td>{{ coupon_discount.nro }}</td>
+                <td>{{ coupon_discount.numberOfUses }}</td>
+                <td>{{ coupon_discount.percent ? 'Yes' : 'No' }}</td>
+                <td>{{ coupon_discount.value }}</td>
+                <td style="width: 200px">
+                    <a style="width: 70px" class="btn btn-info" href="{{ path('secure_crud_coupon_discount_show', {'id': coupon_discount.id}) }}">Mostrar</a>
+                    <a style="width: 70px" class="btn btn-warning" href="{{ path('secure_crud_coupon_discount_edit', {'id': coupon_discount.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Sin datos para mostrar</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(coupon_discounts) }}
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+{{ parent() }}
+<script>
+    $('#coupon_discount_value').prop('type','number')
+</script>
+{% endblock %}

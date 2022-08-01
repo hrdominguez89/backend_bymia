@@ -1,0 +1,94 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Ordenes{% endblock %}
+
+{% block stylesheets %}
+     {{ parent() }}
+    <style>
+        .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: .255em;
+            vertical-align: .255em;
+            content: "";
+            border-top: .3em solid;
+            border-right: .3em solid transparent;
+            border-bottom: 0;
+            border-left: .3em solid transparent;
+        }
+        .completado{background-color:#00b52f;}
+        .procesando{background-color:#0029ff ;}
+        .reembolsado{background-color:#b1245e ;}
+        .cancelado{background-color:#fb6106 ;}
+        .fallido{background-color:#e10707 ;}
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Ordenes</h1>
+
+    {{ include('secure/order/_form.html.twig') }}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nro. Orden</th>
+                <th>Estado</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.checkoutId }}</td>
+                <td>
+                   <div class="dropdown" >
+                        <button class="btn btn-secondary dropdown-toggle w-100 {{ order.checkoutStatus | lower }}" type="button" id="dropdownMenuButton{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false" style="max-width:150px">
+                            {{ order.checkoutStatus | upper }}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ order.id }}">
+                            <li><a class="dropdown-item" href="{{ path('secure_order_change_status', {'id': order.id, 'status':'Procesando'}) }}">Procesando</a></li>
+                            <li><a class="dropdown-item" href="{{ path('secure_order_change_status', {'id': order.id, 'status':'Completado'}) }}">Completado</a></li>
+                            <li><a class="dropdown-item" href="{{ path('secure_order_change_status', {'id': order.id, 'status':'Cancelado'}) }}">Cancelado</a></li>
+                            <li><a class="dropdown-item" href="{{ path('secure_order_change_status', {'id': order.id, 'status':'Reembolsado'}) }}">Reembolsado</a></li>
+                            <li><a class="dropdown-item" href="{{ path('secure_order_change_status', {'id': order.id, 'status':'Fallido'}) }}">Fallido</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td>{{ order.checkoutBillingFirstName }} {{ order.checkoutBillingLastName }}</td>
+                <td>{{ order.date | date }}</td>
+                <td>${{ order.total }}</td>
+                <td style="width: 190px">
+                    <a style="width: 70px" class="btn btn-info" href="{{ path('secure_order_show', {'id': order.id}) }}">Mostrar</a>
+                    {# <a style="width: 70px" class="btn btn-warning" href="{{ path('secure_crud_order_edit', {'id': order.id}) }}">Editar</a> #}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="27">Sin datos para mostrar</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(orders) }}
+    </div>
+{% endblock %}
+
+ {% block javascripts %}
+     {{ parent() }}
+    <script>
+        var busy = false;
+        $('#order_search_number').on('keyup',Send);   
+        $('#order_search_customer').on('keyup',Send);   
+        function Send(){
+            if(!busy){
+                setTimeout(function(){ $("#order_search").submit();  busy = false; }, 2000);
+                busy = true;
+            }
+        }      
+    </script>
+
+{% endblock %}

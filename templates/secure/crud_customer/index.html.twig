@@ -1,0 +1,70 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}Cliente{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between">
+    <h1 class="mr-auto mb-0 title-table">Clientes</h1>
+    <a class="btn btn-success" href="{{ path('secure_crud_customer_new') }}">Importar</a>
+</div>
+
+    {{ include('secure/crud_customer/_form_search.html.twig') }}
+
+    <table class="table imagen">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Teléfono</th>
+                {# <th>Teléfono celular</th> #}
+                <th>Correo electrónico</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for customer in customers %}
+            <tr>
+                {% if customer.image %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset(customer.image) }}"/></td>
+                {% else %}
+                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+                {% endif %}
+                <td>{{ customer.billingFirstName }}</td>
+                <td>{{ customer.billingLastName }}</td>
+                <td>{{ customer.billingPhone }}</td>
+                {# <td>{{ customer.cellPhone }}</td> #}
+                <td>{{ customer.billingEmail }}</td>
+                <td style="width: 200px">
+                    <a style="width: 70px" class="btn btn-info" href="{{ path('secure_crud_customer_show', {'id': customer.id}) }}">Mostrar</a>
+                    <a style="width: 70px" class="btn btn-warning" href="{{ path('secure_crud_customer_edit', {'id': customer.id}) }}">Editar</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Sin datos para mostrar</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation">
+        {{ knp_pagination_render(customers) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+     {{ parent() }}
+    <script>
+        var busy = false;
+        $('#customer_search_name').on('keyup',Send);   
+        function Send(){
+            if(!busy){
+                setTimeout(function(){ $("#customer_search").submit();  busy = false; }, 2000);
+                busy = true;
+            }
+        }      
+    </script>
+
+{% endblock %}
+
