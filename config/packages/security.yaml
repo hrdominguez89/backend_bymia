@@ -1,6 +1,6 @@
 security:
     role_hierarchy:
-        ROLE_SUPER_ADMIN: [ ROLE_AUSER, ROLE_ALLOWED_TO_SWITCH ]
+        ROLE_SUPER_ADMIN: [ ROLE_USER, ROLE_ALLOWED_TO_SWITCH ]
     # https://symfony.com/doc/current/security/authenticator_manager.html
     enable_authenticator_manager: false
     # https://symfony.com/doc/current/security.html#c-hashing-passwords
@@ -41,6 +41,6 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/security/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/reset-password/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/*, roles: [ IS_AUTHENTICATED_FULLY ] } #requires_channel: https
+        - { path: ^/security/*, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password/*, roles: PUBLIC_ACCESS }
+        - { path: ^/*, roles: [ ROLE_SUPER_ADMIN ] } #requires_channel: https

@@ -11,19 +11,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends BaseUser
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->roles = json_encode(['ROLE_USER']);
-    }
+    /**
+     * @ORM\Column(type="json")
+     */
+    protected $roles = [];
 
     /**
      * @return array
      */
     public function getRoles(): array
     {
-        return array_unique(['ROLE_USER']);
+        return array_unique($this->roles);
     }
 
 }
