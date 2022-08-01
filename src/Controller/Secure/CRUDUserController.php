@@ -59,6 +59,7 @@ class CRUDUserController extends AbstractController
                 $user->setImage('uploads/images/' . $imageFileName);
             }
             $user->setPassword($_ENV['PWD_NEW_USER']);
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();

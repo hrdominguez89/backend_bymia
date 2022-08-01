@@ -24,6 +24,7 @@ class UserType extends AbstractType
             ->add('name', TextType::class, ['label' => 'Nombre',])
             ->add('lastname', TextType::class, ['label' => 'Apellido', 'required' => true])
             ->add('role', EntityType::class, [
+                'placeholder' => 'Seleccione un Rol',
                 'label' => 'Rol',
                 'class'  => Roles::class,
                 'choice_label' => 'name',
