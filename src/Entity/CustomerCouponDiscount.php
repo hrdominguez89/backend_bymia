@@ -209,4 +209,14 @@ class CustomerCouponDiscount
             "type" => $this->isPercent() ? "percent" : "discount",
         ];
     }
+
+    public function getPercent(): ?bool
+    {
+        return $this->percent;
+    }
+
+    public function getApplied(): ?bool
+    {
+        return $this->applied;
+    }
 }

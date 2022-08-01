@@ -136,4 +136,11 @@ class Brand
         ];
     }
 
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
 }

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Model\Product as BaseProduct;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -310,6 +311,28 @@ class Product extends BaseProduct
         }
 
         return $images;
+    }
+
+    public function addImage(ProductImages $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProductId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(ProductImages $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProductId() === $this) {
+                $image->setProductId(null);
+            }
+        }
+
+        return $this;
     }
 
 

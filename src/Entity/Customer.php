@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -150,6 +151,10 @@ class Customer extends BaseUser
         parent::__construct();
 
         $this->roles = json_encode(['ROLE_CUSTOMER']);
+        $this->favoriteProducts = new ArrayCollection();
+        $this->couponDiscounts = new ArrayCollection();
+        $this->shoppingCarts = new ArrayCollection();
+        $this->shoppingOrders = new ArrayCollection();
     }
 
     /**
@@ -602,5 +607,39 @@ class Customer extends BaseUser
             ],
             "coupon" => $coupon,
         ]);
+    }
+
+    public function removeFavoriteProduct(FavoriteProduct $favoriteProduct): self
+    {
+        if ($this->favoriteProducts->removeElement($favoriteProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriteProduct->getCustomerId() === $this) {
+                $favoriteProduct->setCustomerId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addCouponDiscount(CustomerCouponDiscount $couponDiscount): self
+    {
+        if (!$this->couponDiscounts->contains($couponDiscount)) {
+            $this->couponDiscounts[] = $couponDiscount;
+            $couponDiscount->setCustomerId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCouponDiscount(CustomerCouponDiscount $couponDiscount): self
+    {
+        if ($this->couponDiscounts->removeElement($couponDiscount)) {
+            // set the owning side to null (unless already changed)
+            if ($couponDiscount->getCustomerId() === $this) {
+                $couponDiscount->setCustomerId(null);
+            }
+        }
+
+        return $this;
     }
 }

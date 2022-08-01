@@ -129,5 +129,10 @@ class CouponDiscount
         return $this;
     }
 
+    public function getPercent(): ?bool
+    {
+        return $this->percent;
+    }
+
 
 }

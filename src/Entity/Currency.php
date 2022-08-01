@@ -129,5 +129,10 @@ class Currency
         return $this;
     }
 
+    public function getMain(): ?bool
+    {
+        return $this->main;
+    }
+
 
 }
