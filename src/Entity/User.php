@@ -17,6 +17,13 @@ class User extends BaseUser
     protected $roles = [];
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(name="password", type="string", length=512, nullable=true)
+     */
+    protected $password;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Roles::class, inversedBy="users")
      */
     private $role;
@@ -61,6 +68,18 @@ class User extends BaseUser
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+
+    /**
+     * @param string|null $password
+     * @return $this
+     */
+    public function setPassword(?string $password): self
+    {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
 
         return $this;
     }

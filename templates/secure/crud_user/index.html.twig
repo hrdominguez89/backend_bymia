@@ -26,19 +26,14 @@
 							{% if user.image %}
 								<td><img class="imagen-grid" alt="Imagen" src="{{ asset(user.image) }}"/></td>
 							{% else %}
-								<td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
+								<td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.png') }}"/></td>
 							{% endif %}
 							<td>{{ user.email }}</td>
 							<td>{{ user.name }}</td>
 							<td>{{ user.lastname }}</td>
+							<td>{{ user.role.name }}</td>
 							<td>
-								{% for nameRole in user.nameRoles %}
-									{{ nameRole }}
-								{% endfor %}
-
-							</td>
-							<td>
-								<a class="btn btn-warning" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}">Editar</a>
+								<a class="btn btn-warning" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}" title="Editar operador">Editar</a>
 							</td>
 						</tr>
 					{% else %}

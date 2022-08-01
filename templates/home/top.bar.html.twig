@@ -68,7 +68,7 @@
 			{#            </div>#}
 
 				<div class="dropdown d-inline-block text-white"> <button type="button" class="btn header-item bg-soft-light border-start border-end" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<img class="rounded-circle header-profile-user" src="{{ asset(app.user.image) }}" alt="Header Avatar">
+					<img class="rounded-circle header-profile-user" src="{{ app.user.image ? asset(app.user.image) : asset('assets/images/default_avatar.png') }}" alt="Header Avatar">
 					<span class="d-none d-xl-inline-block ms-1 fw-medium text-white">
 						{{ app.user.name }}</span>
 					<i class="mdi mdi-chevron-down d-none d-xl-inline-block text-white"></i>

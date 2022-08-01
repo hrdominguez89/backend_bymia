@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Roles;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +21,14 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, ['label' => 'Correo',])
+            ->add('name', TextType::class, ['label' => 'Nombre',])
+            ->add('lastname', TextType::class, ['label' => 'Apellido', 'required' => true])
+            ->add('role', EntityType::class, [
+                'label' => 'Rol',
+                'class'  => Roles::class,
+                'choice_label' => 'name',
+                'required'=>true,
+            ])
             // ->add('password', PasswordType::class, ['label' => 'Contraseña',])
             ->add('image', FileType::class, [
                 'label' => 'Imagen ',
@@ -43,10 +53,7 @@ class UserType extends AbstractType
                         'mimeTypesMessage' => 'Please upload a valid document',
                     ])
                 ],
-            ])
-            ->add('name', TextType::class, ['label' => 'Nombre',])
-            //            ->add('roles')
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

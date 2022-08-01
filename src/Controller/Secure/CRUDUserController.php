@@ -27,16 +27,26 @@ class CRUDUserController extends AbstractController
      */
     public function index(UserRepository $userRepository): Response
     {
-        return $this->render('secure/crud_user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
+        $data['users'] =  $userRepository->findAll();
+        // $data['files_css'] = array('hola.css?v='.rand());
+        $data['files_js'] = array('operators.js?v=' . rand());
+        return $this->render('secure/crud_user/index.html.twig', $data);
     }
 
     /**
      * @Route("/new", name="secure_crud_user_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FileUploader $fileUploader, ResetPasswordHelperInterface $resetPasswordHelper, UrlGeneratorInterface $router, TranslatorInterface $translator, SendMail $sendMail): Response
-    {
+    public function new(
+        Request $request,
+        FileUploader $fileUploader,
+        ResetPasswordHelperInterface $resetPasswordHelper,
+        UrlGeneratorInterface $router,
+        TranslatorInterface $translator,
+        SendMail $sendMail
+    ): Response {
+
+
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -46,9 +56,9 @@ class CRUDUserController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $user->setImage('uploads/images/'.$imageFileName);
+                $user->setImage('uploads/images/' . $imageFileName);
             }
-
+            $user->setPassword($_ENV['PWD_NEW_USER']);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -90,7 +100,7 @@ class CRUDUserController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $user->setImage('uploads/images/'.$imageFileName);
+                $user->setImage('uploads/images/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
 
