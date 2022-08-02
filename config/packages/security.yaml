@@ -19,7 +19,7 @@ security:
             pattern: ^/*
             lazy: true
             provider: users
-            anonymous: true
+            anonymous: false
             form_login:
                 check_path: app_security_login
                 login_path: app_security_login
