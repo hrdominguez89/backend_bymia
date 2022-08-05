@@ -6,7 +6,7 @@ security:
         App\Entity\User: "auto"
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        users_in_memory: { memory: null }
+        # users_in_memory: { memory: null }
         users:
             entity:
                 class: 'App\Entity\User'
@@ -19,12 +19,13 @@ security:
             pattern: ^/*
             lazy: true
             provider: users
-            anonymous: false
+            anonymous: true
             form_login:
                 check_path: app_security_login
                 login_path: app_security_login
                 default_target_path: app_homepage
                 csrf_token_generator: security.csrf.token_manager
+                use_referer: true
             logout:
                 path: app_security_logout
                 target: app_security_login
