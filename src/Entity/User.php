@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Model\User as BaseUser;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +34,23 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lastname;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="registration_user")
+     */
+    private $customers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CustomerAddresses::class, mappedBy="registration_user")
+     */
+    private $customerAddresses;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->customers = new ArrayCollection();
+        $this->customerAddresses = new ArrayCollection();
+    }
 
     /**
      * @return array
@@ -80,6 +99,71 @@ class User extends BaseUser
     public function setPassword(?string $password): self
     {
         $this->password = password_hash($password, PASSWORD_BCRYPT);
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @return Collection|Customer[]
+     */
+    public function getCustomers(): Collection
+    {
+        return $this->customers;
+    }
+
+    public function addCustomer(Customer $customer): self
+    {
+        if (!$this->customers->contains($customer)) {
+            $this->customers[] = $customer;
+            $customer->setRegistrationUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomer(Customer $customer): self
+    {
+        if ($this->customers->removeElement($customer)) {
+            // set the owning side to null (unless already changed)
+            if ($customer->getRegistrationUser() === $this) {
+                $customer->setRegistrationUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CustomerAddresses[]
+     */
+    public function getCustomerAddresses(): Collection
+    {
+        return $this->customerAddresses;
+    }
+
+    public function addCustomerAddress(CustomerAddresses $customerAddress): self
+    {
+        if (!$this->customerAddresses->contains($customerAddress)) {
+            $this->customerAddresses[] = $customerAddress;
+            $customerAddress->setRegistrationUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomerAddress(CustomerAddresses $customerAddress): self
+    {
+        if ($this->customerAddresses->removeElement($customerAddress)) {
+            // set the owning side to null (unless already changed)
+            if ($customerAddress->getRegistrationUser() === $this) {
+                $customerAddress->setRegistrationUser(null);
+            }
+        }
 
         return $this;
     }

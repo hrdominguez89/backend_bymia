@@ -29,7 +29,7 @@ class CRUDUserController extends AbstractController
     {
         $data['users'] =  $userRepository->findAll();
         // $data['files_css'] = array('hola.css?v='.rand());
-        $data['files_js'] = array('operators.js?v=' . rand());
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         return $this->render('secure/crud_user/index.html.twig', $data);
     }
 

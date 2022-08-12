@@ -4,46 +4,50 @@
 
 {% block content %}
 	<div class="d-flex justify-content-between">
-		<h1 class="mr-auto mb-0 title-table">Operadores</h1>
-		<a class="btn btn-success" href="{{ path('secure_crud_user_new') }}">Nuevo operador</a>
+		<div class="col-6">
+			<h1 class="mr-auto mb-0 title-table">Operadores</h1>
+		</div>
+
+		<div class="col-6 text-end">
+			<a class="btn btn-success" href="{{ path('secure_crud_user_new') }}">Nuevo operador</a>
+		</div>
 	</div>
 	<div class="row mt-5">
 		<div class="col-12">
-			<table id="datatable-operators" class="table imagen" data-order="[[ 2, &quot;asc&quot; ],[ 3, &quot;asc&quot; ]]">
-				<thead>
-					<tr>
-						<th data-orderable="false">Imagen</th>
-						<th>Correo</th>
-						<th>Nombre</th>
-						<th>Apellido</th>
-						<th>Rol</th>
-						<th data-orderable="false">Acciones</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for user in users %}
-						<tr>
-							{% if user.image %}
-								<td><img class="imagen-grid" alt="Imagen" src="{{ asset(user.image) }}"/></td>
-							{% else %}
-								<td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.png') }}"/></td>
-							{% endif %}
-							<td>{{ user.email }}</td>
-							<td>{{ user.name }}</td>
-							<td>{{ user.lastname }}</td>
-							<td>{{ user.role.name }}</td>
-							<td>
-								<a class="btn btn-warning" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}" title="Editar operador">Editar</a>
-							</td>
-						</tr>
-					{% else %}
-						<tr>
-							<td colspan="7">no se encontraron datos</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+			<div class="table-responsive">
 
+				<table id="table_full_buttons" class="table table-sm" data-order="[[ 2, &quot;asc&quot; ],[ 3, &quot;asc&quot; ]]">
+					<thead>
+						<tr>
+							<th data-orderable="false">Imagen</th>
+							<th>Correo</th>
+							<th>Nombre</th>
+							<th>Apellido</th>
+							<th>Rol</th>
+							<th data-orderable="false">Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for user in users %}
+							<tr>
+								{% if user.image %}
+									<td><img class="imagen-grid" alt="Imagen" src="{{ asset(user.image) }}"/></td>
+								{% else %}
+									<td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.png') }}"/></td>
+								{% endif %}
+								<td>{{ user.email }}</td>
+								<td>{{ user.name }}</td>
+								<td>{{ user.lastname }}</td>
+								<td>{{ user.role.name }}</td>
+								<td>
+									<a class="btn btn-warning" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}" title="Editar operador">Editar</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+
+			</div>
 		</div>
 	</div>
 {% endblock %}

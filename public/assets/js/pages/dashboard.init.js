@@ -9,12 +9,12 @@ function getChartColorsArray(r) {
 }
 
 $(document).ready(function () {
-  getOrderSummary();
-  getProductBestSeller();
-  getBestCategory();
-  getSummaryByMonth();
-  getBetterCustomerList();
-  getLastOrderList();
+  //getOrderSummary();
+  //getProductBestSeller();
+  //getBestCategory();
+  //getSummaryByMonth();
+  //getBetterCustomerList();
+  //getLastOrderList();
   // getBestBrand();
 });
 

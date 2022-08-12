@@ -15,13 +15,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Customer extends BaseUser
 {
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
-     */
-    private $apiId;
-
-    /**
      * @var FavoriteProduct[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\FavoriteProduct", mappedBy="customerId")
@@ -49,112 +42,98 @@ class Customer extends BaseUser
      */
     private $shoppingOrders;
 
+    
     /**
      * @var string|null
      *
-     * @ORM\Column(name="identification", type="string", length=255, nullable=true)
-     */
-    private $identification;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="billing_first_name", type="string", length=100, nullable=true)
+     * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @Assert\Length(min=2, max=100)
      */
-    private $billingFirstName;
+    private $lastname;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="billing_last_name", type="string", length=100, nullable=true)
+     * @ORM\Column(name="country_code_cel_phone", type="string", length=100, nullable=true)
      * @Assert\Length(min=2, max=100)
      */
-    private $billingLastName;
+    public $country_code_cel_phone;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="billing_company_name", type="string", length=255, nullable=true)
-     * @Assert\Length(max=100)
-     */
-    private $billingCompanyName;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="billing_country", type="string", length=100, nullable=true)
+     * @ORM\Column(name="state_code_cel_phone", type="string", length=100, nullable=true)
      * @Assert\Length(min=2, max=100)
      */
-    private $billingCountry;
+    public $state_code_cel_phone;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="billing_street_address", type="string", length=500, nullable=true)
-     * @Assert\Length(min=2, max=500)
-     */
-    private $billingStreetAddress;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="billing_address", type="string", length=255, nullable=true)
-     * @Assert\Length(max=255)
-     */
-    private $billingAddress;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="billing_city", type="string", length=100, nullable=true)
+     * @ORM\Column(name="cel_phone", type="string", length=100, nullable=true)
      * @Assert\Length(min=2, max=100)
      */
-    private $billingCity;
+    public $cel_phone;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="billing_state", type="string", length=100, nullable=true)
+     * @ORM\Column(name="country_code_phone", type="string", length=100, nullable=true)
      * @Assert\Length(min=2, max=100)
      */
-    private $billingState;
+    public $country_code_phone;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="billing_postcode", type="string", length=50, nullable=true)
-     * @Assert\Length(min=2, max=50)
-     */
-    private $billingPostcode;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="billing_email", type="string", length=100, nullable=true)
-     * @Assert\Length(min=5, max=100)
-     * @Assert\Email(mode="strict")
-     */
-    private $billingEmail;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="billing_phone", type="string", length=100, nullable=true)
+     * @ORM\Column(name="state_code_phone", type="string", length=100, nullable=true)
      * @Assert\Length(min=2, max=100)
      */
-    private $billingPhone;
+    public $state_code_phone;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="phone", type="string", length=100, nullable=true)
+     * @Assert\Length(min=2, max=100)
+     */
+    public $phone;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CustomersTypesRoles::class, inversedBy="customers")
+     */
+    public $customer_type_role;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=RegistrationType::class, inversedBy="customers")
+     */
+    public $registration_type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
+     */
+    public $registration_user;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    public $registration_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CustomerAddresses::class, mappedBy="customer")
+     */
+    public $customerAddresses;
 
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->roles = json_encode(['ROLE_CUSTOMER']);
         $this->favoriteProducts = new ArrayCollection();
         $this->couponDiscounts = new ArrayCollection();
         $this->shoppingCarts = new ArrayCollection();
         $this->shoppingOrders = new ArrayCollection();
+        $this->customerAddresses = new ArrayCollection();
     }
 
     /**
@@ -637,6 +616,168 @@ class Customer extends BaseUser
             // set the owning side to null (unless already changed)
             if ($couponDiscount->getCustomerId() === $this) {
                 $couponDiscount->setCustomerId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(?string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getCountryCodeCelPhone(): ?string
+    {
+        return $this->country_code_cel_phone;
+    }
+
+    public function setCountryCodeCelPhone(?string $country_code_cel_phone): self
+    {
+        $this->country_code_cel_phone = $country_code_cel_phone;
+
+        return $this;
+    }
+
+    public function getStateCodeCelPhone(): ?string
+    {
+        return $this->state_code_cel_phone;
+    }
+
+    public function setStateCodeCelPhone(?string $state_code_cel_phone): self
+    {
+        $this->state_code_cel_phone = $state_code_cel_phone;
+
+        return $this;
+    }
+
+    public function getCelPhone(): ?string
+    {
+        return $this->cel_phone;
+    }
+
+    public function setCelPhone(?string $cel_phone): self
+    {
+        $this->cel_phone = $cel_phone;
+
+        return $this;
+    }
+
+    public function getCountryCodePhone(): ?string
+    {
+        return $this->country_code_phone;
+    }
+
+    public function setCountryCodePhone(?string $country_code_phone): self
+    {
+        $this->country_code_phone = $country_code_phone;
+
+        return $this;
+    }
+
+    public function getStateCodePhone(): ?string
+    {
+        return $this->state_code_phone;
+    }
+
+    public function setStateCodePhone(?string $state_code_phone): self
+    {
+        $this->state_code_phone = $state_code_phone;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getCustomerTypeRole(): ?CustomersTypesRoles
+    {
+        return $this->customer_type_role;
+    }
+
+    public function setCustomerTypeRole(?CustomersTypesRoles $customer_type_role): self
+    {
+        $this->customer_type_role = $customer_type_role;
+
+        return $this;
+    }
+
+    public function getRegistrationType(): ?RegistrationType
+    {
+        return $this->registration_type;
+    }
+
+    public function setRegistrationType(?RegistrationType $registration_type): self
+    {
+        $this->registration_type = $registration_type;
+
+        return $this;
+    }
+
+    public function getRegistrationUser(): ?User
+    {
+        return $this->registration_user;
+    }
+
+    public function setRegistrationUser(?User $registration_user): self
+    {
+        $this->registration_user = $registration_user;
+
+        return $this;
+    }
+
+    public function getRegistrationDate(): ?\DateTimeInterface
+    {
+        return $this->registration_date;
+    }
+
+    public function setRegistrationDate(?\DateTimeInterface $registration_date): self
+    {
+        $this->registration_date = $registration_date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CustomerAddresses[]
+     */
+    public function getCustomerAddresses(): Collection
+    {
+        return $this->customerAddresses;
+    }
+
+    public function addCustomerAddress(CustomerAddresses $customerAddress): self
+    {
+        if (!$this->customerAddresses->contains($customerAddress)) {
+            $this->customerAddresses[] = $customerAddress;
+            $customerAddress->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomerAddress(CustomerAddresses $customerAddress): self
+    {
+        if ($this->customerAddresses->removeElement($customerAddress)) {
+            // set the owning side to null (unless already changed)
+            if ($customerAddress->getCustomer() === $this) {
+                $customerAddress->setCustomer(null);
             }
         }
 

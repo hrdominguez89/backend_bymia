@@ -23,20 +23,17 @@ class CrudCustomerController extends AbstractController
     /**
      * @Route("/", name="secure_crud_customer_index")
      */
-    public function index(CustomerRepository $customerRepository, PaginatorInterface $pagination, Request $request): Response
+    public function index(CustomerRepository $customerRepository): Response
     {
-        $customerSearch = new CustomerSearchDto();
-        $form = $this->createForm(CustomerSearchType::class, $customerSearch);
-        $form->handleRequest($request);
 
-        $page = $request->query->getInt('page', $request->get("page") || 1);
-        $limit = 15;
-        $orders = $customerRepository->list($page, $limit, $customerSearch);
+        $customers = $customerRepository->findAll();
+        
+        // dump($customers);die();
 
-        return $this->render('secure/crud_customer/index.html.twig', [
-            'customers' => $orders,
-            'form' => $form->createView(),
-        ]);       
+        $data['customers'] = $customers;
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+
+        return $this->render('secure/crud_customer/index.html.twig', $data);
     }
 
     /**

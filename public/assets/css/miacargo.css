@@ -162,7 +162,7 @@ body {
 
 .red-background {
   background-color: var(--mia-red-color) !important;
-  color: #15FED4
+  color: #15fed4;
 }
 
 .imagen-grid {
@@ -186,7 +186,6 @@ tr {
   height: 90px;
 }
 
-
 .loading-cmp {
   z-index: 10000;
   height: 100%;
@@ -197,3 +196,14 @@ tr {
   justify-content: center;
   padding-top: 15rem;
 }
+
+/* INICIO scroll, alto y color de fondo de boton de visibilidad de datatable */
+.dt-button-collection .dropdown-menu {
+  overflow-y: scroll;
+  max-height: 150px;
+}
+
+.dt-button-collection .dropdown-menu .active{
+  background-color: #d5d5d5;
+}
+/* FIN scroll, alto y color de fondo de boton de visibilidad de datatable*/
