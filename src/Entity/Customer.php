@@ -124,6 +124,11 @@ class Customer extends BaseUser
      */
     public $customerAddresses;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $status;
+
 
     public function __construct()
     {
@@ -780,6 +785,18 @@ class Customer extends BaseUser
                 $customerAddress->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

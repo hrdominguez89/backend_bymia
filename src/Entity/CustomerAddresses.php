@@ -24,17 +24,17 @@ class CustomerAddresses
     private $customer;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="customerAddresses")
      */
     private $country;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=States::class, inversedBy="customerAddresses")
      */
     private $state;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity=Cities::class, inversedBy="customerAddresses")
      */
     private $city;
 
@@ -111,42 +111,6 @@ class CustomerAddresses
     public function setCustomer(?customer $customer): self
     {
         $this->customer = $customer;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->country;
-    }
-
-    public function setCountry(string $country): self
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    public function getState(): ?string
-    {
-        return $this->state;
-    }
-
-    public function setState(string $state): self
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
 
         return $this;
     }
@@ -291,6 +255,42 @@ class CustomerAddresses
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getCountry(): ?Countries
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Countries $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getState(): ?States
+    {
+        return $this->state;
+    }
+
+    public function setState(?States $state): self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function getCity(): ?Cities
+    {
+        return $this->city;
+    }
+
+    public function setCity(?Cities $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }

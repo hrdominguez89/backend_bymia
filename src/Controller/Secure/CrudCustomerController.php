@@ -26,10 +26,7 @@ class CrudCustomerController extends AbstractController
     public function index(CustomerRepository $customerRepository): Response
     {
 
-        $customers = $customerRepository->findAll();
-        
-        // dump($customers);die();
-
+        $customers = $customerRepository->listCustomersInfo();
         $data['customers'] = $customers;
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
 
@@ -42,6 +39,7 @@ class CrudCustomerController extends AbstractController
     public function new(Request $request): Response
     {
         $customer = new Customer();
+        dump($customer);die();
         $form = $this->createForm(CustomerType::class, $customer);
         $form->handleRequest($request);
 

@@ -35,7 +35,7 @@ class CustomersTypesRoles
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="customer_type")
+     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="customer_type_role")
      */
     private $customers;
 
@@ -97,7 +97,7 @@ class CustomersTypesRoles
     {
         if (!$this->customers->contains($customer)) {
             $this->customers[] = $customer;
-            $customer->setCustomerType($this);
+            $customer->setCustomerTypeRole($this);
         }
 
         return $this;
@@ -107,8 +107,8 @@ class CustomersTypesRoles
     {
         if ($this->customers->removeElement($customer)) {
             // set the owning side to null (unless already changed)
-            if ($customer->getCustomerType() === $this) {
-                $customer->setCustomerType(null);
+            if ($customer->getCustomerTypeRole() === $this) {
+                $customer->setCustomerTypeRole(null);
             }
         }
 

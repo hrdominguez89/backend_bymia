@@ -47,6 +47,7 @@ const loadDatatableOperators = () => {
           },
         },
       ],
+      colReorder: true,
       language: {
         url: "/assets/libs/datatables.net-language/es-ES.json",
       },
