@@ -1,0 +1,43 @@
+"use strict";
+
+$(document).ready(() => {
+  listenSelectCustomerTypeRole();
+});
+
+let selectCustomerTypeRole;
+
+const listenSelectCustomerTypeRole = () => {
+  selectCustomerTypeRole = $("#customer_customer_type_role");
+  if (selectCustomerTypeRole.length) {
+    showDivs(parseInt(selectCustomerTypeRole.val()));
+    selectCustomerTypeRole.on("change", () => {
+      showDivs(parseInt(selectCustomerTypeRole.val()));
+    });
+  }
+};
+
+const showDivs = (value) => {
+  const divCustomerForm = $("#divCustomerForm");
+  const divLastname = $("#col-lastname");
+  const inputLastName = $("#customer_lastname");
+  const nameInput = $('#name_input');
+
+  switch (value) {
+    case 1: //Persona
+      divCustomerForm.show();
+      divLastname.show();
+      inputLastName.attr('required','required')
+      nameInput.html('Nombre');
+      break;
+    case 2: //Empresa
+      divCustomerForm.show();
+      divLastname.hide();
+      inputLastName.removeAttr('required')
+      nameInput.html('Razon social');
+      break;
+    default: //Ninguno
+      divCustomerForm.hide();
+      inputLastName.removeAttr('required')
+      break;
+  }
+};

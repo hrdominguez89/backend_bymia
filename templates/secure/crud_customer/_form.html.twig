@@ -1,5 +1,152 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-<button class="btn btn-primary">Guardar</button>
-<a class="btn btn-secondary" href="{{ path('secure_crud_customer_index') }}">Regresar</a>
+{% if form_errors(form) %}
+	<div class="row">
+		<div class="col-12">
+			<div class="alert alert-danger">
+				{{ form_errors(form) }}
+			</div>
+		</div>
+	</div>
+{% endif %}
+<div class="row my-2">
+	<div class="col-3">
+		{{ form_row(form.customer_type_role) }}
+	</div>
+</div>
+<div style="display:none" id="divCustomerForm">
+	<div class="row my-2">
+		<div class="col-12">
+			<h5 class="mr-auto mb-0 title-table">Datos del cliente</h5>
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col" id="col-name">
+			{{ form_label(form.name, 'Nombre', {
+    'label_attr': {'class': 'form-label','id':'name_input'}
+}) }}
+			{{ form_widget(form.name) }}
+		</div>
+		<div class="col" id="col-lastname" style="display:none">
+			{{ form_row(form.lastname) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col">
+			{{ form_row(form.email) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col">
+			{{ form_row(form.image) }}
+		</div>
+	</div>
+	<hr>
+	<div class="row my-2">
+		<div class="col-12">
+			<h5 class="mr-auto mb-0 title-table">Teléfono celular</h5>
+		</div>
+	</div>
+	<div class="row my-2">
+
+		<div class="col-4">
+			{{ form_row(form.country_code_cel_phone) }}
+		</div>
+		<div class="col-4">
+			{{ form_row(form.state_code_cel_phone) }}
+		</div>
+		<div class="col-4">
+			{{ form_row(form.cel_phone) }}
+		</div>
+	</div>
+	<hr>
+	<div class="row my-2">
+		<div class="col-12">
+			<h5 class="mr-auto mb-0 title-table">Teléfono fijo</h5>
+		</div>
+	</div>
+	<div class="row my-2">
+
+		<div class="col-4">
+			{{ form_row(form.country_code_phone) }}
+		</div>
+		<div class="col-4">
+			{{ form_row(form.state_code_phone) }}
+		</div>
+		<div class="col-4">
+			{{ form_row(form.phone) }}
+		</div>
+	</div>
+	{# 
+			<hr>
+			<div class="row my-2">
+				<div class="col-12">
+					<h5 class="mr-auto mb-0 title-table">Dirección</h5>
+				</div>
+			</div>
+			<div class="row my-2">
+			
+				<div class="col-4">
+					<label for="exampleFormControlInput1" class="form-label">País</label>
+					<input type="text" class="form-control" placeholder="País" aria-label="País">
+				</div>
+				<div class="col-4">
+					<label for="exampleFormControlInput1" class="form-label">Estado</label>
+					<input type="text" class="form-control" placeholder="Estado" aria-label="Estado">
+				</div>
+				<div class="col-4">
+					<label for="exampleFormControlInput1" class="form-label">Ciudad</label>
+					<input type="text" class="form-control" placeholder="Ciudad" aria-label="Ciudad">
+				</div>
+			
+			</div>
+			<div class="row my-2">
+			
+				<div class="col-8">
+					<label for="exampleFormControlInput1" class="form-label">Dirección</label>
+					<input type="text" class="form-control" placeholder="Dirección" aria-label="Dirección">
+				</div>
+			
+				<div class="col-4">
+					<label for="exampleFormControlInput1" class="form-label">Nro.</label>
+					<input type="text" class="form-control" placeholder="Nro." aria-label="Nro.">
+				</div>
+			
+			</div>
+			<div class="row my-2">
+			
+				<div class="col-4">
+					<label for="exampleFormControlInput1" class="form-label">Piso</label>
+					<input type="text" class="form-control" placeholder="Piso" aria-label="Piso">
+				</div>
+			
+				<div class="col-4">
+					<label for="exampleFormControlInput1" class="form-label">Dpto</label>
+					<input type="text" class="form-control" placeholder="Dpto" aria-label="Dpto">
+				</div>
+			
+				<div class="col-4">
+					<label for="exampleFormControlInput1" class="form-label">Cod. Postal</label>
+					<input type="text" class="form-control" placeholder="Cod. Postal" aria-label="Cod. Postal">
+				</div>
+			
+			</div>
+			<div class="row my-2">
+			
+				<div class="col-12">
+					<label for="exampleFormControlInput1" class="form-label">Información adicional</label>
+					<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Información adicional" aria-label="Información adicional"></textarea>
+				</div>
+			</div> #}
+
+	<div class="row my-2">
+
+		<div class="col-12 text-end">
+			<a class="btn btn-secondary" href="{{ path('secure_crud_customer_index') }}">Regresar</a>
+
+			<button class="btn btn-primary">Guardar</button>
+		</div>
+	</div>
+</div>
+
+
 {{ form_end(form) }}

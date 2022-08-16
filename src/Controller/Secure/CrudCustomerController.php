@@ -38,23 +38,26 @@ class CrudCustomerController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $customer = new Customer();
-        dump($customer);die();
-        $form = $this->createForm(CustomerType::class, $customer);
+        $data['customer'] = new Customer();
+        $form = $this->createForm(CustomerType::class, $data['customer']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data['customer']->setStatus(true);
+            $data['customer']->setPassword($_ENV['PWD_NEW_USER']);
+
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($customer);
+            $entityManager->persist($data['customer']);
             $entityManager->flush();
 
             return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/crud_customer/new.html.twig', [
-            'customer' => $customer,
-            'form' => $form,
-        ]);
+        $data['form'] = $form;
+        $data['files_js'] = array(
+            'customers/customers.js?v='.rand(),
+        );
+        return $this->renderForm('secure/crud_customer/new.html.twig', $data);
     }
 
     /**
@@ -72,7 +75,8 @@ class CrudCustomerController extends AbstractController
      */
     public function edit(Request $request, Customer $customer, FileUploader $fileUploader): Response
     {
-        $form = $this->createForm(CustomerType::class, $customer);
+        $data['customer'] = $customer;
+        $form = $this->createForm(CustomerType::class, $data['customer']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() /*&& $form->isValid()*/) {
@@ -80,17 +84,18 @@ class CrudCustomerController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $customer->setImage('uploads/images/' . $imageFileName);
+                $data['customer']->setImage('uploads/images/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/crud_customer/edit.html.twig', [
-            'customer' => $customer,
-            'form' => $form,
-        ]);
+        $data['form'] = $form;
+        $data['files_js'] = array(
+            'customers/customers.js?v='.rand(),
+        );
+        return $this->renderForm('secure/crud_customer/new.html.twig', $data);
     }
 
     /**

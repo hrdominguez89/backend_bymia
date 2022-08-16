@@ -794,7 +794,7 @@ class Customer extends BaseUser
         return $this->status;
     }
 
-    public function setStatus(?bool $status): self
+    public function setStatus(?bool $status = true): self
     {
         $this->status = $status;
 
