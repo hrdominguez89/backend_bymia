@@ -24,6 +24,9 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $helper): Response
     {
+        if($this->getUser()){
+            return $this->redirectToRoute('app_homepage'); 
+        }
         return $this->render(
             'security/login.html.twig',
             [

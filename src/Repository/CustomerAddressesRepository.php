@@ -19,32 +19,41 @@ class CustomerAddressesRepository extends ServiceEntityRepository
         parent::__construct($registry, CustomerAddresses::class);
     }
 
-    // /**
-    //  * @return CustomerAddresses[] Returns an array of CustomerAddresses objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    /**
+     * @return Customers[] Returns an array of customers objects
+     */
 
-    /*
-    public function findOneBySomeField($value): ?CustomerAddresses
+    public function listCustomerAddresses($customer_id)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+                co.name as country,
+                st.name as state,
+                ci.name as city,
+                c.id as customer_id,
+                ca.id as customer_address_id,
+                ca.street,
+                ca.number_street,
+                ca.floor,
+                ca.department,
+                ca.postal_code,
+                ca.additional_info,
+                ca.active,
+                ca.registration_date,
+                ca.favorite_address,
+                ca.billing_address
+            
+            FROM App:CustomerAddresses ca
+
+            LEFT JOIN App:Countries as co WITH ca.country = co.id
+            LEFT JOIN App:States as st WITH ca.state = st.id
+            LEFT JOIN App:Cities as ci WITH ca.city = ci.id
+            LEFT JOIN App:Customer as c WITH ca.customer = c.id
+
+            WHERE ca.customer =:customer_id
+            ')
+            ->setParameter('customer_id', $customer_id)
+            ->getResult();
     }
-    */
 }

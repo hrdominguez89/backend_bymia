@@ -27,7 +27,9 @@ class CrudCustomerController extends AbstractController
     {
 
         $customers = $customerRepository->listCustomersInfo();
+        $data['title'] = 'Clientes';
         $data['customers'] = $customers;
+        $data['title'] = "Clientes";
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
 
         return $this->render('secure/crud_customer/index.html.twig', $data);
@@ -38,6 +40,7 @@ class CrudCustomerController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $data['title'] = "Nuevo cliente";
         $data['customer'] = new Customer();
         $form = $this->createForm(CustomerType::class, $data['customer']);
         $form->handleRequest($request);
@@ -53,11 +56,11 @@ class CrudCustomerController extends AbstractController
             return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $data['form'] = $form;
+        $data['form'] = $form->createView();
         $data['files_js'] = array(
             'customers/customers.js?v='.rand(),
         );
-        return $this->renderForm('secure/crud_customer/new.html.twig', $data);
+        return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
     }
 
     /**
@@ -75,6 +78,7 @@ class CrudCustomerController extends AbstractController
      */
     public function edit(Request $request, Customer $customer, FileUploader $fileUploader): Response
     {
+        $data['title'] = "Editar cliente";
         $data['customer'] = $customer;
         $form = $this->createForm(CustomerType::class, $data['customer']);
         $form->handleRequest($request);
@@ -95,7 +99,7 @@ class CrudCustomerController extends AbstractController
         $data['files_js'] = array(
             'customers/customers.js?v='.rand(),
         );
-        return $this->renderForm('secure/crud_customer/new.html.twig', $data);
+        return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
     }
 
     /**

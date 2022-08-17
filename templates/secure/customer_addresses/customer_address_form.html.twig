@@ -1,0 +1,76 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-12">
+			<h1 class="mr-auto mb-0 title-table">{{ title }}</h1>
+		</div>
+	</div>
+	<div class="row mt-3">
+		<div class="col-12">
+			<h3>Cliente:
+				{% if (customer.customer_type_role.id == 1) %}
+					{{customer.lastname}},
+					{{customer.name}}</h3>
+			{% else %}
+				{{customer.name}}</h3>
+		{% endif %}
+
+		<p>E-mail:
+			{{customer.email}}<br>
+			Tipo de cliente:
+			{{customer.customer_type_role.name}}<br>
+			Fecha Alta:
+			{{customer.registration_date|date("m/d/Y")}}</p>
+
+	</div>
+	{{form_start(form)}}
+	<div class="row mt-3">
+		<div class="col-12">
+			<div class="row my-2">{# <div class="col" id="col-name">
+									{{ form_label(
+				                            form.name,
+				                            'Nombre',
+				                            {'label_attr': {'class': 'form-label','id':'name_input'}}
+									)}}
+									{{ form_widget(form.name) }}
+								</div> #}
+				{# <div class="col" id="col-lastname" style="display:none">
+									{{ form_row(form.lastname) }}
+								</div> #}
+			</div>
+			<div class="row my-2">
+				<div class="col-12">
+					{{ form_row(form.street) }}
+				</div>
+			</div>
+
+			<div class="row my-2">
+				<div class="col-12 col-md-3">
+					{{ form_row(form.number_street) }}
+				</div>
+				<div class="col-12 col-md-3">
+					{{ form_row(form.floor) }}
+				</div>
+				<div class="col-12 col-md-3">
+					{{ form_row(form.department) }}
+				</div>
+				<div class="col-12 col-md-3">
+					{{ form_row(form.postal_code) }}
+				</div>
+			</div>
+			<div class="row my-2">
+				<div class="col-12">
+					{{ form_row(form.additional_info) }}
+				</div>
+			</div>
+
+		</div>
+	</div>
+	{{form_end(form)}}
+
+{% endblock %}
