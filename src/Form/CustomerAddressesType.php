@@ -6,6 +6,7 @@ use App\Entity\Countries;
 use App\Entity\CustomerAddresses;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,20 +28,16 @@ class CustomerAddressesType extends AbstractType
             ->add('state', ChoiceType::class, [
                 'placeholder' => 'Seleccione un estado/provincia',
                 'label' => 'Estado/Provincia',
-                'choices'  => [
-                    'Estado/Provincia' => null,
-                ],
-                'mapped'=>false,
-                'required' => true,
+                'disabled' => true,
+                'mapped' => false,
+                'required' => false,
             ])
             ->add('city', ChoiceType::class, [
                 'placeholder' => 'Seleccione una ciudad',
                 'label' => 'Ciudad',
-                'choices'  => [
-                    'Ciudad' => null,
-                ],
-                'mapped'=>false,
-                'required' => true,
+                'disabled' => true,
+                'mapped' => false,
+                'required' => false,
             ])
             ->add('street', TextType::class, [
                 'label' => 'Dirección',
@@ -66,23 +63,13 @@ class CustomerAddressesType extends AbstractType
                 'label' => 'Información adicional',
                 'required' => false
             ])
-            ->add('favorite_address', ChoiceType::class, [
-                'choices' => [
-                    'Dirección predeterminada de envío' => true,
-                ],
-                'expanded' => true,
-                'multiple' => true,
-                'label' => false,
-                'required' => false
+            ->add('favorite_address', CheckboxType::class, [
+                'label'    => 'Dirección predeterminada de envío',
+                'required' => false,
             ])
-            ->add('billing_address', ChoiceType::class, [
-                'choices'  => [
-                    'Dirección predeterminada de facturación' => true,
-                ],
-                'expanded' => true,
-                'multiple' => true,
-                'label' => false,
-                'required' => false
+            ->add('billing_address', CheckboxType::class, [
+                'label'    => 'Dirección predeterminada de facturación',
+                'required' => false,
             ]);
     }
 

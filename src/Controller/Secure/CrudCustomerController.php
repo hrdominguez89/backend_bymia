@@ -56,7 +56,7 @@ class CrudCustomerController extends AbstractController
             return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $data['form'] = $form->createView();
+        $data['form'] = $form;
         $data['files_js'] = array(
             'customers/customers.js?v='.rand(),
         );

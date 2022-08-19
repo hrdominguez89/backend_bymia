@@ -47,4 +47,24 @@ class StatesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findStatesByCountryId($country_id): ?array
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            s.id,
+            s.name
+
+            FROM App:States s
+
+            INNER JOIN App:Countries co WITH co.id = s.country
+
+            WHERE co.id = :country_id
+
+            ORDER BY s.name
+            ')
+            ->setParameter('country_id', $country_id)
+            ->getResult();
+    }
 }

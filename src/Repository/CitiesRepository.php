@@ -47,4 +47,23 @@ class CitiesRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findCitiesByStateId($state_id): ?array
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            c.id,
+            c.name
+
+            FROM App:Cities c
+
+            INNER JOIN App:States st WITH st.id = c.state
+
+            WHERE st.id = :state_id
+
+            ORDER BY c.name
+            ')
+            ->setParameter('state_id', $state_id)
+            ->getResult();
+    }
 }

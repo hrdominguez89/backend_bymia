@@ -56,4 +56,30 @@ class CustomerAddressesRepository extends ServiceEntityRepository
             ->setParameter('customer_id', $customer_id)
             ->getResult();
     }
+
+    public function updateFavoriteAddress($customer_id)
+    {
+        $this->getEntityManager()
+            ->createQuery('
+            UPDATE App:CustomerAddresses ca
+            SET
+                ca.favorite_address = false
+            WHERE ca.customer =:customer_id
+            ')
+            ->setParameter('customer_id', $customer_id)
+            ->execute();
+    }
+
+    public function updateBillingAddress($customer_id)
+    {
+        $this->getEntityManager()
+            ->createQuery('
+            UPDATE App:CustomerAddresses ca
+            SET
+                ca.billing_address = false
+            WHERE ca.customer =:customer_id
+            ')
+            ->setParameter('customer_id', $customer_id)
+            ->execute();
+    }
 }
