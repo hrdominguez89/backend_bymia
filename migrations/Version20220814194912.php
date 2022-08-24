@@ -20,15 +20,15 @@ final class Version20220814194912 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE states DROP CONSTRAINT country_region_final');
-        $this->addSql('ALTER TABLE cities DROP CONSTRAINT cities_ibfk_2');
-        $this->addSql('ALTER TABLE cities DROP CONSTRAINT cities_ibfk_1');
-        $this->addSql('DROP SEQUENCE countries_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE states_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE cities_id_seq CASCADE');
-        $this->addSql('DROP TABLE countries');
-        $this->addSql('DROP TABLE states');
-        $this->addSql('DROP TABLE cities');
+        //$this->addSql('ALTER TABLE states DROP CONSTRAINT country_region_final');
+        //$this->addSql('ALTER TABLE cities DROP CONSTRAINT cities_ibfk_2');
+        //$this->addSql('ALTER TABLE cities DROP CONSTRAINT cities_ibfk_1');
+        //$this->addSql('DROP SEQUENCE countries_id_seq CASCADE');
+        //$this->addSql('DROP SEQUENCE states_id_seq CASCADE');
+        //$this->addSql('DROP SEQUENCE cities_id_seq CASCADE');
+        //$this->addSql('DROP TABLE countries');
+        //$this->addSql('DROP TABLE states');
+        //$this->addSql('DROP TABLE cities');
     }
 
     public function down(Schema $schema): void
