@@ -28,10 +28,20 @@
 			)}}
 			{{ form_widget(form.name) }}
 		</div>
-		<div class="col" id="col-lastname" style="display:none">
+		<div class="col col-data-person" id="col-lastname" style="display:none">
 			{{ form_row(form.lastname) }}
 		</div>
 	</div>
+
+	<div class="row my-2">
+		<div class="col col-data-person" style="display:none">
+			{{ form_row(form.gender_type) }}
+		</div>
+		<div class="col col-data-person" style="display:none">
+			{{ form_row(form.date_of_birth) }}
+		</div>
+	</div>
+
 	<div class="row my-2">
 		<div class="col">
 			{{ form_row(form.email) }}
@@ -40,6 +50,21 @@
 	<div class="row my-2">
 		<div class="col">
 			{{ form_row(form.image) }}
+		</div>
+	</div>
+	<hr>
+	<div class="row my-2">
+		<div class="col-12">
+			<h5 class="mr-auto mb-0 title-table">Redes sociales</h5>
+		</div>
+	</div>
+	<div class="row my-2">
+
+		<div class="col-6">
+			{{ form_row(form.url_facebook) }}
+		</div>
+		<div class="col-6">
+			{{ form_row(form.url_instagram) }}
 		</div>
 	</div>
 	<hr>
@@ -78,68 +103,6 @@
 			{{ form_row(form.phone) }}
 		</div>
 	</div>
-	{# 
-				<hr>
-				<div class="row my-2">
-					<div class="col-12">
-						<h5 class="mr-auto mb-0 title-table">Dirección</h5>
-					</div>
-				</div>
-				<div class="row my-2">
-				
-					<div class="col-4">
-						<label for="exampleFormControlInput1" class="form-label">País</label>
-						<input type="text" class="form-control" placeholder="País" aria-label="País">
-					</div>
-					<div class="col-4">
-						<label for="exampleFormControlInput1" class="form-label">Estado</label>
-						<input type="text" class="form-control" placeholder="Estado" aria-label="Estado">
-					</div>
-					<div class="col-4">
-						<label for="exampleFormControlInput1" class="form-label">Ciudad</label>
-						<input type="text" class="form-control" placeholder="Ciudad" aria-label="Ciudad">
-					</div>
-				
-				</div>
-				<div class="row my-2">
-				
-					<div class="col-8">
-						<label for="exampleFormControlInput1" class="form-label">Dirección</label>
-						<input type="text" class="form-control" placeholder="Dirección" aria-label="Dirección">
-					</div>
-				
-					<div class="col-4">
-						<label for="exampleFormControlInput1" class="form-label">Nro.</label>
-						<input type="text" class="form-control" placeholder="Nro." aria-label="Nro.">
-					</div>
-				
-				</div>
-				<div class="row my-2">
-				
-					<div class="col-4">
-						<label for="exampleFormControlInput1" class="form-label">Piso</label>
-						<input type="text" class="form-control" placeholder="Piso" aria-label="Piso">
-					</div>
-				
-					<div class="col-4">
-						<label for="exampleFormControlInput1" class="form-label">Dpto</label>
-						<input type="text" class="form-control" placeholder="Dpto" aria-label="Dpto">
-					</div>
-				
-					<div class="col-4">
-						<label for="exampleFormControlInput1" class="form-label">Cod. Postal</label>
-						<input type="text" class="form-control" placeholder="Cod. Postal" aria-label="Cod. Postal">
-					</div>
-				
-				</div>
-				<div class="row my-2">
-				
-					<div class="col-12">
-						<label for="exampleFormControlInput1" class="form-label">Información adicional</label>
-						<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Información adicional" aria-label="Información adicional"></textarea>
-					</div>
-				</div> #}
-
 	<div class="row my-2">
 
 		<div class="col-12 text-end">

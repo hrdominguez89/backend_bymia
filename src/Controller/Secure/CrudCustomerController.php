@@ -48,6 +48,11 @@ class CrudCustomerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data['customer']->setStatus(true);
             $data['customer']->setPassword($_ENV['PWD_NEW_USER']);
+            if ($form->get('customer_type_role')->getData()->getId() == 2) {
+                $data['customer']->setLastname(null);
+                $data['customer']->setGenderType(null);
+                $data['customer']->setDateOfBirth(null);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['customer']);
@@ -58,7 +63,7 @@ class CrudCustomerController extends AbstractController
 
         $data['form'] = $form;
         $data['files_js'] = array(
-            'customers/customers.js?v='.rand(),
+            'customers/customers.js?v=' . rand(),
         );
         return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
     }
@@ -90,6 +95,11 @@ class CrudCustomerController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $data['customer']->setImage('uploads/images/' . $imageFileName);
             }
+            if ($form->get('customer_type_role')->getData()->getId() == 2) {
+                $data['customer']->setLastname(null);
+                $data['customer']->setGenderType(null);
+                $data['customer']->setDateOfBirth(null);
+            }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
@@ -97,7 +107,7 @@ class CrudCustomerController extends AbstractController
 
         $data['form'] = $form;
         $data['files_js'] = array(
-            'customers/customers.js?v='.rand(),
+            'customers/customers.js?v=' . rand(),
         );
         return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
     }

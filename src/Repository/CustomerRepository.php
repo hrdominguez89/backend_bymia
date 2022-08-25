@@ -75,8 +75,12 @@ class CustomerRepository extends ServiceEntityRepository
             c.phone,
             c.registration_date,
             c.status,
+            c.url_facebook,
+            c.url_instagram,
+            c.date_of_birth,
             max(ctr.name) as customer_type_role,
             max(ctr.id) as customer_type_role_id,
+            max(gt.initials) as gender_type,
             (SELECT co.name FROM App:Countries co left join App:CustomerAddresses ca2 WITH ca2.country=co.id where ca2.favorite_address = true and ca2.customer=c.id) as country,
             (SELECT st.name FROM App:States st left join App:CustomerAddresses ca3 WITH ca3.state=st.id where ca3.favorite_address = true and ca3.customer=c.id) as state,
             (SELECT ci.name FROM App:Cities ci left join App:CustomerAddresses ca4 WITH ca4.city=ci.id where ca4.favorite_address = true and ca4.customer=c.id) as city,
@@ -89,6 +93,7 @@ class CustomerRepository extends ServiceEntityRepository
 
             FROM App:Customer c
             LEFT JOIN App:CustomersTypesRoles ctr WITH ctr.id = c.customer_type_role
+            LEFT JOIN App:GenderType gt WITH gt.id = c.gender_type
             LEFT JOIN App:CustomerAddresses ca WITH c.id = ca.customer
 
             GROUP BY

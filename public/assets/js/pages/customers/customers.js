@@ -18,20 +18,20 @@ const listenSelectCustomerTypeRole = () => {
 
 const showDivs = (value) => {
   const divCustomerForm = $("#divCustomerForm");
-  const divLastname = $("#col-lastname");
+  const divsPerson = $(".col-data-person");
   const inputLastName = $("#customer_lastname");
   const nameInput = $('#name_input');
 
   switch (value) {
     case 1: //Persona
       divCustomerForm.show();
-      divLastname.show();
+      divsPerson.show();
       inputLastName.attr('required','required')
       nameInput.html('Nombre');
       break;
     case 2: //Empresa
       divCustomerForm.show();
-      divLastname.hide();
+      divsPerson.hide();
       inputLastName.removeAttr('required')
       nameInput.html('Razon social');
       break;
