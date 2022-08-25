@@ -110,11 +110,14 @@
 								</td>
 
 								<td>
-									{{ customer.lastname }}
+									{# Si es 1 es persona y que muestre lastname #}
+									{% if (customer.customer_type_role_id == 1) %}
+										{{ customer.lastname }}
+									{% endif %}
 								</td>
 
 								<td>
-									{{ customer.email }}
+									<a href="mailto:{{ customer.email }}" title="Enviar correo a {{ customer.email }}">{{ customer.email }}</a>
 								</td>
 
 								<td>

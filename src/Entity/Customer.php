@@ -129,6 +129,31 @@ class Customer extends BaseUser
      */
     private $status;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=GenderType::class, inversedBy="customers")
+     */
+    private $gender_type;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $date_of_birth;
+
+    /**
+     * @ORM\Column(type="bigint", nullable=true)
+     */
+    private $google_oauth_uid;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $url_facebook;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $url_instagram;
+
 
     public function __construct()
     {
@@ -797,6 +822,66 @@ class Customer extends BaseUser
     public function setStatus(?bool $status = true): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getGenderType(): ?GenderType
+    {
+        return $this->gender_type;
+    }
+
+    public function setGenderType(?GenderType $gender_type): self
+    {
+        $this->gender_type = $gender_type;
+
+        return $this;
+    }
+
+    public function getDateOfBirth(): ?\DateTimeInterface
+    {
+        return $this->date_of_birth;
+    }
+
+    public function setDateOfBirth(?\DateTimeInterface $date_of_birth): self
+    {
+        $this->date_of_birth = $date_of_birth;
+
+        return $this;
+    }
+
+    public function getGoogleOauthUid(): ?string
+    {
+        return $this->google_oauth_uid;
+    }
+
+    public function setGoogleOauthUid(?string $google_oauth_uid): self
+    {
+        $this->google_oauth_uid = $google_oauth_uid;
+
+        return $this;
+    }
+
+    public function getUrlFacebook(): ?string
+    {
+        return $this->url_facebook;
+    }
+
+    public function setUrlFacebook(?string $url_facebook): self
+    {
+        $this->url_facebook = $url_facebook;
+
+        return $this;
+    }
+
+    public function getUrlInstagram(): ?string
+    {
+        return $this->url_instagram;
+    }
+
+    public function setUrlInstagram(?string $url_instagram): self
+    {
+        $this->url_instagram = $url_instagram;
 
         return $this;
     }

@@ -76,6 +76,7 @@ class CustomerRepository extends ServiceEntityRepository
             c.registration_date,
             c.status,
             max(ctr.name) as customer_type_role,
+            max(ctr.id) as customer_type_role_id,
             (SELECT co.name FROM App:Countries co left join App:CustomerAddresses ca2 WITH ca2.country=co.id where ca2.favorite_address = true and ca2.customer=c.id) as country,
             (SELECT st.name FROM App:States st left join App:CustomerAddresses ca3 WITH ca3.state=st.id where ca3.favorite_address = true and ca3.customer=c.id) as state,
             (SELECT ci.name FROM App:Cities ci left join App:CustomerAddresses ca4 WITH ca4.city=ci.id where ca4.favorite_address = true and ca4.customer=c.id) as city,
