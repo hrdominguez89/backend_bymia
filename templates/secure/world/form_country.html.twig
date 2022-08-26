@@ -1,0 +1,132 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-12">
+			<h1 class="mr-auto mb-0 title-table">{{ title }}</h1>
+		</div>
+	</div>
+
+	{{ form_start(form) }}
+	{% if form_errors(form) %}
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					{{ form_errors(form) }}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	{# <div class="row my-2">
+		<div class="col-3">
+			{{ form_row(form.customer_type_role) }}
+		</div>
+	</div>
+	<div style="display:none" id="divCustomerForm">
+		<div class="row my-2">
+			<div class="col-12">
+				<h5 class="mr-auto mb-0 title-table">Datos del cliente</h5>
+			</div>
+		</div>
+		<div class="row my-2">
+			<div class="col" id="col-name">
+				{{ form_label(
+					form.name,
+					'Nombre',
+					{'label_attr': {'class': 'form-label','id':'name_input'}}
+				)}}
+				{{ form_widget(form.name) }}
+			</div>
+			<div class="col col-data-person" id="col-lastname" style="display:none">
+				{{ form_row(form.lastname) }}
+			</div>
+		</div>
+	
+		<div class="row my-2">
+			<div class="col col-data-person" style="display:none">
+				{{ form_row(form.gender_type) }}
+			</div>
+			<div class="col col-data-person" style="display:none">
+				{{ form_row(form.date_of_birth) }}
+			</div>
+		</div>
+	
+		<div class="row my-2">
+			<div class="col">
+				{{ form_row(form.email) }}
+			</div>
+		</div>
+		<div class="row my-2">
+			<div class="col">
+				{{ form_row(form.image) }}
+			</div>
+		</div>
+		<hr>
+		<div class="row my-2">
+			<div class="col-12">
+				<h5 class="mr-auto mb-0 title-table">Redes sociales</h5>
+			</div>
+		</div>
+		<div class="row my-2">
+	
+			<div class="col-6">
+				{{ form_row(form.url_facebook) }}
+			</div>
+			<div class="col-6">
+				{{ form_row(form.url_instagram) }}
+			</div>
+		</div>
+		<hr>
+		<div class="row my-2">
+			<div class="col-12">
+				<h5 class="mr-auto mb-0 title-table">Teléfono celular</h5>
+			</div>
+		</div>
+		<div class="row my-2">
+	
+			<div class="col-4">
+				{{ form_row(form.country_code_cel_phone) }}
+			</div>
+			<div class="col-4">
+				{{ form_row(form.state_code_cel_phone) }}
+			</div>
+			<div class="col-4">
+				{{ form_row(form.cel_phone) }}
+			</div>
+		</div>
+		<hr>
+		<div class="row my-2">
+			<div class="col-12">
+				<h5 class="mr-auto mb-0 title-table">Teléfono fijo</h5>
+			</div>
+		</div>
+		<div class="row my-2">
+	
+			<div class="col-4">
+				{{ form_row(form.country_code_phone) }}
+			</div>
+			<div class="col-4">
+				{{ form_row(form.state_code_phone) }}
+			</div>
+			<div class="col-4">
+				{{ form_row(form.phone) }}
+			</div>
+		</div>
+		<div class="row my-2">
+	
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_crud_customer_index') }}">Regresar</a>
+	
+				<button class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div> #}
+
+
+	{{ form_end(form) }}
+
+{% endblock %}
