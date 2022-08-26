@@ -19,32 +19,17 @@ class CountriesRepository extends ServiceEntityRepository
         parent::__construct($registry, Countries::class);
     }
 
-    // /**
-    //  * @return Countries[] Returns an array of Countries objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function listCountries()
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            c.id as country_id,
+            c.name as country_name,
+            c.region
 
-    /*
-    public function findOneBySomeField($value): ?Countries
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            FROM App:Countries c
+            ')
+            ->getResult();
     }
-    */
 }
