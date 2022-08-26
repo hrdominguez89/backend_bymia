@@ -149,6 +149,16 @@ class Countries
      */
     private $customerAddresses;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=RegionType::class, inversedBy="countries")
+     */
+    private $region_type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SubregionType::class, inversedBy="countries")
+     */
+    private $subregion_type;
+
     public function __construct()
     {
         $this->states = new ArrayCollection();
@@ -523,6 +533,30 @@ class Countries
                 $customerAddress->setCountry(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRegionType(): ?RegionType
+    {
+        return $this->region_type;
+    }
+
+    public function setRegionType(?RegionType $region_type): self
+    {
+        $this->region_type = $region_type;
+
+        return $this;
+    }
+
+    public function getSubregionType(): ?SubregionType
+    {
+        return $this->subregion_type;
+    }
+
+    public function setSubregionType(?SubregionType $subregion_type): self
+    {
+        $this->subregion_type = $subregion_type;
 
         return $this;
     }
