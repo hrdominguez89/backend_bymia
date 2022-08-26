@@ -6,9 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Countries;
+use App\Form\CountriesType;
 use App\Repository\CitiesRepository;
 use App\Repository\CountriesRepository;
 use App\Repository\StatesRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Country;
 
 /**
  * @Route("/world")
@@ -29,25 +32,63 @@ class WorldController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_world_new_country")
      */
-    public function newCountry(CountriesRepository $countriesRepository): Response
+    public function newCountry(Request $request): Response
     {
         $data['title'] = 'Paises';
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['countries'] = $countriesRepository->findOneBy(['name' => 'Argentina']);
-        // dump($data['countries']);die();
-        return $this->render('secure/world/abm_countries.html.twig', $data);
+        $data['country'] = new Countries;
+        $form = $this->createForm(CountriesType::class, $data['country']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+        }
+        $data['form'] = $form;
+        return $this->renderForm('secure/world/form_country.html.twig', $data);
     }
+
+    // public function new(Request $request): Response
+    // {
+    //     $data['title'] = "Nuevo cliente";
+    //     $data['customer'] = new Customer();
+    //     $form = $this->createForm(CustomerType::class, $data['customer']);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $data['customer']->setStatus(true);
+    //         $data['customer']->setPassword($_ENV['PWD_NEW_USER']);
+    //         if ($form->get('customer_type_role')->getData()->getId() == 2) {
+    //             $data['customer']->setLastname(null);
+    //             $data['customer']->setGenderType(null);
+    //             $data['customer']->setDateOfBirth(null);
+    //         }
+
+    //         $entityManager = $this->getDoctrine()->getManager();
+    //         $entityManager->persist($data['customer']);
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
+    //     }
+
+    //     $data['form'] = $form;
+    //     $data['files_js'] = array(
+    //         'customers/customers.js?v=' . rand(),
+    //     );
+    //     return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
+    // }
 
     /**
      * @Route("/{country_id}/edit", name="secure_crud_world_edit_country")
      */
-    public function editCountry(CountriesRepository $countriesRepository): Response
+    public function editCountry($country_id, Request $request, CountriesRepository $countriesRepository): Response
     {
         $data['title'] = 'Paises';
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['countries'] = $countriesRepository->findOneBy(['name' => 'Argentina']);
-        // dump($data['countries']);die();
-        return $this->render('secure/world/abm_countries.html.twig', $data);
+        $data['country'] = $countriesRepository->find($country_id);
+        $form = $this->createForm(CountriesType::class, $data['country']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+        }
+        $data['form'] = $form;
+        return $this->renderForm('secure/world/form_country.html.twig', $data);
     }
 
 
