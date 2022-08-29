@@ -10,6 +10,8 @@ use App\Form\CountriesType;
 use App\Repository\CitiesRepository;
 use App\Repository\CountriesRepository;
 use App\Repository\StatesRepository;
+use App\Repository\SubregionTypeRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Country;
 
@@ -35,7 +37,9 @@ class WorldController extends AbstractController
     public function newCountry(Request $request): Response
     {
         $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['files_js'] = array(
+            'world/country.js?v=' . rand(),
+        );
         $data['country'] = new Countries;
         $form = $this->createForm(CountriesType::class, $data['country']);
         $form->handleRequest($request);
@@ -81,7 +85,9 @@ class WorldController extends AbstractController
     public function editCountry($country_id, Request $request, CountriesRepository $countriesRepository): Response
     {
         $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['files_js'] = array(
+            'world/country.js?v=' . rand(),
+        );
         $data['country'] = $countriesRepository->find($country_id);
         $form = $this->createForm(CountriesType::class, $data['country']);
         $form->handleRequest($request);
@@ -163,5 +169,21 @@ class WorldController extends AbstractController
         $data['countries'] = $countriesRepository->findOneBy(['name' => 'Argentina']);
         // dump($data['countries']);die();
         return $this->render('secure/world/abm_countries.html.twig', $data);
+    }
+
+    
+    /**
+     * @Route("/getSubregiones/{region_id}", name="secure_world_get_subregion", methods={"GET"})
+     */
+    public function getSubregiones($region_id, SubregionTypeRepository $subregionTypeRepository): Response
+    {
+        $data['data'] = $subregionTypeRepository->findSubregiones($region_id);
+        if ($data['data']) {
+            $data['status'] = true;
+        } else {
+            $data['status'] = false;
+            $data['message'] = 'No se encontraron subregiones con el id indicado';
+        }
+        return new JsonResponse($data);
     }
 }
