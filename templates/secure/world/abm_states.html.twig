@@ -4,18 +4,9 @@
 {% endblock %}
 
 {% block content %}
-	{# REVISAR ESTE BREADCRUM PARA PONER #}
-	{# <div class="row">
-				<div class="col-12">
-					<ol class="breadcrumb m-0">
-						<li class="breadcrumb-item">
-							<a href="javascript: void(0);">Dashboard</a>
-						</li>
-						<li class="breadcrumb-item active">Dashboard</li>
-					</ol>
-				</div>
-			</div> #}
-		<div class="d-flex justify-content-between"> <div class="col-6">
+	{{parent()}}
+	<div class="d-flex justify-content-between">
+		<div class="col-6">
 			<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
 		</div>
 
@@ -74,6 +65,11 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+	</div>
+	<div class="row mt-5 mb-5">
+		<div class="col-12 text-end">
+			<a class="btn btn-secondary" href="{{ path('secure_crud_world_index') }}">Regresar</a>
 		</div>
 	</div>
 {% endblock %}

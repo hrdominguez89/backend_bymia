@@ -31,7 +31,7 @@ class States
     private $country;
 
     /**
-     * @ORM\Column(type="string", length=2)
+     * @ORM\Column(type="string", length=2, nullable=true)
      */
     private $country_code;
 
@@ -71,7 +71,7 @@ class States
     private $updated_at;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $flag;
 

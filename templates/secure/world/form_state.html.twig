@@ -6,10 +6,15 @@
 
 {% block content %}
 	{{ parent() }}
-
 	<div class="row">
 		<div class="col-12">
 			<h1 class="mr-auto mb-0 title-table">{{ title }}</h1>
+		</div>
+	</div>
+
+    <div class="row mt-2">
+		<div class="col-12">
+			<h4>Pais:{{country.name}}</h4>
 		</div>
 	</div>
 
@@ -23,25 +28,9 @@
 			</div>
 		</div>
 	{% endif %}
-	<div class="row my-2">
-		<div class="col-4">
+    <div class="row my-2">
+		<div class="col-12">
 			{{ form_row(form.name) }}
-		</div>
-		<div class="col-4">
-			{{ form_label (
-				form.region_type,
-				'Región',
-				{'label_attr': {'class': 'form-label','id':'label-region','data-region-id':country.regionType ? country.regionType.id:'0'}}
-			)}}
-			{{ form_widget(form.region_type) }}
-		</div>
-		<div class="col-4">
-			{{ form_label (
-				form.subregion,
-				'Subregion',
-				{'label_attr': {'class': 'form-label','id':'label-subregion','data-subregion-id':country.subregionType ? country.subregionType.id:'0'}}
-			)}}
-			{{ form_widget(form.subregion) }}
 		</div>
 	</div>
 	<div class="row my-2">
@@ -56,7 +45,7 @@
 		<div class="row my-2">
 
 			<div class="col-12 text-end">
-				<a class="btn btn-secondary" href="{{ path('secure_crud_world_index') }}">Regresar</a>
+				<a class="btn btn-secondary" href="{{ path('secure_crud_states_index',{'country_id':country.id}) }}">Regresar</a>
 
 				<button class="btn btn-primary">Guardar</button>
 			</div>
