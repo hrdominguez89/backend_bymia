@@ -30,7 +30,7 @@ class Cities
     private $state;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $state_code;
 
@@ -40,7 +40,7 @@ class Cities
     private $country;
 
     /**
-     * @ORM\Column(type="string", length=2)
+     * @ORM\Column(type="string", length=2,nullable=true)
      */
     private $country_code;
 
@@ -65,7 +65,7 @@ class Cities
     private $updated_at;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      */
     private $flag;
 
