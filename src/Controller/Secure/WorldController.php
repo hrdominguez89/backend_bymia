@@ -2,14 +2,20 @@
 
 namespace App\Controller\Secure;
 
+use App\Entity\Cities;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Countries;
+use App\Entity\States;
+use App\Form\CitiesType;
 use App\Form\CountriesType;
+use App\Form\StatesType;
 use App\Repository\CitiesRepository;
 use App\Repository\CountriesRepository;
 use App\Repository\StatesRepository;
+use App\Repository\SubregionTypeRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Country;
 
@@ -24,6 +30,9 @@ class WorldController extends AbstractController
     public function index(CountriesRepository $countriesRepository): Response
     {
         $data['title'] = 'Paises';
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         $data['countries'] = $countriesRepository->listCountries();
         return $this->render('secure/world/abm_countries.html.twig', $data);
@@ -32,60 +41,57 @@ class WorldController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_world_new_country")
      */
-    public function newCountry(Request $request): Response
+    public function newCountry(Request $request, SubregionTypeRepository $subregionTypeRepository): Response
     {
-        $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['title'] = 'Nuevo país';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array(
+            'world/country.js?v=' . rand(),
+        );
         $data['country'] = new Countries;
         $form = $this->createForm(CountriesType::class, $data['country']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $data['country']->setSubregionType($subregionTypeRepository->find($request->get('countries')['subregion']));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['country']);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_crud_world_index');
         }
         $data['form'] = $form;
         return $this->renderForm('secure/world/form_country.html.twig', $data);
     }
 
-    // public function new(Request $request): Response
-    // {
-    //     $data['title'] = "Nuevo cliente";
-    //     $data['customer'] = new Customer();
-    //     $form = $this->createForm(CustomerType::class, $data['customer']);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $data['customer']->setStatus(true);
-    //         $data['customer']->setPassword($_ENV['PWD_NEW_USER']);
-    //         if ($form->get('customer_type_role')->getData()->getId() == 2) {
-    //             $data['customer']->setLastname(null);
-    //             $data['customer']->setGenderType(null);
-    //             $data['customer']->setDateOfBirth(null);
-    //         }
-
-    //         $entityManager = $this->getDoctrine()->getManager();
-    //         $entityManager->persist($data['customer']);
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     $data['form'] = $form;
-    //     $data['files_js'] = array(
-    //         'customers/customers.js?v=' . rand(),
-    //     );
-    //     return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
-    // }
 
     /**
      * @Route("/{country_id}/edit", name="secure_crud_world_edit_country")
      */
-    public function editCountry($country_id, Request $request, CountriesRepository $countriesRepository): Response
+    public function editCountry($country_id, Request $request, CountriesRepository $countriesRepository, SubregionTypeRepository $subregionTypeRepository): Response
     {
-        $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['title'] = 'Editar País';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array(
+            'world/country.js?v=' . rand(),
+        );
         $data['country'] = $countriesRepository->find($country_id);
         $form = $this->createForm(CountriesType::class, $data['country']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $data['country']->setSubregionType($subregionTypeRepository->find($request->get('countries')['subregion']));
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['country']);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_crud_world_index');
         }
         $data['form'] = $form;
         return $this->renderForm('secure/world/form_country.html.twig', $data);
@@ -99,33 +105,69 @@ class WorldController extends AbstractController
     {
         $data['title'] = 'Estados/Provincias';
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['country'] = $countriesRepository->findOneBy(['id' => $country_id]);
+        $data['country'] = $countriesRepository->find($country_id);
         $data['states'] = $statesRepository->findStatesByCountryId($country_id);
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('active' => true, 'title' => $data['title'] . ' de ' . $data['country']->getName())
+        );
         return $this->render('secure/world/abm_states.html.twig', $data);
     }
 
     /**
      * @Route("/{country_id}/state/new", name="secure_crud_state_new")
      */
-    public function newState(CountriesRepository $countriesRepository): Response
+    public function newState($country_id, CountriesRepository $countriesRepository, Request $request): Response
     {
-        $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['countries'] = $countriesRepository->findOneBy(['name' => 'Argentina']);
-        // dump($data['countries']);die();
-        return $this->render('secure/world/abm_countries.html.twig', $data);
+        $data['title'] = 'Nuevo Estado/Provincia';
+        $data['country'] = $countriesRepository->find($country_id);
+        $data['state'] = new States;
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('path' => 'secure_crud_states_index', 'path_parameters' => ['country_id' => $country_id], 'title' => 'Estados/Provincias ' . $data['country']->getName()),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $form = $this->createForm(StatesType::class, $data['state']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $data['state']->setCountry($data['country']);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['state']);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_crud_states_index', ['country_id' => $country_id]);
+        }
+        $data['form'] = $form;
+        return $this->renderForm('secure/world/form_state.html.twig', $data);
     }
 
     /**
      * @Route("/{country_id}/state/{state_id}/edit", name="secure_crud_state_edit")
      */
-    public function editState(CountriesRepository $countriesRepository): Response
+    public function editState($country_id, $state_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository): Response
     {
-        $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['countries'] = $countriesRepository->findOneBy(['name' => 'Argentina']);
-        // dump($data['countries']);die();
-        return $this->render('secure/world/abm_countries.html.twig', $data);
+        $data['title'] = 'Editar Estado/Provincia';
+        $data['country'] = $countriesRepository->find($country_id);
+        $data['state'] = $statesRepository->find($state_id);
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('path' => 'secure_crud_states_index', 'path_parameters' => ['country_id' => $country_id], 'title' => 'Estados/Provincias de ' . $data['country']->getName()),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $form = $this->createForm(StatesType::class, $data['state']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['state']);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_crud_states_index', ['country_id' => $country_id]);
+        }
+        $data['form'] = $form;
+        return $this->renderForm('secure/world/form_state.html.twig', $data);
     }
 
     /**
@@ -135,33 +177,92 @@ class WorldController extends AbstractController
     {
         $data['title'] = 'Ciudades';
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['country'] = $countriesRepository->findOneBy(['id' => $country_id]);
-        $data['state'] = $statesRepository->findOneBy(['id' => $state_id]);
+        $data['country'] = $countriesRepository->find($country_id);
+        $data['state'] = $statesRepository->find($state_id);
         $data['cities'] = $citiesRepository->findCitiesByStateId($state_id);
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('path' => 'secure_crud_states_index', 'path_parameters' => ['country_id' => $country_id], 'title' => 'Estados/Provincias de ' . $data['country']->getName()),
+            array('active' => true, 'title' => $data['title'] . ' de ' . $data['state']->getName())
+        );
         return $this->render('secure/world/abm_cities.html.twig', $data);
     }
 
     /**
      * @Route("/{country_id}/state/{state_id}/city/new", name="secure_crud_city_new")
      */
-    public function newCity(CountriesRepository $countriesRepository): Response
+    public function newCity($country_id, $state_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository): Response
     {
-        $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['countries'] = $countriesRepository->findOneBy(['name' => 'Argentina']);
-        // dump($data['countries']);die();
-        return $this->render('secure/world/abm_countries.html.twig', $data);
+        $data['title'] = 'Nueva Ciudad';
+        $data['country'] = $countriesRepository->find($country_id);
+        $data['state'] = $statesRepository->find($state_id);
+        $data['city'] = new Cities;
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('path' => 'secure_crud_states_index', 'path_parameters' => ['country_id' => $country_id], 'title' => 'Estados/Provincias de ' . $data['country']->getName()),
+            array('path' => 'secure_crud_cities_index', 'path_parameters' => ['country_id' => $country_id, 'state_id' => $state_id], 'title' => 'Ciudades de ' . $data['state']->getName()),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $form = $this->createForm(CitiesType::class, $data['city']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $data['city']->setCountry($data['country']);
+            $data['city']->setState($data['state']);
+
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['city']);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_crud_cities_index', ['country_id' => $country_id, 'state_id' => $state_id]);
+        }
+        $data['form'] = $form;
+        return $this->renderForm('secure/world/form_city.html.twig', $data);
     }
 
     /**
      * @Route("/{country_id}/state/{state_id}/city/{city_id}/edit", name="secure_crud_city_edit")
      */
-    public function editCity(CountriesRepository $countriesRepository): Response
+    public function editCity($country_id, $state_id, $city_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository): Response
     {
-        $data['title'] = 'Paises';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-        $data['countries'] = $countriesRepository->findOneBy(['name' => 'Argentina']);
-        // dump($data['countries']);die();
-        return $this->render('secure/world/abm_countries.html.twig', $data);
+        $data['title'] = 'Editar Ciudad';
+        $data['country'] = $countriesRepository->find($country_id);
+        $data['state'] = $statesRepository->find($state_id);
+        $data['city'] = $citiesRepository->find($city_id);
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_world_index', 'title' => 'Paises'),
+            array('path' => 'secure_crud_states_index', 'path_parameters' => ['country_id' => $country_id], 'title' => 'Estados/Provincias de ' . $data['country']->getName()),
+            array('path' => 'secure_crud_cities_index', 'path_parameters' => ['country_id' => $country_id, 'state_id' => $state_id], 'title' => 'Ciudades de ' . $data['state']->getName()),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $form = $this->createForm(CitiesType::class, $data['city']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['city']);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_crud_cities_index', ['country_id' => $country_id, 'state_id' => $state_id]);
+        }
+        $data['form'] = $form;
+        return $this->renderForm('secure/world/form_city.html.twig', $data);
+    }
+
+
+    /**
+     * @Route("/getSubregiones/{region_id}", name="secure_world_get_subregion", methods={"GET"})
+     */
+    public function getSubregiones($region_id, SubregionTypeRepository $subregionTypeRepository): Response
+    {
+        $data['data'] = $subregionTypeRepository->findSubregiones($region_id);
+        if ($data['data']) {
+            $data['status'] = true;
+        } else {
+            $data['status'] = false;
+            $data['message'] = 'No se encontraron subregiones con el id indicado';
+        }
+        return new JsonResponse($data);
     }
 }

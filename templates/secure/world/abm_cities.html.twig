@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+	{{parent()}}
 	<div class="d-flex justify-content-between">
 		<div class="col-6">
 			<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
@@ -62,6 +63,11 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+	</div>
+	<div class="row mt-5 mb-5">
+		<div class="col-12 text-end">
+			<a class="btn btn-secondary" href="{{ path('secure_crud_states_index',{'country_id':country.id}) }}">Regresar</a>
 		</div>
 	</div>
 {% endblock %}

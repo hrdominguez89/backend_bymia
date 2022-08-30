@@ -58,7 +58,34 @@
 		<!-- Start right Content here -->
 			<!-- ============================================================== --> <div class="main-content"><div class="page-content">
 
-				{% block content %}{% endblock %}
+				{% block content %}
+					{% if breadcrumbs is defined %}
+						<div class="row">
+							<div class="col-12">
+								<ol class="breadcrumb m-0">
+									<li class="breadcrumb-item">
+										<a href="{{ path('app_homepage') }}">Inicio</a>
+									</li>
+									{% for breadcrumb in breadcrumbs %}
+										{% if breadcrumb.active is defined %}
+											<li class="breadcrumb-item active">{{breadcrumb.title}}</li>
+										{% else %}
+											{% if breadcrumb.path_parameters is defined %}
+												<li class="breadcrumb-item">
+													<a href="{{ path(breadcrumb.path,breadcrumb.path_parameters) }}">{{breadcrumb.title}}</a>
+												</li>
+											{% else %}
+												<li class="breadcrumb-item">
+													<a href="{{ path(breadcrumb.path) }}">{{breadcrumb.title}}</a>
+												</li>
+											{% endif %}
+										{% endif %}
+									{% endfor %}
+								</ol>
+							</div>
+						</div>
+					{% endif %}
+				{% endblock %}
 
 			</div>
 			<!-- End Page-content -->
@@ -104,7 +131,6 @@
 	<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 	<script src="{{ asset('assets/libs/datatables.net-colreorder/js/dataTables.colReorder.min.js') }}"></script>
 
-	
 
 	<!-- Sweet Alerts js -->
 	<script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>

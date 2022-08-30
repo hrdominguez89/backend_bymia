@@ -18,33 +18,21 @@ class SubregionTypeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, SubregionType::class);
     }
-
-    // /**
-    //  * @return SubregionType[] Returns an array of SubregionType objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findSubregiones($region_id): ?array
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            sr.id,
+            sr.name
 
-    /*
-    public function findOneBySomeField($value): ?SubregionType
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            FROM App:SubregionType sr
+
+            WHERE sr.region_type = :region_id
+
+            ORDER BY sr.name
+            ')
+            ->setParameter('region_id', $region_id)
+            ->getResult();
     }
-    */
 }
