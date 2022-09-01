@@ -35,6 +35,10 @@
 								Ciudad &nbsp;
 							</th>
 
+							<th class="text-center">
+								Visible &nbsp;
+							</th>
+
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
 							</th>
@@ -51,6 +55,12 @@
 
 								<td>
 									{{city.name}}
+								</td>
+
+								<td class="text-center">
+									<a style="font-size:16px" data-status="{{city.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/Cities" data-id="{{city.id}}" class="text-{{city.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
+										<i class="fas fa-toggle-{{city.visible ? 'on':'off'}}"></i>
+									</a>
 								</td>
 
 								<td class="text-center">

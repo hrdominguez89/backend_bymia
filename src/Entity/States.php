@@ -90,6 +90,11 @@ class States
      */
     private $customerAddresses;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $visible;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
@@ -305,6 +310,18 @@ class States
                 $customerAddress->setState(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(?bool $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }

@@ -25,7 +25,8 @@ class CitiesRepository extends ServiceEntityRepository
             ->createQuery('
             SELECT
             c.id,
-            c.name
+            c.name,
+            c.visible
 
             FROM App:Cities c
 

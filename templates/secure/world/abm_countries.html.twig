@@ -38,6 +38,10 @@
 								Subregión &nbsp;
 							</th>
 
+							<th class="text-center">
+								Visible &nbsp;
+							</th>
+
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
 							</th>
@@ -65,6 +69,13 @@
 								</td>
 
 								<td class="text-center">
+									<a style="font-size:16px" data-status="{{country.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/Countries" data-id="{{country.country_id}}" class="text-{{country.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
+										<i class="fas fa-toggle-{{country.visible ? 'on':'off'}}"></i>
+									</a>
+								</td>
+
+								<td class="text-center">
+
 									<a style="font-size:16px" class="text-primary m-2" href="{{ path('secure_crud_states_index', {'country_id': country.country_id}) }}" title="Ver estados">
 										<i class="fas fa-eye"></i>
 									</a>

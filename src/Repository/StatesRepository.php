@@ -25,7 +25,8 @@ class StatesRepository extends ServiceEntityRepository
             ->createQuery('
             SELECT
             s.id,
-            s.name
+            s.name,
+            s.visible
 
             FROM App:States s
 

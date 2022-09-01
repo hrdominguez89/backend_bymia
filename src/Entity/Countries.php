@@ -159,6 +159,11 @@ class Countries
      */
     private $subregion_type;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $visible;
+
     public function __construct()
     {
         $this->states = new ArrayCollection();
@@ -557,6 +562,18 @@ class Countries
     public function setSubregionType(?SubregionType $subregion_type): self
     {
         $this->subregion_type = $subregion_type;
+
+        return $this;
+    }
+
+    public function getVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(?bool $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }

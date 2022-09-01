@@ -34,6 +34,10 @@
 								Estado &nbsp;
 							</th>
 
+							<th class="text-center">
+								Visible &nbsp;
+							</th>
+
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
 							</th>
@@ -47,9 +51,14 @@
 									{{state.id}}
 								</td>
 
-
 								<td>
 									{{state.name}}
+								</td>
+
+								<td class="text-center">
+									<a style="font-size:16px" data-status="{{state.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/States" data-id="{{state.id}}" class="text-{{state.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
+										<i class="fas fa-toggle-{{state.visible ? 'on':'off'}}"></i>
+									</a>
 								</td>
 
 								<td class="text-center">

@@ -265,4 +265,41 @@ class WorldController extends AbstractController
         }
         return new JsonResponse($data);
     }
+
+    /**
+     * @Route("/updateVisible/{entity_name}", name="secure_world_update_visible", methods={"POST"})
+     */
+    public function updateVisible($entity_name, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository): Response
+    {
+        $id = (int)$request->get('id');
+        $visible = $request->get('visible');
+
+        switch ($entity_name) {
+            case 'Countries':
+                $entity_object = $countriesRepository->find($id);
+                break;
+            case 'States':
+                $entity_object = $statesRepository->find($id);
+                break;
+            case 'Cities':
+                $entity_object = $citiesRepository->find($id);
+                break;
+        }
+
+        if ($visible == 'on') {
+            $entity_object->setVisible(false);
+            $data['visible'] = false;
+        } else {
+            $entity_object->setVisible(true);
+            $data['visible'] = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
+        return new JsonResponse($data);
+    }
 }

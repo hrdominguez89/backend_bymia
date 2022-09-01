@@ -26,7 +26,7 @@ class CountriesRepository extends ServiceEntityRepository
             SELECT
             c.id as country_id,
             c.name as country_name,
-            c.region,
+            c.visible,
             rt.id as region_type_id,
             rt.name as region_type_name,
             srt.id as subregion_type,
