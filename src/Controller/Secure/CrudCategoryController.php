@@ -22,22 +22,20 @@ class CrudCategoryController extends AbstractController
      */
     public function index(CategoryRepository $categoryRepository, PaginatorInterface $pagination, Request $request): Response
     {
-        $data =$categoryRepository->findAll();
-        $paginator = $pagination->paginate(
-            $data,
-            $request->query->getInt('page', $request->get("page") || 1), /*page number*/
-            15, /*limit per page*/
-            ['align' => 'center', 'style' => 'bottom',]
+        $data['title'] = 'Categorías';
+        $data['categories'] = $categoryRepository->findAll();;
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
         );
-        return $this->render('secure/crud_category/index.html.twig', [
-            'categories' => $paginator,
-        ]);
+
+        return $this->render('secure/crud_category/index.html.twig', $data);
     }
 
     /**
      * @Route("/new", name="secure_crud_category_new", methods={"GET","POST"})
      */
-    public function new(Request $request,FileUploader $fileUploader): Response
+    public function new(Request $request, FileUploader $fileUploader): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -47,7 +45,7 @@ class CrudCategoryController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $category->setImage($_ENV['SITE_URL'].'uploads/images/'.$imageFileName);
+                $category->setImage($_ENV['SITE_URL'] . 'uploads/images/' . $imageFileName);
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($category);
@@ -84,7 +82,7 @@ class CrudCategoryController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $category->setImage('uploads/images/'.$imageFileName);
+                $category->setImage('uploads/images/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
 
@@ -102,7 +100,7 @@ class CrudCategoryController extends AbstractController
      */
     public function delete(Request $request, Category $category): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($category);
             $entityManager->flush();

@@ -1,48 +1,119 @@
 {% extends 'home/index.html.twig' %}
 
-{% block title %}Subcategoría{% endblock %}
+{% block title %}
+	{{title}}
+{% endblock %}
 
 {% block content %}
-    <div class="d-flex justify-content-between">
-        <h1 class="mr-auto mb-0 title-table"><a href="{{ path('secure_crud_category_index') }}">{{ category_name }}</a>/Subcategoría
-        </h1>
-        <a href="{{ path('secure_crud_subcategory_new',{'id_category': id_category  }) }}" class="btn btn-success">Crear
-            nueva</a>
-    </div>
+	{{parent()}}
+	<div class="d-flex justify-content-between">
+		<div class="col-6">
+			<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
+		</div>
+	</div>
+	<div class="row mt-5">
+		<div class="col-12">
+			<div class="table-responsive">
+				<table id="table_full_buttons" class="table table-striped table-sm nowrap" data-order="[[ 2, &quot;asc&quot; ]]">
+					<thead>
+						<tr>
+							<th data-type="num" class="text-center">
+								Id. &nbsp;
+							</th>
 
-    <table class="table imagen">
-        <thead>
-        <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Id de la Api</th>
-            <th>Cantidad de productos</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for subcategory in subcategories %}
-            <tr>
-                {% if subcategory.image %}
-                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset(subcategory.image) }}"/></td>
-                {% else %}
-                    <td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/></td>
-                {% endif %}
-                <td>{{ subcategory.name }}</td>
-                <td>{{ subcategory.apiId }}</td>
-                <td>{{ subcategory.items }}</td>
-                <td style="width: 170px">
-                    <a style="width: 70px" class="btn btn-info"
-                       href="{{ path('secure_crud_subcategory_show', {'id': subcategory.id}) }}">Mostrar</a>
-                    <a style="width: 70px" class="btn btn-warning"
-                       href="{{ path('secure_crud_subcategory_edit', {'id': subcategory.id}) }}">Editar</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+							<th data-type="num" class="text-center">
+								Api Id &nbsp;
+							</th>
+
+							<th>
+								Nombre Subcategoría &nbsp;
+							</th>
+
+                            <th>
+								Nombre Categpría &nbsp;
+							</th>
+
+							<th>
+								Slug &nbsp;
+							</th>
+
+							<th data-orderable="false">
+								Imagen &nbsp;
+							</th>
+							{# <th class="text-center">
+																						Visible &nbsp;
+																					</th> #}
+
+							<th class="text-center" data-orderable="false">
+								Acciones &nbsp;
+							</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						{% for subcategory in subcategories %}
+
+							<tr>
+								{# category_id
+								category_api_id
+								category_name
+								subcategory_id
+								subcategory_api_id
+								subcategory_name #}
+								<td class="text-center">
+									{{subcategory.subcategory_id}}
+								</td>
+
+
+								<td class="text-center">
+									{{subcategory.subcategory_api_id}}
+								</td>
+
+								<td>
+									{{subcategory.subcategory_name}}
+								</td>
+
+                                <td>
+									{{subcategory.category_name}}
+								</td>
+
+								<td>
+									{{subcategory.slug}}
+								</td>
+								<td>
+									{% if subcategory.image %}
+										<img class="imagen-grid" alt="Imagen" src="{{ asset(subcategory.image) }}"/>
+									{% else %}
+										<img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/>
+									{% endif %}
+								</td>
+								{#
+								                                <td>
+								                                    <a style="font-size:16px" data-status="{{country.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/Countries" data-id="{{country.country_id}}" class="text-{{country.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
+								                                    {{brand.visible}}
+								                                        <i class="fas fa-toggle-{{country.visible ? 'on':'off'}}"></i>
+								                                    </a>
+								                                </td>#}
+
+
+								<td class="text-center">
+									<a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_crud_subcategory_edit', {'subcategory_id': subcategory.subcategory_id}) }}" title="Editar subcategoría">
+										<i class="fas fa-edit"></i>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-5 mb-5">
+		<div class="col-12 text-end">
+			<a class="btn btn-secondary" href="{{ path('app_homepage') }}">Regresar</a>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
 {% endblock %}

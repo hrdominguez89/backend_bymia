@@ -15,29 +15,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
  /**
- * @Route("/category")
+ * @Route("/subcategory")
  */
 class CrudSubcategoryController extends AbstractController
 {
     /**
-     * @Route("/{id_category}/subcategory", name="secure_crud_subcategory_index", methods={"GET"})
+     * @Route("/", name="secure_crud_subcategory_index", methods={"GET"})
      */
-    public function index(int $id_category,EntityManagerInterface $em,SubcategoryRepository $subcategoryRepository, PaginatorInterface $pagination, Request $request): Response
+    public function index(EntityManagerInterface $em,SubcategoryRepository $subcategoryRepository): Response
     {
-        /** @var Category $objCategory */
-        $objCategory = $em->getRepository(Category::class)->find($id_category);
-        $data =$subcategoryRepository->findBy(['categoryId'=>$id_category]);
-        $paginator = $pagination->paginate(
-            $data,
-            $request->query->getInt('page', $request->get("page") || 1), /*page number*/
-            15, /*limit per page*/
-            ['align' => 'center', 'style' => 'bottom',]
+        $data['subcategories'] =$subcategoryRepository->listSubcategories();
+        $data['title'] = 'Subcategorías';
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
         );
-        return $this->render('secure/crud_subcategory/index.html.twig', [
-            'subcategories' => $paginator,
-            'category_name'=>$objCategory->getName(),
-            'id_category'=>$id_category
-        ]);
+        return $this->render('secure/crud_subcategory/index.html.twig', $data);
     }
 
     /**
@@ -84,7 +77,7 @@ class CrudSubcategoryController extends AbstractController
     }
 
     /**
-     * @Route("/subcategory/{id}/edit", name="secure_crud_subcategory_edit", methods={"GET","POST"})
+     * @Route("/subcategory/{subcategory_id}/edit", name="secure_crud_subcategory_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Subcategory $subcategory, FileUploader $fileUploader): Response
     {
