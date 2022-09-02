@@ -30,6 +30,13 @@ class CRUDUserController extends AbstractController
         $data['users'] =  $userRepository->findAll();
         // $data['files_css'] = array('hola.css?v='.rand());
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+
+        $data['title'] = 'Operadores';
+
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+
         return $this->render('secure/crud_user/index.html.twig', $data);
     }
 
@@ -59,7 +66,7 @@ class CRUDUserController extends AbstractController
                 $user->setImage('uploads/images/' . $imageFileName);
             }
             $user->setPassword($_ENV['PWD_NEW_USER']);
-            
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
@@ -72,10 +79,15 @@ class CRUDUserController extends AbstractController
             return $this->redirectToRoute('secure_crud_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/crud_user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+        $data['user'] = $user;
+        $data['form'] = $form;
+        $data['title'] = 'Nuevo operador';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_user_index', 'title' => 'Operadores'),
+            array('active' => true, 'title' => $data['title'])
+        );
+
+        return $this->renderForm('secure/crud_user/new.html.twig', $data);
     }
 
     /**
@@ -108,10 +120,15 @@ class CRUDUserController extends AbstractController
             return $this->redirectToRoute('secure_crud_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/crud_user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+        $data['user'] = $user;
+        $data['form'] = $form;
+        $data['title'] = 'Editar operador';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_user_index', 'title' => 'Operadores'),
+            array('active' => true, 'title' => $data['title'])
+        );
+
+        return $this->renderForm('secure/crud_user/edit.html.twig', $data);
     }
 
     /**

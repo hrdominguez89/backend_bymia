@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+	{{parent()}}
 	<div class="d-flex justify-content-between">
 		<div class="col-6">
 			<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
@@ -25,7 +26,7 @@
 								Imagen &nbsp;
 							</th>
 
-							<th class="text-center">
+							<th data-type="num" class="text-center">
 								Id. &nbsp;
 							</th>
 
@@ -129,16 +130,18 @@
 										{{ customer.lastname }}
 									{% endif %}
 								</td>
-								<td class="text-center">
+								<td
+									class="text-center">
 									{# Si es 1 es persona y que muestre genero #}
 									{% if (customer.customer_type_role_id == 1) %}
 										{{ customer.gender_type }}
 									{% endif %}
 								</td>
-								<td class="text-center">
+								<td
+									data-order="{{customer.customer_type_role_id == 1 ? customer.registration_date|date('U'):0}}" class="text-center">
 									{# Si es 1 es persona y que muestre fecha de nacimiento #}
 									{% if (customer.customer_type_role_id == 1) %}
-										{{ customer.date_of_birth }}
+										{{ customer.date_of_birth|date("d/m/Y") }}
 									{% endif %}
 								</td>
 
@@ -201,7 +204,7 @@
 									{{ customer.phone }}
 								</td>
 
-								<td class="text-center">
+								<td data-order="{{customer.registration_date|date('U')}}" class="text-center">
 									{{customer.registration_date|date("d/m/Y")}}
 								</td>
 
@@ -226,6 +229,14 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+	</div>
+
+	<div class="row mt-5 mb-5">
+		<div class="col-12 text-end">
+
+			<a class="btn btn-secondary" href="{{ path('app_homepage') }}">Regresar</a>
+
 		</div>
 	</div>
 {% endblock %}

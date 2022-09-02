@@ -1,11 +1,13 @@
 {% extends 'home/index.html.twig' %}
-{% block title %}Operadores
+{% block title %}
+	{{title}}
 {% endblock %}
 
 {% block content %}
+	{{parent()}}
 	<div class="d-flex justify-content-between">
 		<div class="col-6">
-			<h1 class="mr-auto mb-0 title-table">Operadores</h1>
+			<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
 		</div>
 
 		<div class="col-6 text-end">
@@ -48,6 +50,14 @@
 				</table>
 
 			</div>
+		</div>
+	</div>
+
+	<div class="row mt-5 mb-5">
+		<div class="col-12 text-end">
+
+			<a class="btn btn-secondary" href="{{ path('app_homepage') }}">Regresar</a>
+
 		</div>
 	</div>
 {% endblock %}

@@ -31,7 +31,9 @@ class CrudCustomerController extends AbstractController
         $data['customers'] = $customers;
         $data['title'] = "Clientes";
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
         return $this->render('secure/crud_customer/index.html.twig', $data);
     }
 
@@ -65,18 +67,22 @@ class CrudCustomerController extends AbstractController
         $data['files_js'] = array(
             'customers/customers.js?v=' . rand(),
         );
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
+            array('active' => true, 'title' => $data['title'])
+        );
         return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
     }
 
-    /**
-     * @Route("/{id}", name="secure_crud_customer_show", methods={"GET"})
-     */
-    public function show(Customer $customer): Response
-    {
-        return $this->render('secure/crud_customer/show.html.twig', [
-            'customer' => $customer,
-        ]);
-    }
+    // /**
+    //  * @Route("/{id}", name="secure_crud_customer_show", methods={"GET"})
+    //  */
+    // public function show(Customer $customer): Response
+    // {
+    //     return $this->render('secure/crud_customer/show.html.twig', [
+    //         'customer' => $customer,
+    //     ]);
+    // }
 
     /**
      * @Route("/{id}/edit", name="secure_crud_customer_edit", methods={"GET","POST"})
@@ -108,6 +114,10 @@ class CrudCustomerController extends AbstractController
         $data['form'] = $form;
         $data['files_js'] = array(
             'customers/customers.js?v=' . rand(),
+        );
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
+            array('active' => true, 'title' => $data['title'])
         );
         return $this->renderForm('secure/crud_customer/customer_form.html.twig', $data);
     }

@@ -1,7 +1,10 @@
 {% extends 'home/index.html.twig' %}
-{% block title %}Operador{% endblock %}
+{% block title %}
+	{{title}}
+{% endblock %}
 
 {% block content %}
-    <h1>Editar Operador</h1>
-    {{ include('secure/crud_user/_form.html.twig', {'button_label': 'Guardar'}) }}
+	{{parent()}}
+	<h1>{{title}}</h1>
+	{{ include('secure/crud_user/_form.html.twig', {'button_label': 'Guardar'}) }}
 {% endblock %}

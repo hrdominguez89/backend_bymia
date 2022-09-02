@@ -12,6 +12,7 @@ let toggleButton;
 
 const loadDatatableFullButtons = () => {
   if ($("#table_full_buttons").length) {
+    $.fn.dataTable.moment("DD/MM/YYYY");
     tableFullButtons = $("#table_full_buttons").DataTable({
       stateSave: true, //esto permite guardar en memoria la visualizacion de las columnas
       //dom: "lBftip", //l= cant. de registros por pagina | B=botones | f = campo de busqueda | t = tabla | i = informacion de cantidad de registros | p = pagination

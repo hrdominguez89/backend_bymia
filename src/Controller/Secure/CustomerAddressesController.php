@@ -30,7 +30,10 @@ class CustomerAddressesController extends AbstractController
         $data['customer'] = $customerRepository->find($customer_id);
         $data['customer_addresses'] = $customerAddressesRepository->listCustomerAddresses($customer_id);
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
-
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
+            array('active' => true, 'title' => $data['title'] . ' (' . $data['customer']->getLastname() . ', ' . $data['customer']->getName() . ')')
+        );
         return $this->render('secure/customer_addresses/index.html.twig', $data);
     }
 
@@ -70,6 +73,13 @@ class CustomerAddressesController extends AbstractController
         $data['title'] = 'Nueva dirección del cliente';
         $data['files_js'] = array(
             'customers/customer_addresses.js?v=' . rand(),
+        );
+
+
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
+            array('path' => 'secure_customer_addresses', 'path_parameters' => ['customer_id' => $customer_id], 'title' => 'Direcciones del cliente' . ' (' . $data['customer']->getLastname() . ', ' . $data['customer']->getName() . ')'),
+            array('active' => true, 'title' => $data['title'])
         );
 
         return $this->renderForm('secure/customer_addresses/customer_address_form.html.twig', $data);
@@ -120,6 +130,12 @@ class CustomerAddressesController extends AbstractController
         $data['title'] = 'Editar dirección del cliente';
         $data['files_js'] = array(
             'customers/customer_addresses.js?v=' . rand(),
+        );
+
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
+            array('path' => 'secure_customer_addresses', 'path_parameters' => ['customer_id' => $customer_id], 'title' => 'Direcciones del cliente' . ' (' . $data['customer']->getLastname() . ', ' . $data['customer']->getName() . ')'),
+            array('active' => true, 'title' => $data['title'])
         );
 
         return $this->renderForm('secure/customer_addresses/customer_address_form.html.twig', $data);

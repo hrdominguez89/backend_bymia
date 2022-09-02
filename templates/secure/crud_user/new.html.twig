@@ -1,9 +1,11 @@
 {% extends 'home/index.html.twig' %}
-{% block title %}Nuevo Operador
+{% block title %}
+	{{title}}
 {% endblock %}
 {% block content %}
+	{{parent()}}
 	<div class="d-flex justify-content-between">
-		<h1 class="mr-auto mb-0 title-table">Crear Nuevo Operador</h1>
+		<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
 	</div>
 	<div class="row mt-5">
 		<div class="col-12">
