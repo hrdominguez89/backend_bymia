@@ -23,13 +23,13 @@ class CrudCategoryController extends AbstractController
     public function index(CategoryRepository $categoryRepository, PaginatorInterface $pagination, Request $request): Response
     {
         $data['title'] = 'Categorías';
-        $data['categories'] = $categoryRepository->findAll();;
+        $data['categories'] = $categoryRepository->listCategories();;
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
         );
 
-        return $this->render('secure/crud_category/index.html.twig', $data);
+        return $this->render('secure/crud_category/abm_categories.html.twig', $data);
     }
 
     /**

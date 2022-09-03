@@ -73,4 +73,25 @@ class CategoryRepository extends ServiceEntityRepository
         return $entityManager->createQuery($dql)->setMaxResults($limit)->getResult();
 
     }
+
+    public function listCategories()
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            max(c.id) as id,
+            max(c.apiId) as apiId,
+            max(c.name) as name,
+            max(c.slug) as slug,
+            max(c.image) as image,
+            COUNT(sc.id) as cantidad
+
+            FROM App:Category c 
+            LEFT JOIN c.subcategories sc
+
+            GROUP BY c.id
+
+            ')
+            ->getResult();
+    }
 }

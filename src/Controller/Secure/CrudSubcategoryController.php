@@ -30,7 +30,7 @@ class CrudSubcategoryController extends AbstractController
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
         );
-        return $this->render('secure/crud_subcategory/index.html.twig', $data);
+        return $this->render('secure/crud_subcategory/abm_subcategory.html.twig', $data);
     }
 
     /**

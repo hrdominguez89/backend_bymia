@@ -22,27 +22,20 @@
 							</th>
 
 							<th data-type="num" class="text-center">
-								Api Id &nbsp;
+								Id 3PL &nbsp;
 							</th>
 
 							<th>
 								Nombre Subcategoría &nbsp;
 							</th>
 
-                            <th>
-								Nombre Categpría &nbsp;
-							</th>
-
 							<th>
 								Slug &nbsp;
 							</th>
-
-							<th data-orderable="false">
-								Imagen &nbsp;
+							
+							<th data-type="num" class="text-center">
+								Categorias relacionadas &nbsp;
 							</th>
-							{# <th class="text-center">
-																						Visible &nbsp;
-																					</th> #}
 
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
@@ -54,12 +47,6 @@
 						{% for subcategory in subcategories %}
 
 							<tr>
-								{# category_id
-								category_api_id
-								category_name
-								subcategory_id
-								subcategory_api_id
-								subcategory_name #}
 								<td class="text-center">
 									{{subcategory.subcategory_id}}
 								</td>
@@ -73,28 +60,13 @@
 									{{subcategory.subcategory_name}}
 								</td>
 
-                                <td>
-									{{subcategory.category_name}}
-								</td>
-
 								<td>
 									{{subcategory.slug}}
 								</td>
-								<td>
-									{% if subcategory.image %}
-										<img class="imagen-grid" alt="Imagen" src="{{ asset(subcategory.image) }}"/>
-									{% else %}
-										<img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/>
-									{% endif %}
-								</td>
-								{#
-								                                <td>
-								                                    <a style="font-size:16px" data-status="{{country.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/Countries" data-id="{{country.country_id}}" class="text-{{country.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
-								                                    {{brand.visible}}
-								                                        <i class="fas fa-toggle-{{country.visible ? 'on':'off'}}"></i>
-								                                    </a>
-								                                </td>#}
 
+								<td class="text-center">
+									{{subcategory.cantidad}}
+								</td>
 
 								<td class="text-center">
 									<a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_crud_subcategory_edit', {'subcategory_id': subcategory.subcategory_id}) }}" title="Editar subcategoría">

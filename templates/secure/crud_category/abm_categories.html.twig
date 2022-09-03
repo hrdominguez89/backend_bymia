@@ -22,7 +22,7 @@
 							</th>
 
 							<th data-type="num" class="text-center">
-								Api Id &nbsp;
+								Id 3PL &nbsp;
 							</th>
 
 							<th>
@@ -31,6 +31,10 @@
 
 							<th>
 								Slug &nbsp;
+							</th>
+
+							<th data-type="num" class="text-center">
+								Subcategorías relacionadas &nbsp;
 							</th>
 
 							<th data-orderable="false">
@@ -67,6 +71,11 @@
 								<td>
 									{{category.slug}}
 								</td>
+
+								<td class="text-center">
+									{{category.cantidad}}
+								</td>
+
 								<td>
 									{% if category.image %}
 										<img class="imagen-grid" alt="Imagen" src="{{ asset(category.image) }}"/>

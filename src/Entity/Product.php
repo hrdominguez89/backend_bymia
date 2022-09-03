@@ -72,7 +72,7 @@ class Product extends BaseProduct
     /**
      * @ORM\ManyToOne(targetEntity=ProductCondition::class, inversedBy="products")
      */
-    private $contidion;
+    private $condition;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductStatusType::class, inversedBy="products")
@@ -216,14 +216,14 @@ class Product extends BaseProduct
         return $this;
     }
 
-    public function getContidion(): ?ProductCondition
+    public function getCondition(): ?ProductCondition
     {
-        return $this->contidion;
+        return $this->condition;
     }
 
-    public function setContidion(?ProductCondition $contidion): self
+    public function setCondition(?ProductCondition $condition): self
     {
-        $this->contidion = $contidion;
+        $this->condition = $condition;
 
         return $this;
     }
