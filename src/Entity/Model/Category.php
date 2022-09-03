@@ -22,32 +22,12 @@ abstract class Category
     protected $name;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="path", type="string", length=255, nullable=true)
-     */
-    protected $path;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=10)
-     */
-    protected $type;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="slug", type="string", length=100)
      */
     protected $slug;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="active", type="boolean")
-     */
-    protected $active;
 
     /**
      * @var string|null
@@ -63,19 +43,6 @@ abstract class Category
      */
     protected $image;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="items", type="integer")
-     */
-    protected $items;
-
-    public function __construct()
-    {
-        $this->active = true;
-        $this->items = 0;
-        $this->type = 'shop';
-    }
 
     /**
      * @return mixed
@@ -116,24 +83,6 @@ abstract class Category
         return $this->slug;
     }
 
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     * @return $this
-     */
-    public function setActive(bool $active): self
-    {
-        $this->active = $active;
-
-        return $this;
-    }
 
     /**
      * @return string|null
@@ -173,62 +122,6 @@ abstract class Category
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getItems(): int
-    {
-        return $this->items;
-    }
-
-    /**
-     * @param int $items
-     * @return $this
-     */
-    public function setItems(int $items): self
-    {
-        $this->items = $items;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string|null $path
-     * @return $this
-     */
-    public function setPath(?string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     * @return $this
-     */
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
 
     /**
      * @return array
@@ -237,11 +130,9 @@ abstract class Category
     {
         return [
             "id" => $this->getId(),
-            "type" => $this->getType(),
             "name" => $this->getName(),
             "slug" => $this->getSlug(),
             "image" => $this->getImage(),
-            "items" => $this->getItems(),
             "customFields" => "",
         ];
     }
@@ -257,17 +148,13 @@ abstract class Category
             "type" => "child",
             "category" => [
                 "id" => $this->getId(),
-                "type" => $this->getType(),
                 "name" => $this->getName(),
                 "slug" => $this->getSlug(),
-                "path" => $this->getSlug(),
                 "image" => $this->getImage(),
-                "items" => $this->getItems(),
                 "customFields" => [],
                 "parents" => null,
                 "children" => null,
             ],
-            "count" => $this->getItems(),
         ];
     }
 
@@ -279,8 +166,7 @@ abstract class Category
         return [
             "type" => 'link',
             "label" => $this->getName(),
-            "url" => '/shop/catalog/'.$this->getSlug(),
+            "url" => '/shop/catalog/' . $this->getSlug(),
         ];
     }
-
 }

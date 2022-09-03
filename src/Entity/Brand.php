@@ -47,6 +47,11 @@ class Brand
     private $image;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -139,6 +144,18 @@ class Brand
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

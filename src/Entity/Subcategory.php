@@ -21,11 +21,6 @@ class Subcategory extends BaseCategory
      */
     private $categoryId;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * @return Category
      */
@@ -58,5 +53,4 @@ class Subcategory extends BaseCategory
             'children' => [],
         ]);
     }
-
 }
