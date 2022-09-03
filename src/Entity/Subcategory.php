@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Model\Category as BaseCategory;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,45 +14,36 @@ use Doctrine\ORM\Mapping as ORM;
 class Subcategory extends BaseCategory
 {
     /**
-     * @var Category
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="subcategories")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="categoria_id", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="subcategories")
      */
-    private $categoryId;
+    private $category;
 
-    /**
-     * @return Category
-     */
-    public function getCategoryId(): Category
+    public function __construct()
     {
-        return $this->categoryId;
+        $this->category = new ArrayCollection();
     }
 
     /**
-     * @param Category $categoryId
-     * @return $this
+     * @return Collection|Category[]
      */
-    public function setCategoryId(Category $categoryId): Subcategory
+    public function getCategory(): Collection
     {
-        $this->categoryId = $categoryId;
+        return $this->category;
+    }
 
-        $categoryId->addSubcategory($this);
+    public function addCategory(Category $category): self
+    {
+        if (!$this->category->contains($category)) {
+            $this->category[] = $category;
+        }
 
         return $this;
     }
 
-    /**
-     * @param bool $withParents
-     * @return array
-     */
-    public function asArray(bool $withParents = true): array
+    public function removeCategory(Category $category): self
     {
-        return array_merge(parent::asArray(), [
-            'parents' => $withParents ? [$this->categoryId->asArray()] : [],
-            'children' => [],
-        ]);
+        $this->category->removeElement($category);
+
+        return $this;
     }
 }

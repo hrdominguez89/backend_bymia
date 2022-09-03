@@ -17,79 +17,31 @@ abstract class Product
     /**
      * @var string|null
      *
-     * @ORM\Column(name="parent_id", type="string", length=255, nullable=true)
-     */
-    protected $parentId;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(name="sku", type="string", length=255, nullable=true)
      */
     protected $sku;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="badges", type="string", length=10, nullable=true)
-     */
-    protected $badges;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="availability", type="string", length=20, nullable=true)
+     * @ORM\Column(name="short_name", type="string", nullable=true, length=255)
      */
-    protected $availability;
+    protected $shortName;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="name", type="string", length=100)
+     * @ORM\Column(name="long_name", type="string", nullable=true, length=255)
      */
-    protected $name;
+    protected $longName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=100)
+     * @ORM\Column(name="slug", type="string", length=255)
      */
     protected $slug;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="image", type="text", nullable=true)
-     */
-    protected $image;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="new_image", type="text", nullable=true)
-     */
-    protected $newImage;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    protected $description;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="stock", type="float", nullable=true)
-     */
-    protected $stock;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="url", type="string", length=255, nullable=true)
-     */
-    protected $url;
 
     /**
      * @var float|null
@@ -101,37 +53,9 @@ abstract class Product
     /**
      * @var float|null
      *
-     * @ORM\Column(name="price", type="float", nullable=true)
+     * @ORM\Column(name="cost", type="float", nullable=true)
      */
-    protected $price;
-
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="offer_price", type="float", nullable=true)
-     */
-    protected $offerPrice;
-
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="offer_start_date", type="datetime", nullable=true)
-     */
-    protected $offerStartDate;
-
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="offer_end_date", type="datetime", nullable=true)
-     */
-    protected $offerEndDate;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="html_description", type="text", nullable=true)
-     */
-    protected $htmlDescription;
+    protected $cost;
 
     /**
      * @var string|null
@@ -143,63 +67,35 @@ abstract class Product
     /**
      * @var string|null
      *
-     * @ORM\Column(name="color", type="string", length=255, nullable=true)
+     * @ORM\Column(name="long_description", type="text", nullable=true)
      */
-    protected $color;
+    protected $longDescription;
 
-    /**
-     * @var float|null
-     *
-     * @ORM\Column(name="length", type="float", nullable=true)
-     */
-    protected $length;
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="dimensions", type="string", length=255, nullable=true)
-     */
-    protected $dimensions;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
-    protected $date;
+    protected $createdAt;
 
     /**
-     * @var bool
+     * @var \DateTime
      *
-     * @ORM\Column(name="featured", type="boolean")
+     * @ORM\Column(name="created_at_3pl", type="datetime", nullable=true)
      */
-    protected $featured;
+    protected $createdAt3PL;
 
     /**
-     * @var float
+     * @var \DateTime
      *
-     * @ORM\Column(name="sales", type="float")
+     * @ORM\Column(name="updated_at_3pl", type="datetime", nullable=true)
      */
-    protected $sales;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="reviews", type="float")
-     */
-    protected $reviews;
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="rating", type="float")
-     */
-    protected $rating;
+    protected $updatedAt3PL;
 
     public function __construct()
     {
-        $this->date = new \DateTime();
-        $this->featured = false;
-        $this->rating = 0;
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -208,25 +104,6 @@ abstract class Product
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getParentId(): ?string
-    {
-        return $this->parentId;
-    }
-
-    /**
-     * @param string|null $parentId
-     * @return $this
-     */
-    public function setParentId(?string $parentId): self
-    {
-        $this->parentId = $parentId;
-
-        return $this;
     }
 
     /**
@@ -248,64 +125,45 @@ abstract class Product
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getAvailability(): ?string
-    {
-        return $this->availability;
-    }
-
-    /**
-     * @param string|null $availability
-     * @return $this
-     */
-    public function setAvailability(?string $availability): self
-    {
-        $this->availability = $availability;
-
-        return $this;
-    }
 
     /**
      * @return string|null
      */
-    public function getBadges(): ?string
+    public function getShortName(): ?string
     {
-        return $this->badges;
+        return $this->ShortName;
     }
 
     /**
-     * @param string|null $badges
+     * @param string|null $ShortName
      * @return $this
      */
-    public function setBadges(?string $badges): self
+    public function setShortName(?string $ShortName): self
     {
-        $this->badges = $badges;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string|null $name
-     * @return $this
-     */
-    public function setName(?string $name): self
-    {
-        $this->name = $name;
+        $this->ShortName = $ShortName;
 
         $slugify = new Slugify();
 
-        $this->slug = $slugify->slugify($name);
+        $this->slug = $slugify->slugify($ShortName);
 
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLongName(): ?string
+    {
+        return $this->longName;
+    }
+
+    /**
+     * @param string|null $longName
+     * @return $this
+     */
+    public function setLongName(?string $longName): self
+    {
+        $this->name = $longName;
         return $this;
     }
 
@@ -317,43 +175,6 @@ abstract class Product
         return $this->slug;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    /**
-     * @param string|null $image
-     * @return $this
-     */
-    public function setImage(?string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getNewImage(): ?string
-    {
-        return $this->newImage;
-    }
-
-    /**
-     * @param string|null $image
-     * @return $this
-     */
-    public function setNewImage(?string $image): self
-    {
-        $this->newImage = $image;
-
-        return $this;
-    }
 
     /**
      * @return string|null
@@ -434,94 +255,18 @@ abstract class Product
     /**
      * @return float|null
      */
-    public function getPrice(): ?float
+    public function getCost(): ?float
     {
         return $this->price;
     }
 
     /**
-     * @param float|null $price
+     * @param float|null $cost
      * @return $this
      */
-    public function setPrice(?float $price): self
+    public function setCost(?float $cost): self
     {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    /**
-     * @return float|null
-     */
-    public function getOfferPrice(): ?float
-    {
-        return $this->offerPrice;
-    }
-
-    /**
-     * @param float|null $offerPrice
-     * @return $this
-     */
-    public function setOfferPrice(?float $offerPrice): self
-    {
-        $this->offerPrice = $offerPrice;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getOfferStartDate(): ?\DateTime
-    {
-        return $this->offerStartDate;
-    }
-
-    /**
-     * @param \DateTime|null $offerStartDate
-     * @return $this
-     */
-    public function setOfferStartDate(?\DateTime $offerStartDate): self
-    {
-        $this->offerStartDate = $offerStartDate;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getOfferEndDate(): ?\DateTime
-    {
-        return $this->offerEndDate;
-    }
-
-    /**
-     * @param \DateTime|null $offerEndDate
-     * @return $this
-     */
-    public function setOfferEndDate(?\DateTime $offerEndDate): self
-    {
-        $this->offerEndDate = $offerEndDate;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getHtmlDescription(): ?string
-    {
-        return $this->htmlDescription;
-    }
-
-    /**
-     * @param string|null $htmlDescription
-     * @return $this
-     */
-    public function setHtmlDescription(?string $htmlDescription): self
-    {
-        $this->htmlDescription = $htmlDescription;
+        $this->cost = $cost;
 
         return $this;
     }
@@ -548,56 +293,18 @@ abstract class Product
     /**
      * @return string|null
      */
-    public function getColor(): ?string
+    public function getLongDescription(): ?string
     {
-        return $this->color;
+        return $this->longDescription;
     }
 
     /**
-     * @param string|null $color
+     * @param string|null $longDescription
      * @return $this
      */
-    public function setColor(?string $color): self
+    public function setLongDescription(?string $longDescription): self
     {
-        $this->color = $color;
-
-        return $this;
-    }
-
-    /**
-     * @return float|null
-     */
-    public function getLength(): ?float
-    {
-        return $this->length;
-    }
-
-    /**
-     * @param float|null $length
-     * @return $this
-     */
-    public function setLength(?float $length): self
-    {
-        $this->length = $length;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDimensions(): ?string
-    {
-        return $this->dimensions;
-    }
-
-    /**
-     * @param string|null $dimensions
-     * @return $this
-     */
-    public function setDimensions(?string $dimensions): self
-    {
-        $this->dimensions = $dimensions;
+        $this->longDescription = $longDescription;
 
         return $this;
     }
@@ -605,94 +312,56 @@ abstract class Product
     /**
      * @return \DateTime
      */
-    public function getDate(): \DateTime
+    public function getCreatedAt(): \DateTime
     {
-        return $this->date;
+        return $this->createdAt;
     }
 
     /**
-     * @param \DateTime $date
+     * @param \DateTime $createdAt
      * @return $this
      */
-    public function setDate(\DateTime $date): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
-        $this->date = $date;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     /**
-     * @return bool
+     * @return \DateTime
      */
-    public function isFeatured(): bool
+    public function getCreatedAt3PL(): \DateTime
     {
-        return $this->featured;
+        return $this->createdAt3PL;
     }
 
     /**
-     * @param bool $featured
+     * @param \DateTime $createdAt3PL
      * @return $this
      */
-    public function setFeatured(bool $featured): self
+    public function setCreatedAt3PL(\DateTime $createdAt3PL): self
     {
-        $this->featured = $featured;
+        $this->createdAt3PL = $createdAt3PL;
 
         return $this;
     }
 
     /**
-     * @return float
+     * @return \DateTime
      */
-    public function getSales(): float
+    public function getUpdatedAt3PL(): \DateTime
     {
-        return $this->sales;
+        return $this->updatedAt3PL;
     }
 
     /**
-     * @param float $sales
+     * @param \DateTime $updatedAt3PL
      * @return $this
      */
-    public function setSales(float $sales): self
+    public function setUpdatedAt3PL(\DateTime $updatedAt3PL): self
     {
-        $this->sales = $sales;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getReviews(): float
-    {
-        return $this->reviews;
-    }
-
-    /**
-     * @param float $reviews
-     * @return $this
-     */
-    public function setReviews(float $reviews): self
-    {
-        $this->reviews = $reviews;
-
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getRating(): float
-    {
-        return $this->rating;
-    }
-
-    /**
-     * @param float $rating
-     * @return $this
-     */
-    public function setRating(float $rating): self
-    {
-        $this->rating = $rating;
+        $this->updatedAt3PL = $updatedAt3PL;
 
         return $this;
     }
@@ -705,27 +374,12 @@ abstract class Product
         return [
             "id" => $this->getId(),
             "slug" => $this->getSlug(),
-            "name" => $this->getName(),
+            "shortName" => $this->getShortName(),
             "sku" => $this->getSku(),
             "description" => $this->getDescription(),
             "shortDescription" => $this->getShortDescription(),
-            "price" => $this->calcPrice(),
-            "compareAtPrice" => $this->getOfferPrice() ? $this->getPrice() : null,
-            "badges" => [$this->getBadges()],
-            "rating" => $this->getRating(),
-            "reviews" => $this->getReviews(),
             "stock" => $this->getStock(),
-            "availability" => $this->getAvailability(),
             "customFields" => "",
         ];
     }
-
-    /**
-     * @return float|null
-     */
-    public function calcPrice(): ?float
-    {
-        return $this->getOfferPrice() ?? $this->getPrice();
-    }
-
 }

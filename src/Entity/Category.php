@@ -14,9 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Category extends BaseCategory
 {
     /**
-     * @var Subcategory[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Subcategory", mappedBy="categoryId", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity=Subcategory::class, mappedBy="category")
      */
     private $subcategories;
 
@@ -26,71 +24,29 @@ class Category extends BaseCategory
     }
 
     /**
-     * @return Subcategory[]|ArrayCollection
+     * @return Collection|Subcategory[]
      */
-    public function getSubcategories()
+    public function getSubcategories(): Collection
     {
         return $this->subcategories;
     }
 
-    /**
-     * @param Subcategory $subcategory
-     * @return $this
-     */
-    public function addSubcategory(Subcategory $subcategory): Category
+    public function addSubcategory(Subcategory $subcategory): self
     {
         if (!$this->subcategories->contains($subcategory)) {
             $this->subcategories[] = $subcategory;
+            $subcategory->addCategory($this);
         }
 
         return $this;
     }
 
-    /**
-     * @param Subcategory $subcategory
-     * @return $this
-     */
-    public function removeSubcategory(Subcategory $subcategory): Category
+    public function removeSubcategory(Subcategory $subcategory): self
     {
-        if ($this->subcategories->contains($subcategory)) {
-            $this->subcategories->removeElement($subcategory);
+        if ($this->subcategories->removeElement($subcategory)) {
+            $subcategory->removeCategory($this);
         }
 
         return $this;
     }
-
-    /**
-     * @return array
-     */
-    public function asArray(): array
-    {
-        $children = [];
-
-        foreach ($this->getSubcategories() as $subcategory) {
-            $children[] = $subcategory->asArray(false);
-        }
-
-        return array_merge(parent::asArray(), [
-            'parents' => [],
-            'children' => $children,
-        ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function asMenu(): array
-    {
-        $children = [];
-
-        foreach ($this->getSubcategories() as $subcategory) {
-            $children[] = $subcategory->asMenu();
-        }
-
-        return array_merge(parent::asMenu(), [
-            'children' => $children,
-        ]);
-    }
-
-
 }

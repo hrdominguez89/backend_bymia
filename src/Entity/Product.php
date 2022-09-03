@@ -14,326 +14,127 @@ use Doctrine\ORM\Mapping as ORM;
 class Product extends BaseProduct
 {
 
-    const NO_PARENT = 'no--parent';
+    /**
+     * @ORM\Column(type="string", length=100, nullable="true")
+     */
+    private $cod;
 
     /**
-     * @var Brand
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Brand",cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="brand_id", referencedColumnName="id", nullable=true)
-     * })
+     * @ORM\Column(type="string", length=100, nullable="true")
      */
-    private $brandId;
+    private $part_number;
 
     /**
-     * @var ArrayCollection|ProductSpecification[]
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductSpecification", mappedBy="productId", cascade={"remove"})
+     * @ORM\Column(type="integer", nullable="true")
      */
-    private $productSpecifications;
+    private $onhand;
 
     /**
-     * @var ArrayCollection|ProductSubcategory[]
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductSubcategory", mappedBy="productId", cascade={"remove"})
+     * @ORM\Column(type="integer", nullable="true")
      */
-    private $productSubcategories;
+    private $commited;
 
     /**
-     * @var ArrayCollection|ProductImages[]
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductImages", mappedBy="productId", cascade={"remove"})
+     * @ORM\Column(type="integer", nullable="true")
      */
-    private $images;
+    private $incomming;
 
     /**
-     * @var ArrayCollection|ProductTag[]
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\ProductTag", mappedBy="productId", cascade={"remove"})
+     * @ORM\Column(type="integer", nullable="true")
      */
-    private $productTag;
+    private $available;
+
+    /**
+     * @ORM\Column(type="integer", nullable="true")
+     */
+    private $id_3pl;
 
     public function __construct()
     {
         parent::__construct();
-
-        $this->productSpecifications = new ArrayCollection();
-        $this->productSubcategories = new ArrayCollection();
-        $this->images = new ArrayCollection();
-        $this->productTag = new ArrayCollection();
     }
 
-    /**
-     * @return Brand
-     */
-    public function getBrandId(): ?Brand
+    public function getCod(): ?string
     {
-        return $this->brandId;
+        return $this->cod;
     }
 
-    /**
-     * @param Brand $brandId
-     * @return $this
-     */
-    public function setBrandId(Brand $brandId): Product
+    public function setCod(string $cod): self
     {
-        $this->brandId = $brandId;
+        $this->cod = $cod;
 
         return $this;
     }
 
-    /**
-     * @return ProductSpecification[]|ArrayCollection
-     */
-    public function getProductSpecifications()
+    public function getPartNumber(): ?string
     {
-        return $this->productSpecifications;
+        return $this->part_number;
     }
 
-    /**
-     * @param ProductSpecification $productSpecification
-     * @return $this
-     */
-    public function addProductSpecification(ProductSpecification $productSpecification): Product
+    public function setPartNumber(string $part_number): self
     {
-        if (!$this->productSpecifications->contains($productSpecification)) {
-            $this->productSpecifications[] = $productSpecification;
-        }
+        $this->part_number = $part_number;
 
         return $this;
     }
 
-    /**
-     * @param ProductSpecification $productSpecification
-     * @return $this
-     */
-    public function removeProductSpecification(ProductSpecification $productSpecification): Product
+    public function getOnhand(): ?int
     {
-        if ($this->productSpecifications->contains($productSpecification)) {
-            $this->productSpecifications->removeElement($productSpecification);
-        }
+        return $this->onhand;
+    }
+
+    public function setOnhand(int $onhand): self
+    {
+        $this->onhand = $onhand;
 
         return $this;
     }
 
-    /**
-     * @return int|mixed
-     */
-    public function getCategoryId()
+    public function getCommited(): ?int
     {
-        return $this->productSubcategories->count() > 0 ? $this->productSubcategories[0]->getSubCategory()->getId() : 0;
+        return $this->commited;
     }
 
-    /**
-     * @return string
-     */
-    public function getCategoryName(): string
+    public function setCommited(int $commited): self
     {
-        return $this->productSubcategories->count() > 0
-            ? $this->productSubcategories[0]->getSubCategory()->getName()
-            : '';
-    }
-
-    /**
-     * @return ProductSubcategory[]|ArrayCollection
-     */
-    public function getProductSubcategories()
-    {
-        return $this->productSubcategories;
-    }
-
-    /**
-     * @param ProductSubcategory $productSubcategory
-     * @return $this
-     */
-    public function addProductSubcategory(ProductSubcategory $productSubcategory): Product
-    {
-        if (!$this->productSubcategories->contains($productSubcategory)) {
-            $this->productSubcategories[] = $productSubcategory;
-        }
+        $this->commited = $commited;
 
         return $this;
     }
 
-    /**
-     * @param ProductSubcategory $productSubcategory
-     * @return $this
-     */
-    public function removeProductSubcategory(ProductSubcategory $productSubcategory): Product
+    public function getIncomming(): ?int
     {
-        if ($this->productSubcategories->contains($productSubcategory)) {
-            $this->productSubcategories->removeElement($productSubcategory);
-        }
+        return $this->incomming;
+    }
+
+    public function setIncomming(int $incomming): self
+    {
+        $this->incomming = $incomming;
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getImage(): ?string
+    public function getAvailable(): ?int
     {
-        if(!parent::getImage() && $this->images->count() > 0){
-            return $this->images[0]->getImage();
-        }
-
-        return parent::getImage();
+        return $this->available;
     }
 
-    /**
-     * @return ProductImages[]|ArrayCollection
-     */
-    public function getImages()
+    public function setAvailable(int $available): self
     {
-        return $this->images;
-    }
-
-    /**
-     * @param ProductImages $productImages
-     * @return $this
-     */
-    public function addProductImages(ProductImages $productImages): Product
-    {
-        if (!$this->images->contains($productImages)) {
-            $this->images[] = $productImages;
-        }
+        $this->available = $available;
 
         return $this;
     }
 
-    /**
-     * @param ProductImages $productImages
-     * @return $this
-     */
-    public function removeProductImages(ProductImages $productImages): Product
+    public function getId3pl(): ?int
     {
-        if ($this->images->contains($productImages)) {
-            $this->images->removeElement($productImages);
-        }
+        return $this->id_3pl;
+    }
+
+    public function setId3pl(int $id_3pl): self
+    {
+        $this->id_3pl = $id_3pl;
 
         return $this;
     }
-
-    /**
-     * @return ProductTag[]|ArrayCollection
-     */
-    public function getProductTag()
-    {
-        return $this->productTag;
-    }
-
-    /**
-     * @param ProductTag $productTag
-     * @return $this
-     */
-    public function addProductTag(ProductTag $productTag): Product
-    {
-        if (!$this->productTag->contains($productTag)) {
-            $this->productTag[] = $productTag;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ProductTag $productTag
-     * @return $this
-     */
-    public function removeProductTag(ProductTag $productTag): Product
-    {
-        if ($this->productTag->contains($productTag)) {
-            $this->productTag->removeElement($productTag);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param bool $full
-     * @param array $customFields
-     * @return array
-     */
-    public function asArray(bool $full = true, array $customFields = []): array
-    {
-        $images = $this->getAllImages();
-
-        [$categories, $attrs] = [[], []];
-
-        if ($full) {
-            $categories = $this->getAllCategories();
-            $attrs = $this->getAllSpecifications();
-        }
-
-        return array_merge(parent::asArray(), [
-            "brand" => $this->getBrandId() ? $this->getBrandId()->asArray() : null,
-            "images" => $images,
-            "categories" => $categories,
-            "attributes" => $attrs,
-            "customFields" => $customFields,
-        ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllCategories(): array
-    {
-        $categories = [];
-        foreach ($this->getProductSubcategories() as $productSubcategory) {
-            $categories[] = $productSubcategory->getSubCategory()->asArray();
-        }
-
-        return $categories;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllSpecifications(): array
-    {
-        $attrs = [];
-        foreach ($this->getProductSpecifications() as $productSpecification) {
-            $attrs[] = $productSpecification->asArray($this->getId(), $this->getSlug());
-        }
-
-        return $attrs;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllImages(): array
-    {
-        $images = [];
-        foreach ($this->getImages() as $image) {
-            $images[] = $image->getImage();
-        }
-
-        return $images;
-    }
-
-    public function addImage(ProductImages $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setProductId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImage(ProductImages $image): self
-    {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getProductId() === $this) {
-                $image->setProductId(null);
-            }
-        }
-
-        return $this;
-    }
-
-
 }

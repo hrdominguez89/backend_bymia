@@ -18,26 +18,12 @@ class ProductImages
     private $id;
 
     /**
-     * @var Product
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="images")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $productId;
-
-    /**
      * @var string|null
      *
      * @ORM\Column(name="image", type="text", nullable=true)
      */
     private $image;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $new;
 
     /**
      * @return mixed
@@ -45,27 +31,6 @@ class ProductImages
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return Product
-     */
-    public function getProductId(): Product
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param Product $productId
-     * @return $this
-     */
-    public function setProductId(Product $productId): ProductImages
-    {
-        $this->productId = $productId;
-
-        $productId->addProductImages($this);
-
-        return $this;
     }
 
     /**
@@ -83,18 +48,6 @@ class ProductImages
     public function setImage(?string $image): ProductImages
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getNew(): ?bool
-    {
-        return $this->new;
-    }
-
-    public function setNew(?bool $new): self
-    {
-        $this->new = $new;
 
         return $this;
     }
