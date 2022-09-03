@@ -49,6 +49,36 @@ class Product extends BaseProduct
      */
     private $id_3pl;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Warehouses::class, inversedBy="products")
+     */
+    private $warehouse;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
+     */
+    private $category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Subcategory::class, inversedBy="products")
+     */
+    private $subcategory;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="products")
+     */
+    private $brand;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ProductCondition::class, inversedBy="products")
+     */
+    private $contidion;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ProductStatusType::class, inversedBy="products")
+     */
+    private $status_type;
+
     public function __construct()
     {
         parent::__construct();
@@ -134,6 +164,78 @@ class Product extends BaseProduct
     public function setId3pl(int $id_3pl): self
     {
         $this->id_3pl = $id_3pl;
+
+        return $this;
+    }
+
+    public function getWarehouse(): ?Warehouses
+    {
+        return $this->warehouse;
+    }
+
+    public function setWarehouse(?Warehouses $warehouse): self
+    {
+        $this->warehouse = $warehouse;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getSubcategory(): ?Subcategory
+    {
+        return $this->subcategory;
+    }
+
+    public function setSubcategory(?Subcategory $subcategory): self
+    {
+        $this->subcategory = $subcategory;
+
+        return $this;
+    }
+
+    public function getBrand(): ?Brand
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(?Brand $brand): self
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function getContidion(): ?ProductCondition
+    {
+        return $this->contidion;
+    }
+
+    public function setContidion(?ProductCondition $contidion): self
+    {
+        $this->contidion = $contidion;
+
+        return $this;
+    }
+
+    public function getStatusType(): ?ProductStatusType
+    {
+        return $this->status_type;
+    }
+
+    public function setStatusType(?ProductStatusType $status_type): self
+    {
+        $this->status_type = $status_type;
 
         return $this;
     }
