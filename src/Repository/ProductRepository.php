@@ -66,13 +66,10 @@ class ProductRepository extends ServiceEntityRepository
             FROM App\Entity\Product e
             WHERE e.id =:attr OR e.slug =:attr'
             )->setParameter('attr', $attr)->getOneOrNullResult();
-
         } catch (\Exception $ex) {
-
         }
 
         return null;
-
     }
 
     /**
@@ -108,7 +105,6 @@ class ProductRepository extends ServiceEntityRepository
             WHERE e.parentId =:parentId AND e.id <>:pId
             ORDER BY e.id ASC'
         )->setParameters(['parentId' => $parentId, 'pId' => $pId])->getResult();
-
     }
 
     /**
@@ -131,12 +127,12 @@ class ProductRepository extends ServiceEntityRepository
         $printWhere = true;
         if ($sc = $request->get('category')) {
 
-            $dql = is_numeric($sc) ? $dql.'WHERE (sc.id =:sc OR c.id =:sc) ' : $dql.'WHERE (sc.slug =:sc OR c.slug =:sc) ';
+            $dql = is_numeric($sc) ? $dql . 'WHERE (sc.id =:sc OR c.id =:sc) ' : $dql . 'WHERE (sc.slug =:sc OR c.slug =:sc) ';
             $printWhere = false;
         }
 
         if ($request->get('featured')) {
-            $dql = $dql.($printWhere ? 'WHERE (e.featured = TRUE) ' : 'AND (e.featured = TRUE) ');
+            $dql = $dql . ($printWhere ? 'WHERE (e.featured = TRUE) ' : 'AND (e.featured = TRUE) ');
             $printWhere = false;
         }
 
@@ -144,7 +140,7 @@ class ProductRepository extends ServiceEntityRepository
             $brandSlugs = $this->getExplodeBySeparator($br);
 
             if (count($brandSlugs) > 0 && $brandSlugs[0] != 'undefined') {
-                $dql = $dql.($printWhere ? 'WHERE (b.slug IN (:brandSlugs)) ' : 'AND (b.slug IN (:brandSlugs)) ');
+                $dql = $dql . ($printWhere ? 'WHERE (b.slug IN (:brandSlugs)) ' : 'AND (b.slug IN (:brandSlugs)) ');
                 $printWhere = false;
             }
         }
@@ -153,54 +149,54 @@ class ProductRepository extends ServiceEntityRepository
             $colorSlugs = $this->getExplodeBySeparator($colors);
 
             if (count($colorSlugs) > 0 && $colorSlugs[0] != 'undefined') {
-                $dql = $dql.($printWhere ? 'WHERE (psf.customFieldsType =:color AND sp.slug IN (:colorSlugs)) ' : 'AND (psf.customFieldsType =:color AND sp.slug IN (:colorSlugs)) ');
+                $dql = $dql . ($printWhere ? 'WHERE (psf.customFieldsType =:color AND sp.slug IN (:colorSlugs)) ' : 'AND (psf.customFieldsType =:color AND sp.slug IN (:colorSlugs)) ');
                 $printWhere = false;
             }
         }
 
         if ($rg = $request->get('filter_price')) {
             [$min, $max] = $this->getRange($rg);
-            $dql = $dql.($printWhere ? 'WHERE (e.price >=:min AND e.price <=:max) ' : 'AND (e.price >=:min AND e.price <=:max) ');
+            $dql = $dql . ($printWhere ? 'WHERE (e.price >=:min AND e.price <=:max) ' : 'AND (e.price >=:min AND e.price <=:max) ');
             $printWhere = false;
         }
 
         $fd = $request->get('filter_discount');
         if ($request->get('in_offer') || ($fd && $fd == 'yes')) {
-            $dql = $dql.($printWhere ? 'WHERE (e.offerPrice > 0) ' : 'AND (e.offerPrice > 0) ');
+            $dql = $dql . ($printWhere ? 'WHERE (e.offerPrice > 0) ' : 'AND (e.offerPrice > 0) ');
             $printWhere = false;
         }
 
         if (($tp = $request->get('top_rated')
                 || $bs = $request->get('best_selling')
-                    || $na = $request->get('new_arrivals')
-                        || $oc = $request->get('ordering_criteria'))
-            && !$printWhere) {
+                || $na = $request->get('new_arrivals')
+                || $oc = $request->get('ordering_criteria'))
+            && !$printWhere
+        ) {
 
             $printOrder = true;
 
             if (isset($tp) && $tp) {
-                $dql = $dql.' ORDER BY e.reviews DESC ';
+                $dql = $dql . ' ORDER BY e.reviews DESC ';
                 $printOrder = false;
             }
 
             if (isset($bs) && $bs) {
-                $dql = $dql.($printOrder ? ' ORDER BY e.sales DESC' : ', e.sales DESC ');
+                $dql = $dql . ($printOrder ? ' ORDER BY e.sales DESC' : ', e.sales DESC ');
                 $printOrder = false;
             }
 
             if (isset($na) && $na) {
-                $dql = $dql.($printOrder ? ' ORDER BY e.date DESC' : ', e.date DESC ');
+                $dql = $dql . ($printOrder ? ' ORDER BY e.date DESC' : ', e.date DESC ');
                 $printOrder = false;
             }
 
             if (isset($oc) && $oc) {
                 [$attr, $order] = explode('_', $oc);
 
-                $dql = $dql.($printOrder
-                        ? ' ORDER BY e.'.$attr.' '.strtoupper($order)
-                        : ', e.'.$attr.' '.strtoupper($order));
+                $dql = $dql . ($printOrder
+                    ? ' ORDER BY e.' . $attr . ' ' . strtoupper($order)
+                    : ', e.' . $attr . ' ' . strtoupper($order));
             }
-
         }
 
         $query = $entityManager->createQuery($dql);
@@ -220,7 +216,6 @@ class ProductRepository extends ServiceEntityRepository
             : $query;
 
         return $this->pagination->paginate($query, $request->get('page', 1), $request->get('limit', 12));
-
     }
 
     /**
@@ -230,7 +225,7 @@ class ProductRepository extends ServiceEntityRepository
     public function getParents(Request $request, ProductSearchDto $productSearchType): \Knp\Component\Pager\Pagination\PaginationInterface
     {
         $entityManager = $this->getEntityManager();
-        $where="";
+        $where = "";
         if ($productSearchType->getName()) {
             $where .= "and clearstr(e.name) like clearstr('%" . $productSearchType->getName() . "%')";
         }
@@ -256,21 +251,20 @@ class ProductRepository extends ServiceEntityRepository
             ORDER BY e.id DESC";
         $query = $entityManager->createQuery($dql);
         return $this->pagination->paginate($query, $request->get('page', 1), $request->get('limit', 15));
-
     }
 
     /**
      * @param int $parentId
      * @return Product[]
      */
-    public function getChildrens($id):array
+    public function getChildrens($id): array
     {
         $entityManager = $this->getEntityManager();
         return $entityManager->createQuery('SELECT e
             FROM App\Entity\Product e 
             WHERE e.stock > 0
             and e.parentId =:id
-            ORDER BY e.id DESC')->setParameter('id',$id)->getResult();
+            ORDER BY e.id DESC')->setParameter('id', $id)->getResult();
     }
 
     /**
@@ -292,15 +286,15 @@ class ProductRepository extends ServiceEntityRepository
 
         $printWhere = true;
         if ($slug != 'all') {
-            $dql = $dql.' WHERE (sc.id =:sc OR c.id =:sc OR sc.slug =:sc OR c.slug =:sc) ';
+            $dql = $dql . ' WHERE (sc.id =:sc OR c.id =:sc OR sc.slug =:sc OR c.slug =:sc) ';
             $printWhere = false;
         }
 
-        $dql = $dql.($printWhere ? 'WHERE e.name LIKE :name' : ' AND e.name LIKE :name');
-        $dql = $dql.' ORDER BY e.name DESC';
+        $dql = $dql . ($printWhere ? 'WHERE e.name LIKE :name' : ' AND e.name LIKE :name');
+        $dql = $dql . ' ORDER BY e.name DESC';
 
         $query = $entityManager->createQuery($dql)
-            ->setParameter('name', '%'.$name.'%')
+            ->setParameter('name', '%' . $name . '%')
             ->setMaxResults($limit ?? 5);
 
         if ($slug != 'all') {
@@ -309,7 +303,6 @@ class ProductRepository extends ServiceEntityRepository
 
         return $query
             ->getResult();
-
     }
 
     /**
@@ -375,7 +368,6 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getMaxResults(50)
             ->getResult();
-
     }
 
     //obtener los que estan en oferta---hacer
