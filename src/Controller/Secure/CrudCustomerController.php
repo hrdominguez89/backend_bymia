@@ -34,7 +34,7 @@ class CrudCustomerController extends AbstractController
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
         );
-        return $this->render('secure/crud_customer/index.html.twig', $data);
+        return $this->render('secure/crud_customer/abm_customer.html.twig', $data);
     }
 
     /**

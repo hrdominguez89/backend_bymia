@@ -131,20 +131,20 @@ abstract class Product
      */
     public function getShortName(): ?string
     {
-        return $this->ShortName;
+        return $this->shortName;
     }
 
     /**
-     * @param string|null $ShortName
+     * @param string|null $shortName
      * @return $this
      */
-    public function setShortName(?string $ShortName): self
+    public function setShortName(?string $shortName): self
     {
-        $this->ShortName = $ShortName;
+        $this->shortName = $shortName;
 
         $slugify = new Slugify();
 
-        $this->slug = $slugify->slugify($ShortName);
+        $this->slug = $slugify->slugify($shortName);
 
         return $this;
     }
@@ -257,7 +257,7 @@ abstract class Product
      */
     public function getCost(): ?float
     {
-        return $this->price;
+        return $this->cost;
     }
 
     /**
@@ -312,7 +312,7 @@ abstract class Product
     /**
      * @return \DateTime
      */
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
@@ -331,7 +331,7 @@ abstract class Product
     /**
      * @return \DateTime
      */
-    public function getCreatedAt3PL(): \DateTime
+    public function getCreatedAt3PL(): ?\DateTime
     {
         return $this->createdAt3PL;
     }
@@ -350,7 +350,7 @@ abstract class Product
     /**
      * @return \DateTime
      */
-    public function getUpdatedAt3PL(): \DateTime
+    public function getUpdatedAt3PL(): ?\DateTime
     {
         return $this->updatedAt3PL;
     }

@@ -80,17 +80,14 @@ class ProductsController extends AbstractController
      */
     public function index(ProductRepository $productRepository, Request $request, PaginatorInterface $pagination): Response
     {
-        $data = $productRepository->findAll();
-        $paginator = $pagination->paginate(
-            $data,
-            $request->query->getInt('page', $request->get("page") || 1), /*page number*/
-            15, /*limit per page*/
-            ['align' => 'center', 'style' => 'bottom',]
+        $data['products'] = $productRepository->findAll();
+        $data['title'] = 'Productos';
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
         );
-
-        return $this->render('secure/products/index.html.twig', [
-            'products' => $paginator,
-        ]);
+        
+        return $this->render('secure/products/abm_products.html.twig', $data);
     }
 
     /**
