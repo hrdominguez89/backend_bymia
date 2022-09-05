@@ -8,62 +8,117 @@
 			<ul class="metismenu list-unstyled" id="side-menu">
 				<li class="text-white">
 					<a href="javascript: void(0);" class="has-arrow text-white red-background">
-						<i class="bx bxs-spreadsheet text-white"></i>
-						<span data-key="t-static" class="text-white">{{ 'Static' | trans }}</span>
+						<i class="fas fa-sitemap text-white"></i>
+						<span class="text-white">ByMia E-Commerce</span>
 					</a>
 					<ul class="sub-menu red-background" aria-expanded="true">
-						{#                        <li>#}
-						{#                            <a href="{{ path('secure_payment_method') }}">#}
-						{#                                <i class="fab fa-cc-visa text-white"></i>#}
-						{#                                <span data-key="t-metodo-pago" class="text-white">{{ 'Metodos de pago' | trans }}</span>#}
-						{#                            </a>#}
-						{#                        </li>#}
-							<li>
-								<a href="{{ path('contact_us') }}"> <i class="bx bx-phone-incoming text-white"></i>
-								<span data-key="t-contact" class="text-white">Contáctenos</span>
+						<li class="text-white">
+							<a href="javascript: void(0);" class="has-arrow text-white red-background">
+								<i class="bx bxs-dock-top text-white"></i>
+								<span class="text-white">Header</span>
 							</a>
+							<ul class="sub-menu red-background" aria-expanded="true">
+								<li>
+									<a href="{{ path('about_us') }}">
+										<i class="bx bxs-info-circle text-white"></i>
+										<span data-key="t-about-us" class="text-white">Sobre nosotros</span>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<i class="fas fa-question-circle text-white"></i>
+										<span class="text-white">FAQ</span>
+									</a>
+
+								</li>
+								<li>
+									<a href="{{ path('secure_crud_social_network_index') }}">
+										<i class="bx bxl-twitter text-white"></i>
+										<span data-key="t-social-network" class="text-white">Red social</span>
+									</a>
+								</li>
+							</ul>
 						</li>
-						<li>
-							<a href="{{ path('about_us') }}">
-								<i class="bx bxs-info-circle text-white"></i>
-								<span data-key="t-about-us" class="text-white">Sobre nosotros</span>
+						<li class="text-white">
+							<a href="javascript: void(0);" class="has-arrow text-white red-background">
+								<i class="bx bxs-detail text-white"></i>
+								<span class="text-white">Cuerpo</span>
 							</a>
+							<ul class="sub-menu red-background" aria-expanded="true">
+
+								<li>
+									<a class="red-background" href="{{ path('secure_cover_image_index') }}">
+										<i class="fas fa-images text-white"></i>
+										<span class="text-white">Sliders</span>
+									</a>
+								</li>
+
+								<li>
+									<a class="red-background" href="{{ path('secure_configuration_index') }}">
+										<i class="fas fa-icons text-white"></i>
+										<span class="text-white">Iconos inicio</span>
+									</a>
+								</li>
+
+								<li>
+									<a class="red-background" href="{{ path('secure_crud_advertisements_new') }}">
+										<i class="fas fa-images text-white"></i>
+										<span class="text-white">Banners</span>
+									</a>
+								</li>
+							</ul>
 						</li>
-						<li>
-							<a href="{{ path('terms_conditions') }}">
-								<i class="fas fa-gavel text-white"></i>
-								<span data-key="t-terms-conditions" class="text-white">Término y condiciones</span>
+						<li class="text-white">
+							<a href="javascript: void(0);" class="has-arrow text-white red-background">
+								<i class="bx bxs-dock-bottom text-white"></i>
+								<span class="text-white">Footer</span>
 							</a>
+							<ul class="sub-menu red-background" aria-expanded="true">
+								<li>
+									<a href="{{ path('terms_conditions') }}">
+										<i class="fas fa-gavel text-white"></i>
+										<span data-key="t-terms-conditions" class="text-white">Término y condiciones</span>
+									</a>
+								</li>
+
+								<li>
+									<a href="{{ path('terms_conditions') }}">
+										<i class="fas fa-gavel text-white"></i>
+										<span class="text-white">Política de privacidad</span>
+									</a>
+								</li>
+
+								<li>
+									<a href="{{ path('terms_conditions') }}">
+										<i class="fas fa-gavel text-white"></i>
+										<span class="text-white">Devolución</span>
+									</a>
+								</li>
+
+								<li>
+									<a href="{{ path('terms_conditions') }}">
+										<i class="fas fa-gavel text-white"></i>
+										<span class="text-white">Atención al cliente</span>
+									</a>
+								</li>
+
+								<li>
+									<a href="{{ path('contact_us') }}">
+										<i class="bx bx-phone-incoming text-white"></i>
+										<span data-key="t-contact" class="text-white">Contáctenos</span>
+									</a>
+								</li>
+
+								<li>
+									<a href="{{ path('terms_conditions') }}">
+										<i class="fas fa-gavel text-white"></i>
+										<span class="text-white">Envíos</span>
+									</a>
+								</li>
+
+							</ul>
 						</li>
-						<li>
-							<a href="{{ path('secure_crud_social_network_index') }}">
-								<i class="bx bxl-twitter text-white"></i>
-								<span data-key="t-social-network" class="text-white">Red social</span>
-							</a>
-						</li>
-						{#                        <li>#}
-						{#                            <a href="{{ path('app_newsletter') }}">#}
-						{#                                <i class="fas fa-envelope-open-text text-white"></i>#}
-						{#                                <span data-key="t-newsletter" class="text-white">{{ 'Newsletter' | trans }}</span>#}
-						{#                            </a>#}
-						{#                        </li>#}
-							<li>
-								<a class="red-background" href="{{ path('secure_configuration_index') }}"> <i class="fas fa-icons text-white"></i>
-								<span data-key="t-configuration" class="text-white">{{ 'Configurations' | trans }}</span>
-							</a>
-						</li>
-						<li>
-							<a class="red-background" href="{{ path('secure_cover_image_index') }}">
-								<i class="fas fa-images text-white"></i>
-								<span data-key="t-cover-images" class="text-white">Imágenes de la portada</span>
-							</a>
-						</li>
-						<li>
-							<a class="red-background" href="{{ path('secure_crud_advertisements_new') }}">
-								<i class="fas fa-images text-white"></i>
-								<span data-key="t-advertisements-images" class="text-white">Imágenes promociones</span>
-							</a>
-						</li>
+
 
 					</ul>
 				</li>
@@ -102,8 +157,10 @@
 						<a class="red-background" href="{{ path('secure_crud_customer_index') }}"> <i class="fas fa-user-tie text-white"></i>
 						<span data-key="t-customers" class="text-white">Clientes</span>
 					</a>
-					<li>
-						<a class="red-background" href="{{ path('secure_crud_world_index') }}"> <i class="fas fa-map-marked-alt text-white"></i>
+				</li>
+				<li>
+					<a class="red-background" href="{{ path('secure_crud_world_index') }}">
+						<i class="fas fa-map-marked-alt text-white"></i>
 						<span class="text-white">Paises/Estados/Ciudades</span>
 					</a>
 				</li>
