@@ -6,10 +6,18 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BrandRepository")
  * @ORM\Table("mia_brand")
+ * 
+ * @ApiResource(
+ *      collectionOperations={"get"={"normalization_context"={"groups"="Brands:List"}}},
+ *      itemOperations={"get"={"normalization_context"={"groups"="Brand:item"}}},
+ *      paginationEnabled=false
+ * )
  */
 class Brand
 {
@@ -17,6 +25,9 @@ class Brand
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="bigint")
+     * 
+     * 
+     * @Groups({"Brands:List","Brand:item"})
      */
     private $id;
 
@@ -24,6 +35,7 @@ class Brand
      * @var string|null
      *
      * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
+     * 
      */
     private $apiId;
 
@@ -31,6 +43,9 @@ class Brand
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=50)
+     * 
+     * @Groups({"Brands:List","Brand:item"})
+     * 
      */
     private $name;
 
@@ -38,6 +53,9 @@ class Brand
      * @var string
      *
      * @ORM\Column(name="slug", type="string", length=50)
+     * 
+     * @Groups({"Brands:List","Brand:item"})
+     * 
      */
     private $slug;
 
@@ -45,11 +63,17 @@ class Brand
      * @var string|null
      *
      * @ORM\Column(name="image", type="text", nullable=true)
+     * 
+     * @Groups({"Brands:List","Brand:item"})
+     * 
      */
     private $image;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * 
+     * @Groups({"Brands:List","Brand:item"})
+     * 
      */
     private $description;
 

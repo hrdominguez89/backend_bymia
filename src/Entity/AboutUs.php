@@ -3,10 +3,18 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AboutUsRepository")
  * @ORM\Table("mia_about_us")
+ * 
+ * @ApiResource(
+ *      collectionOperations={"get"={"normalization_context"={"groups"="AboutUs:List"}}},
+ *      itemOperations={"get"={"normalization_context"={"groups"="AboutUs:item"}}},
+ *      paginationEnabled=false
+ * )
  */
 class AboutUs
 {
@@ -14,6 +22,7 @@ class AboutUs
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="bigint")
+     * 
      */
     private $id;
 
@@ -21,6 +30,7 @@ class AboutUs
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", nullable=true)
+     * @Groups({"AboutUs:List","AboutUs:item"})
      */
     private $description;
 
@@ -50,5 +60,4 @@ class AboutUs
 
         return $this;
     }
-
 }
