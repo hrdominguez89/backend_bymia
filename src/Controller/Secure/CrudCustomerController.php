@@ -26,9 +26,8 @@ class CrudCustomerController extends AbstractController
     public function index(CustomerRepository $customerRepository): Response
     {
 
-        $customers = $customerRepository->listCustomersInfo();
         $data['title'] = 'Clientes';
-        $data['customers'] = $customers;
+        $data['customers'] = $customerRepository->listCustomersInfo();
         $data['title'] = "Clientes";
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         $data['breadcrumbs'] = array(

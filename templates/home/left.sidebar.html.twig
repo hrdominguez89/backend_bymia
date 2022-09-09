@@ -129,14 +129,24 @@
 						<span data-key="t-operators" class="text-white">Operadores</span>
 					</a>
 				</li>
-				{#                <li>#}
-				{#                    <a class="red-background" href="{{ path('app_tiempo_demora_almacen') }}">#}
-				{#                        <i class="fas fa-business-time text-white"></i>#}
-				{#                        <span data-key="t-tiempo-demora" class="text-white">{{ 'TiempoDemora' | trans }}</span>#}
-				{#                    </a>#}
-				{#                </li>#}
-					<li>
-						<a class="red-background" href="{{ path('secure_crud_coupon_discount_index') }}"> <i class="fab fa-aws text-white"></i>
+
+				<li>
+					<a class="red-background" href="{{ path('api_clients') }}">
+						<i class="fas fa-user-lock text-white"></i>
+						<span class="text-white">Usuarios API</span>
+					</a>
+				</li>
+
+				<li>
+					<a class="red-background" href="{{ path('secure_crud_customer_index') }}">
+						<i class="fas fa-user-tie text-white"></i>
+						<span data-key="t-customers" class="text-white">Clientes</span>
+					</a>
+				</li>
+
+				<li>
+					<a class="red-background" href="{{ path('secure_crud_coupon_discount_index') }}">
+						<i class="fab fa-aws text-white"></i>
 						<span data-key="t-offert-coupon" class="text-white">Cupones de descuento</span>
 					</a>
 				</li>
@@ -153,14 +163,9 @@
 				{#                        <span data-key="t-currency-changes" class="text-white">{{ 'CurrencyChanges' | trans }}</span>#}
 				{#                    </a>#}
 				{#                </li>#}
+
 					<li>
-						<a class="red-background" href="{{ path('secure_crud_customer_index') }}"> <i class="fas fa-user-tie text-white"></i>
-						<span data-key="t-customers" class="text-white">Clientes</span>
-					</a>
-				</li>
-				<li>
-					<a class="red-background" href="{{ path('secure_crud_world_index') }}">
-						<i class="fas fa-map-marked-alt text-white"></i>
+						<a class="red-background" href="{{ path('secure_crud_world_index') }}"> <i class="fas fa-map-marked-alt text-white"></i>
 						<span class="text-white">Paises/Estados/Ciudades</span>
 					</a>
 				</li>
