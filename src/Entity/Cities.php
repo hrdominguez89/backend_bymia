@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=CitiesRepository::class)
+ * 
  */
+
 class Cities
 {
     /**
@@ -88,8 +90,9 @@ class Cities
     {
         $this->customerAddresses = new ArrayCollection();
     }
-    
-    public function __toString() {
+
+    public function __toString()
+    {
         return $this->name;
     }
 

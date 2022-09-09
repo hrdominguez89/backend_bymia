@@ -7,6 +7,9 @@ secure_controllers:
     type: annotation
     prefix: /secure
 
+api_controllers:
+    resource: ../../src/Api/
+    type: annotation
 
 kernel:
     resource: ../../src/Kernel.php

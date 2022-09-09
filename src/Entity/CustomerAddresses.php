@@ -18,7 +18,7 @@ class CustomerAddresses
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=customer::class, inversedBy="customerAddresses")
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="customerAddresses")
      * @ORM\JoinColumn(nullable=false)
      */
     private $customer;

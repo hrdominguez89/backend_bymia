@@ -13,12 +13,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass="App\Repository\BrandRepository")
  * @ORM\Table("mia_brand")
  * 
- * @ApiResource(
- *      collectionOperations={"get"={"normalization_context"={"groups"="Brands:List"}}},
- *      itemOperations={"get"={"normalization_context"={"groups"="Brand:item"}}},
- *      paginationEnabled=false
- * )
  */
+//  * @ApiResource(
+//  *      collectionOperations={"get"={"normalization_context"={"groups"="Brands:List"}}},
+//  *      itemOperations={"get"={"normalization_context"={"groups"="Brand:item"}}},
+//  *      paginationEnabled=false
+//  * )
 class Brand
 {
     /**

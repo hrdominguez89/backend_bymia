@@ -1,4 +1,6 @@
 {
+    "name":"bymia/backend_api",
+    "description":"Desarrolo del backend de bymia integrado con la api para comunicacion entre el frontend el 3pl y el crm",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -17,6 +19,7 @@
         "doctrine/orm": "^2.10",
         "knplabs/knp-paginator-bundle": "^5.7",
         "league/flysystem-bundle": "1.5.*",
+        "lexik/jwt-authentication-bundle": "^2.16",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^6.1",
@@ -40,6 +43,7 @@
         "symfony/proxy-manager-bridge": "5.3.*",
         "symfony/runtime": "5.3.*",
         "symfony/security-bundle": "5.3.*",
+        "symfony/security-core": "5.3.*",
         "symfony/serializer": "5.3.*",
         "symfony/string": "5.3.*",
         "symfony/translation": "5.3.*",

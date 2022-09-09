@@ -11,11 +11,30 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table("mia_about_us")
  * 
  * @ApiResource(
- *      collectionOperations={"get"={"normalization_context"={"groups"="AboutUs:List"}}},
- *      itemOperations={"get"={"normalization_context"={"groups"="AboutUs:item"}}},
+ *      normalizationContext={"groups"={"submission"}},
+ *      denormalizationContext={"groups"={"submission"}},
+ *      itemOperations={"get","put"={"normalization_context"={"groups"="AboutUs:item"},{"path"="ruta/aa"}}},
  *      paginationEnabled=false
  * )
  */
+
+/*[ApiResource(
+    itemOperations: [
+            'get',
+            'put' => [
+                'denormalization_context' => [
+                    'groups' => ['item:put'],
+                    'swagger_definition_name' => 'put',
+                ],
+            ],
+            'delete',
+        ],
+    ],
+    denormalizationContext: [
+        'groups' => ['item:post'],
+        'swagger_definition_name' => 'post',
+    ],
+)]*/
 class AboutUs
 {
     /**
@@ -30,7 +49,7 @@ class AboutUs
      * @var string|null
      *
      * @ORM\Column(name="description", type="text", nullable=true)
-     * @Groups({"AboutUs:List","AboutUs:item"})
+     * @Groups({"AboutUs:item","submission"})
      */
     private $description;
 
