@@ -31,7 +31,10 @@
 {% endblock %}
 
 {% block body %}
-
+	{# Carga modal en caso de haber mensajes para mostrar #}
+	{% for message in app.flashes('message') %}
+		{% include 'home/modal.html.twig' %}
+	{% endfor %}
 	<!-- <body data-layout="horizontal"> -->
 
 	<!-- loading overlay -->
@@ -60,30 +63,7 @@
 
 				{% block content %}
 					{% if breadcrumbs is defined %}
-						<div class="row">
-							<div class="col-12">
-								<ol class="breadcrumb m-0">
-									<li class="breadcrumb-item">
-										<a href="{{ path('app_homepage') }}">Inicio</a>
-									</li>
-									{% for breadcrumb in breadcrumbs %}
-										{% if breadcrumb.active is defined %}
-											<li class="breadcrumb-item active">{{breadcrumb.title}}</li>
-										{% else %}
-											{% if breadcrumb.path_parameters is defined %}
-												<li class="breadcrumb-item">
-													<a href="{{ path(breadcrumb.path,breadcrumb.path_parameters) }}">{{breadcrumb.title}}</a>
-												</li>
-											{% else %}
-												<li class="breadcrumb-item">
-													<a href="{{ path(breadcrumb.path) }}">{{breadcrumb.title}}</a>
-												</li>
-											{% endif %}
-										{% endif %}
-									{% endfor %}
-								</ol>
-							</div>
-						</div>
+						{% include 'home/breadcrumbs.html.twig' %}
 					{% endif %}
 				{% endblock %}
 

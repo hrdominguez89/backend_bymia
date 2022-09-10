@@ -30,6 +30,17 @@
 			{{ form_row(form.api_client_type_role) }}
 		</div>
 	</div>
+	{% if reset_api_key is defined %}
+		<div class="row my-2">
+			<div class="col-6">
+				{{form_row(form.reset_api_key)}}
+			</div>
+		</div>
+	{% else %}
+		<div style="display:none;">
+			{{ form_row(form.reset_api_key, { 'attr': {'disabled': 'disabled'} }) }}
+		</div>
+	{% endif %}
 	<div>
 		<div class="row my-2">
 

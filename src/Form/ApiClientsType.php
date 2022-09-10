@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ApiClientsType extends AbstractType
 {
@@ -22,6 +23,12 @@ class ApiClientsType extends AbstractType
                 'class'  => ApiClientsTypesRoles::class,
                 'choice_label' => 'name',
                 'required' => true,
+            ])
+            
+            ->add('reset_api_key', CheckboxType::class, [
+                'label'    => 'Reiniciar API KEY',
+                'required' => false,
+                'mapped' => false
             ])
         ;
     }

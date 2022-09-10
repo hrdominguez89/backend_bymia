@@ -127,7 +127,11 @@ function send(method, url, params, fnCallBackOnSuccess, fnCallBackAlways) {
       // handle error
       // Error 😨
       console.log(error);
-      message("Error!", "Ha ocurrido un error en la solicitud", MessageType.ERROR);
+      message(
+        "Error!",
+        "Ha ocurrido un error en la solicitud",
+        MessageType.ERROR
+      );
       // if (error.response) {
       //   /*
       //    * The request was made and the server responded with a
@@ -176,9 +180,9 @@ function is_granted(role) {
 }
 
 $(document).ready(function () {
-
+  openModal();
   //set language on init to all site
-  o = 'sp' //localStorage.getItem("language");
+  o = "sp"; //localStorage.getItem("language");
   $.getJSON("/assets/lang/" + o + ".json", function (t) {
     $("html").attr("lang", o),
       $.each(t, function (t, e) {
@@ -188,15 +192,19 @@ $(document).ready(function () {
   });
 });
 
-const loadingCmponent = {
+const openModal = () => {
+  if($('#messageModal').length){
+    $('#messageModal').modal('show');
+  }
+};
 
+const loadingCmponent = {
   show() {
-    $('#loading--component-id').fadeIn()
+    $("#loading--component-id").fadeIn();
   },
   close() {
-    $('#loading--component-id').fadeOut()
-  }
+    $("#loading--component-id").fadeOut();
+  },
+};
 
-}
-
-loadingCmponent.close()
+loadingCmponent.close();

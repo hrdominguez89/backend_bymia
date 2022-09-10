@@ -50,25 +50,27 @@ class ApiClientsController extends AbstractController
             $data['api_client']->setUpdatedAt(new \DateTime());
 
 
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($data['api_client']);
-            // $entityManager->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['api_client']);
+            $entityManager->flush();
 
-            dump($data['api_client']);die();
-
-            $message['type']= 'modal';
+            $message['type'] = 'modal';
+            $message['alert'] = 'success';
             $message['title'] = 'Se creó un nuevo usuario de API';
             $message['message'] = '
                 Acontinuación se detalla las credenciales del usuario creado<br>
-                <span class="fw-bold">API Client: </span>
                 <br>
-                <span class="fw-bold">Rol: </span>
+                Anotelas ya que no podra volver a consultarlas, en caso de olvido o perdida debera reiniciar la api key.<br>
+                <br>
+                <span class="fw-bold">API Client: </span>' . $data['api_client']->getName() . '
+                <br>
+                <span class="fw-bold">Rol: </span>' . $data['api_client']->getApiClientTypeRole()->getName() . '
                 <br>                
-                <span class="fw-bold">API Client: </span>
+                <span class="fw-bold">API Client: </span>' . $clave['api_client_id'] . '
                 <br>
-                <span class="fw-bold">API Key: </span>
+                <span class="fw-bold">API Key: </span>' . $clave['api_key'] . '<br>
                 ';
-            $this->addFlash('message',$message);
+            $this->addFlash('message', $message);
             return $this->redirectToRoute('api_clients', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -85,6 +87,7 @@ class ApiClientsController extends AbstractController
      */
     public function edit($id, Request $request, ApiClientsRepository $apiClientsRepository): Response
     {
+        $data['reset_api_key'] = true;
         $data['title'] = "Editar usuario API";
         $data['api_client'] = $apiClientsRepository->find($id);
         $form = $this->createForm(ApiClientsType::class, $data['api_client']);
@@ -93,6 +96,28 @@ class ApiClientsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data['api_client']->setUpdatedAt(new \DateTime());
 
+            if ($form->get('reset_api_key')->getData()) {
+                $clave['api_key'] = Uuid::v4();
+                $data['api_client']->setApiKey($clave['api_key']);
+                $message['type'] = 'modal';
+                $message['alert'] = 'success';
+                $message['title'] = 'Se editó usuario de API';
+                $message['message'] = '
+                    Acontinuación se detalla las credenciales del usuario editado<br>
+                    <br>
+                    Anotelas ya que no podra volver a consultarlas, en caso de olvido o perdida debera reiniciar la api key.<br>
+                    <br>
+
+                    <span class="fw-bold">API Client: </span>' . $data['api_client']->getName() . '
+                    <br>
+                    <span class="fw-bold">Rol: </span>' . $data['api_client']->getApiClientTypeRole()->getName() . '
+                    <br>                
+                    <span class="fw-bold">API Client: </span>' . $data['api_client']->getApiClientId() . '
+                    <br>
+                    <span class="fw-bold">API Key: </span>' . $clave['api_key'] . '<br>
+                    ';
+                $this->addFlash('message', $message);
+            }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['api_client']);
             $entityManager->flush();
