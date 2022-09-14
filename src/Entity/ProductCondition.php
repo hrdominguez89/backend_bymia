@@ -30,7 +30,7 @@ class ProductCondition
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="contidion")
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="condition")
      */
     private $products;
 
@@ -80,7 +80,7 @@ class ProductCondition
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->setContidion($this);
+            $product->setCondition($this);
         }
 
         return $this;
@@ -90,8 +90,8 @@ class ProductCondition
     {
         if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
-            if ($product->getContidion() === $this) {
-                $product->setContidion(null);
+            if ($product->getCondition() === $this) {
+                $product->setCondition(null);
             }
         }
 

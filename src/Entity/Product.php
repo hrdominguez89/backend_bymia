@@ -22,6 +22,7 @@ class Product extends BaseProduct
 
     /**
      * @ORM\Column(type="string", length=100, nullable="true")
+     * 
      */
     private $part_number;
 
@@ -37,6 +38,8 @@ class Product extends BaseProduct
 
     /**
      * @ORM\Column(type="integer", nullable="true")
+     * 
+     * 
      */
     private $incomming;
 

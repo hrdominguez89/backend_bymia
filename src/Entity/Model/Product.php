@@ -11,6 +11,7 @@ abstract class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="bigint")
+     * 
      */
     protected $id;
 
@@ -176,62 +177,6 @@ abstract class Product
     }
 
 
-    /**
-     * @return string|null
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string|null $description
-     * @return $this
-     */
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return float|null
-     */
-    public function getStock(): ?float
-    {
-        return $this->stock;
-    }
-
-    /**
-     * @param float|null $stock
-     * @return $this
-     */
-    public function setStock(?float $stock): self
-    {
-        $this->stock = $stock;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string|null $url
-     * @return $this
-     */
-    public function setUrl(?string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
-    }
 
     /**
      * @return float|null
@@ -376,9 +321,8 @@ abstract class Product
             "slug" => $this->getSlug(),
             "shortName" => $this->getShortName(),
             "sku" => $this->getSku(),
-            "description" => $this->getDescription(),
+            "longDescription" => $this->getLongDescription(),
             "shortDescription" => $this->getShortDescription(),
-            "stock" => $this->getStock(),
             "customFields" => "",
         ];
     }

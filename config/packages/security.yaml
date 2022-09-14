@@ -11,6 +11,11 @@ security:
                 class: 'App\Entity\User'
                 property: "email"
 
+        api_client:
+            entity:
+                class: 'App\Entity\ApiClients'
+                property: "api_client_id"
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -29,16 +34,7 @@ security:
             logout:
                 path: app_security_logout
                 target: app_security_login
-
-        api_register:
-            pattern: ^/api/v1/register
-            methods: [POST]
-            security: false
-        docs:
-            pattern: ^/api/v1
-            methods: [GET]
-            security: false
-
+                
     access_control:
         - { path: ^/security/*, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password/*, roles: PUBLIC_ACCESS }

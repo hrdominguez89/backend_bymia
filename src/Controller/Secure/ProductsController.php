@@ -86,7 +86,18 @@ class ProductsController extends AbstractController
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
         );
-        
+
+        return $this->render('secure/products/abm_products.html.twig', $data);
+    }
+
+    /**
+     * @Route("/prueba", name="secure_crud_product_prueba", methods={"POST"})
+     */
+    public function prueba(Request $request): Response
+    {
+
+        dump($request);
+        die();
         return $this->render('secure/products/abm_products.html.twig', $data);
     }
 
