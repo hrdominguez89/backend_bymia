@@ -8,7 +8,6 @@ let tableFullButtons;
 let rowData;
 let rowNumber;
 let columnNumber;
-let toggleButton;
 
 const loadDatatableFullButtons = () => {
   if ($("#table_full_buttons").length) {

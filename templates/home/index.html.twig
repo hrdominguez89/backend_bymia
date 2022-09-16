@@ -13,6 +13,9 @@
 	<link
 	href="{{ asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css') }}" rel="stylesheet" type="text/css"/>
 
+	<link
+	href="{{ asset('assets/libs/datatables.rowReorder/css/rowReorder.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
+
 	<!-- Sweet Alert-->
 	<link
 	href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
@@ -38,7 +41,8 @@
 	<!-- <body data-layout="horizontal"> -->
 
 	<!-- loading overlay -->
-		<div class="loader-container" style="display: none;"> <div class="loader-element">
+	<div class="loader-container" style="display: none;">
+		<div class="loader-element">
 			<div class="loader">Loading...</div>
 			<i class="loader-icon bx bx-hourglass bx-spin align-middle me-2 text-white"></i>
 		</div>
@@ -110,9 +114,12 @@
 	<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
 	<script src="{{ asset('assets/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
 	<script src="{{ asset('assets/libs/datatables.net-colreorder/js/dataTables.colReorder.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.select/dataTables.select.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.rowReorder/js/dataTables.rowReorder.min.js') }}"></script>
+	<script src="{{ asset('assets/libs/datatables.editor/dataTables.editor.min.js') }}"></script>
 	<script src="{{ asset('assets/libs/momentjs/moment.min.js') }}"></script>
 	<script src="{{ asset('assets/libs/momentjs/datetime-moment.js') }}"></script>
-
+	<script src="{{ asset('assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
 
 
 	<!-- Sweet Alerts js -->
@@ -133,5 +140,4 @@
 		{% endfor %}
 
 	{% endif %}
-
 {% endblock %}
