@@ -25,19 +25,30 @@ class AboutUsController extends AbstractController
             $about_us = new AboutUs();
         else
             $about_us = $arr_about_us[0];
-
         $form = $this->createForm(AboutUsType::class, $about_us);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $request->get('about_us');
             $about_us->setDescription($data['description']);
             $em->persist($about_us);
             $em->flush();
+            $message['type'] = 'modal';
+            $message['alert'] = 'success';
+            $message['title'] = 'Éxito';
+            $message['message'] = '
+                Cambios guardados con éxito
+                ';
+            $this->addFlash('message', $message);
+            return $this->redirectToRoute('about_us');
         }
-        return $this->render('secure/about_us/index.html.twig', [
-            'controller_name' => 'AboutUsController',
-            'form' => $form->createView()
-        ]);
+        $data['title'] = 'Acerca de nosotros';
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array('ckeditor_text_area.js?v=' . rand());
+        $data['form'] = $form->createView();
+
+        return $this->render('secure/about_us/form_about_us.html.twig', $data);
     }
 }
