@@ -80,9 +80,6 @@ class FaqsController extends AbstractController
             array('path' => 'abm_topics_faqs', 'title' => 'Temas'),
             array('active' => true, 'title' => $data['title'])
         );
-        $data['files_js'] = array(
-            'faqs/topic.js?v=' . rand(),
-        );
         $data['topic'] = $topicsRepository->find($topic_id);
         $form = $this->createForm(TopicType::class, $data['topic']);
         $form->handleRequest($request);
@@ -134,7 +131,6 @@ class FaqsController extends AbstractController
         $data['faq'] = new Faqs;
 
         $data['files_js'] = array(
-            'faqs/topic.js?v=' . rand(),
             'ckeditor_text_area.js?v=' . rand(),
         );
 
@@ -183,7 +179,6 @@ class FaqsController extends AbstractController
             array('active' => true, 'title' => $data['title'])
         );
         $data['files_js'] = array(
-            'faqs/topic.js?v=' . rand(),
             'ckeditor_text_area.js?v=' . rand(),
         );
         $form = $this->createForm(FaqType::class, $data['faq']);
@@ -249,28 +244,24 @@ class FaqsController extends AbstractController
      */
     public function updateOrder($entity_name, Request $request, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository): Response
     {
-        $id = (int)$request->get('id');
-        $visible = $request->get('visible');
+        $ids = $request->get('orderData')['ids'];
+        $orders = $request->get('orderData')['orders'];
 
         switch ($entity_name) {
             case 'Topics':
-                $entity_object = $topicsRepository->find($id);
+                foreach ($topicsRepository->findById($ids) as $obj) {
+                    $obj->setNumberOrder($orders[array_search($obj->getId(), $ids)]);
+                }
                 break;
             case 'Faqs':
-                $entity_object = $faqsRepository->find($id);
+                foreach ($faqsRepository->findById($ids) as $obj) {
+                    $obj->setNumberOrder($orders[array_search($obj->getId(), $ids)]);
+                }
                 break;
-        }
-
-        if ($visible == 'on') {
-            $entity_object->setVisible(false);
-            $data['visible'] = false;
-        } else {
-            $entity_object->setVisible(true);
-            $data['visible'] = true;
         }
 
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($entity_object);
+        // $entityManager->persist($entity_object);
         $entityManager->flush();
 
         $data['status'] = true;

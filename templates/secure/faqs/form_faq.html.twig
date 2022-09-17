@@ -30,8 +30,8 @@
 
 	{% if faq.icon is defined and (faq.icon !='' or faq.icon != null) %}
 		<div class="row my-2">
-			<div class="col-6">
-				<img class="imagen-grid" alt="Imagen" src="{{ asset(faq.icon) }}"/>
+			<div class="col-2">
+				<img class="img-thumbnail" alt="Imagen" src="{{ asset(faq.icon) }}"/>
 				{{form_row(form.delete_icon)}}
 			</div>
 		</div>

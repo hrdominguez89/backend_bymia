@@ -29,8 +29,8 @@
 	</div>
 	{% if topic.icon is defined and (topic.icon !='' or topic.icon != null) %}
 		<div class="row my-2">
-			<div class="col-6">
-				<img class="imagen-grid" alt="Imagen" src="{{ asset(topic.icon) }}"/>
+			<div class="col-2">
+				<img class="img-thumbnail" alt="Imagen" src="{{ asset(topic.icon) }}"/>
 				{{form_row(form.delete_icon)}}
 			</div>
 		</div>

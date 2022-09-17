@@ -18,7 +18,7 @@ class FaqType extends AbstractType
     {
         $builder
             ->add('question', TextType::class, ['label' => 'Pregunta', 'required' => true])
-            ->add('answer', TextareaType::class, ['label' => 'Respuesta', 'required' => true])
+            ->add('answer', TextareaType::class, ['label' => 'Respuesta', 'required' => false])
             ->add('icon', FileType::class, [
                 'label' => 'Icono',
 

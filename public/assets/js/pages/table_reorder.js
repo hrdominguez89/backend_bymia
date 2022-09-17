@@ -9,6 +9,8 @@ let rowData;
 let rowNumber;
 let columnNumber;
 
+let orderData;
+
 const loadDatatableReOrder = () => {
   if ($("#table_reorder").length) {
     $.fn.dataTable.moment("DD/MM/YYYY");
@@ -16,10 +18,11 @@ const loadDatatableReOrder = () => {
       paging: false,
       rowReorder: true,
       columnDefs: [
-        { orderable: true, className: 'reorder', targets: 0 },
+        { orderable: true, className: "reorder", targets: 0 },
+        { orderable: false, targets: 1, visible: false },
         { orderable: false, targets: "_all" },
       ],
-    //   scrollY: 400,
+      //   scrollY: 400,
       //dom: "lBftip", //l= cant. de registros por pagina | B=botones | f = campo de busqueda | t = tabla | i = informacion de cantidad de registros | p = pagination
       dom: "<'row'<'col-sm-12 mt-5'tr>><'row'<'col-sm-12 col-md-5'i>>",
       language: {
@@ -28,24 +31,29 @@ const loadDatatableReOrder = () => {
     });
 
     tableReOrder.on("row-reorder", function (e, diff, edit) {
-      var result =
-        "Reorder started on row: " + edit.triggerRow.data()[1] + "<br>";
-
+      orderData = {
+        ids: [],
+        orders: [],
+      };
       for (var i = 0, ien = diff.length; i < ien; i++) {
         var rowData = tableReOrder.row(diff[i].node).data();
-
-        result +=
-          rowData[1] +
-          " updated to be in position " +
-          diff[i].newData +
-          " (was " +
-          diff[i].oldData +
-          ")<br>";
+        orderData.ids.push(rowData[1]);
+        orderData.orders.push(diff[i].newData);
       }
-
-      console.log("Event result:<br>" + result);
+      saveNewOrder();
     });
   }
+};
+
+const saveNewOrder = async () => {
+  const slug = $("#table_reorder").data("slug");
+  await $.ajax({
+    url: slug,
+    method: "POST",
+    data: { orderData: orderData },
+    // success: (res) => {
+    // },
+  });
 };
 
 const listenToggleOnOff = async () => {
