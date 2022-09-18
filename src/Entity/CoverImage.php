@@ -46,29 +46,24 @@ class CoverImage
     private $linkBtn;
 
     /**
-     * @var bool
-     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pre_title;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $number_order;
+
+    /**
      * @ORM\Column(type="boolean")
      */
-    private $main;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="image_lg", type="string", length=255)
-     */
-    private $imageLg;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="image_sm", type="string", length=255)
-     */
-    private $imageSm;
+    private $visible;
 
     public function __construct()
     {
-        $this->main = false;
+        $this->visible = false;
+        $this->number_order = null;
     }
 
     /**
@@ -155,66 +150,39 @@ class CoverImage
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMain(): bool
+    public function getPreTitle(): ?string
     {
-        return $this->main;
+        return $this->pre_title;
     }
 
-    /**
-     * @param bool $main
-     * @return $this
-     */
-    public function setMain(bool $main): CoverImage
+    public function setPreTitle(?string $pre_title): self
     {
-        $this->main = $main;
+        $this->pre_title = $pre_title;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getImageLg(): string
+    public function getNumberOrder(): ?int
     {
-        return $this->imageLg;
+        return $this->number_order;
     }
 
-    /**
-     * @param string $imageLg
-     * @return $this
-     */
-    public function setImageLg(string $imageLg): CoverImage
+    public function setNumberOrder(?int $number_order): self
     {
-        $this->imageLg = $imageLg;
+        $this->number_order = $number_order;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getImageSm(): string
+    public function getVisible(): ?bool
     {
-        return $this->imageSm;
+        return $this->visible;
     }
 
-    /**
-     * @param string $imageSm
-     * @return $this
-     */
-    public function setImageSm(string $imageSm): CoverImage
+    public function setVisible(bool $visible): self
     {
-        $this->imageSm = $imageSm;
+        $this->visible = $visible;
 
         return $this;
     }
-
-    public function getMain(): ?bool
-    {
-        return $this->main;
-    }
-
 }

@@ -32,7 +32,7 @@ class FaqsController extends AbstractController
             array('active' => true, 'title' => $data['title'])
         );
         $data['files_js'] = array('table_reorder.js?v=' . rand());
-        $data['topics'] = $topicsRepository->findBy(array(), array('number_order' => 'ASC'));
+        $data['topics'] = $topicsRepository->findBy(array(), array('visible' => 'DESC', 'number_order' => 'ASC'));
         return $this->render('secure/faqs/abm_topics_faqs.html.twig', $data);
     }
 
@@ -109,7 +109,7 @@ class FaqsController extends AbstractController
      */
     public function index_faq($topic_id, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository): Response
     {
-        $data['topic'] = $topicsRepository->findOneBy(array('id' => $topic_id));
+        $data['topic'] = $topicsRepository->findOneBy(array('id' => $topic_id), ['visible' => 'DESC', 'number_order' => 'ASC']);
         $data['faqs'] = $faqsRepository->findByTopicId($topic_id);
         $data['title'] = 'Preguntas de ' . $data['topic']->getName();
         $data['breadcrumbs'] = array(

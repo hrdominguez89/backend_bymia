@@ -4,14 +4,15 @@ namespace App\Controller\Secure;
 
 use App\Entity\CoverImage;
 use App\Form\CoverImageType;
+use App\Helpers\FileUploader;
 use App\Repository\CoverImageRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Helpers\FileUploader;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/cover-image")
@@ -23,56 +24,45 @@ class CoverImageController extends AbstractController
      */
     public function index(CoverImageRepository $coverImageRepository): Response
     {
-        return $this->render('secure/cover_image/index.html.twig', [
-            'cover_images' => $coverImageRepository->findAll(),
-        ]);
+        $data['sliders'] = $coverImageRepository->findBy(array(), array('visible' => 'DESC', 'number_order' => 'ASC'));
+        $data['title'] = 'Sliders';
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array('table_reorder.js?v=' . rand());
+        return $this->render('secure/cover_image/abm_sliders.html.twig', $data);
     }
 
     /**
      * @Route("/new", name="secure_cover_image_new", methods={"GET","POST"})
      */
-    public function new(Request $request, CoverImageRepository $coverImageRepository, FileUploader $fileUploader): Response
+    public function new(Request $request): Response
     {
-        $coverImage = new CoverImage();
-        $form = $this->createForm(CoverImageType::class, $coverImage);
+        $data['slider'] = new CoverImage();
+        $form = $this->createForm(CoverImageType::class, $data['slider']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
-            if ($coverImage->isMain()) {
-                $coverImageMain = $coverImageRepository->findOneBy(['main' => true]);
-                if ($coverImageMain) {
-                    $coverImageMain->setMain(false);
-                    $entityManager->persist($coverImageMain);
-                }
-            }
-
-            $imageFile = $form->get('imageLg')->getData();
-            if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-                $coverImage->setImageLg($_ENV['SITE_URL'].'/uploads/images/'.$imageFileName);
-            }
-            $imageFile = $form->get('imageSm')->getData();
-            if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-                $coverImage->setImageSm($_ENV['SITE_URL'].'/uploads/images/'.$imageFileName);
-            }
-
-            $entityManager->persist($coverImage);
+            $entityManager->persist($data['slider']);
             $entityManager->flush();
 
             return $this->redirectToRoute('secure_cover_image_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('secure/cover_image/new.html.twig', [
-            'cover_image' => $coverImage,
-            'form' => $form,
-        ]);
+        $data['title'] = 'Nuevo slider';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_cover_image_index', 'title' => 'Sliders'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array(
+            'ckeditor_text_area.js?v=' . rand(),
+        );
+        $data['form'] = $form;
+        return $this->renderForm('secure/cover_image/form_cover_image.html.twig', $data);
     }
 
     /**
-     * @Route("/{id}", name="secure_cover_image_show", methods={"GET"})
+     * @Route("/{id}/show", name="secure_cover_image_show", methods={"GET"})
      */
     public function show(CoverImage $coverImage): Response
     {
@@ -84,45 +74,32 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_cover_image_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, CoverImageRepository $coverImageRepository, CoverImage $coverImage, FileUploader $fileUploader): Response
+    public function edit($id, CoverImageRepository $coverImageRepository, Request $request, CoverImage $coverImage): Response
     {
+        $data['slider'] = $coverImageRepository->find($id);
         $form = $this->createForm(CoverImageType::class, $coverImage);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
-            if ($coverImage->isMain()) {
-                $coverImageMain = $coverImageRepository->findOneBy(['main' => true]);
-                if ($coverImageMain) {
-                    $coverImageMain->setMain(false);
-                    $entityManager->persist($coverImageMain);
-                }
-            }
-            /** @var UploadedFile $imageFile */
-            $imageFile = $form->get('imageLg')->getData();
-            if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-                $coverImage->setImageLg($_ENV['SITE_URL'].'/uploads/images/'.$imageFileName);
-            }
-            $imageFile = $form->get('imageSm')->getData();
-            if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-                $coverImage->setImageSm($_ENV['SITE_URL'].'/uploads/images/'.$imageFileName);
-            }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->persist($coverImage);
+            $entityManager->flush();
 
             return $this->redirectToRoute('secure_cover_image_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('secure/cover_image/edit.html.twig', [
-            'cover_image' => $coverImage,
-            'form' => $form,
-        ]);
+        $data['title'] = 'Editar slider';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_cover_image_index', 'title' => 'Sliders'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array(
+            'ckeditor_text_area.js?v=' . rand(),
+        );
+        $data['form'] = $form;
+        return $this->renderForm('secure/cover_image/form_cover_image.html.twig', $data);
     }
 
     /**
-     * @Route("/{id}", name="secure_cover_image_delete", methods={"POST"})
+     * @Route("/{id}/delete", name="secure_cover_image_delete", methods={"POST"})
      */
     public function delete(Request $request, CoverImage $coverImage): Response
     {
@@ -133,5 +110,54 @@ class CoverImageController extends AbstractController
         }
 
         return $this->redirectToRoute('secure_cover_image_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    /**
+     * @Route("/updateVisible", name="secure_cover_image_update_visible", methods={"POST"})
+     */
+    public function updateVisible(Request $request, CoverImageRepository $coverImageRepository): Response
+    {
+        $id = (int)$request->get('id');
+        $visible = $request->get('visible');
+
+        $entity_object = $coverImageRepository->find($id);
+
+        if ($visible == 'on') {
+            $entity_object->setVisible(false);
+            $data['visible'] = false;
+        } else {
+            $entity_object->setVisible(true);
+            $data['visible'] = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/updateOrder", name="secure_cover_image_update_order", methods={"POST"})
+     */
+    public function updateOrder(Request $request, CoverImageRepository $coverImageRepository): Response
+    {
+        $ids = $request->get('orderData')['ids'];
+        $orders = $request->get('orderData')['orders'];
+
+        foreach ($coverImageRepository->findById($ids) as $obj) {
+            $obj->setNumberOrder($orders[array_search($obj->getId(), $ids)]);
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        // $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
+        return new JsonResponse($data);
     }
 }
