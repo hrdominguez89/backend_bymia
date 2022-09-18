@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Secure;
 
-use App\Entity\PrivacyPolicy;
-use App\Form\PrivacyPolicyType;
+use App\Entity\Refund;
+use App\Form\RefundType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,28 +11,28 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/privacy-policy")
+ * @Route("/refund")
  */
-class PrivacyPolicyController extends AbstractController
+class RefundController extends AbstractController
 {
     /**
-     * @Route("/", name="privacy_policy")
+     * @Route("/", name="refund")
      */
     public function index(EntityManagerInterface $em, Request $request): Response
     {
-        $arr_privacy_policy = $em->getRepository(PrivacyPolicy::class)->findAll();
-        if (empty($arr_privacy_policy))
-            $privacy_policy = new PrivacyPolicy();
+        $arr_refund = $em->getRepository(Refund::class)->findAll();
+        if (empty($arr_refund))
+            $refund = new Refund();
         else
-            $privacy_policy = $arr_privacy_policy[0];
+            $refund = $arr_refund[0];
 
-        $form = $this->createForm(PrivacyPolicyType::class, $privacy_policy);
+        $form = $this->createForm(RefundType::class, $refund);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $request->get('privacy_policy');
-            $privacy_policy->setDescription($data['description']);
-            $em->persist($privacy_policy);
+            $data = $request->get('refund');
+            $refund->setDescription($data['description']);
+            $em->persist($refund);
             $em->flush();
 
             $message['type'] = 'modal';
@@ -42,17 +42,16 @@ class PrivacyPolicyController extends AbstractController
                 Cambios guardados con éxito
                 ';
             $this->addFlash('message', $message);
-            return $this->redirectToRoute('privacy_policy');
+            return $this->redirectToRoute('refund');
         }
 
-        $data['title'] = 'Política de privacidad';
+        $data['title'] = 'Devolución';
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
         );
 
         $data['files_js'] = array('ckeditor_text_area.js?v=' . rand());
         $data['form'] = $form->createView();
-
-        return $this->render('privacy_policy/form_privacy_policy.html.twig', $data);
+        return $this->render('secure/refund/form_refund.html.twig', $data);
     }
 }
