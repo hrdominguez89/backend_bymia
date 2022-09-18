@@ -1,0 +1,24 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}
+	{{title}}
+{% endblock %}
+
+{% block content %}
+	{{ parent() }}
+	<h1>{{title}}</h1>
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<div>
+		<div class="row my-2">
+
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_configuration_index') }}">Regresar</a>
+
+				<button class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
+	{{ form_end(form) }}
+
+{% endblock %}

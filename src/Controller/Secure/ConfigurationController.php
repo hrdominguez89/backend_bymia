@@ -23,9 +23,13 @@ class ConfigurationController extends AbstractController
      */
     public function index(ConfigurationRepository $configurationRepository): Response
     {
-        return $this->render('secure/configuration/index.html.twig', [
-            'configurations' => $configurationRepository->findAll(),
-        ]);
+        $data['configurations'] = $configurationRepository->findAll();
+        $data['title'] = 'Iconos inicio';
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array('table_simple.js?v=' . rand());
+        return $this->render('secure/configuration/abm_home_icons.html.twig', $data);
     }
 
     /**
@@ -42,7 +46,7 @@ class ConfigurationController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $configuration->setImage($_ENV['SITE_URL'].'/uploads/images/'.$imageFileName);
+                $configuration->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($configuration);
@@ -50,21 +54,29 @@ class ConfigurationController extends AbstractController
 
             return $this->redirectToRoute('secure_configuration_index', [], Response::HTTP_SEE_OTHER);
         }
+        $data['configuration'] = $configuration;
+        $data['form'] = $form;
+        $data['title'] = 'Nuevo icono de inicio';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_configuration_index', 'title' => 'Iconos de inicio'),
+            array('active' => true, 'title' => $data['title'])
+        );
 
-        return $this->renderForm('secure/configuration/new.html.twig', [
-            'configuration' => $configuration,
-            'form' => $form,
-        ]);
+        return $this->renderForm('secure/configuration/form_home_icons.html.twig', $data);
     }
 
     /**
-     * @Route("/{id}", name="secure_configuration_show", methods={"GET"})
+     * @Route("/{id}/show", name="secure_configuration_show", methods={"GET"})
      */
     public function show(Configuration $configuration): Response
     {
-        return $this->render('secure/configuration/show.html.twig', [
-            'configuration' => $configuration,
-        ]);
+        $data['configuration'] = $configuration;
+        $data['title'] = 'Icono de inicio';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_configuration_index', 'title' => 'Iconos de incio'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        return $this->render('secure/configuration/show.html.twig', $data);
     }
 
     /**
@@ -80,17 +92,22 @@ class ConfigurationController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $configuration->setImage($_ENV['SITE_URL'].'/uploads/images/'.$imageFileName);
+                $configuration->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('secure_configuration_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/configuration/edit.html.twig', [
-            'configuration' => $configuration,
-            'form' => $form,
-        ]);
+        $data['configuration'] = $configuration;
+        $data['form'] = $form;
+        $data['title'] = 'Editar icono de inicio';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_configuration_index', 'title' => 'Iconos de inicio'),
+            array('active' => true, 'title' => $data['title'])
+        );
+
+        return $this->renderForm('secure/configuration/form_home_icons.html.twig', $data);
     }
 
     /**
