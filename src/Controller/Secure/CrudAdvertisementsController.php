@@ -39,47 +39,59 @@ class CrudAdvertisementsController extends AbstractController
             $srcSm3 = $form->get('srcSm3')->getData();
             if (isset($src1)) {
                 $imageFileName = $fileUploader->upload($src1);
-                $advertisement->setSrc1($_ENV['SITE_URL'].'/uploads/images/' . $imageFileName);
+                $advertisement->setSrc1($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             if (isset($srcSm1)) {
                 $imageFileName = $fileUploader->upload($srcSm1);
-                $advertisement->setSrcSm1($_ENV['SITE_URL'].'/uploads/images/' . $imageFileName);
+                $advertisement->setSrcSm1($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             if (isset($src2)) {
                 $imageFileName = $fileUploader->upload($src2);
-                $advertisement->setSrc2($_ENV['SITE_URL'].'/uploads/images/' . $imageFileName);
+                $advertisement->setSrc2($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             if (isset($srcSm2)) {
                 $imageFileName = $fileUploader->upload($srcSm2);
-                $advertisement->setSrcSm2($_ENV['SITE_URL'].'/uploads/images/' . $imageFileName);
+                $advertisement->setSrcSm2($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             if (isset($src3)) {
                 $imageFileName = $fileUploader->upload($src3);
-                $advertisement->setSrc3($_ENV['SITE_URL'].'/uploads/images/' . $imageFileName);
+                $advertisement->setSrc3($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             if (isset($srcSm3)) {
                 $imageFileName = $fileUploader->upload($srcSm3);
-                $advertisement->setSrcSm3($_ENV['SITE_URL'].'/uploads/images/' . $imageFileName);
+                $advertisement->setSrcSm3($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($advertisement);
             $entityManager->flush();
+
+            $message['type'] = 'modal';
+            $message['alert'] = 'success';
+            $message['title'] = 'Éxito';
+            $message['message'] = '
+                Cambios guardados con éxito
+                ';
+            $this->addFlash('message', $message);
+            return $this->redirectToRoute('secure_crud_advertisements_new');
         }
 
-        $data = [
-            'src1'=>$advertisement->getSrc1(),
-            'src2'=>$advertisement->getSrc2(),
-            'src3'=>$advertisement->getSrc3(),
-            'srcSm1'=>$advertisement->getSrcSm1(),
-            'srcSm2'=>$advertisement->getSrcSm2(),
-            'srcSm3'=>$advertisement->getSrcSm3(),
+        $data_img = [
+            'src1' => $advertisement->getSrc1(),
+            'src2' => $advertisement->getSrc2(),
+            'src3' => $advertisement->getSrc3(),
+            'srcSm1' => $advertisement->getSrcSm1(),
+            'srcSm2' => $advertisement->getSrcSm2(),
+            'srcSm3' => $advertisement->getSrcSm3(),
         ];
+        $data['title'] = 'Banners';
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['advertisement'] = $advertisement;
+        $data['form'] = $form;
+        $data['data'] = $data_img;
 
-        return $this->renderForm('secure/crud_advertisements/new.html.twig', [
-            'advertisement' => $advertisement,
-            'form' => $form,
-            'data'=>$data
-        ]);
+        return $this->renderForm('secure/crud_advertisements/form_banners.html.twig', $data);
     }
 }
