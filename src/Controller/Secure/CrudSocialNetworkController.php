@@ -20,9 +20,13 @@ class CrudSocialNetworkController extends AbstractController
      */
     public function index(SocialNetworkRepository $socialNetworkRepository): Response
     {
-        return $this->render('secure/crud_social_network/index.html.twig', [
-            'social_networks' => $socialNetworkRepository->findAll(),
-        ]);
+        $data['title'] = 'Redes sociales';
+        $data['social_networks'] = $socialNetworkRepository->findAll();
+        $data['files_js'] = array('table_simple.js?v=' . rand());
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+        return $this->render('secure/crud_social_network/abm_redes.html.twig', $data);
     }
 
     /**
@@ -41,10 +45,15 @@ class CrudSocialNetworkController extends AbstractController
             return $this->redirectToRoute('secure_crud_social_network_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/crud_social_network/new.html.twig', [
-            'social_network' => $socialNetwork,
-            'form' => $form,
-        ]);
+        $data['form'] = $form;
+        $data['social_network'] = $socialNetwork;
+        $data['title'] = 'Nueva red social';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_social_network_index', 'title' => 'Redes sociales'),
+            array('active' => true, 'title' => $data['title'])
+        );
+
+        return $this->renderForm('secure/crud_social_network/form_redes.html.twig', $data);
     }
 
     /**
@@ -52,9 +61,13 @@ class CrudSocialNetworkController extends AbstractController
      */
     public function show(SocialNetwork $socialNetwork): Response
     {
-        return $this->render('secure/crud_social_network/show.html.twig', [
-            'social_network' => $socialNetwork,
-        ]);
+        $data['social_network'] = $socialNetwork;
+        $data['title'] = 'Red social';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_social_network_index', 'title' => 'Redes sociales'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        return $this->render('secure/crud_social_network/show.html.twig', $data);
     }
 
     /**
@@ -70,11 +83,14 @@ class CrudSocialNetworkController extends AbstractController
 
             return $this->redirectToRoute('secure_crud_social_network_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('secure/crud_social_network/edit.html.twig', [
-            'social_network' => $socialNetwork,
-            'form' => $form,
-        ]);
+        $data['form'] = $form;
+        $data['social_network'] = $socialNetwork;
+        $data['title'] = 'Editar red social';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_social_network_index', 'title' => 'Redes sociales'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        return $this->renderForm('secure/crud_social_network/form_redes.html.twig', $data);
     }
 
     /**
@@ -82,7 +98,7 @@ class CrudSocialNetworkController extends AbstractController
      */
     public function delete(Request $request, SocialNetwork $socialNetwork): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$socialNetwork->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $socialNetwork->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($socialNetwork);
             $entityManager->flush();

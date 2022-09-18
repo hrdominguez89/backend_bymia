@@ -1,5 +1,13 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button style="width: 90px" class="btn btn-primary">Guardar</button>
-    <a style="width: 90px" class="btn btn-secondary" href="{{ path('secure_crud_social_network_index') }}">Regresar</a>
+    <div>
+		<div class="row my-2">
+
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_crud_social_network_index')}}">Regresar</a>
+
+				<button class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
 {{ form_end(form) }}
