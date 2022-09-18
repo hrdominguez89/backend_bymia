@@ -29,15 +29,30 @@ class TermsConditionsController extends AbstractController
         $form = $this->createForm(TermsConditionsType::class, $terms_conditions);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $request->get('terms_conditions');
             $terms_conditions->setDescription($data['description']);
             $em->persist($terms_conditions);
             $em->flush();
+
+            $message['type'] = 'modal';
+            $message['alert'] = 'success';
+            $message['title'] = 'Éxito';
+            $message['message'] = '
+                Cambios guardados con éxito
+                ';
+            $this->addFlash('message', $message);
+            return $this->redirectToRoute('terms_conditions');
         }
-        return $this->render('secure/terms_conditions/index.html.twig', [
-            'controller_name' => 'TermsConditionsController',
-            'form' => $form->createView()
-        ]);
+
+        $data['title'] = 'Términos y condiciones';
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+
+        $data['files_js'] = array('ckeditor_text_area.js?v=' . rand());
+        $data['form'] = $form->createView();
+
+        return $this->render('secure/terms_conditions/form_terminos_y_condiciones.html.twig', $data);
     }
 }

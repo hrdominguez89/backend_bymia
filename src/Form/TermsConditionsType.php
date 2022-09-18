@@ -15,11 +15,9 @@ class TermsConditionsType extends AbstractType
     {
         $builder
             ->add('description', TextareaType::class, [
-                'required' => true,
+                'required' => false,
                 'label' => 'Descripción'
-            ])
-            ->add('save', SubmitType::class, ['label' => 'Guardar', 'attr'=>['class'=>'mt-2 btn btn-primary']])
-            ->getForm();
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
