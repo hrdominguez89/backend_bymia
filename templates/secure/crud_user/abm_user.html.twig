@@ -21,7 +21,7 @@
 				<table id="table_full_buttons" class="table table-sm" data-order="[[ 2, &quot;asc&quot; ],[ 3, &quot;asc&quot; ]]">
 					<thead>
 						<tr>
-							<th data-orderable="false">Imagen</th>
+							<th data-orderable="false" style="width:60px;">Imagen</th>
 							<th>Correo</th>
 							<th>Nombre</th>
 							<th>Apellido</th>
@@ -33,16 +33,18 @@
 						{% for user in users %}
 							<tr>
 								{% if user.image %}
-									<td><img class="imagen-grid" alt="Imagen" src="{{ asset(user.image) }}"/></td>
+									<td><img class="img-fluid" alt="Imagen" src="{{ asset(user.image) }}"/></td>
 								{% else %}
-									<td><img class="imagen-grid" alt="Imagen" src="{{ asset('uploads/images/default.png') }}"/></td>
+									<td><img class="img-fluid" alt="Imagen" src="{{ asset('uploads/images/default.png') }}"/></td>
 								{% endif %}
 								<td>{{ user.email }}</td>
 								<td>{{ user.name }}</td>
 								<td>{{ user.lastname }}</td>
 								<td>{{ user.role.name }}</td>
-								<td>
-									<a class="btn btn-warning" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}" title="Editar operador">Editar</a>
+								<td class="text-center">
+									<a class="btn" href="{{ path('secure_crud_user_edit', {'id': user.id}) }}" title="Editar operador">
+										<i class="fas fa-edit text-warning"></i>
+									</a>
 								</td>
 							</tr>
 						{% endfor %}

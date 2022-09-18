@@ -37,7 +37,7 @@ class CRUDUserController extends AbstractController
             array('active' => true, 'title' => $data['title'])
         );
 
-        return $this->render('secure/crud_user/index.html.twig', $data);
+        return $this->render('secure/crud_user/abm_user.html.twig', $data);
     }
 
     /**

@@ -29,7 +29,7 @@ class ContactUsController extends AbstractController
         $form = $this->createForm(ContactUsType::class, $contact_us);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $request->get('contact_us');
             $contact_us
                 ->setEmail($data['email'])
@@ -37,14 +37,24 @@ class ContactUsController extends AbstractController
                 ->setUrl($data['url'])
                 ->setAddress($data['address'])
                 ->setPhoneMain($data['phoneMain'])
-                ->setPhoneOther($data['phoneOther'])
-            ;
+                ->setPhoneOther($data['phoneOther']);
             $em->persist($contact_us);
             $em->flush();
+
+            $message['type'] = 'modal';
+            $message['alert'] = 'success';
+            $message['title'] = 'Éxito';
+            $message['message'] = '
+                Cambios guardados con éxito
+                ';
+            $this->addFlash('message', $message);
+            return $this->redirectToRoute('contact_us');
         }
-        return $this->render('secure/contact_us/index.html.twig', [
-            'controller_name' => 'ContactUsController',
-            'form' => $form->createView()
-        ]);
+        $data['title'] = 'Acerca de nosotros';
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['form'] = $form->createView();
+        return $this->render('secure/contact_us/form_contact_us.html.twig', $data);
     }
 }

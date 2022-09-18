@@ -17,11 +17,11 @@ class ContactUsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description', TextareaType ::class, [
+            ->add('description', TextareaType::class, [
                 'required' => true,
                 'label' => 'Descripcción'
             ])
-            ->add('address', TextareaType ::class, [
+            ->add('address', TextareaType::class, [
                 'required' => true,
                 'label' => 'Dirección'
             ])
@@ -40,9 +40,7 @@ class ContactUsType extends AbstractType
             ->add('url', UrlType::class, [
                 'required' => false,
                 'label' => 'Url'
-            ])
-            ->add('save', SubmitType::class, ['label' => 'Guardar', 'attr'=>['class'=>'mt-2 btn btn-primary']])
-            ->getForm();
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,0 +1,51 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}
+	{{title}}
+{% endblock %}
+
+{% block content %}
+	{{ parent() }}
+	<div>
+		<h1>{{title}}</h1>
+		{{ form_start(form, {'attr':{'id':'conctac_us','autocomplete':"off"}}) }}
+		<div class="row">
+			<div class="col-6">
+				{{ form_label(form.description) }}
+				{{ form_widget(form.description) }}
+			</div>
+			<div class="col-6">
+				{{ form_label(form.address) }}
+				{{ form_widget(form.address) }}
+			</div>
+			<div class="col-4">
+				{{ form_label(form.email) }}
+				{{ form_widget(form.email) }}
+			</div>
+			<div class="col-4">
+				{{ form_label(form.phoneMain) }}
+				{{ form_widget(form.phoneMain) }}
+			</div>
+			<div class="col-4">
+				{{ form_label(form.phoneOther) }}
+				{{ form_widget(form.phoneOther) }}
+			</div>
+			<div class="col-12">
+				{{ form_label(form.url) }}
+				{{ form_widget(form.url) }}
+			</div>
+		</div>
+		<div>
+			<div class="row my-2">
+
+				<div class="col-12 text-end">
+					<a class="btn btn-secondary" href="{{ path('app_homepage')}}">Regresar</a>
+
+					<button class="btn btn-primary">Guardar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{ form_end(form) }}
+
+{% endblock %}
