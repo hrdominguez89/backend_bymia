@@ -11,11 +11,6 @@ security:
                 class: 'App\Entity\User'
                 property: "email"
 
-        api_client:
-            entity:
-                class: 'App\Entity\ApiClients'
-                property: "api_client_id"
-
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

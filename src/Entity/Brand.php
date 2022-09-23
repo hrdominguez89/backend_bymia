@@ -74,6 +74,11 @@ class Brand
      */
     private $products;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $visible;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -214,6 +219,18 @@ class Brand
                 $product->setBrand(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(?bool $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }

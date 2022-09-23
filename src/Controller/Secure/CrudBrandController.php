@@ -73,9 +73,13 @@ class CrudBrandController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_brand_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Brand $brand, FileUploader $fileUploader): Response
+    public function edit($id, Request $request, BrandRepository $brandRepository, FileUploader $fileUploader): Response
     {
-        $form = $this->createForm(BrandType::class, $brand);
+
+        $data['brand'] = $brandRepository->find($id);
+        dump($data['brand']->getApiId());
+        die();
+        $form = $this->createForm(BrandType::class, $data['brand']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
