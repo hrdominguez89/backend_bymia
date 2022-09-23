@@ -86,7 +86,7 @@ class CrudBrandController extends AbstractController
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $brand->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $data['brand']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
 
@@ -94,7 +94,7 @@ class CrudBrandController extends AbstractController
         }
 
         return $this->renderForm('secure/crud_brand/edit.html.twig', [
-            'brand' => $brand,
+            'brand' => $data['brand'],
             'form' => $form,
         ]);
     }
