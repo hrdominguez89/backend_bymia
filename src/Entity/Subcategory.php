@@ -52,6 +52,11 @@ class Subcategory
      */
     private $products;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $visible;
+
 
     public function __construct()
     {
@@ -218,6 +223,18 @@ class Subcategory
         if ($this->products->removeElement($product)) {
             $product->removeSubcategory($this);
         }
+
+        return $this;
+    }
+
+    public function getVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(?bool $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }
