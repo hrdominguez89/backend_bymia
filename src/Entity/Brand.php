@@ -34,7 +34,7 @@ class Brand
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=50)
+     * @ORM\Column(name="name", type="string", length=255)
      * 
      * 
      * 
@@ -44,7 +44,7 @@ class Brand
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=50)
+     * @ORM\Column(name="slug", type="string", length=255)
      * 
      * 
      * 

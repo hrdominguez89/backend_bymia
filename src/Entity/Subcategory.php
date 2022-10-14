@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Model\Category as BaseCategory;
+use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,22 +11,157 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\SubcategoryRepository")
  * @ORM\Table("mia_sub_category")
  */
-class Subcategory extends BaseCategory
+class Subcategory
 {
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="bigint")
+     */
+    protected $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    protected $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="slug", type="string", length=255)
+     */
+    protected $slug;
+
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
+     */
+    protected $apiId;
+
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="subcategories")
      */
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="subcategory")
+     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="subcategory")
      */
     private $products;
+
 
     public function __construct()
     {
         $this->category = new ArrayCollection();
         $this->products = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        $slugify = new Slugify();
+
+        $this->slug = $slugify->slugify($name);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getApiId(): ?string
+    {
+        return $this->apiId;
+    }
+
+    /**
+     * @param string|null $apiId
+     * @return $this
+     */
+    public function setApiId(?string $apiId): self
+    {
+        $this->apiId = $apiId;
+
+        return $this;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function asArray(): array
+    {
+        return [
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "slug" => $this->getSlug(),
+            "customFields" => "",
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function asArray2(): array
+    {
+        return [
+            "slug" => $this->getSlug(),
+            "name" => $this->getName(),
+            "type" => "child",
+            "category" => [
+                "id" => $this->getId(),
+                "name" => $this->getName(),
+                "slug" => $this->getSlug(),
+                "customFields" => [],
+                "parents" => null,
+                "children" => null,
+            ],
+        ];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function asMenu(): array
+    {
+        return [
+            "type" => 'link',
+            "label" => $this->getName(),
+            "url" => '/shop/catalog/' . $this->getSlug(),
+        ];
     }
 
     /**
@@ -53,8 +188,15 @@ class Subcategory extends BaseCategory
         return $this;
     }
 
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
     /**
-     * @return Collection|Product[]
+     * @return Collection<int, Product>
      */
     public function getProducts(): Collection
     {
@@ -65,7 +207,7 @@ class Subcategory extends BaseCategory
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-            $product->setSubcategory($this);
+            $product->addSubcategory($this);
         }
 
         return $this;
@@ -74,10 +216,7 @@ class Subcategory extends BaseCategory
     public function removeProduct(Product $product): self
     {
         if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getSubcategory() === $this) {
-                $product->setSubcategory(null);
-            }
+            $product->removeSubcategory($this);
         }
 
         return $this;
