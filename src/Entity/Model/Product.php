@@ -76,23 +76,10 @@ abstract class Product
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     protected $createdAt;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at_3pl", type="datetime", nullable=true)
-     */
-    protected $createdAt3PL;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at_3pl", type="datetime", nullable=true)
-     */
-    protected $updatedAt3PL;
 
     public function __construct()
     {
@@ -269,44 +256,6 @@ abstract class Product
     public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt3PL(): ?\DateTime
-    {
-        return $this->createdAt3PL;
-    }
-
-    /**
-     * @param \DateTime $createdAt3PL
-     * @return $this
-     */
-    public function setCreatedAt3PL(\DateTime $createdAt3PL): self
-    {
-        $this->createdAt3PL = $createdAt3PL;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getUpdatedAt3PL(): ?\DateTime
-    {
-        return $this->updatedAt3PL;
-    }
-
-    /**
-     * @param \DateTime $updatedAt3PL
-     * @return $this
-     */
-    public function setUpdatedAt3PL(\DateTime $updatedAt3PL): self
-    {
-        $this->updatedAt3PL = $updatedAt3PL;
 
         return $this;
     }

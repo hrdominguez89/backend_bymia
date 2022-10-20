@@ -26,19 +26,19 @@
 
 							<th>SKU &nbsp;</th>
 
-							<th>Cod. &nbsp;</th>
+							<th>COD &nbsp;</th>
 
-							<th>Part number &nbsp;</th>
+							<th>Part number / UPC &nbsp;</th>
 
-							<th>Nombre corto &nbsp;</th>
+							<th>Título &nbsp;</th>
 
-							<th>Nombre largo &nbsp;</th>
+							<th>Descripcion &nbsp;</th>
 
 							<th>Marca &nbsp;</th>
 
 							<th>Categoría &nbsp;</th>
 
-							<th>Subcategoría &nbsp;</th>
+							{# <th>Subcategoría &nbsp;</th> #}
 
 							<th>Peso &nbsp;</th>
 
@@ -54,11 +54,7 @@
 
 							<th>Condición &nbsp;</th>
 
-							<th>Alta en ByMia &nbsp;</th>
-
-							<th>Alta en 3PL &nbsp;</th>
-
-							<th>Ultima actualización en 3PL &nbsp;</th>
+							<th>Alta&nbsp;</th>
 
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
@@ -84,15 +80,15 @@
 
 								<td>{{product.partNumber}}</td>
 
-								<td>{{product.shortName}}</td>
+								<td>{{product.title}}</td>
 
-								<td>{{product.longName}}</td>
+								<td>{{product.description}}</td>
 
 								<td>{{product.brand}}</td>
 
 								<td>{{product.category}}</td>
 
-								<td>{{product.subcategory}}</td>
+								{# <td>{{product.subcategory}}</td> #}
 
 								<td>{{product.weight}}</td>
 
@@ -110,14 +106,10 @@
 
 								<td data-order="{{product.createdAt ? product.createdAt|date('U'):0}}" class="text-center">{{product.createdAt ? product.createdAt|date("d/m/Y"):'-'}}</td>
 
-								<td data-order="{{product.createdAt3pl ? product.createdAt3pl|date('U'):0}}" class="text-center">{{product.createdAt3pl ? product.createdAt3pl|date("d/m/Y"):'-'}}</td>
-
-								<td data-order="{{product.updatedAt3pl ? product.updatedAt3pl|date('U'):0}}" class="text-center">{{product.updatedAt3pl ? product.updatedAt3pl|date("d/m/Y"):'-'}}</td>
-
 								<td
 									class="text-center">{# <a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_crud_city_edit', {'country_id':country.id,'state_id':state.id,'city_id':city.id}) }}" title="Editar ciudad">
-																																																																																																																																																																																																																																																																				<i class="fas fa-edit"></i>
-																																																																																																																																																																																																																																																																			</a> #}
+																																																																																																																																																																																																																																																																														<i class="fas fa-edit"></i>
+																																																																																																																																																																																																																																																																													</a> #}
 								</td>
 							</tr>
 						{% endfor %}

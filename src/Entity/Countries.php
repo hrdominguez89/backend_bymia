@@ -115,7 +115,7 @@ class Countries
     private $emojiU;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     private $created_at;
 

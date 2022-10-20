@@ -24,17 +24,14 @@ class SubcategoryRepository extends ServiceEntityRepository
         return $this->getEntityManager()
             ->createQuery('
             SELECT
-            max(sc.id) as subcategory_id,
-            max(sc.apiId) as subcategory_api_id,
-            max(sc.name) as subcategory_name,
-            max(sc.slug) as slug,
-            COUNT(c.id) as cantidad
+            sc.id,
+            sc.id3pl,
+            sc.name,
+            sc.slug,
+            sc.visible,
+            sc.created_at
 
             FROM App:Subcategory sc 
-            LEFT JOIN sc.category c
-
-            GROUP BY sc.id
-
             ')
             ->getResult();
     }

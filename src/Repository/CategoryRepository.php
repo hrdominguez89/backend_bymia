@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Category;
-use App\Entity\Subcategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -41,15 +40,12 @@ class CategoryRepository extends ServiceEntityRepository
 
     /**
      * @param $slug
-     * @return \App\Entity\Model\Category
      */
-    public function findOneBySlug($slug): \App\Entity\Model\Category
+    public function findOneBySlug($slug)
     {
-        $entityManager = $this->getEntityManager();
-
         $entity = $this->findOneBy(['slug' => $slug], ['name' => 'ASC']);
 
-        return $entity ?? $entityManager->getRepository(Subcategory::class)->findOneBy(['slug' => $slug], ['name' => 'ASC']);
+        return $entity ;
     }
 
 
@@ -79,18 +75,17 @@ class CategoryRepository extends ServiceEntityRepository
         return $this->getEntityManager()
             ->createQuery('
             SELECT
-            max(c.id) as id,
-            max(c.apiId) as apiId,
-            max(c.name) as name,
-            max(c.slug) as slug,
-            max(c.image) as image,
-            COUNT(sc.id) as cantidad
+            c.id,
+            c.id3pl,
+            c.name,
+            c.description,
+            c.slug,
+            c.image,
+            c.nomenclature,
+            c.visible,
+            c.created_at
 
             FROM App:Category c 
-            LEFT JOIN c.subcategories sc
-
-            GROUP BY c.id
-
             ')
             ->getResult();
     }

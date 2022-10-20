@@ -26,10 +26,10 @@ class Brand
     /**
      * @var string|null
      *
-     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
+     * @ORM\Column(name="id3pl", type="bigint", nullable=true)
      * 
      */
-    private $apiId;
+    private $id3pl;
 
     /**
      * @var string
@@ -75,9 +75,14 @@ class Brand
     private $products;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
+     * @ORM\Column(type="boolean", nullable=false, options={"default" : False})
      */
     private $visible;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=false, options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $created_at;
 
     public function __construct()
     {
@@ -93,20 +98,20 @@ class Brand
     }
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getApiId(): ?string
+    public function getId3pl(): ?int
     {
-        return $this->apiId;
+        return $this->id3pl;
     }
 
     /**
-     * @param string|null $apiId
+     * @param int|null $id3pl
      * @return $this
      */
-    public function setApiId(?string $apiId): Brand
+    public function setId3pl(?int $id3pl): Brand
     {
-        $this->apiId = $apiId;
+        $this->id3pl = $id3pl;
 
         return $this;
     }
@@ -231,6 +236,18 @@ class Brand
     public function setVisible(?bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

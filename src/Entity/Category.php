@@ -40,9 +40,9 @@ class Category
     /**
      * @var string|null
      *
-     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
+     * @ORM\Column(name="id3pl", type="bigint", nullable=true)
      */
-    protected $apiId;
+    protected $id3pl;
 
     /**
      * @var string|null
@@ -50,11 +50,6 @@ class Category
      * @ORM\Column(name="image", type="text", nullable=true)
      */
     protected $image;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Subcategory::class, mappedBy="category")
-     */
-    private $subcategories;
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="category")
@@ -67,28 +62,23 @@ class Category
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=3, nullable=true)
+     * @ORM\Column(type="string", length=2, nullable=true)
      */
     private $nomenclature;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     private $created_at;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updated_at;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=false, options={"default":False})
      */
     private $visible;
 
     public function __construct()
     {
-        $this->subcategories = new ArrayCollection();
         $this->products = new ArrayCollection();
     }
 
@@ -133,20 +123,20 @@ class Category
 
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getApiId(): ?string
+    public function getId3pl(): ?int
     {
-        return $this->apiId;
+        return $this->id3pl;
     }
 
     /**
-     * @param string|null $apiId
+     * @param int|null $id3pl
      * @return $this
      */
-    public function setApiId(?string $apiId): self
+    public function setId3pl(?int $id3pl): self
     {
-        $this->apiId = $apiId;
+        $this->id3pl = $id3pl;
 
         return $this;
     }
@@ -219,33 +209,6 @@ class Category
     }
 
     /**
-     * @return Collection|Subcategory[]
-     */
-    public function getSubcategories(): Collection
-    {
-        return $this->subcategories;
-    }
-
-    public function addSubcategory(Subcategory $subcategory): self
-    {
-        if (!$this->subcategories->contains($subcategory)) {
-            $this->subcategories[] = $subcategory;
-            $subcategory->addCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSubcategory(Subcategory $subcategory): self
-    {
-        if ($this->subcategories->removeElement($subcategory)) {
-            $subcategory->removeCategory($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Product[]
      */
     public function getProducts(): Collection
@@ -307,18 +270,6 @@ class Category
     public function setCreatedAt(?\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
-    {
-        $this->updated_at = $updated_at;
 
         return $this;
     }

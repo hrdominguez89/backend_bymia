@@ -35,13 +35,6 @@ class Tag
     private $slug;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
-     */
-    private $apiId;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="tag")
      */
     private $products;
@@ -52,14 +45,9 @@ class Tag
     private $visible;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     private $created_at;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updated_at;
 
     public function __construct()
     {
@@ -103,25 +91,6 @@ class Tag
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getApiId(): ?string
-    {
-        return $this->apiId;
-    }
-
-    /**
-     * @param string|null $apiId
-     * @return $this
-     */
-    public function setApiId(?string $apiId): Tag
-    {
-        $this->apiId = $apiId;
-
-        return $this;
     }
 
     public function setSlug(string $slug): self
@@ -178,18 +147,6 @@ class Tag
     public function setCreatedAt(?\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
-    {
-        $this->updated_at = $updated_at;
 
         return $this;
     }

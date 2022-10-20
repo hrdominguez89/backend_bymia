@@ -33,14 +33,9 @@ class ApiClients
     private $api_key;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     private $created_at;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updated_at;
 
     /**
      * @ORM\ManyToOne(targetEntity=ApiClientsTypesRoles::class, inversedBy="apiClients")
@@ -97,18 +92,6 @@ class ApiClients
     public function setCreatedAt(\DateTime $created_at): self
     {
         $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updated_at;
-    }
-
-    public function setUpdatedAt(\DateTime $updated_at): self
-    {
-        $this->updated_at = $updated_at;
 
         return $this;
     }

@@ -57,7 +57,7 @@ class Cities
     private $longitude;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     private $created_at;
 

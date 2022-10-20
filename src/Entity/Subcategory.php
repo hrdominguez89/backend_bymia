@@ -38,14 +38,9 @@ class Subcategory
     /**
      * @var string|null
      *
-     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
+     * @ORM\Column(name="id3pl", type="bigint", nullable=true)
      */
-    protected $apiId;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="subcategories")
-     */
-    private $category;
+    protected $id3pl;
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="subcategory")
@@ -53,14 +48,18 @@ class Subcategory
     private $products;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true, options={"default":False})
      */
     private $visible;
+
+    /**
+     * @ORM\Column(type="datetime",nullable=false, options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $created_at;
 
 
     public function __construct()
     {
-        $this->category = new ArrayCollection();
         $this->products = new ArrayCollection();
     }
 
@@ -105,20 +104,20 @@ class Subcategory
 
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getApiId(): ?string
+    public function getId3pl(): ?int
     {
-        return $this->apiId;
+        return $this->id3pl;
     }
 
     /**
-     * @param string|null $apiId
+     * @param int|null $id3pl
      * @return $this
      */
-    public function setApiId(?string $apiId): self
+    public function setId3pl(?int $id3pl): self
     {
-        $this->apiId = $apiId;
+        $this->id3pl = $id3pl;
 
         return $this;
     }
@@ -146,14 +145,6 @@ class Subcategory
             "slug" => $this->getSlug(),
             "name" => $this->getName(),
             "type" => "child",
-            "category" => [
-                "id" => $this->getId(),
-                "name" => $this->getName(),
-                "slug" => $this->getSlug(),
-                "customFields" => [],
-                "parents" => null,
-                "children" => null,
-            ],
         ];
     }
 
@@ -167,30 +158,6 @@ class Subcategory
             "label" => $this->getName(),
             "url" => '/shop/catalog/' . $this->getSlug(),
         ];
-    }
-
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategory(): Collection
-    {
-        return $this->category;
-    }
-
-    public function addCategory(Category $category): self
-    {
-        if (!$this->category->contains($category)) {
-            $this->category[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self
-    {
-        $this->category->removeElement($category);
-
-        return $this;
     }
 
     public function setSlug(string $slug): self
@@ -235,6 +202,18 @@ class Subcategory
     public function setVisible(?bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

@@ -22,7 +22,7 @@ class Warehouses
     /**
      * @ORM\Column(type="integer")
      */
-    private $api_id;
+    private $id3pl;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -34,6 +34,11 @@ class Warehouses
      */
     private $products;
 
+    /**
+     * @ORM\Column(type="datetime",nullable=false,options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $created_at;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -44,14 +49,14 @@ class Warehouses
         return $this->id;
     }
 
-    public function getApiId(): ?int
+    public function getId3pl(): ?int
     {
-        return $this->api_id;
+        return $this->id3pl;
     }
 
-    public function setApiId(int $api_id): self
+    public function setId3pl(int $id3pl): self
     {
-        $this->api_id = $api_id;
+        $this->id3pl = $id3pl;
 
         return $this;
     }
@@ -94,6 +99,18 @@ class Warehouses
                 $product->setWarehouse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

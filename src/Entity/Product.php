@@ -33,7 +33,7 @@ class Product
     /**
      * @var string|null
      *
-     * @ORM\Column(name="sku", type="string", length=255, nullable=true)
+     * @ORM\Column(name="sku", type="string", length=255, nullable=true, unique=true)
      */
     protected $sku;
 
@@ -76,21 +76,14 @@ class Product
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     protected $createdAt;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     */
-    protected $updatedAt;
-    
-    /**
      * @ORM\Column(type="string", length=100, nullable="true")
      */
-    private $upc;
+    private $cod;
 
     /**
      * @ORM\Column(type="string", length=15, nullable="true")
@@ -121,9 +114,9 @@ class Product
     private $available;
 
     /**
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(name="id3pl",type="integer", nullable="true")
      */
-    private $id_3pl;
+    private $id3pl;
 
     /**
      * @ORM\ManyToOne(targetEntity=Warehouses::class, inversedBy="products")
@@ -201,20 +194,31 @@ class Product
     private $subcategory;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true, options={"default":False})
      */
     private $visible;
 
     /**
-     * @ORM\ManyToMany(targetEntity=tag::class, inversedBy="products")
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="products")
      */
     private $tag;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $conditium;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ImagesProducts::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $imagesProducts;
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->subcategory = new ArrayCollection();
         $this->tag = new ArrayCollection();
+        $this->imagesProducts = new ArrayCollection();
     }
 
     /**
@@ -356,25 +360,6 @@ class Product
     }
 
     /**
-     * @return \DateTime
-     */
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * @param \DateTime $updatedAt
-     * @return $this
-     */
-    public function setUpdatedAt(\DateTime $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
      * @return array
      */
     public function asArray(): array
@@ -389,14 +374,14 @@ class Product
         ];
     }
 
-    public function getUpc(): ?string
+    public function getCod(): ?string
     {
-        return $this->upc;
+        return $this->cod;
     }
 
-    public function setUpc(string $upc): self
+    public function setCod(string $cod): self
     {
-        $this->upc = $upc;
+        $this->cod = $cod;
 
         return $this;
     }
@@ -463,12 +448,12 @@ class Product
 
     public function getId3pl(): ?int
     {
-        return $this->id_3pl;
+        return $this->id3pl;
     }
 
-    public function setId3pl(int $id_3pl): self
+    public function setId3pl(int $id3pl): self
     {
-        $this->id_3pl = $id_3pl;
+        $this->id3pl = $id3pl;
 
         return $this;
     }
@@ -692,7 +677,7 @@ class Product
         return $this->tag;
     }
 
-    public function addTag(tag $tag): self
+    public function addTag(Tag $tag): self
     {
         if (!$this->tag->contains($tag)) {
             $this->tag[] = $tag;
@@ -701,9 +686,51 @@ class Product
         return $this;
     }
 
-    public function removeTag(tag $tag): self
+    public function removeTag(Tag $tag): self
     {
         $this->tag->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getConditium(): ?string
+    {
+        return $this->conditium;
+    }
+
+    public function setConditium(?string $conditium): self
+    {
+        $this->conditium = $conditium;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImagesProducts>
+     */
+    public function getImagesProducts(): Collection
+    {
+        return $this->imagesProducts;
+    }
+
+    public function addImagesProduct(ImagesProducts $imagesProduct): self
+    {
+        if (!$this->imagesProducts->contains($imagesProduct)) {
+            $this->imagesProducts[] = $imagesProduct;
+            $imagesProduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImagesProduct(ImagesProducts $imagesProduct): self
+    {
+        if ($this->imagesProducts->removeElement($imagesProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($imagesProduct->getProduct() === $this) {
+                $imagesProduct->setProduct(null);
+            }
+        }
 
         return $this;
     }

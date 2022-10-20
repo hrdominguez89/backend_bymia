@@ -77,7 +77,7 @@ class CrudBrandController extends AbstractController
     {
 
         $data['brand'] = $brandRepository->find($id);
-        dump($data['brand']->getApiId());
+        dump($data['brand']->getId3pl());
         die();
         $form = $this->createForm(BrandType::class, $data['brand']);
         $form->handleRequest($request);
