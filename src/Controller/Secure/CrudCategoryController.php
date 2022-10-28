@@ -37,37 +37,28 @@ class CrudCategoryController extends AbstractController
      */
     public function new(Request $request, FileUploader $fileUploader): Response
     {
-        $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category);
+        $data['title'] = 'Nueva categoría';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_category_index', 'title' => 'Categorías'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['category'] = new Category();
+        $form = $this->createForm(CategoryType::class, $data['category']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $category->setImage($_ENV['SITE_URL'] . 'uploads/images/' . $imageFileName);
+                $data['category']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($category);
-            $entityManager->flush();
+            $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('secure_crud_category_index', [], Response::HTTP_SEE_OTHER);
         }
+        $data['form'] = $form;
 
-        return $this->renderForm('secure/crud_category/new.html.twig', [
-            'category' => $category,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="secure_crud_category_show", methods={"GET"})
-     */
-    public function show(Category $category): Response
-    {
-        return $this->render('secure/crud_category/show.html.twig', [
-            'category' => $category,
-        ]);
+        return $this->renderForm('secure/crud_category/form_categories.html.twig', $data);
     }
 
     /**
