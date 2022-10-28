@@ -6,11 +6,14 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BrandRepository")
  * @ORM\Table("mia_brand")
  * 
+ * @UniqueEntity(fields="name", message="El nombre indicado ya se encuentra registrado.")
+ * @UniqueEntity(fields="nomenclature", message="La nomenclatura indicada ya se encuentra registrada, por favor intente con otra.")
  * 
  */
 class Brand
@@ -34,7 +37,7 @@ class Brand
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
      * 
      * 
@@ -259,12 +262,12 @@ class Brand
 
     public function getNomenclature(): ?string
     {
-        return $this->nomenclature;
+        return strtoupper($this->nomenclature);
     }
 
     public function setNomenclature(string $nomenclature): self
     {
-        $this->nomenclature = $nomenclature;
+        $this->nomenclature = strtoupper($nomenclature);
 
         return $this;
     }

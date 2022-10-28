@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\C
+ * ustomerRepository")
  * @ORM\Table("mia_customer")
  */
 class Customer extends BaseUser
@@ -623,7 +624,6 @@ class Customer extends BaseUser
         if ($this->favoriteProducts->removeElement($favoriteProduct)) {
             // set the owning side to null (unless already changed)
             if ($favoriteProduct->getCustomerId() === $this) {
-                $favoriteProduct->setCustomerId(null);
             }
         }
 
@@ -645,7 +645,6 @@ class Customer extends BaseUser
         if ($this->couponDiscounts->removeElement($couponDiscount)) {
             // set the owning side to null (unless already changed)
             if ($couponDiscount->getCustomerId() === $this) {
-                $couponDiscount->setCustomerId(null);
             }
         }
 

@@ -38,10 +38,8 @@
 
 	{% if (brand.image) %}
 		<div class="row">
-			<div class="col-12">
-				<div class="alert alert-danger">
-					hola
-				</div>
+			<div class="col-xs-12 col-md-4">
+				<img class="img-fluid" style="width:100%" alt="Imagen" src="{{ asset(brand.image) }}"/>
 			</div>
 		</div>
 	{% endif %}
