@@ -41,8 +41,8 @@ class BrandType extends AbstractType
                     ])
                 ],
             ])
-            ->add('description', TextareaType::class, ['label' => 'Descripción','required'=>false])
-            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'maxlength' => 2]]);
+            ->add('description', TextareaType::class, ['label' => 'Descripción', 'required' => false])
+            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 3, 'maxlength' => 3]]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -73,26 +73,30 @@ class CrudCategoryController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_category_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Category $category, FileUploader $fileUploader): Response
+    public function edit($id, Request $request, CategoryRepository $categoryRepository, FileUploader $fileUploader): Response
     {
-        $form = $this->createForm(CategoryType::class, $category);
+        $data['title'] = 'Editar categoría';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_category_index', 'title' => 'Categorías'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['category'] = $categoryRepository->find($id);
+        $form = $this->createForm(CategoryType::class, $data['category']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $category->setImage('uploads/images/' . $imageFileName);
+                $data['category']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('secure_crud_category_index', [], Response::HTTP_SEE_OTHER);
         }
+        $data['form'] = $form;
 
-        return $this->renderForm('secure/crud_category/edit.html.twig', [
-            'category' => $category,
-            'form' => $form,
-        ]);
+        return $this->renderForm('secure/crud_category/form_categories.html.twig', $data);
     }
 
     /**

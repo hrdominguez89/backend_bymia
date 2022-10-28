@@ -6,11 +6,15 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  * @ORM\Table("mia_category")
+ * @UniqueEntity(fields="name", message="La categoría indicada ya se encuentra registrada.")
+ * @UniqueEntity(fields="nomenclature", message="La nomenclatura indicada ya se encuentra registrada, por favor intente con otra.")
  * 
  */
 class Category
@@ -25,7 +29,7 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     protected $name;
 
@@ -62,7 +66,7 @@ class Category
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true)
+     * @ORM\Column(type="string", length=2, nullable=true, unique=true)
      */
     private $nomenclature;
 
@@ -252,12 +256,12 @@ class Category
 
     public function getNomenclature(): ?string
     {
-        return $this->nomenclature;
+        return strtoupper($this->nomenclature);
     }
 
     public function setNomenclature(?string $nomenclature): self
     {
-        $this->nomenclature = $nomenclature;
+        $this->nomenclature = strtoupper($nomenclature);
 
         return $this;
     }

@@ -42,9 +42,6 @@ class CrudBrandController extends AbstractController
             array('path' => 'secure_crud_brand_index', 'title' => 'Marcas'),
             array('active' => true, 'title' => $data['title'])
         );
-        $data['files_js'] = array(
-            'world/country.js?v=' . rand(),
-        );
 
         $data['brand'] = new Brand();
         $form = $this->createForm(BrandType::class, $data['brand']);
@@ -75,9 +72,6 @@ class CrudBrandController extends AbstractController
         $data['breadcrumbs'] = array(
             array('path' => 'secure_crud_brand_index', 'title' => 'Marcas'),
             array('active' => true, 'title' => $data['title'])
-        );
-        $data['files_js'] = array(
-            'world/country.js?v=' . rand(),
         );
         $data['brand'] = $brandRepository->find($id);
         $form = $this->createForm(BrandType::class, $data['brand']);

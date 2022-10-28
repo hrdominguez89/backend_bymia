@@ -88,7 +88,7 @@ class Brand
     private $created_at;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=3, nullable=true, unique=true)
      */
     private $nomenclature;
 
