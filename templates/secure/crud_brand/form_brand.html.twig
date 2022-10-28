@@ -1,0 +1,68 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
+{% block content %}
+	{{parent()}}
+	<div class="row">
+		<div class="col-12">
+			<h1 class="mr-auto mb-0 title-table">{{ title }}</h1>
+		</div>
+	</div>
+
+	{{ form_start(form) }}
+	{% if form_errors(form) %}
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					{{ form_errors(form) }}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	<div class="row my-2">
+		<div class="col-8">
+			{{ form_row(form.name) }}
+		</div>
+		<div class="col-4">
+			{{ form_row(form.nomenclature) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col-12">
+			{{ form_row(form.description) }}
+		</div>
+	</div>
+
+	{% if (brand.image) %}
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					hola
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+	<div class="row my-2">
+		<div class="col-12">
+			{{ form_row(form.image) }}
+		</div>
+	</div>
+	<div>
+		<div class="row my-2">
+
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_crud_brand_index') }}">Regresar</a>
+
+				<button class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
+
+
+	{{ form_end(form) }}
+
+{% endblock %}

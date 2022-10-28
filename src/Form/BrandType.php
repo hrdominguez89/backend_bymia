@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Brand;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,9 +16,8 @@ class BrandType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, ['label' => 'Nombre',])
-            ->add('apiId', TextType::class, ['label' => 'Id de la Api',])
-            ->add('image',FileType::class, [
+            ->add('name', TextType::class, ['label' => 'Nombre', 'required' => true])
+            ->add('image', FileType::class, [
                 'label' => 'Imagen ',
 
                 // unmapped means that this field is not associated to any entity property
@@ -40,7 +40,9 @@ class BrandType extends AbstractType
                         'mimeTypesMessage' => 'Please upload a valid document',
                     ])
                 ],
-            ]);
+            ])
+            ->add('description', TextareaType::class, ['label' => 'Descripción','required'=>false])
+            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'maxlength' => 2]]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

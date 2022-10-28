@@ -84,6 +84,11 @@ class Brand
      */
     private $created_at;
 
+    /**
+     * @ORM\Column(type="string", length=2, nullable=true, unique=true)
+     */
+    private $nomenclature;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -248,6 +253,18 @@ class Brand
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getNomenclature(): ?string
+    {
+        return $this->nomenclature;
+    }
+
+    public function setNomenclature(string $nomenclature): self
+    {
+        $this->nomenclature = $nomenclature;
 
         return $this;
     }

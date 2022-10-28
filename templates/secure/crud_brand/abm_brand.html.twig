@@ -10,6 +10,11 @@
 		<div class="col-6">
 			<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
 		</div>
+
+
+		<div class="col-6 text-end">
+			<a class="btn btn-success" href="{{ path('secure_crud_brand_new') }}">Nueva marca</a>
+		</div>
 	</div>
 	<div class="row mt-5">
 		<div class="col-12">
@@ -30,15 +35,19 @@
 							</th>
 
 							<th>
+								Nomenclatura &nbsp;
+							</th>
+
+							<th>
 								Slug &nbsp;
 							</th>
 
 							<th data-orderable="false">
 								Imagen &nbsp;
 							</th>
-							{# <th class="text-center">
-															Visible &nbsp;
-														</th> #}
+							<th class="text-center">
+								Visible &nbsp;
+							</th>
 
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
@@ -65,6 +74,10 @@
 								</td>
 
 								<td>
+									{{brand.nomenclature|upper }}
+								</td>
+
+								<td>
 									{{brand.slug}}
 								</td>
 								<td>
@@ -74,13 +87,12 @@
 										<img class="img-fluid" style="width:100px" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/>
 									{% endif %}
 								</td>
-								{#
-                                <td>
-                                    <a style="font-size:16px" data-status="{{country.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/Countries" data-id="{{country.country_id}}" class="text-{{country.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
-                                    {{brand.visible}}
-                                        <i class="fas fa-toggle-{{country.visible ? 'on':'off'}}"></i>
-                                    </a>
-                                </td>#}
+
+								<td class="text-center">
+									<a style="font-size:16px" data-status="{{brand.visible ? 'on':'off'}}" data-slug="/secure/brand/updateVisible/brand" data-id="{{brand.id}}" class="text-{{brand.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
+										<i class="fas fa-toggle-{{brand.visible ? 'on':'off'}}"></i>
+									</a>
+								</td>
 
 
 								<td class="text-center">

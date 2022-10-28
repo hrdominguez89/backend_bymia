@@ -8,6 +8,7 @@ use App\Helpers\FileUploader;
 use App\Repository\BrandRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,7 +29,7 @@ class CrudBrandController extends AbstractController
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
         );
-        return $this->render('secure/crud_brand/index.html.twig', $data);
+        return $this->render('secure/crud_brand/abm_brand.html.twig', $data);
     }
 
     /**
@@ -36,38 +37,33 @@ class CrudBrandController extends AbstractController
      */
     public function new(Request $request, FileUploader $fileUploader): Response
     {
-        $brand = new Brand();
-        $form = $this->createForm(BrandType::class, $brand);
+        $data['title'] = 'Nueva marca';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_brand_index', 'title' => 'Marcas'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array(
+            'world/country.js?v=' . rand(),
+        );
+
+        $data['brand'] = new Brand();
+        $form = $this->createForm(BrandType::class, $data['brand']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile);
-                $brand->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $data['brand']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($brand);
+            $entityManager->persist($data['brand']);
             $entityManager->flush();
 
             return $this->redirectToRoute('secure_crud_brand_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        return $this->renderForm('secure/crud_brand/new.html.twig', [
-            'brand' => $brand,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="secure_crud_brand_show", methods={"GET"})
-     */
-    public function show(BrandRepository $brandRepository, Brand $brand): Response
-    {
-        return $this->render('secure/crud_brand/show.html.twig', [
-            'brand' => $brand,
-            'cantDelete' => count($brandRepository->getCantProductByBrand($brand->getId())) > 0 ? false : true,
-        ]);
+        $data['form'] = $form;
+        return $this->renderForm('secure/crud_brand/form_brand.html.twig', $data);
     }
 
     /**
@@ -75,10 +71,15 @@ class CrudBrandController extends AbstractController
      */
     public function edit($id, Request $request, BrandRepository $brandRepository, FileUploader $fileUploader): Response
     {
-
+        $data['title'] = 'Editar marca';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_brand_index', 'title' => 'Marcas'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array(
+            'world/country.js?v=' . rand(),
+        );
         $data['brand'] = $brandRepository->find($id);
-        dump($data['brand']->getId3pl());
-        die();
         $form = $this->createForm(BrandType::class, $data['brand']);
         $form->handleRequest($request);
 
@@ -92,11 +93,9 @@ class CrudBrandController extends AbstractController
 
             return $this->redirectToRoute('secure_crud_brand_index', [], Response::HTTP_SEE_OTHER);
         }
+        $data['form'] = $form;
 
-        return $this->renderForm('secure/crud_brand/edit.html.twig', [
-            'brand' => $data['brand'],
-            'form' => $form,
-        ]);
+        return $this->renderForm('secure/crud_brand/form_brand.html.twig', $data);
     }
 
     /**
@@ -111,5 +110,33 @@ class CrudBrandController extends AbstractController
         }
 
         return $this->redirectToRoute('secure_crud_brand_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/updateVisible/brand", name="secure_brand_update_visible", methods={"post"})
+     */
+    public function updateVisible(Request $request, BrandRepository $brandRepository): Response
+    {
+        $id = (int)$request->get('id');
+        $visible = $request->get('visible');
+
+
+        $entity_object = $brandRepository->find($id);
+
+        if ($visible == 'on') {
+            $entity_object->setVisible(false);
+            $data['visible'] = false;
+        } else {
+            $entity_object->setVisible(true);
+            $data['visible'] = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
+        return new JsonResponse($data);
     }
 }
