@@ -23,37 +23,15 @@
 		</div>
 	{% endif %}
 	<div class="row my-2">
-		<div class="col-8">
+		<div class="col-12">
 			{{ form_row(form.name) }}
-		</div>
-		<div class="col-4">
-			{{ form_row(form.nomenclature) }}
-		</div>
-	</div>
-	<div class="row my-2">
-		<div class="col-12">
-			{{ form_row(form.description) }}
-		</div>
-	</div>
-
-	{% if (brand.image) %}
-		<div class="row">
-			<div class="col-xs-12 col-md-4">
-				<img class="img-fluid" style="width:100%" alt="Imagen" src="{{ asset(brand.image) }}"/>
-			</div>
-		</div>
-	{% endif %}
-
-	<div class="row my-2">
-		<div class="col-12">
-			{{ form_row(form.image) }}
 		</div>
 	</div>
 	<div>
 		<div class="row my-2">
 
 			<div class="col-12 text-end">
-				<a class="btn btn-secondary" href="{{ path('secure_crud_brand_index') }}">Regresar</a>
+				<a class="btn btn-secondary" href="{{ path('secure_crud_subcategory_index') }}">Regresar</a>
 
 				<button class="btn btn-primary">Guardar</button>
 			</div>

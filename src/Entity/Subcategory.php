@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,9 +39,8 @@ class Subcategory
 
 
     /**
-     * @var string|null
      *
-     * @ORM\Column(name="id3pl", type="bigint", nullable=true)
+     * @ORM\Column(name="id3pl", type="integer", nullable=true)
      */
     protected $id3pl;
 
@@ -63,6 +63,8 @@ class Subcategory
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->visible = false;
     }
 
     /**
@@ -87,7 +89,7 @@ class Subcategory
      */
     public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->name = strtoupper($name);
 
         $slugify = new Slugify();
 

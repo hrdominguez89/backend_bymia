@@ -219,6 +219,7 @@ class Product
         $this->subcategory = new ArrayCollection();
         $this->tag = new ArrayCollection();
         $this->imagesProducts = new ArrayCollection();
+        $this->visible = false;
     }
 
     /**

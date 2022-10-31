@@ -83,6 +83,7 @@ class CategoryRepository extends ServiceEntityRepository
             c.image,
             c.nomenclature,
             c.visible,
+            c.principal,
             c.created_at
 
             FROM App:Category c 

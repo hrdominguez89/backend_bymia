@@ -43,9 +43,8 @@ class Category
 
 
     /**
-     * @var string|null
      *
-     * @ORM\Column(name="id3pl", type="bigint", nullable=true)
+     * @ORM\Column(name="id3pl", type="integer", nullable=true)
      */
     protected $id3pl;
 

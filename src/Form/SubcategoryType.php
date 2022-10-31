@@ -15,31 +15,7 @@ class SubcategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name',TextType::class,['label'=>'Nombre' , 'required' => true,])
-            ->add('image',FileType::class, [
-                'label' => 'Imagen ',
-
-                // unmapped means that this field is not associated to any entity property
-                'mapped' => false,
-
-                // make it optional so you don't have to re-upload the PDF file
-                // every time you edit the Product details
-                'required' => false,
-
-                // unmapped fields can't define their validation using annotations
-                // in the associated entity, so you can use the PHP constraint classes
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2048k',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/svg',
-                        ],
-                        'mimeTypesMessage' => 'Please upload a valid document',
-                    ])
-                ],
-            ]);
+            ->add('name', TextType::class, ['label' => 'Nombre', 'attr' => ['style' => 'text-transform:uppercase', 'required' => true]]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -20,9 +20,13 @@ class CrudTagController extends AbstractController
      */
     public function index(TagRepository $tagRepository): Response
     {
-        return $this->render('secure/crud_tag/index.html.twig', [
-            'tags' => $tagRepository->findAll(),
-        ]);
+        $data['title'] = 'Etiquetas';
+        $data['tags'] = $tagRepository->findAll();
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+        return $this->render('secure/crud_tag/abm_tags.html.twig', $data);
     }
 
     /**
@@ -30,65 +34,50 @@ class CrudTagController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $tag = new Tag();
-        $form = $this->createForm(TagType::class, $tag);
+        $data['title'] = 'Nueva etiqueta';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_tag_index', 'title' => 'Etiquetas'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['tag'] = new Tag();
+        $form = $this->createForm(TagType::class, $data['tag']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($tag);
+            $entityManager->persist($data['tag']);
             $entityManager->flush();
 
             return $this->redirectToRoute('secure_crud_tag_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/crud_tag/new.html.twig', [
-            'tag' => $tag,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="secure_crud_tag_show", methods={"GET"})
-     */
-    public function show(Tag $tag): Response
-    {
-        return $this->render('secure/crud_tag/show.html.twig', [
-            'tag' => $tag,
-        ]);
+        $data['form'] = $form;
+        return $this->renderForm('secure/crud_tag/form_tag.html.twig', $data);
     }
 
     /**
      * @Route("/{id}/edit", name="secure_crud_tag_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Tag $tag): Response
+    public function edit($id, Request $request, TagRepository $tagRepository): Response
     {
-        $form = $this->createForm(TagType::class, $tag);
+        $data['title'] = 'Editar etiqueta';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_tag_index', 'title' => 'Etiquetas'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['tag'] = $tagRepository->find($id);
+        $form = $this->createForm(TagType::class, $data['tag']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['tag']);
+            $entityManager->flush();
 
             return $this->redirectToRoute('secure_crud_tag_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('secure/crud_tag/edit.html.twig', [
-            'tag' => $tag,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="secure_crud_tag_delete", methods={"POST"})
-     */
-    public function delete(Request $request, Tag $tag): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$tag->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($tag);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('secure_crud_tag_index', [], Response::HTTP_SEE_OTHER);
+        $data['form'] = $form;
+        return $this->renderForm('secure/crud_tag/form_tag.html.twig', $data);
     }
 }

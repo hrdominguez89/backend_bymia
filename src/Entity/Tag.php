@@ -6,10 +6,14 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
  * @ORM\Table("mia_tag")
+ * @UniqueEntity(fields="name", message="La etiqueta indicada ya se encuentra registrada.")
+ * 
  */
 class Tag
 {
@@ -49,9 +53,16 @@ class Tag
      */
     private $created_at;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $id3pl;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->visible = false;
+        $this->created_at = new \DateTime();
     }
 
     /**
@@ -76,7 +87,7 @@ class Tag
      */
     public function setName(string $name): Tag
     {
-        $this->name = $name;
+        $this->name = strtoupper($name);
 
         $slugify = new Slugify();
 
@@ -151,4 +162,15 @@ class Tag
         return $this;
     }
 
+    public function getId3pl(): ?int
+    {
+        return $this->id3pl;
+    }
+
+    public function setId3pl(?int $id3pl): self
+    {
+        $this->id3pl = $id3pl;
+
+        return $this;
+    }
 }

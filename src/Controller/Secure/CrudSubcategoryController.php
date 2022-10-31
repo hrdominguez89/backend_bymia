@@ -22,7 +22,7 @@ class CrudSubcategoryController extends AbstractController
     /**
      * @Route("/", name="secure_crud_subcategory_index", methods={"GET"})
      */
-    public function index(EntityManagerInterface $em, SubcategoryRepository $subcategoryRepository): Response
+    public function index(SubcategoryRepository $subcategoryRepository): Response
     {
         $data['subcategories'] = $subcategoryRepository->listSubcategories();
         $data['title'] = 'Subcategorías';
@@ -36,57 +36,55 @@ class CrudSubcategoryController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_subcategory_new", methods={"GET","POST"})
      */
-    public function new(EntityManagerInterface $em, Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request): Response
     {
-        /** @var Category $objCategory */
-        $subcategory = new Subcategory();
-        $form = $this->createForm(SubcategoryType::class, $subcategory);
+        $data['title'] = 'Nueva subcategoría';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_subcategory_index', 'title' => 'Subcategorías'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['subcategory'] = new Subcategory();
+
+        $form = $this->createForm(SubcategoryType::class, $data['subcategory']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $imageFile = $form->get('image')->getData();
-            if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-            }
-            $entityManager->persist($subcategory);
+            $entityManager->persist($data['subcategory']);
             $entityManager->flush();
 
-            return $this->redirectToRoute('secure_crud_subcategory_index');
+            return $this->redirectToRoute('secure_crud_subcategory_index', [], Response::HTTP_SEE_OTHER);
         }
+        $data['form'] = $form;
 
-        return $this->renderForm('secure/crud_subcategory/new.html.twig', [
-            'subcategory' => $subcategory,
-            'form' => $form,
-        ]);
+        return $this->renderForm('secure/crud_subcategory/form_subcategory.html.twig', $data);
     }
 
 
     /**
      * @Route("/subcategory/{subcategory_id}/edit", name="secure_crud_subcategory_edit", methods={"GET","POST"})
      */
-    public function edit($subcategory_id, Request $request,SubcategoryRepository $subcategoryRepository, FileUploader $fileUploader): Response
+    public function edit($subcategory_id, Request $request, SubcategoryRepository $subcategoryRepository): Response
     {
-        $subcategory = $subcategoryRepository->find($subcategory_id);
-        $form = $this->createForm(SubcategoryType::class, $subcategory);
+        $data['title'] = 'Editar subcategoría';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_subcategory_index', 'title' => 'Subcategorías'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['subcategory'] = $subcategoryRepository->find($subcategory_id);
+
+        $form = $this->createForm(SubcategoryType::class, $data['subcategory']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $imageFile = $form->get('image')->getData();
-            if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-            }
-            $entityManager->persist($subcategory);
+            $entityManager->persist($data['subcategory']);
             $entityManager->flush();
 
-            return $this->redirectToRoute('secure_crud_subcategory_index');
+            return $this->redirectToRoute('secure_crud_subcategory_index', [], Response::HTTP_SEE_OTHER);
         }
+        $data['form'] = $form;
 
-        return $this->renderForm('secure/crud_subcategory/new.html.twig', [
-            'subcategory' => $subcategory,
-            'form' => $form,
-        ]);
+        return $this->renderForm('secure/crud_subcategory/form_subcategory.html.twig', $data);
     }
-
 }
