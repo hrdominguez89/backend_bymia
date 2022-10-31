@@ -53,7 +53,6 @@ class CrudBrandController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $data['brand']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
-            $data['brand']->setVisible(false);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['brand']);
             $entityManager->flush();

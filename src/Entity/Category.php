@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  * @ORM\Table("mia_category")
+ * 
  * @UniqueEntity(fields="name", message="La categoría indicada ya se encuentra registrada.")
  * @UniqueEntity(fields="nomenclature", message="La nomenclatura indicada ya se encuentra registrada, por favor intente con otra.")
  * 
@@ -89,6 +90,9 @@ class Category
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->visible = false;
+        $this->principal = false;
     }
 
     /**
@@ -113,7 +117,7 @@ class Category
      */
     public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->name = strtoupper($name);
 
         $slugify = new Slugify();
 

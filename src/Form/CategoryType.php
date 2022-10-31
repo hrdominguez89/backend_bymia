@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,7 +17,7 @@ class CategoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, ['label' => 'Nombre', 'required' => true])
+            ->add('name', TextType::class, ['label' => 'Nombre', 'attr' => ['style' => 'text-transform: uppercase', 'required' => true]])
             ->add('image', FileType::class, [
                 'label' => 'Imagen ',
 
@@ -42,7 +43,12 @@ class CategoryType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, ['label' => 'Descripción', 'required' => false])
-            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 2, 'maxlength' => 2]]);
+            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 2, 'maxlength' => 2]])
+            ->add('principal', CheckboxType::class, [
+                'label'    => 'Establecer como categoría principal',
+                'required' => false,
+                // 'mapped' => false
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

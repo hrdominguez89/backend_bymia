@@ -98,6 +98,7 @@ class Brand
     {
         $this->products = new ArrayCollection();
         $this->created_at= new \DateTime();
+        $this->visible= false;
     }
 
     /**
@@ -141,7 +142,7 @@ class Brand
      */
     public function setName(string $name): Brand
     {
-        $this->name = $name;
+        $this->name = strtoupper($name);
 
         $slugify = new Slugify();
 

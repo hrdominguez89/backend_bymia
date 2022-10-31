@@ -20,7 +20,7 @@ class CrudCategoryController extends AbstractController
     /**
      * @Route("/", name="secure_crud_category_index", methods={"GET"})
      */
-    public function index(CategoryRepository $categoryRepository, PaginatorInterface $pagination, Request $request): Response
+    public function index(CategoryRepository $categoryRepository): Response
     {
         $data['title'] = 'Categorías';
         $data['categories'] = $categoryRepository->listCategories();;
@@ -52,7 +52,9 @@ class CrudCategoryController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $data['category']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['category']);
+            $entityManager->flush();
 
             return $this->redirectToRoute('secure_crud_category_index', [], Response::HTTP_SEE_OTHER);
         }
