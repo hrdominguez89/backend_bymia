@@ -68,4 +68,20 @@ class ProductsController extends AbstractController
 
         return $this->render('secure/products/abm_products.html.twig', $data);
     }
+
+    /**
+     * @Route("/new", name="secure_crud_product_new", methods={"GET","POST"})
+     */
+    public function new(ProductRepository $productRepository, Request $request, PaginatorInterface $pagination): Response
+    {
+        $data['products'] = $productRepository->findAll();
+        dd($data['products']);
+        $data['title'] = 'Productos';
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['breadcrumbs'] = array(
+            array('active' => true, 'title' => $data['title'])
+        );
+
+        return $this->render('secure/products/abm_products.html.twig', $data);
+    }
 }

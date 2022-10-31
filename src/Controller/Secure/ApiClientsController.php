@@ -47,7 +47,6 @@ class ApiClientsController extends AbstractController
             $data['api_client']->setApiClientId($clave['api_client_id']);
             $data['api_client']->setApiKey($clave['api_key']);
             $data['api_client']->setCreatedAt(new \DateTime());
-            $data['api_client']->setUpdatedAt(new \DateTime());
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -94,7 +93,6 @@ class ApiClientsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data['api_client']->setUpdatedAt(new \DateTime());
 
             if ($form->get('reset_api_key')->getData()) {
                 $clave['api_key'] = Uuid::v4();

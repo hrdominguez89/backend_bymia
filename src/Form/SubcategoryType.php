@@ -16,7 +16,6 @@ class SubcategoryType extends AbstractType
     {
         $builder
             ->add('name',TextType::class,['label'=>'Nombre' , 'required' => true,])
-            ->add('apiId',TextType::class,['label'=>'Id de la Api',  'required' => false,])
             ->add('image',FileType::class, [
                 'label' => 'Imagen ',
 

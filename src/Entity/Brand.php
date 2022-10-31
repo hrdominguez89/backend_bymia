@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -78,12 +79,13 @@ class Brand
     private $products;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default" : False})
+     * @ORM\Column(type="boolean", nullable=false, options={"default":false})
      */
     private $visible;
 
     /**
-     * @ORM\Column(type="datetime",nullable=false, options={"default":"CURRENT_TIMESTAMP"})
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
+     * 
      */
     private $created_at;
 
@@ -95,6 +97,7 @@ class Brand
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->created_at= new \DateTime();
     }
 
     /**

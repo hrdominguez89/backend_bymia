@@ -77,9 +77,14 @@ class Category
 
 
     /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default":False})
+     * @ORM\Column(type="boolean", nullable=false, options={"default":false})
      */
     private $visible;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default":false})
+     */
+    private $principal;
 
     public function __construct()
     {
@@ -293,6 +298,18 @@ class Category
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getPrincipal(): ?bool
+    {
+        return $this->principal;
+    }
+
+    public function setPrincipal(bool $principal): self
+    {
+        $this->principal = $principal;
 
         return $this;
     }

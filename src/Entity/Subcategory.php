@@ -6,10 +6,12 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SubcategoryRepository")
  * @ORM\Table("mia_sub_category")
+ * @UniqueEntity(fields="name", message="La subcategoría indicada ya se encuentra registrada.")
  */
 class Subcategory
 {
@@ -23,7 +25,7 @@ class Subcategory
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     protected $name;
 
