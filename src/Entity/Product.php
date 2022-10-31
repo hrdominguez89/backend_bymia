@@ -213,6 +213,11 @@ class Product
      */
     private $imagesProducts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ProductImages::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $image;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -220,6 +225,7 @@ class Product
         $this->tag = new ArrayCollection();
         $this->imagesProducts = new ArrayCollection();
         $this->visible = false;
+        $this->image = new ArrayCollection();
     }
 
     /**
@@ -730,6 +736,36 @@ class Product
             // set the owning side to null (unless already changed)
             if ($imagesProduct->getProduct() === $this) {
                 $imagesProduct->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductImages>
+     */
+    public function getImage(): Collection
+    {
+        return $this->image;
+    }
+
+    public function addImage(ProductImages $image): self
+    {
+        if (!$this->image->contains($image)) {
+            $this->image[] = $image;
+            $image->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(ProductImages $image): self
+    {
+        if ($this->image->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
             }
         }
 

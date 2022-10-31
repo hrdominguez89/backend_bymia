@@ -2,6 +2,8 @@
 
 namespace App\Controller\Secure;
 
+use App\Entity\Product;
+use App\Form\ProductType;
 use App\Repository\BrandRepository;
 use App\Repository\ProductImagesRepository;
 use App\Repository\ProductRepository;
@@ -72,16 +74,25 @@ class ProductsController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_product_new", methods={"GET","POST"})
      */
-    public function new(ProductRepository $productRepository, Request $request, PaginatorInterface $pagination): Response
+    public function new(Request $request): Response
     {
-        $data['products'] = $productRepository->findAll();
-        dd($data['products']);
-        $data['title'] = 'Productos';
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['title'] = 'Nuevo producto';
         $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_brand_index', 'title' => 'Productos'),
             array('active' => true, 'title' => $data['title'])
         );
+        $data['product'] = new Product;
+        $form = $this->createForm(ProductType::class, $data['product']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($data['product']);
+            $entityManager->flush();
 
-        return $this->render('secure/products/abm_products.html.twig', $data);
+            return $this->redirectToRoute('secure_crud_product_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $data['form'] = $form;
+        return $this->renderForm('secure/crud_product/form_products.html.twig', $data);
     }
 }

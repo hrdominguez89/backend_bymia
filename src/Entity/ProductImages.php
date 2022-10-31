@@ -24,6 +24,12 @@ class ProductImages
      */
     private $image;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="image")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $product;
+
 
     /**
      * @return mixed
@@ -48,6 +54,18 @@ class ProductImages
     public function setImage(?string $image): ProductImages
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }

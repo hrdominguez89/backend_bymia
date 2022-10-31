@@ -133,6 +133,22 @@ class CrudProductController extends AbstractController
     }
 
     /**
+     * @Route("/new", name="_secure_crud_product_new")
+     */
+    public function new(ProductRepository $productRepository, Request $request): Response
+    {
+        $productSearchType = new ProductSearchDto();
+        $form = $this->createForm(ProductSearchType::class, $productSearchType);
+        $form->handleRequest($request);
+
+        $data = $productRepository->getParents($request, $productSearchType);
+        return $this->render('secure/crud_product/index.html.twig', [
+            'products' => $data,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
      * @Route("/saveImage/{id}", name="secure_crud_product_save_image", methods={"POST","GET"})
      */
     public function saveImage(
