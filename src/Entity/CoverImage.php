@@ -11,6 +11,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ORM\Table("mia_cover_image")
  *  
  * @ApiResource(
+ *        attributes={"order"={"numberOrder": "ASC"}},
  * *      collectionOperations={
  *          "get"={
  * 				"path"="sliders"
