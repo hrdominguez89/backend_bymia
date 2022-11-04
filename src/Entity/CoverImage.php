@@ -43,9 +43,9 @@ class CoverImage
     /**
      * @var string|null
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="subtitle", type="text", nullable=true)
      */
-    private $description;
+    private $subtitle;
 
     /**
      * @var string|null
@@ -62,14 +62,14 @@ class CoverImage
     private $linkBtn;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="volanta", type="string", length=255, nullable=true)
      */
-    private $pre_title;
+    private $volanta;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(name="number_order",type="smallint", nullable=true)
      */
-    private $number_order;
+    private $numberOrder;
 
     /**
      * @ORM\Column(type="boolean")
@@ -79,7 +79,7 @@ class CoverImage
     public function __construct()
     {
         $this->visible = false;
-        $this->number_order = null;
+        $this->numberOrder = null;
     }
 
     /**
@@ -112,18 +112,18 @@ class CoverImage
     /**
      * @return string|null
      */
-    public function getDescription(): ?string
+    public function getSubtitle(): ?string
     {
-        return $this->description;
+        return $this->subtitle;
     }
 
     /**
-     * @param string|null $description
+     * @param string|null $subtitle
      * @return $this
      */
-    public function setDescription(?string $description): CoverImage
+    public function setSubtitle(?string $subtitle): CoverImage
     {
-        $this->description = $description;
+        $this->subtitle = $subtitle;
 
         return $this;
     }
@@ -166,26 +166,26 @@ class CoverImage
         return $this;
     }
 
-    public function getPreTitle(): ?string
+    public function getVolanta(): ?string
     {
-        return $this->pre_title;
+        return $this->volanta;
     }
 
-    public function setPreTitle(?string $pre_title): self
+    public function setVolanta(?string $volanta): self
     {
-        $this->pre_title = $pre_title;
+        $this->volanta = $volanta;
 
         return $this;
     }
 
     public function getNumberOrder(): ?int
     {
-        return $this->number_order;
+        return $this->numberOrder;
     }
 
-    public function setNumberOrder(?int $number_order): self
+    public function setNumberOrder(?int $numberOrder): self
     {
-        $this->number_order = $number_order;
+        $this->numberOrder = $numberOrder;
 
         return $this;
     }

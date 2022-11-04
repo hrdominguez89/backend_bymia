@@ -27,7 +27,7 @@ class CoverImageRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
 
         return $entityManager->createQuery(
-            'SELECT e.id, e.title, e.description, e.nameBtn, e.linkBtn, e.pre_title, e.number_order
+            'SELECT e.id, e.title, e.subtitle, e.nameBtn, e.linkBtn, e.volanta, e.numberOrder
             FROM App\Entity\CoverImage e'
         )->getArrayResult();
     }

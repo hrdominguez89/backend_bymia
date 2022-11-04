@@ -7,11 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
+
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\C
- * ustomerRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @ORM\Table("mia_customer")
+ * 
+ * @ApiResource()
  */
 class Customer extends BaseUser
 {
