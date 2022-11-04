@@ -109,7 +109,7 @@ class FaqsController extends AbstractController
      */
     public function index_faq($topic_id, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository): Response
     {
-        $data['topic'] = $topicsRepository->findOneBy(array('id' => $topic_id), ['visible' => 'DESC', 'number_order' => 'ASC']);
+        $data['topic'] = $topicsRepository->findOneBy(array('id' => $topic_id), ['visible' => 'DESC', 'numberOrder' => 'ASC']);
         $data['faqs'] = $faqsRepository->findByTopicId($topic_id);
         $data['title'] = 'Preguntas de ' . $data['topic']->getName();
         $data['breadcrumbs'] = array(

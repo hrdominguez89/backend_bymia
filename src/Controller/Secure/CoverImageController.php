@@ -24,7 +24,7 @@ class CoverImageController extends AbstractController
      */
     public function index(CoverImageRepository $coverImageRepository): Response
     {
-        $data['sliders'] = $coverImageRepository->findBy(array(), array('visible' => 'DESC', 'number_order' => 'ASC'));
+        $data['sliders'] = $coverImageRepository->findBy(array(), array('visible' => 'DESC', 'numberOrder' => 'ASC'));
         $data['title'] = 'Sliders';
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
