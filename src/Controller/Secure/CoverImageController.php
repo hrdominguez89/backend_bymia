@@ -54,9 +54,9 @@ class CoverImageController extends AbstractController
             array('path' => 'secure_cover_image_index', 'title' => 'Sliders'),
             array('active' => true, 'title' => $data['title'])
         );
-        $data['files_js'] = array(
-            'ckeditor_text_area.js?v=' . rand(),
-        );
+        // $data['files_js'] = array(
+        //     'ckeditor_text_area.js?v=' . rand(),
+        // );
         $data['form'] = $form;
         return $this->renderForm('secure/cover_image/form_cover_image.html.twig', $data);
     }
@@ -91,9 +91,9 @@ class CoverImageController extends AbstractController
             array('path' => 'secure_cover_image_index', 'title' => 'Sliders'),
             array('active' => true, 'title' => $data['title'])
         );
-        $data['files_js'] = array(
-            'ckeditor_text_area.js?v=' . rand(),
-        );
+        // $data['files_js'] = array(
+        //     'ckeditor_text_area.js?v=' . rand(),
+        // );
         $data['form'] = $form;
         return $this->renderForm('secure/cover_image/form_cover_image.html.twig', $data);
     }
