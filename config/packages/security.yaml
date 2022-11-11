@@ -1,12 +1,12 @@
 security:
-    enable_authenticator_manager: false
+    enable_authenticator_manager: true
 
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
         App\Entity\User: "auto"
 
     providers:
-        users:
+        backend_users:
             entity:
                 class: 'App\Entity\User'
                 property: "email"
@@ -18,18 +18,16 @@ security:
         main:
             pattern: ^/*
             lazy: true
-            provider: users
-            anonymous: true
+            provider: backend_users
             form_login:
                 check_path: app_security_login
                 login_path: app_security_login
                 default_target_path: app_homepage
-                csrf_token_generator: security.csrf.token_manager
                 use_referer: true
             logout:
                 path: app_security_logout
                 target: app_security_login
-                
+
     access_control:
         - { path: ^/security/*, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password/*, roles: PUBLIC_ACCESS }
