@@ -3,23 +3,38 @@
 namespace App\Service;
 
 use League\Flysystem\FilesystemInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploader
 {
+    private $slugger;
+    private $filesystem;
 
-    private $defaultStorage;
-
-    public function __construct(FilesystemInterface $defaultStorage)
+    public function __construct(FilesystemInterface $filesystem, SluggerInterface $slugger)
     {
-        $this->defaultStorage = $defaultStorage;
+        $this->filesystem = $filesystem;
+        $this->slugger = $slugger;
     }
 
-    public function uploadBase64File(string $base64File): string
+    public function upload(UploadedFile $file, $path = false): string
     {
-        $extension = explode('/', mime_content_type($base64File))[1];
-        $data = explode(',', $base64File);
-        $filename = sprintf('%s.%s', uniqid('file_', true), $extension);
-        $this->defaultStorage->write($filename, base64_decode($data[1]));
-        return $filename;
+        $originalFilename = $file->getClientOriginalName();
+        $safeFilename =  $this->slugger->slug($originalFilename);
+        $newFilename =  $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+
+        $path = '/' . $path . '/' .  $newFilename;
+        $stream = fopen($file->getPathname(), 'r');
+        $result = $this->filesystem->writeStream($path, $stream, ['ACL' => 'public-read']);
+        if ($result === false) {
+            throw new FileException(
+                sprintf('Could not write uploaded file %s', $newFilename)
+            );
+        }
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+        return $newFilename;
     }
 }

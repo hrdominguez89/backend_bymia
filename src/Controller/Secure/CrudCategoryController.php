@@ -4,19 +4,21 @@ namespace App\Controller\Secure;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
-use App\Helpers\FileUploader;
 use App\Repository\CategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\FileUploader;
 
 /**
  * @Route("/category")
  */
 class CrudCategoryController extends AbstractController
 {
+
+    private $pathImg = 'categories';
     /**
      * @Route("/", name="secure_crud_category_index", methods={"GET"})
      */
@@ -49,8 +51,8 @@ class CrudCategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-                $data['category']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($imageFile, $this->pathImg);
+                $data['category']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['category']);
@@ -80,8 +82,8 @@ class CrudCategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile);
-                $data['category']->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($imageFile, $this->pathImg);
+                $data['category']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
 
