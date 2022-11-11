@@ -30,21 +30,21 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * @ORM\Column(name="name",nullable=false, type="string", length=255, unique=true)
      */
     protected $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255,nullable=false)
      */
     protected $slug;
 
 
     /**
      *
-     * @ORM\Column(name="id3pl", type="integer", nullable=true)
+     * @ORM\Column(name="id3pl", type="bigint", nullable=true)
      */
     protected $id3pl;
 
@@ -61,9 +61,9 @@ class Category
     private $products;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="description_es", type="text", nullable=true)
      */
-    private $description;
+    private $descriptionEs;
 
     /**
      * @ORM\Column(type="string", length=2, nullable=true, unique=true)
@@ -79,12 +79,17 @@ class Category
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default":false})
      */
-    private $visible;
+    private $visible = false;
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default":false})
      */
-    private $principal;
+    private $principal = false;
+
+    /**
+     * @ORM\Column(name="description_en",type="text",nullable=true)
+     */
+    private $descriptionEn;
 
     public function __construct()
     {
@@ -250,14 +255,14 @@ class Category
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDescriptionEs(): ?string
     {
-        return $this->description;
+        return $this->descriptionEs;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescriptionEs(?string $descriptionEs): self
     {
-        $this->description = $description;
+        $this->descriptionEs = $descriptionEs;
 
         return $this;
     }
@@ -313,6 +318,18 @@ class Category
     public function setPrincipal(bool $principal): self
     {
         $this->principal = $principal;
+
+        return $this;
+    }
+
+    public function getDescriptionEn(): ?string
+    {
+        return $this->descriptionEn;
+    }
+
+    public function setDescriptionEn(string $descriptionEn): self
+    {
+        $this->descriptionEn = $descriptionEn;
 
         return $this;
     }

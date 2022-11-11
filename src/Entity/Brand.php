@@ -41,14 +41,13 @@ class Brand
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      * 
      * 
-     * 
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255, nullable=false)
      * 
      * 
      * 
@@ -66,11 +65,11 @@ class Brand
     private $image;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(name="description_es",type="text", nullable=true)
      * 
      * 
      */
-    private $description;
+    private $descriptionEs;
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand")
@@ -81,7 +80,7 @@ class Brand
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default":false})
      */
-    private $visible;
+    private $visible = false;
 
     /**
      * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
@@ -94,11 +93,22 @@ class Brand
      */
     private $nomenclature;
 
+    /**
+     * @ORM\Column(name="description_en",type="text", nullable=true)
+     */
+    private $descriptionEn;
+
+    /**
+     * @ORM\Column(type="boolean",nullable=false, options={"default":false})
+     */
+    private $principal = false;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
-        $this->created_at= new \DateTime();
-        $this->visible= false;
+        $this->created_at = new \DateTime();
+        $this->visible = false;
+        $this->principal = false;
     }
 
     /**
@@ -198,14 +208,14 @@ class Brand
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDescriptionEs(): ?string
     {
-        return $this->description;
+        return $this->descriptionEs;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescriptionEs(?string $descriptionEs): self
     {
-        $this->description = $description;
+        $this->descriptionEs = $descriptionEs;
 
         return $this;
     }
@@ -276,4 +286,27 @@ class Brand
         return $this;
     }
 
+    public function getDescriptionEn(): ?string
+    {
+        return $this->descriptionEn;
+    }
+
+    public function setDescriptionEn(string $descriptionEn): self
+    {
+        $this->descriptionEn = $descriptionEn;
+
+        return $this;
+    }
+
+    public function getPrincipal(): ?bool
+    {
+        return $this->principal;
+    }
+
+    public function setPrincipal(bool $principal): self
+    {
+        $this->principal = $principal;
+
+        return $this;
+    }
 }

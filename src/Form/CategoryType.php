@@ -42,12 +42,12 @@ class CategoryType extends AbstractType
                     ])
                 ],
             ])
-            ->add('description', TextareaType::class, ['label' => 'Descripción', 'required' => false])
+            ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción español', 'required' => false])
+            ->add('descriptionEn', TextareaType::class, ['label' => 'Descripción inglés', 'required' => false])
             ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 2, 'maxlength' => 2]])
             ->add('principal', CheckboxType::class, [
                 'label'    => 'Establecer como categoría principal',
                 'required' => false,
-                // 'mapped' => false
             ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Brand;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -41,8 +42,13 @@ class BrandType extends AbstractType
                     ])
                 ],
             ])
-            ->add('description', TextareaType::class, ['label' => 'Descripción', 'required' => false])
-            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 3, 'maxlength' => 3]]);
+            ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción español', 'required' => false])
+            ->add('descriptionEn', TextareaType::class, ['label' => 'Descripción Inglés', 'required' => false])
+            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 3, 'maxlength' => 3]])
+            ->add('principal', CheckboxType::class, [
+                'label'    => 'Establecer como marca principal',
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
