@@ -18,13 +18,17 @@ class FileUploader
         $this->slugger = $slugger;
     }
 
-    public function upload(UploadedFile $file, $path = false): string
+    public function upload(UploadedFile $file, $path = false,$nombre): string
     {
-        $originalFilename = $file->getClientOriginalName();
-        $safeFilename =  $this->slugger->slug($originalFilename);
+        $safeFilename =  $this->slugger->slug($nombre);
         $newFilename =  $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
-        $path = '/' . $path . '/' .  $newFilename;
+        if($path){
+            $path = '/' . $path . '/' .  $newFilename;
+        }else{
+            $path = '/' .  $newFilename;
+
+        }
         $stream = fopen($file->getPathname(), 'r');
         $result = $this->filesystem->writeStream($path, $stream, ['ACL' => 'public-read']);
         if ($result === false) {

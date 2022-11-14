@@ -41,14 +41,14 @@ class Product
     /**
      * @var string|null
      *
-     * @ORM\Column(name="title", type="string", nullable=true, length=255)
+     * @ORM\Column(name="title", type="string", nullable=false, length=255)
      */
     protected $title;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", nullable=false, length=255)
      */
     protected $slug;
 
@@ -69,9 +69,9 @@ class Product
     /**
      * @var string|null
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="description_es", type="text", nullable=true)
      */
-    protected $description;
+    protected $descriptionEs;
 
     /**
      * @var \DateTime
@@ -92,24 +92,24 @@ class Product
     private $part_number;
 
     /**
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $onhand;
 
     /**
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $commited;
 
     /**
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable=false)
      * 
      * 
      */
     private $incomming;
 
     /**
-     * @ORM\Column(type="integer", nullable="true")
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $available;
 
@@ -132,16 +132,6 @@ class Product
      * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="products")
      */
     private $brand;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=ProductCondition::class, inversedBy="products")
-     */
-    private $condition;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=ProductStatusType::class, inversedBy="products")
-     */
-    private $status_type;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -196,7 +186,7 @@ class Product
     /**
      * @ORM\Column(type="boolean", nullable=true, options={"default":False})
      */
-    private $visible;
+    private $visible = false;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="products")
@@ -209,21 +199,20 @@ class Product
     private $conditium;
 
     /**
-     * @ORM\OneToMany(targetEntity=ImagesProducts::class, mappedBy="product", orphanRemoval=true)
-     */
-    private $imagesProducts;
-
-    /**
      * @ORM\OneToMany(targetEntity=ProductImages::class, mappedBy="product", orphanRemoval=true)
      */
     private $image;
+
+    /**
+     * @ORM\Column(name="description_en",type="text")
+     */
+    private $descriptionEn;
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->subcategory = new ArrayCollection();
         $this->tag = new ArrayCollection();
-        $this->imagesProducts = new ArrayCollection();
         $this->visible = false;
         $this->image = new ArrayCollection();
     }
@@ -330,18 +319,18 @@ class Product
     /**
      * @return string|null
      */
-    public function getDescription(): ?string
+    public function getDescriptionEs(): ?string
     {
-        return $this->description;
+        return $this->descriptionEs;
     }
 
     /**
-     * @param string|null $description
+     * @param string|null $descriptionEs
      * @return $this
      */
-    public function setDescription(?string $description): self
+    public function setDescriptionEs(?string $descriptionEs): self
     {
-        $this->description = $description;
+        $this->descriptionEs = $descriptionEs;
 
         return $this;
     }
@@ -376,7 +365,7 @@ class Product
             "slug" => $this->getSlug(),
             "title" => $this->getTitle(),
             "sku" => $this->getSku(),
-            "description" => $this->getDescription(),
+            "descriptionEs" => $this->getDescriptionEs(),
             "customFields" => "",
         ];
     }
@@ -509,18 +498,6 @@ class Product
     public function setCondition(?ProductCondition $condition): self
     {
         $this->condition = $condition;
-
-        return $this;
-    }
-
-    public function getStatusType(): ?ProductStatusType
-    {
-        return $this->status_type;
-    }
-
-    public function setStatusType(?ProductStatusType $status_type): self
-    {
-        $this->status_type = $status_type;
 
         return $this;
     }
@@ -713,36 +690,6 @@ class Product
     }
 
     /**
-     * @return Collection<int, ImagesProducts>
-     */
-    public function getImagesProducts(): Collection
-    {
-        return $this->imagesProducts;
-    }
-
-    public function addImagesProduct(ImagesProducts $imagesProduct): self
-    {
-        if (!$this->imagesProducts->contains($imagesProduct)) {
-            $this->imagesProducts[] = $imagesProduct;
-            $imagesProduct->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeImagesProduct(ImagesProducts $imagesProduct): self
-    {
-        if ($this->imagesProducts->removeElement($imagesProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($imagesProduct->getProduct() === $this) {
-                $imagesProduct->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, ProductImages>
      */
     public function getImage(): Collection
@@ -768,6 +715,18 @@ class Product
                 $image->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescriptionEn(): ?string
+    {
+        return $this->descriptionEn;
+    }
+
+    public function setDescriptionEn(string $descriptionEn): self
+    {
+        $this->descriptionEn = $descriptionEn;
 
         return $this;
     }

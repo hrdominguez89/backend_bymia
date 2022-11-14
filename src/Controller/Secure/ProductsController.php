@@ -3,6 +3,7 @@
 namespace App\Controller\Secure;
 
 use App\Entity\Product;
+use App\Entity\ProductImages;
 use App\Form\ProductType;
 use App\Repository\BrandRepository;
 use App\Repository\ProductImagesRepository;
@@ -13,7 +14,6 @@ use App\Repository\ProductTagRepository;
 use App\Repository\SpecificationRepository;
 use App\Repository\SubcategoryRepository;
 use App\Repository\TagRepository;
-use App\Service\FileUploader;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -22,12 +22,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\FileUploader;
+
 
 /**
  * @Route("/product")
  */
 class ProductsController extends AbstractController
 {
+
+    private $pathImg = 'products';
+
     /**
      * ProductController constructor.
      * @param ProductRepository $productRepository
@@ -74,7 +79,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_product_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, FileUploader $fileUploader): Response
     {
         $data['title'] = 'Nuevo producto';
         $data['breadcrumbs'] = array(
@@ -86,6 +91,16 @@ class ProductsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                foreach ($form->get('image')->getData() as $file) {
+                    $images = new ProductImages;
+                    $imageFileName = $fileUploader->upload($file, $this->pathImg, $form->get('title')->getData());
+                    $images->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
+                    $images->setProduct($data['product']);
+                    $entityManager->persist($images);
+                }
+            }
             $entityManager->persist($data['product']);
             $entityManager->flush();
 

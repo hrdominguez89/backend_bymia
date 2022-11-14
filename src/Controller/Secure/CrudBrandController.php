@@ -54,7 +54,7 @@ class CrudBrandController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile, $this->pathImg);
+                $imageFileName = $fileUploader->upload($imageFile, $this->pathImg, $form->get('name')->getData());
                 $data['brand']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             $entityManager = $this->getDoctrine()->getManager();
@@ -84,7 +84,7 @@ class CrudBrandController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
-                $imageFileName = $fileUploader->upload($imageFile, $this->pathImg);
+                $imageFileName = $fileUploader->upload($imageFile, $this->pathImg, $form->get('name')->getData());
                 $data['brand']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             $this->getDoctrine()->getManager()->flush();
