@@ -134,7 +134,7 @@
 		{% for image in product.getImage %}
 			<div class="row">
 				<div class="col-xs-12 col-md-4">
-					<img class="img-fluid" style="width:100%" alt="Imagen" src="{{ asset(image) }}"/>
+					<img class="img-fluid" style="width:100%" alt="Imagen" src="{{ image.image }}"/>
 				</div>
 			</div>
 		{% endfor %}
@@ -150,7 +150,7 @@
 		<div class="row my-2">
 
 			<div class="col-12 text-end">
-				<a class="btn btn-secondary" href="{{ path('secure_crud_brand_index') }}">Regresar</a>
+				<a class="btn btn-secondary" href="{{ path('secure_crud_product_index') }}">Regresar</a>
 
 				<button class="btn btn-primary">Guardar</button>
 			</div>

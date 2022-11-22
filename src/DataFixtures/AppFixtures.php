@@ -14,7 +14,6 @@ use App\Entity\PayPal;
 use App\Entity\Product;
 use App\Entity\ProductImages;
 use App\Entity\ProductReviews;
-use App\Entity\ProductSpecification;
 use App\Entity\ProductSubcategory;
 use App\Entity\Specification;
 use App\Entity\SpecificationType;
@@ -421,12 +420,6 @@ molestie ante. In feugiat ante vitae ultricies malesuada.
 
                         $sp = $attributes[array_rand($attributes)];
 
-                        $pSpecification = new ProductSpecification($entity, $sp);
-                        $pSpecification
-                            ->setCustomFieldsType($sp->getSpecificationTypeId()->getDefaultCustomFieldsType())
-                            ->setCustomFieldsValue($sp->getDefaultCustomFieldsValue());
-
-                        $manager->persist($pSpecification->setValue(rand(2, 10)));
                     }
 
                     foreach ($productDef['images'] as $imageDef) {

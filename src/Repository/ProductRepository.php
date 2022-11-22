@@ -119,8 +119,6 @@ class ProductRepository extends ServiceEntityRepository
             FROM App\Entity\Product e 
             LEFT JOIN e.brandId b
             LEFT JOIN e.productSubcategories psc
-            LEFT JOIN e.productSpecifications psf
-            LEFT JOIN psf.specificationId sp
             LEFT JOIN psc.subCategory sc 
             LEFT JOIN sc.categoryId c ';
 

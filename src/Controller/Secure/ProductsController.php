@@ -8,7 +8,6 @@ use App\Form\ProductType;
 use App\Repository\BrandRepository;
 use App\Repository\ProductImagesRepository;
 use App\Repository\ProductRepository;
-use App\Repository\ProductSpecificationRepository;
 use App\Repository\ProductSubcategoryRepository;
 use App\Repository\ProductTagRepository;
 use App\Repository\SpecificationRepository;
@@ -39,7 +38,6 @@ class ProductsController extends AbstractController
      */
     public function __construct(
         ProductRepository $productRepository,
-        ProductSpecificationRepository $productEspecificacionRepository,
         ParameterBagInterface $parameterBag,
         BrandRepository $brandRepository,
         SpecificationRepository $specificacionRepository,
@@ -50,7 +48,6 @@ class ProductsController extends AbstractController
         ProductImagesRepository $productImagesRepository
     ) {
         $this->productRepository = $productRepository;
-        $this->productEspecificacionRepository = $productEspecificacionRepository;
         $this->brandRepository = $brandRepository;
         $this->tagRepository = $tagRepository;
         $this->subcategoryRepository = $subcategoryRepository;
@@ -62,7 +59,7 @@ class ProductsController extends AbstractController
     }
 
     /**
-     * @Route("/index", name="secure_crud_product_index", methods={"GET"})
+     * @Route("/", name="secure_crud_product_index", methods={"GET"})
      */
     public function index(ProductRepository $productRepository, Request $request, PaginatorInterface $pagination): Response
     {
@@ -87,6 +84,41 @@ class ProductsController extends AbstractController
             array('active' => true, 'title' => $data['title'])
         );
         $data['product'] = new Product;
+        $form = $this->createForm(ProductType::class, $data['product']);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $imageFile = $form->get('image')->getData();
+            if ($imageFile) {
+                foreach ($form->get('image')->getData() as $file) {
+                    $images = new ProductImages;
+                    $imageFileName = $fileUploader->upload($file, $this->pathImg, $form->get('title')->getData());
+                    $images->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
+                    $images->setProduct($data['product']);
+                    $entityManager->persist($images);
+                }
+            }
+            $entityManager->persist($data['product']);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_crud_product_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $data['form'] = $form;
+        return $this->renderForm('secure/crud_product/form_products.html.twig', $data);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="secure_crud_product_edit", methods={"GET","POST"})
+     */
+    public function edit($id, Request $request, FileUploader $fileUploader, ProductRepository $productRepository): Response
+    {
+        $data['title'] = 'Editar producto';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_crud_brand_index', 'title' => 'Productos'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['product'] = $productRepository->find($id);
         $form = $this->createForm(ProductType::class, $data['product']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

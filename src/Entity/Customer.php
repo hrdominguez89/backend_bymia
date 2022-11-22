@@ -33,13 +33,6 @@ class Customer extends BaseUser
     private $couponDiscounts;
 
     /**
-     * @var Shopping[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Shopping", mappedBy="customerId")
-     */
-    private $shoppingCarts;
-
-    /**
      * @var Order[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Order", mappedBy="customerId")
@@ -165,7 +158,6 @@ class Customer extends BaseUser
 
         $this->favoriteProducts = new ArrayCollection();
         $this->couponDiscounts = new ArrayCollection();
-        $this->shoppingCarts = new ArrayCollection();
         $this->shoppingOrders = new ArrayCollection();
         $this->customerAddresses = new ArrayCollection();
     }
@@ -268,40 +260,6 @@ class Customer extends BaseUser
         }
 
         return false;
-    }
-
-    /**
-     * @return Shopping[]|ArrayCollection
-     */
-    public function getShoppingCarts()
-    {
-        return $this->shoppingCarts;
-    }
-
-    /**
-     * @param Shopping $shoppingCart
-     * @return $this
-     */
-    public function addShoppingCart(Shopping $shoppingCart): Customer
-    {
-        if (!$this->shoppingCarts->contains($shoppingCart)) {
-            $this->shoppingCarts[] = $shoppingCart;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Shopping $shoppingCart
-     * @return $this
-     */
-    public function removeShoppingCart(Shopping $shoppingCart): Customer
-    {
-        if ($this->shoppingCarts->contains($shoppingCart)) {
-            $this->shoppingCarts->removeElement($shoppingCart);
-        }
-
-        return $this;
     }
 
     /**

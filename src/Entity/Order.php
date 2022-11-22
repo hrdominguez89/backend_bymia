@@ -177,18 +177,6 @@ class Order extends BaseOrder
         return $this;
     }
 
-    /**
-     * @param ProductSpecification $orderItems
-     * @return $this
-     */
-    public function removeOrderItem(ProductSpecification $orderItems): Order
-    {
-        if ($this->orderItems->contains($orderItems)) {
-            $this->orderItems->removeElement($orderItems);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Customer

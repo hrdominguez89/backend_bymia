@@ -10,7 +10,7 @@
 			<h1 class="mr-auto mb-0 title-table">{{title}}</h1>
 		</div>
 
-		
+
 		<div class="col-6 text-end">
 			<a class="btn btn-success" href="{{ path('secure_crud_product_new') }}">Nuevo producto</a>
 		</div>
@@ -99,22 +99,25 @@
 
 								{# <td>{{product.subcategory.name}}</td> #}
 
-								<td>{{product.onhand}}</td>
+								<td class="text-center">{{product.cost}}</td>
 
-								<td>{{product.commited}}</td>
 
-								<td>{{product.incomming}}</td>
+								<td class="text-center">{{product.onhand}}</td>
 
-								<td>{{product.available}}</td>
+								<td class="text-center">{{product.commited}}</td>
 
-								<td>{{product.conditium}}</td>
+								<td class="text-center">{{product.incomming}}</td>
+
+								<td class="text-center">{{product.available}}</td>
+
+								<td class="text-center">{{product.conditium}}</td>
 
 								<td data-order="{{product.createdAt ? product.createdAt|date('U'):0}}" class="text-center">{{product.createdAt ? product.createdAt|date("d/m/Y"):'-'}}</td>
 
-								<td
-									class="text-center">{# <a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_crud_city_edit', {'country_id':country.id,'state_id':state.id,'city_id':city.id}) }}" title="Editar ciudad">
-																																																																																																																																																																																																																																																																														<i class="fas fa-edit"></i>
-																																																																																																																																																																																																																																																																													</a> #}
+								<td class="text-center">
+									<a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_crud_product_edit',{"id":product.id}) }}" title="Editar producto.">
+										<i class="fas fa-edit"></i>
+									</a>
 								</td>
 							</tr>
 						{% endfor %}
