@@ -3,27 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Core\Annotation\ApiResource;
-
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CoverImageRepository")
  * @ORM\Table("mia_cover_image")
  *  
- * @ApiResource(
- *        attributes={"order"={"numberOrder": "ASC"}},
- * *      collectionOperations={
- *          "get"={
- * 				"path"="sliders"
- * 			}
- *      },
- *      itemOperations={
- *          "get"={
- * 				"path"="slider/{id}"
- * 			}
- *      }
  * 
- * )
  */
 class CoverImage
 {

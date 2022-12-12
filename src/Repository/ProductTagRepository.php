@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\ProductSpecification;
 use App\Entity\ProductTag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

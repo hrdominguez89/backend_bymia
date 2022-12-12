@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+
 
 /**
  * @Route("/customeraddresses")
@@ -32,7 +35,7 @@ class CustomerAddressesController extends AbstractController
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         $data['breadcrumbs'] = array(
             array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
-            array('active' => true, 'title' => $data['title'] . ' (' . $data['customer']->getLastname() . ', ' . $data['customer']->getName() . ')')
+            array('active' => true, 'title' => $data['title'] . ' (' . $data['customer']->getName() . ')')
         );
         return $this->render('secure/customer_addresses/index.html.twig', $data);
     }
@@ -40,7 +43,7 @@ class CustomerAddressesController extends AbstractController
     /**
      * @Route("/{customer_id}/new", name="secure_customer_address_new", methods={"GET","POST"})
      */
-    public function new($customer_id, Request $request, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository): Response
+    public function new($customer_id, Request $request, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository, HttpClientInterface $client): Response
     {
         $data['customer'] = $customerRepository->find($customer_id);
         $data['customer_addresses'] = new CustomerAddresses();
@@ -66,6 +69,28 @@ class CustomerAddressesController extends AbstractController
             $entityManager->persist($data['customer_addresses']);
             $entityManager->flush();
 
+            try {
+                $response = $client->request(
+                    'POST',
+                    $_ENV['CRM_API'] . '/acustomer/',
+                    [
+                        'headers'   => [
+                            'Authorization' => 'Basic YWRtaW5fYXBpOmNybTIwMjI=',
+                            'Content-Type'  => 'application/json',
+                            'Cookie'        => 'PHPSESSID=2pe8t2vqj4r5f1ojaqrv6cjg54',
+                        ],
+                        'json'  => [
+                            $data['customer']->getCustomerTotalInfo(),
+                        ]
+                    ]
+                );
+                if (200 == $response->getStatusCode()) {
+                    //FALTA GRABAR EN BASE QUE SE ENVIO AL CRM CORRECTAMENTE
+                }
+            } catch (TransportExceptionInterface $e) {
+                // FALTA GRABAN EN BASE QUE ESTA PENDIENTE DE ENVIO
+            }
+
             return $this->redirectToRoute('secure_customer_addresses', ['customer_id' => $customer_id]);
         }
 
@@ -78,7 +103,7 @@ class CustomerAddressesController extends AbstractController
 
         $data['breadcrumbs'] = array(
             array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
-            array('path' => 'secure_customer_addresses', 'path_parameters' => ['customer_id' => $customer_id], 'title' => 'Direcciones del cliente' . ' (' . $data['customer']->getLastname() . ', ' . $data['customer']->getName() . ')'),
+            array('path' => 'secure_customer_addresses', 'path_parameters' => ['customer_id' => $customer_id], 'title' => 'Direcciones del cliente' . ' (' . $data['customer']->getName() . ')'),
             array('active' => true, 'title' => $data['title'])
         );
 
@@ -89,7 +114,7 @@ class CustomerAddressesController extends AbstractController
     /**
      * @Route("/{customer_id}/edit/{customer_address_id}", name="secure_customer_address_edit", methods={"GET","POST"})
      */
-    public function edit($customer_id, Request $request, $customer_address_id, StatesRepository $statesRepository, CitiesRepository $citiesRepository, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository)
+    public function edit($customer_id, Request $request, $customer_address_id, StatesRepository $statesRepository, CitiesRepository $citiesRepository, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository, HttpClientInterface $client)
     {
         $data['customer'] = $customerRepository->find($customer_id);
         $data['customer_addresses'] = $customerAddressesRepository->findBy(['id' => $customer_address_id])[0];
@@ -123,6 +148,28 @@ class CustomerAddressesController extends AbstractController
             $entityManager->persist($data['customer_addresses']);
             $entityManager->flush();
 
+            try {
+                $response = $client->request(
+                    'POST',
+                    $_ENV['CRM_API'] . '/acustomer/',
+                    [
+                        'headers'   => [
+                            'Authorization' => 'Basic YWRtaW5fYXBpOmNybTIwMjI=',
+                            'Content-Type'  => 'application/json',
+                            'Cookie'        => 'PHPSESSID=2pe8t2vqj4r5f1ojaqrv6cjg54',
+                        ],
+                        'json'  => [
+                            $data['customer']->getCustomerTotalInfo(),
+                        ]
+                    ]
+                );
+                if (200 == $response->getStatusCode()) {
+                    //FALTA GRABAR EN BASE QUE SE ENVIO AL CRM CORRECTAMENTE
+                }
+            } catch (TransportExceptionInterface $e) {
+                // FALTA GRABAN EN BASE QUE ESTA PENDIENTE DE ENVIO
+            }
+
             return $this->redirectToRoute('secure_customer_addresses', ['customer_id' => $customer_id]);
         }
 
@@ -134,7 +181,7 @@ class CustomerAddressesController extends AbstractController
 
         $data['breadcrumbs'] = array(
             array('path' => 'secure_crud_customer_index', 'title' => 'Clientes'),
-            array('path' => 'secure_customer_addresses', 'path_parameters' => ['customer_id' => $customer_id], 'title' => 'Direcciones del cliente' . ' (' . $data['customer']->getLastname() . ', ' . $data['customer']->getName() . ')'),
+            array('path' => 'secure_customer_addresses', 'path_parameters' => ['customer_id' => $customer_id], 'title' => 'Direcciones del cliente' . ' (' . $data['customer']->getName() . ')'),
             array('active' => true, 'title' => $data['title'])
         );
 

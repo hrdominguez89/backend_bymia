@@ -1,14 +1,18 @@
 <!-- Modal -->
 <div class="modal fade" id="messageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
 
-	<div class="modal-dialog">
+	<div class="modal-dialog {{message["size"]|default()}}">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="messageModalLabel">{{message["title"]}}</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				{{message["message"]|raw}}
+				<div class="row">
+					<div class="col-xs-12">
+						{{message["message"]|raw}}
+					</div>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

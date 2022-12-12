@@ -33,7 +33,7 @@ const showDivs = (value) => {
       divCustomerForm.show();
       divsPerson.hide();
       inputLastName.removeAttr('required')
-      nameInput.html('Razon social');
+      nameInput.html('Razón social');
       break;
     default: //Ninguno
       divCustomerForm.hide();

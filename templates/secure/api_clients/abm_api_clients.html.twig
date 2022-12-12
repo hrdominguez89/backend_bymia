@@ -36,9 +36,9 @@
 								Rol &nbsp;
 							</th>
 
-							<th class="text-center">
+							{# <th class="text-center">
 								Estado &nbsp;
-							</th>
+							</th> #}
 
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
@@ -63,11 +63,12 @@
 									{{api_cliente.apiClientTypeRole.Name}}
 								</td>
 
-								<td
-									class="text-center">{# <a style="font-size:16px" data-status="{{city.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/Cities" data-id="{{city.id}}" class="text-{{city.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
+								{# <td
+									class="text-center">
+									<a style="font-size:16px" data-status="{{city.visible ? 'on':'off'}}" data-slug="/secure/world/updateVisible/Cities" data-id="{{city.id}}" class="text-{{city.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">
 																																																																						<i class="fas fa-toggle-{{city.visible ? 'on':'off'}}"></i>
-																																																																					</a> #}
-								</td>
+																																																																					</a>
+								</td> #}
 
 								<td class="text-center">
 									<a style="font-size:16px" class="text-warning m-2" href="{{ path('edit_api_clients', {'id':api_cliente.id}) }}" title="Editar Usuario API">

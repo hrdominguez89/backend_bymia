@@ -7,17 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Annotation\ApiResource;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @ORM\Table("mia_customer")
  * 
- * @ApiResource()
  */
 class Customer extends BaseUser
 {
+    const ROLE_DEFAULT = 'ROLE_CUSTOMER';
+
     /**
      * @var FavoriteProduct[]|ArrayCollection
      *
@@ -39,14 +39,6 @@ class Customer extends BaseUser
      */
     private $shoppingOrders;
 
-    
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
-     * @Assert\Length(min=2, max=100)
-     */
-    private $lastname;
 
     /**
      * @var string|null
@@ -111,9 +103,12 @@ class Customer extends BaseUser
      */
     public $registration_user;
 
+
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
+
     public $registration_date;
 
     /**
@@ -151,6 +146,25 @@ class Customer extends BaseUser
      */
     private $url_instagram;
 
+    /**
+     * @ORM\Column(name="sended_CRM",type="boolean", nullable=false, options={"default":false})
+     */
+    private $sendedCRM = false;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="password", type="string", length=512, nullable=false)
+     */
+    protected $password;
+
+    /**
+     * @var string|array
+     *
+     * @ORM\Column(name="roles", type="string", length=255, nullable=false)
+     */
+    protected $roles;
+
 
     public function __construct()
     {
@@ -160,6 +174,8 @@ class Customer extends BaseUser
         $this->couponDiscounts = new ArrayCollection();
         $this->shoppingOrders = new ArrayCollection();
         $this->customerAddresses = new ArrayCollection();
+        $this->roles = json_encode([self::ROLE_DEFAULT]);
+        $this->registration_date = new \DateTime();
     }
 
     /**
@@ -194,6 +210,22 @@ class Customer extends BaseUser
         }
 
         return $this;
+    }
+
+    /**
+     * @param string|null $password
+     * @return $this
+     */
+    public function setPassword(?string $password): self
+    {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
     }
 
     /**
@@ -316,235 +348,6 @@ class Customer extends BaseUser
     }
 
     /**
-     * @return string|null
-     */
-    public function getIdentification(): ?string
-    {
-        return $this->identification;
-    }
-
-    /**
-     * @param string|null $identification
-     * @return $this
-     */
-    public function setIdentification(?string $identification): Customer
-    {
-        $this->identification = $identification;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingFirstName(): ?string
-    {
-        return $this->billingFirstName;
-    }
-
-    /**
-     * @param string|null $billingFirstName
-     * @return $this
-     */
-    public function setBillingFirstName(?string $billingFirstName): Customer
-    {
-        $this->billingFirstName = $billingFirstName;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingLastName(): ?string
-    {
-        return $this->billingLastName;
-    }
-
-    /**
-     * @param string|null $billingLastName
-     * @return $this
-     */
-    public function setBillingLastName(?string $billingLastName): Customer
-    {
-        $this->billingLastName = $billingLastName;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingCompanyName(): ?string
-    {
-        return $this->billingCompanyName;
-    }
-
-    /**
-     * @param string|null $billingCompanyName
-     * @return $this
-     */
-    public function setBillingCompanyName(?string $billingCompanyName): Customer
-    {
-        $this->billingCompanyName = $billingCompanyName;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingCountry(): ?string
-    {
-        return $this->billingCountry;
-    }
-
-    /**
-     * @param string|null $billingCountry
-     * @return $this
-     */
-    public function setBillingCountry(?string $billingCountry): Customer
-    {
-        $this->billingCountry = $billingCountry;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingStreetAddress(): ?string
-    {
-        return $this->billingStreetAddress;
-    }
-
-    /**
-     * @param string|null $billingStreetAddress
-     * @return $this
-     */
-    public function setBillingStreetAddress(?string $billingStreetAddress): Customer
-    {
-        $this->billingStreetAddress = $billingStreetAddress;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingAddress(): ?string
-    {
-        return $this->billingAddress;
-    }
-
-    /**
-     * @param string|null $billingAddress
-     * @return $this
-     */
-    public function setBillingAddress(?string $billingAddress): Customer
-    {
-        $this->billingAddress = $billingAddress;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingCity(): ?string
-    {
-        return $this->billingCity;
-    }
-
-    /**
-     * @param string|null $billingCity
-     * @return $this
-     */
-    public function setBillingCity(?string $billingCity): Customer
-    {
-        $this->billingCity = $billingCity;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingState(): ?string
-    {
-        return $this->billingState;
-    }
-
-    /**
-     * @param string|null $billingState
-     * @return $this
-     */
-    public function setBillingState(?string $billingState): Customer
-    {
-        $this->billingState = $billingState;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingPostcode(): ?string
-    {
-        return $this->billingPostcode;
-    }
-
-    /**
-     * @param string|null $billingPostcode
-     * @return $this
-     */
-    public function setBillingPostcode(?string $billingPostcode): Customer
-    {
-        $this->billingPostcode = $billingPostcode;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingEmail(): ?string
-    {
-        return $this->billingEmail;
-    }
-
-    /**
-     * @param string|null $billingEmail
-     * @return $this
-     */
-    public function setBillingEmail(?string $billingEmail): Customer
-    {
-        $this->billingEmail = $billingEmail;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getBillingPhone(): ?string
-    {
-        return $this->billingPhone;
-    }
-
-    /**
-     * @param string|null $billingPhone
-     * @return $this
-     */
-    public function setBillingPhone(?string $billingPhone): Customer
-    {
-        $this->billingPhone = $billingPhone;
-
-        return $this;
-    }
-
-
-    /**
      * @return array
      */
     public function getRoles(): array
@@ -555,29 +358,53 @@ class Customer extends BaseUser
     /**
      * @return array
      */
-    public function asArray(): array
+    public function getCustomerTotalInfo(): array
     {
-        $coupon = null;
-        foreach ($this->getCouponDiscounts() as $couponDiscount) {
-            if (!$couponDiscount->isApplied()) {
-                $coupon = $couponDiscount->asArray();
+        $addresses = $this->getCustomerAddresses();
+        foreach ($addresses as $address) {
+            if ($address->getActive()) {
+
+                if ($address->getFavoriteAddress()) {
+                    $home = [
+                        'home_address_id' => $address->getId(),
+                        'Country' => $address->getCountry() ? $address->getCountry()->getName() : '',
+                        'State' => $address->getState() ? $address->getState()->getName() : '',
+                        'City' => $address->getCity() ? $address->getCity()->getName() : '',
+                        'address' => $address->getStreet() . ' ' . $address->getNumberStreet() . ', ' . $address->getFloor() . ' ' . $address->getDepartment(),
+                        'postal_code' => $address->getPostalCode(),
+                        'aditional_info' => $address->getAdditionalInfo(),
+                    ];
+                }
+
+                if ($address->getBillingAddress()) {
+                    $bill = [
+                        'bill_address_id' => $address->getId(),
+                        'Country' => $address->getCountry() ? $address->getCountry()->getName() : '',
+                        'State' => $address->getState() ? $address->getState()->getName() : '',
+                        'City' => $address->getCity() ? $address->getCity()->getName() : '',
+                        'address' => $address->getStreet() . ' ' . $address->getNumberStreet() . ', ' . $address->getFloor() . ' ' . $address->getDepartment(),
+                        'postal_code' => $address->getPostalCode(),
+                        'aditional_info' => $address->getAdditionalInfo(),
+                    ];
+                }
             }
         }
 
-        return array_merge(parent::asArray(), [
-            "address" => [
-                "default" => true,
-                "firstName" => $this->getBillingFirstName(),
-                "lastName" => $this->getBillingLastName(),
-                "email" => $this->getBillingEmail(),
-                "phone" => $this->getBillingPhone(),
-                "country" => $this->getBillingCountry(),
-                "city" => $this->getBillingCity(),
-                "postcode" => $this->getBillingPostcode(),
-                "address" => $this->getBillingAddress(),
-            ],
-            "coupon" => $coupon,
-        ]);
+
+        return [
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'name' => $this->getName(),
+            'phone' => $this->getPhone(),
+            'cel_phone' => $this->getCelPhone(),
+            'customer_type' => $this->getCustomerTypeRole()->getName(),
+            'status' => $this->getStatus(),
+            'gender' => $this->getGenderType()->getInitials(),
+            'birth_day' => $this->getDateOfBirth()->format('Y-m-d'),
+            'created_at' => $this->getRegistrationDate()->format('Y-m-d H:m:s'),
+            'home_address' => @$home ? $home : '',
+            'bill_address' => @$bill ? $bill : '',
+        ];
     }
 
     public function removeFavoriteProduct(FavoriteProduct $favoriteProduct): self
@@ -608,18 +435,6 @@ class Customer extends BaseUser
             if ($couponDiscount->getCustomerId() === $this) {
             }
         }
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(?string $lastname): self
-    {
-        $this->lastname = $lastname;
 
         return $this;
     }
@@ -842,6 +657,18 @@ class Customer extends BaseUser
     public function setUrlInstagram(?string $url_instagram): self
     {
         $this->url_instagram = $url_instagram;
+
+        return $this;
+    }
+
+    public function getSendedCRM(): ?bool
+    {
+        return $this->sendedCRM;
+    }
+
+    public function setSendedCRM(bool $sendedCRM): self
+    {
+        $this->sendedCRM = $sendedCRM;
 
         return $this;
     }

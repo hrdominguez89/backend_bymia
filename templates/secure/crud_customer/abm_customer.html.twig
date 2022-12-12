@@ -38,10 +38,6 @@
 								Nombres/R.Social &nbsp;
 							</th>
 
-							<th>
-								Apellidos &nbsp;
-							</th>
-
 							<th class="text-center">
 								Género &nbsp;
 							</th>
@@ -124,12 +120,6 @@
 									{{ customer.name }}
 								</td>
 
-								<td>
-									{# Si es 1 es persona y que muestre lastname #}
-									{% if (customer.customer_type_role_id == 1) %}
-										{{ customer.lastname }}
-									{% endif %}
-								</td>
 								<td
 									class="text-center">
 									{# Si es 1 es persona y que muestre genero #}

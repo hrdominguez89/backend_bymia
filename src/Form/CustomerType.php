@@ -53,7 +53,6 @@ class CustomerType extends AbstractType
                 'required' => true,
             ])
             ->add('name', TextType::class, ['label' => 'Nombres/Razon Social', 'required' => true])
-            ->add('lastname', TextType::class, ['label' => 'Apellidos', 'required' => false])
             ->add('date_of_birth', DateType::class, ['label' => 'Fecha de nacimiento', 'required' => false, 'widget' => 'single_text'])
             ->add('gender_type', EntityType::class, [
                 'placeholder' => 'Seleccione un género',

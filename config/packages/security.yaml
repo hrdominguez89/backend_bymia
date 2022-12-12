@@ -10,11 +10,13 @@ security:
             entity:
                 class: 'App\Entity\User'
                 property: "email"
-
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/*
+            lazy: false
         main:
             pattern: ^/*
             lazy: true
@@ -29,6 +31,9 @@ security:
                 target: app_security_login
 
     access_control:
+        - { path: ^/api/crm/*, roles: PUBLIC_ACCESS }
+        - { path: ^/api/3pl/*, roles: PUBLIC_ACCESS }
+        - { path: ^/api/front/*, roles: PUBLIC_ACCESS }
         - { path: ^/security/*, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password/*, roles: PUBLIC_ACCESS }
         - {

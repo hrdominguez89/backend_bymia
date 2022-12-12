@@ -43,6 +43,16 @@ class ApiClients
      */
     private $api_client_type_role;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default":TRUE})
+     */
+    private $status = TRUE;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default":FALSE})
+     */
+    private $deleted = FALSE;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +114,30 @@ class ApiClients
     public function setApiClientTypeRole(?ApiClientsTypesRoles $api_client_type_role): self
     {
         $this->api_client_type_role = $api_client_type_role;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDeleted(): ?bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): self
+    {
+        $this->deleted = $deleted;
 
         return $this;
     }
