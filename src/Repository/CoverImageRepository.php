@@ -27,8 +27,12 @@ class CoverImageRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
 
         return $entityManager->createQuery(
-            'SELECT e.id, e.title, e.subtitle, e.nameBtn, e.linkBtn, e.volanta, e.numberOrder
-            FROM App\Entity\CoverImage e'
-        )->getArrayResult();
+            'SELECT e.id, e.title, e.subtitle, e.nameBtn, e.linkBtn, e.volanta, e.numberOrder, e.visible
+            FROM App\Entity\CoverImage e
+            WHERE e.visible = :visible
+            ORDER BY e.numberOrder ASC'
+        )
+            ->setParameter('visible', true)
+            ->getArrayResult();
     }
 }

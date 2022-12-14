@@ -26,16 +26,10 @@ class AboutUsRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
 
-        $data = $entityManager->createQuery(
-            'SELECT e.id, e.description
-            FROM App\Entity\AboutUs e'
-        )->getArrayResult();
-
-        $response = "";
-        foreach ($data as $datum) {
-            $response = $datum['description'];
-        }
-
-        return $response;
+        return $entityManager->createQuery(
+            'SELECT a.id, a.description
+            FROM App\Entity\AboutUs a'
+        )
+            ->getSingleResult();
     }
 }

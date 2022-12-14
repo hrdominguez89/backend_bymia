@@ -14,10 +14,19 @@ security:
             entity:
                 class: 'App\Entity\ApiClients'
                 property: "api_client_id"
+        api_customer:
+            entity:
+                class: 'App\Entity\Customer'
+                property: "email"
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api_customer:
+            pattern: ^/api/customer/*
+            lazy: false
+            provider: api_customer
+            custom_authenticator: App\Security\ApiAuthenticator
         api:
             pattern: ^/api/*
             lazy: false
@@ -37,6 +46,7 @@ security:
                 target: app_security_login
 
     access_control:
+        - { path: ^/api/customer/*, roles: ROLE_CUSTOMER }
         - { path: ^/api/crm/*, roles: PUBLIC_ACCESS }
         - { path: ^/api/3pl/*, roles: PUBLIC_ACCESS }
         - { path: ^/api/front/*, roles: ROLE_CLIENT_FRONT }
