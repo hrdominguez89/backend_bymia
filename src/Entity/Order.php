@@ -563,4 +563,16 @@ class Order extends BaseOrder
 
         return $addLines;
     }
+
+    public function removeOrderItem(OrderItems $orderItem): self
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getOrderId() === $this) {
+                $orderItem->setOrderId(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -672,4 +672,11 @@ class Customer extends BaseUser
 
         return $this;
     }
+
+    public function setRoles(string $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
 }

@@ -18,8 +18,16 @@ class UserApiController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $parametros = json_decode($request->getContent(),true);
+        $parametros = json_decode($request->getContent(), true);
         $parametros = $request->headers;
-        return $this->json([dd($parametros->get('authorization'))]);
+
+        return $this->json(
+            [
+                'prueb' => $parametros->get('authorization'),
+                'aaa' => 'bbbb'
+            ],
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
     }
 }

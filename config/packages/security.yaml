@@ -4,12 +4,16 @@ security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
         App\Entity\User: "auto"
-
+        App\Entity\ApiClients: "auto"
     providers:
         backend_users:
             entity:
                 class: 'App\Entity\User'
                 property: "email"
+        api_users:
+            entity:
+                class: 'App\Entity\ApiClients'
+                property: "api_client_id"
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -17,6 +21,8 @@ security:
         api:
             pattern: ^/api/*
             lazy: false
+            provider: api_users
+            custom_authenticator: App\Security\ApiAuthenticator
         main:
             pattern: ^/*
             lazy: true
@@ -33,7 +39,7 @@ security:
     access_control:
         - { path: ^/api/crm/*, roles: PUBLIC_ACCESS }
         - { path: ^/api/3pl/*, roles: PUBLIC_ACCESS }
-        - { path: ^/api/front/*, roles: PUBLIC_ACCESS }
+        - { path: ^/api/front/*, roles: ROLE_CLIENT_FRONT }
         - { path: ^/security/*, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password/*, roles: PUBLIC_ACCESS }
         - {
