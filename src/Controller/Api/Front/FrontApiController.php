@@ -32,7 +32,7 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/about-us", name="api_sliders",methods={"GET"})
+     * @Route("/about-us", name="api_about_us",methods={"GET"})
      */
     public function aboutUs(AboutUsRepository $aboutUsRepository): Response
     {
@@ -46,7 +46,7 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/faqs", name="api_sliders",methods={"GET"})
+     * @Route("/faqs", name="api_faqs",methods={"GET"})
      */
     public function faqs(FaqsRepository $faqsRepository): Response
     {
