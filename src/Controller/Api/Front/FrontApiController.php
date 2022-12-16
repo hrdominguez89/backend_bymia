@@ -82,7 +82,7 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/country-code", name="api_customer_type",methods={"GET"})
+     * @Route("/country-code", name="api_country_code",methods={"GET"})
      */
     public function countryCode(CountriesRepository $countriesRepository): Response
     {
