@@ -69,4 +69,24 @@ class FaqsRepository extends ServiceEntityRepository
             ->setParameter('topic_id', $topic_id)
             ->getResult();
     }
+
+    public function getFaqsByTopic($topic_id): ?array
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            f.id,
+            f.question,
+            f.answer
+
+            FROM App:Faqs f
+
+            WHERE f.topic = :topic_id and f.visible=:visible
+
+            ORDER BY f.number_order asc, f.question asc
+            ')
+            ->setParameter('topic_id', $topic_id)
+            ->setParameter('visible', true)
+            ->getResult();
+    }
 }

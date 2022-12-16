@@ -5,6 +5,7 @@ namespace App\Entity\Model;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class User implements UserInterface, \Serializable, PasswordAuthenticatedUserInterface
 {
@@ -21,6 +22,7 @@ abstract class User implements UserInterface, \Serializable, PasswordAuthenticat
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=512)
+     *
      */
     protected $email;
 
@@ -40,8 +42,10 @@ abstract class User implements UserInterface, \Serializable, PasswordAuthenticat
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
+     * 
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @Assert\Type("string")
+     * @Assert\NotBlank()
      */
     protected $name;
 

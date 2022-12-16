@@ -75,4 +75,22 @@ class TopicsRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getTopics(): ?array
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            t.id as topic_id,
+            t.name
+
+            FROM App:Topics t
+
+            WHERE t.visible = :topic_visible
+            
+            ORDER BY t.number_order asc, t.name asc
+            ')
+            ->setParameter('topic_visible', true)
+            ->getResult();
+    }
 }

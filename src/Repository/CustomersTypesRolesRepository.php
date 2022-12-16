@@ -47,4 +47,19 @@ class CustomersTypesRolesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findCustomerTypesRole()
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT
+                c.id,
+                c.name
+    
+                FROM App:CustomersTypesRoles c
+    
+                ORDER BY c.id
+                ')
+            ->getResult();
+    }
 }

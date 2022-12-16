@@ -40,4 +40,24 @@ class CountriesRepository extends ServiceEntityRepository
             ')
             ->getResult();
     }
+
+    public function getCountries(){
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            c.id,
+            c.name,
+            c.phonecode,
+            c.iso2
+
+            FROM App:Countries c
+
+            WHERE c.visible = :visible
+
+            ORDER BY c.name
+
+            ')
+            ->setParameter('visible', true)
+            ->getResult();
+    }
 }

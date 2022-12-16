@@ -7,12 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
  * @ORM\Table("mia_customer")
- * 
+ * @UniqueEntity("email")
  */
 class Customer extends BaseUser
 {
@@ -324,25 +326,6 @@ class Customer extends BaseUser
         if ($this->shoppingOrders->contains($shoppingOrder)) {
             $this->shoppingOrders->removeElement($shoppingOrder);
         }
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getApiId(): ?string
-    {
-        return $this->apiId;
-    }
-
-    /**
-     * @param string|null $apiId
-     * @return $this
-     */
-    public function setApiId(?string $apiId): Customer
-    {
-        $this->apiId = $apiId;
 
         return $this;
     }
