@@ -45,7 +45,7 @@ class Customer extends BaseUser
     /**
      * @var string|null
      *
-     * @ORM\Column(name="country_code_cel_phone", type="string", length=100, nullable=true)
+     * @ORM\Column(name="country_code_cel_phone", type="string", length=100, nullable=false)
      * @Assert\Length(min=2, max=100)
      */
     public $country_code_cel_phone;
@@ -119,11 +119,6 @@ class Customer extends BaseUser
     public $customerAddresses;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $status;
-
-    /**
      * @ORM\ManyToOne(targetEntity=GenderType::class, inversedBy="customers")
      */
     private $gender_type;
@@ -148,10 +143,6 @@ class Customer extends BaseUser
      */
     private $url_instagram;
 
-    /**
-     * @ORM\Column(name="sended_CRM",type="boolean", nullable=false, options={"default":false})
-     */
-    private $sendedCRM = false;
 
     /**
      * @var string|null
@@ -167,6 +158,43 @@ class Customer extends BaseUser
      */
     protected $roles;
 
+    /**
+     * @ORM\Column(type="integer", options={"default":0})
+     */
+    private $attempts_send_crm;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $error_message_crm;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CommunicationStatesBetweenPlatforms::class, inversedBy="customers")
+     * @ORM\JoinColumn(nullable=false,options={"default":0})
+     */
+    private $status_sent_crm;
+
+    /**
+     * @ORM\Column(type="uuid", nullable=true)
+     */
+    private $verification_code;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default":0})
+     */
+    private $change_password;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $change_password_date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CustomerStatusType::class, inversedBy="customers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $status;
+
 
     public function __construct()
     {
@@ -178,6 +206,8 @@ class Customer extends BaseUser
         $this->customerAddresses = new ArrayCollection();
         $this->roles = json_encode([self::ROLE_DEFAULT]);
         $this->registration_date = new \DateTime();
+        $this->attempts_send_crm = 0;
+        $this->change_password = false;
     }
 
     /**
@@ -381,7 +411,7 @@ class Customer extends BaseUser
             'phone' => $this->getPhone(),
             'cel_phone' => $this->getCelPhone(),
             'customer_type' => $this->getCustomerTypeRole()->getName(),
-            'status' => $this->getStatus(),
+            'status' => $this->getStatus()->getName(),
             'gender' => $this->getGenderType()->getInitials(),
             'birth_day' => $this->getDateOfBirth()->format('Y-m-d'),
             'created_at' => $this->getRegistrationDate()->format('Y-m-d H:m:s'),
@@ -572,18 +602,6 @@ class Customer extends BaseUser
         return $this;
     }
 
-    public function getStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?bool $status = true): self
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     public function getGenderType(): ?GenderType
     {
         return $this->gender_type;
@@ -644,21 +662,93 @@ class Customer extends BaseUser
         return $this;
     }
 
-    public function getSendedCRM(): ?bool
+    public function setRoles(string $roles): self
     {
-        return $this->sendedCRM;
-    }
-
-    public function setSendedCRM(bool $sendedCRM): self
-    {
-        $this->sendedCRM = $sendedCRM;
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function setRoles(string $roles): self
+    public function getAttemptsSendCrm(): ?int
     {
-        $this->roles = $roles;
+        return $this->attempts_send_crm;
+    }
+
+    public function setAttemptsSendCrm(int $attempts_send_crm): self
+    {
+        $this->attempts_send_crm = $attempts_send_crm;
+
+        return $this;
+    }
+
+    public function getErrorMessageCrm(): ?string
+    {
+        return $this->error_message_crm;
+    }
+
+    public function setErrorMessageCrm(?string $error_message_crm): self
+    {
+        $this->error_message_crm = $error_message_crm;
+
+        return $this;
+    }
+
+    public function getStatusSentCrm(): ?CommunicationStatesBetweenPlatforms
+    {
+        return $this->status_sent_crm;
+    }
+
+    public function setStatusSentCrm(?CommunicationStatesBetweenPlatforms $status_sent_crm): self
+    {
+        $this->status_sent_crm = $status_sent_crm;
+
+        return $this;
+    }
+
+    public function getVerificationCode()
+    {
+        return $this->verification_code;
+    }
+
+    public function setVerificationCode($verification_code): self
+    {
+        $this->verification_code = $verification_code;
+
+        return $this;
+    }
+
+    public function getChangePassword(): ?bool
+    {
+        return $this->change_password;
+    }
+
+    public function setChangePassword(bool $change_password): self
+    {
+        $this->change_password = $change_password;
+
+        return $this;
+    }
+
+    public function getChangePasswordDate(): ?\DateTimeInterface
+    {
+        return $this->change_password_date;
+    }
+
+    public function setChangePasswordDate(?\DateTimeInterface $change_password_date): self
+    {
+        $this->change_password_date = $change_password_date;
+
+        return $this;
+    }
+
+    public function getStatus(): ?CustomerStatusType
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?CustomerStatusType $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

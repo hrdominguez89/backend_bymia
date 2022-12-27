@@ -5,9 +5,6 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     images_directory: '%kernel.project_dir%/public/uploads/images'
-    url.customer.api: '%env(resolve:URL_CUSTOMER_API)%'
-    url.customer.api.ids: '%env(resolve:URL_CUSTOMER_API_IDS)%'
-    url.product.api: '%env(resolve:URL_PRODUCT_API)%'
 
 services:
     # default configuration for services in *this* file

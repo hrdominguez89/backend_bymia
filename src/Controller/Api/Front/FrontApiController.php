@@ -15,7 +15,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Helpers\EnqueueEmail;
+use App\Constants\Constants;
+use App\Repository\CommunicationStatesBetweenPlatformsRepository;
+use App\Repository\CustomerRepository;
+use App\Repository\CustomerStatusTypeRepository;
+use App\Repository\RegistrationTypeRepository;
+use DateTime;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @Route("/api/front")
@@ -98,19 +108,41 @@ class FrontApiController extends AbstractController
     /**
      * @Route("/register", name="api_register_customer", methods={"POST"})
      */
-    public function register(EntityManagerInterface $em, Request $request, CustomersTypesRolesRepository $customersTypesRolesRepository, CountriesRepository $countriesRepository): Response
-    {
+    public function register(
+
+        EntityManagerInterface $em,
+        Request $request,
+        CustomerStatusTypeRepository $customerStatusTypeRepository,
+        RegistrationTypeRepository $registrationTypeRepository,
+        CustomersTypesRolesRepository $customersTypesRolesRepository,
+        CountriesRepository $countriesRepository,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        EnqueueEmail $queue
+
+    ): Response {
+
         $body = $request->getContent();
         $data = json_decode($body, true);
 
+        //find relational objects
         $country = $countriesRepository->find($data['country_code_cel_phone']);
-        $customerTypeRole = $customersTypesRolesRepository->find($data['customer_type_role']);
+        $customer_type_role = $customersTypesRolesRepository->find($data['customer_type_role']);
+        $status_customer = $customerStatusTypeRepository->find(Constants::CUSTOMER_STATUS_PENDING);
+        $registration_type = $registrationTypeRepository->find(Constants::REGISTRATION_TYPE_WEB);
+        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
 
-        
+
+        //set Customer data
         $customer = new Customer();
-        $customer->setCountryCodeCelPhone($country->getPhonecode());
-        $customer->setCustomerTypeRole($customerTypeRole);
-        
+        $customer->setCountryCodeCelPhone($country->getPhonecode())
+            ->setCustomerTypeRole($customer_type_role)
+            ->setVerificationCode(Uuid::v4())
+            ->setStatus($status_customer)
+            ->setRegistrationType($registration_type)
+            ->setRegistrationDate(new \DateTime)
+            ->setStatusSentCrm($status_sent_crm);
+
+
         $form = $this->createForm(RegisterCustomerApiType::class, $customer);
         $form->submit($data);
 
@@ -125,9 +157,89 @@ class FrontApiController extends AbstractController
         $em->persist($customer);
         $em->flush();
 
+        //queue the email
+        $id_email = $queue->enqueue(
+            Constants::EMAIL_TYPE_VALIDATION, //tipo de email
+            $customer->getEmail(), //email destinatario
+            [ //parametros
+                'name' => $customer->getName(),
+                'url_front_validation' => $_ENV['FRONT_URL'] . $_ENV['FRONT_VALIDATION'] . '?code=' . $customer->getVerificationCode() . '&id=' . $customer->getId(),
+            ]
+        );
+
+        //Intento enviar el correo encolado
+        $queue->sendEnqueue($id_email);
+
         return $this->json(
             ['message' => 'Usuario creado'],
             Response::HTTP_CREATED,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/validate", name="api_validate_customer", methods={"POST"})
+     */
+    public function validate(
+
+        EntityManagerInterface $em,
+        Request $request,
+        CustomerRepository $customerRepository,
+        CustomerStatusTypeRepository $customerStatusTypeRepository,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        EnqueueEmail $queue
+
+    ): Response {
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        //get Customer data
+        $customer = $customerRepository->findOneBy(['id' => $data['id']]);
+
+        if (!$customer || (!$customer->getVerificationCode() || !$customer->getVerificationCode()->equals(Uuid::fromString($data['code'])))) {
+            return $this->json(
+                ['message' => 'No fue posible encontrar un usuario o el enlace expiró'],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        if ($customer->getStatus()->getId() !== Constants::CUSTOMER_STATUS_PENDING) {
+            return $this->json(
+                ['message' => 'Su cuenta ya se encuentra validada'],
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/json']
+            );
+        }
+        //find relational objects
+        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
+        $status_customer = $customerStatusTypeRepository->find(Constants::CUSTOMER_STATUS_VALIDATED);
+
+        $customer->setStatus($status_customer)
+            ->setStatusSentCrm($status_sent_crm)
+            ->setAttemptsSendCrm(0)
+            ->setVerificationCode(null);
+
+        $em->persist($customer);
+        $em->flush();
+
+        //queue the email
+        $id_email = $queue->enqueue(
+            Constants::EMAIL_TYPE_WELCOME, //tipo de email
+            $customer->getEmail(), //email destinatario
+            [ //parametros
+                'name' => $customer->getName(),
+                'url_front_login' => $_ENV['FRONT_URL'] . $_ENV['FRONT_LOGIN'],
+            ]
+        );
+
+        //Intento enviar el correo encolado
+        $queue->sendEnqueue($id_email);
+
+        return $this->json(
+            ['message' => 'Cuenta de correo verificada con exito.'],
+            Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );
     }
