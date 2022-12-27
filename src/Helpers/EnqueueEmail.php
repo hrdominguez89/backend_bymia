@@ -81,7 +81,7 @@ class EnqueueEmail
             $this->email->setSentOn(new DateTime());
             $this->email->setEmailStatus($this->emailStatusTypeRepository->find(Constants::EMAIL_STATUS_SENT));
         } catch (TransportExceptionInterface $e) {
-            $this->email->setErrorMessage($e);
+            $this->email->setErrorMessage($e->getMessage());
             if ($this->email->getSendAttempts() + 1 >= 10) {
                 $this->email->setEmailStatus($this->emailStatusTypeRepository->find(Constants::EMAIL_STATUS_CANCELED));
             } else {
