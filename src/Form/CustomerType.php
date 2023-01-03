@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Countries;
 use App\Entity\Customer;
 use App\Entity\CustomersTypesRoles;
 use App\Entity\GenderType;
@@ -64,11 +65,17 @@ class CustomerType extends AbstractType
             ->add('email', EmailType::class, ['label' => 'Email', 'required' => true])
             ->add('url_facebook', UrlType::class, ['label' => 'Facebook', 'required' => false])
             ->add('url_instagram', UrlType::class, ['label' => 'Instagram', 'required' => false])
-
-            ->add('country_code_cel_phone', TextType::class, ['label' => 'Cod. País', 'required' => true])
+            ->add('country_phone_code', EntityType::class, [
+                'placeholder' => 'Seleccione un país',
+                'label' => 'Cód. de país',
+                'class'  => Countries::class,
+                'choice_label' => function ($countries) {
+                    return $countries->getName() . ' (' . $countries->getPhonecode().')';
+                },
+                'required' => true
+            ])
             ->add('state_code_cel_phone', TextType::class, ['label' => 'Cod. Área', 'required' => true])
             ->add('cel_phone', TextType::class, ['label' => 'Nro.', 'required' => true])
-            ->add('country_code_phone', TextType::class, ['label' => 'Cod. País', 'required' => false])
             ->add('state_code_phone', TextType::class, ['label' => 'Cod. Área', 'required' => false])
             ->add('phone', TextType::class, ['label' => 'Nro.', 'required' => false]);
     }

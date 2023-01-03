@@ -67,18 +67,25 @@
 	<hr>
 	<div class="row my-2">
 		<div class="col-12">
+			<h5 class="mr-auto mb-0 title-table">Cód. País</h5>
+		</div>
+		<div class="row my-2">
+
+		<div class="col-12">
+			{{ form_row(form.country_phone_code) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col-12">
 			<h5 class="mr-auto mb-0 title-table">Teléfono celular</h5>
 		</div>
 	</div>
 	<div class="row my-2">
 
-		<div class="col-4">
-			{{ form_row(form.country_code_cel_phone) }}
-		</div>
-		<div class="col-4">
+		<div class="col-6">
 			{{ form_row(form.state_code_cel_phone) }}
 		</div>
-		<div class="col-4">
+		<div class="col-6">
 			{{ form_row(form.cel_phone) }}
 		</div>
 	</div>
@@ -90,13 +97,10 @@
 	</div>
 	<div class="row my-2">
 
-		<div class="col-4">
-			{{ form_row(form.country_code_phone) }}
-		</div>
-		<div class="col-4">
+		<div class="col-6">
 			{{ form_row(form.state_code_phone) }}
 		</div>
-		<div class="col-4">
+		<div class="col-6">
 			{{ form_row(form.phone) }}
 		</div>
 	</div>

@@ -75,9 +75,9 @@ class CustomerAddressesController extends AbstractController
                     $_ENV['CRM_API'] . '/acustomer/',
                     [
                         'headers'   => [
-                            'Authorization' => 'Basic YWRtaW5fYXBpOmNybTIwMjI=',
-                            'Content-Type'  => 'application/json',
-                            'Cookie'        => 'PHPSESSID=2pe8t2vqj4r5f1ojaqrv6cjg54',
+                            'Authorization' => $_ENV['CRM_AUTHORIZATION'],
+                            'Content-Type'  => $_ENV['CRM_CONTENT_TYPE'],
+                            'Cookie'        => $_ENV['CRM_COOKIE'],
                         ],
                         'json'  => [
                             $data['customer']->getCustomerTotalInfo(),
@@ -154,9 +154,9 @@ class CustomerAddressesController extends AbstractController
                     $_ENV['CRM_API'] . '/acustomer/',
                     [
                         'headers'   => [
-                            'Authorization' => 'Basic YWRtaW5fYXBpOmNybTIwMjI=',
-                            'Content-Type'  => 'application/json',
-                            'Cookie'        => 'PHPSESSID=2pe8t2vqj4r5f1ojaqrv6cjg54',
+                            'Authorization' => $_ENV['CRM_AUTHORIZATION'],
+                            'Content-Type'  => $_ENV['CRM_CONTENT_TYPE'],
+                            'Cookie'        => $_ENV['CRM_COOKIE'],
                         ],
                         'json'  => [
                             $data['customer']->getCustomerTotalInfo(),

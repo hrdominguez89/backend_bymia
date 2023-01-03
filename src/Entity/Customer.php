@@ -42,13 +42,6 @@ class Customer extends BaseUser
     private $shoppingOrders;
 
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="country_code_cel_phone", type="string", length=100, nullable=false)
-     * @Assert\Length(min=2, max=100)
-     */
-    public $country_code_cel_phone;
 
     /**
      * @var string|null
@@ -66,13 +59,6 @@ class Customer extends BaseUser
      */
     public $cel_phone;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="country_code_phone", type="string", length=100, nullable=true)
-     * @Assert\Length(min=2, max=100)
-     */
-    public $country_code_phone;
 
     /**
      * @var string|null
@@ -194,6 +180,12 @@ class Customer extends BaseUser
      * @ORM\JoinColumn(nullable=false)
      */
     private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="customers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $country_phone_code;
 
 
     public function __construct()
@@ -408,12 +400,12 @@ class Customer extends BaseUser
             'id' => $this->getId(),
             'email' => $this->getEmail(),
             'name' => $this->getName(),
-            'phone' => $this->getPhone(),
-            'cel_phone' => $this->getCelPhone(),
+            'phone' => $this->getPhone() ? $this->getCountryPhoneCode()->getPhonecode() . ($this->getStateCodePhone() ? $this->getStateCodePhone() : '') . $this->getPhone() : '',
+            'cel_phone' => $this->getCountryPhoneCode()->getPhonecode() . ($this->getStateCodePhone() ? $this->getStateCodePhone() : '') . $this->getCelPhone(),
             'customer_type' => $this->getCustomerTypeRole()->getName(),
             'status' => $this->getStatus()->getName(),
-            'gender' => $this->getGenderType()->getInitials(),
-            'birth_day' => $this->getDateOfBirth()->format('Y-m-d'),
+            'gender' => $this->getGenderType() ? $this->getGenderType()->getInitials() : '',
+            'birth_day' => $this->getDateOfBirth() ? $this->getDateOfBirth()->format('Y-m-d') : '',
             'created_at' => $this->getRegistrationDate()->format('Y-m-d H:m:s'),
             'home_address' => @$home ? $home : '',
             'bill_address' => @$bill ? $bill : '',
@@ -452,18 +444,6 @@ class Customer extends BaseUser
         return $this;
     }
 
-    public function getCountryCodeCelPhone(): ?string
-    {
-        return $this->country_code_cel_phone;
-    }
-
-    public function setCountryCodeCelPhone(?string $country_code_cel_phone): self
-    {
-        $this->country_code_cel_phone = $country_code_cel_phone;
-
-        return $this;
-    }
-
     public function getStateCodeCelPhone(): ?string
     {
         return $this->state_code_cel_phone;
@@ -484,18 +464,6 @@ class Customer extends BaseUser
     public function setCelPhone(?string $cel_phone): self
     {
         $this->cel_phone = $cel_phone;
-
-        return $this;
-    }
-
-    public function getCountryCodePhone(): ?string
-    {
-        return $this->country_code_phone;
-    }
-
-    public function setCountryCodePhone(?string $country_code_phone): self
-    {
-        $this->country_code_phone = $country_code_phone;
 
         return $this;
     }
@@ -749,6 +717,18 @@ class Customer extends BaseUser
     public function setStatus(?CustomerStatusType $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getCountryPhoneCode(): ?Countries
+    {
+        return $this->country_phone_code;
+    }
+
+    public function setCountryPhoneCode(?Countries $country_phone_code): self
+    {
+        $this->country_phone_code = $country_phone_code;
 
         return $this;
     }

@@ -2,12 +2,14 @@
 
 namespace App\Controller\Secure;
 
+use App\Constants\Constants;
 use App\Entity\Customer;
 use App\Form\CustomerSearchType;
 use App\Form\CustomerType;
 use App\Form\Model\CustomerSearchDto;
 use App\Helpers\FileUploader;
 use App\Repository\CustomerRepository;
+use App\Repository\CustomerStatusTypeRepository;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,16 +44,17 @@ class CrudCustomerController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_customer_new", methods={"GET","POST"})
      */
-    public function new(Request $request, HttpClientInterface $client): Response
+    public function new(Request $request, HttpClientInterface $client, CustomerStatusTypeRepository $customerStatusTypeRepository): Response
     {
 
         $data['title'] = "Nuevo cliente";
         $data['customer'] = new Customer();
         $form = $this->createForm(CustomerType::class, $data['customer']);
         $form->handleRequest($request);
+        $status_customer = $customerStatusTypeRepository->find(Constants::CUSTOMER_STATUS_PENDING);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data['customer']->setStatus(true);
+            $data['customer']->setStatus($status_customer);
             $data['customer']->setPassword($_ENV['PWD_NEW_USER']);
             if ($form->get('customer_type_role')->getData()->getId() == 2) {
                 $data['customer']->setGenderType(null);
@@ -105,6 +108,7 @@ class CrudCustomerController extends AbstractController
     {
         $data['title'] = "Editar cliente";
         $data['customer'] = $customerRepository->find($id);
+        dd($data['customer']->getCustomerTotalInfo());
         $form = $this->createForm(CustomerType::class, $data['customer']);
         $form->handleRequest($request);
 
