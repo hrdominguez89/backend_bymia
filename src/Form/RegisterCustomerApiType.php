@@ -17,7 +17,7 @@ class RegisterCustomerApiType extends AbstractType
             ->add('name')
             ->add('email', EmailType::class)
             ->add('password')
-            ->add('country_code_cel_phone')
+            ->add('country_phone_code')
             ->add('cel_phone');
     }
 

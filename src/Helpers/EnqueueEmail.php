@@ -58,7 +58,7 @@ class EnqueueEmail
             $this->email = $this->emailQueueRepository->find($id);
             $this->send();
         } else {
-            $emails = $this->emailQueueRepository->findEmailsByStatus([Constants::EMAIL_STATUS_PENDING, Constants::EMAIL_STATUS_ERROR], ['created_at' => 'ASC'], 100);
+            $emails = $this->emailQueueRepository->findEmailsByStatus([Constants::EMAIL_STATUS_PENDING, Constants::EMAIL_STATUS_ERROR], ['created_at' => 'ASC'], $_ENV['MAX_LIMIT_EMAIL_TO_SEND']);
             foreach ($emails as $this->email) {
                 $this->send();
             }
@@ -82,7 +82,7 @@ class EnqueueEmail
             $this->email->setEmailStatus($this->emailStatusTypeRepository->find(Constants::EMAIL_STATUS_SENT));
         } catch (TransportExceptionInterface $e) {
             $this->email->setErrorMessage($e->getMessage());
-            if ($this->email->getSendAttempts() + 1 >= 10) {
+            if ($this->email->getSendAttempts() + 1 >= $_ENV['MAX_ATTEMPTS_SEND_EMAIL']) {
                 $this->email->setEmailStatus($this->emailStatusTypeRepository->find(Constants::EMAIL_STATUS_CANCELED));
             } else {
                 $this->email->setEmailStatus($this->emailStatusTypeRepository->find(Constants::EMAIL_STATUS_ERROR));

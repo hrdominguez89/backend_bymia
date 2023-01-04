@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
+use App\Helpers\SendCustomerToCrm;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
@@ -114,7 +115,8 @@ class FrontApiController extends AbstractController
         CustomersTypesRolesRepository $customersTypesRolesRepository,
         CountriesRepository $countriesRepository,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        EnqueueEmail $queue
+        EnqueueEmail $queue,
+        SendCustomerToCrm $sendCustomerToCrm
 
     ): Response {
 
@@ -122,7 +124,7 @@ class FrontApiController extends AbstractController
         $data = json_decode($body, true);
 
         //find relational objects
-        $country = $countriesRepository->find($data['country_code_cel_phone']);
+        $country = $countriesRepository->find($data['country_phone_code']);
         $customer_type_role = $customersTypesRolesRepository->find($data['customer_type_role']);
         $status_customer = $customerStatusTypeRepository->find(Constants::CUSTOMER_STATUS_PENDING);
         $registration_type = $registrationTypeRepository->find(Constants::REGISTRATION_TYPE_WEB);
@@ -131,7 +133,7 @@ class FrontApiController extends AbstractController
 
         //set Customer data
         $customer = new Customer();
-        $customer->setCountryPhoneCode($country->getPhonecode())
+        $customer->setCountryPhoneCode($country)
             ->setCustomerTypeRole($customer_type_role)
             ->setVerificationCode(Uuid::v4())
             ->setStatus($status_customer)
@@ -169,6 +171,8 @@ class FrontApiController extends AbstractController
 
         //Intento enviar el correo encolado
         $queue->sendEnqueue($id_email);
+        //envio por helper los datos del cliente al crm
+        $sendCustomerToCrm->SendCustomerToCrm($customer);
 
         return $this->json(
             ['message' => 'Usuario creado'],

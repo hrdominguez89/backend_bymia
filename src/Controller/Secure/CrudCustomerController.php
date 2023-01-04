@@ -4,21 +4,18 @@ namespace App\Controller\Secure;
 
 use App\Constants\Constants;
 use App\Entity\Customer;
-use App\Form\CustomerSearchType;
 use App\Form\CustomerType;
-use App\Form\Model\CustomerSearchDto;
-use App\Helpers\FileUploader;
+use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
-use Exception;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Helpers\SendCustomerToCrm;
+use App\Form\CustomerSearchType;
+use App\Form\Model\CustomerSearchDto;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/customer")
@@ -44,7 +41,7 @@ class CrudCustomerController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_customer_new", methods={"GET","POST"})
      */
-    public function new(Request $request, HttpClientInterface $client, CustomerStatusTypeRepository $customerStatusTypeRepository): Response
+    public function new(Request $request, CustomerStatusTypeRepository $customerStatusTypeRepository, SendCustomerToCrm $sendCustomerToCrm, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository): Response
     {
 
         $data['title'] = "Nuevo cliente";
@@ -61,31 +58,15 @@ class CrudCustomerController extends AbstractController
                 $data['customer']->setDateOfBirth(null);
             }
 
+            $data['customer']->setStatusSentCrm($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
+            $data['customer']->setAttemptsSendCrm(0);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['customer']);
             $entityManager->flush();
 
-            try {
-                $response = $client->request(
-                    'POST',
-                    $_ENV['CRM_API'] . '/acustomer/',
-                    [
-                        'headers'   => [
-                            'Authorization' => $_ENV['CRM_AUTHORIZATION'],
-                            'Content-Type'  => $_ENV['CRM_CONTENT_TYPE'],
-                            'Cookie'        => $_ENV['CRM_COOKIE'],
-                        ],
-                        'json'  => [
-                            $data['customer']->getCustomerTotalInfo(),
-                        ]
-                    ]
-                );
-                if (200 == $response->getStatusCode()) {
-                    //FALTA GRABAR EN BASE QUE SE ENVIO AL CRM CORRECTAMENTE
-                }
-            } catch (TransportExceptionInterface $e) {
-                // FALTA GRABAN EN BASE QUE ESTA PENDIENTE DE ENVIO
-            }
+            //envio por helper los datos del cliente al crm
+            $sendCustomerToCrm->SendCustomerToCrm($data['customer']);
 
             return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -104,11 +85,10 @@ class CrudCustomerController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_customer_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, HttpClientInterface $client, CustomerRepository $customerRepository): Response
+    public function edit($id, Request $request, CustomerRepository $customerRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCustomerToCrm $sendCustomerToCrm): Response
     {
         $data['title'] = "Editar cliente";
         $data['customer'] = $customerRepository->find($id);
-        dd($data['customer']->getCustomerTotalInfo());
         $form = $this->createForm(CustomerType::class, $data['customer']);
         $form->handleRequest($request);
 
@@ -117,27 +97,12 @@ class CrudCustomerController extends AbstractController
                 $data['customer']->setGenderType(null);
                 $data['customer']->setDateOfBirth(null);
             }
+            $data['customer']->setStatusSentCrm($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
+            $data['customer']->setAttemptsSendCrm(0);
             $this->getDoctrine()->getManager()->flush();
 
-            try {
-                $response = $client->request(
-                    'POST',
-                    $_ENV['CRM_API'] . '/acustomer/',
-                    [
-                        'headers'   => [
-                            'Authorization' => $_ENV['CRM_AUTHORIZATION'],
-                            'Content-Type'  => $_ENV['CRM_CONTENT_TYPE'],
-                            'Cookie'        => $_ENV['CRM_COOKIE'],
-                        ],
-                        'json'  => $data['customer']->getCustomerTotalInfo(),
-                    ]
-                );
-                if (200 == $response->getStatusCode()) {
-                    //FALTA GRABAR EN BASE QUE SE ENVIO AL CRM CORRECTAMENTE
-                }
-            } catch (TransportExceptionInterface $e) {
-                // FALTA GRABAN EN BASE QUE ESTA PENDIENTE DE ENVIO
-            }
+            //envio por helper los datos del cliente al crm
+            $sendCustomerToCrm->SendCustomerToCrm($data['customer']);
 
             return $this->redirectToRoute('secure_crud_customer_index', [], Response::HTTP_SEE_OTHER);
         }
