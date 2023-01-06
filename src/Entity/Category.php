@@ -91,12 +91,30 @@ class Category
      */
     private $descriptionEn;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=CommunicationStatesBetweenPlatforms::class, inversedBy="categories")
+     * @ORM\JoinColumn(nullable=false, options={"default":1})
+     */
+    private $status_sent_3pl;
+
+    /**
+     * @ORM\Column(type="smallint", options={"default":0})
+     */
+    private $attempts_send_3pl;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $error_message_3pl;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->visible = false;
         $this->principal = false;
+        $this->attempts_send_3pl = 0;
+
     }
 
     /**
@@ -332,5 +350,46 @@ class Category
         $this->descriptionEn = $descriptionEn;
 
         return $this;
+    }
+
+    public function getStatusSent3pl(): ?CommunicationStatesBetweenPlatforms
+    {
+        return $this->status_sent_3pl;
+    }
+
+    public function setStatusSent3pl(?CommunicationStatesBetweenPlatforms $status_sent_3pl): self
+    {
+        $this->status_sent_3pl = $status_sent_3pl;
+
+        return $this;
+    }
+
+    public function getAttemptsSend3pl(): ?int
+    {
+        return $this->attempts_send_3pl;
+    }
+
+    public function setAttemptsSend3pl(int $attempts_send_3pl): self
+    {
+        $this->attempts_send_3pl = $attempts_send_3pl;
+
+        return $this;
+    }
+
+    public function getErrorMessage3pl(): ?string
+    {
+        return $this->error_message_3pl;
+    }
+
+    public function setErrorMessage3pl(?string $error_message_3pl): self
+    {
+        $this->error_message_3pl = $error_message_3pl;
+
+        return $this;
+    }
+
+    public function incrementAttemptsToSendCategoryTo3pl()
+    {
+        $this->setAttemptsSend3pl($this->attempts_send_3pl + 1); //you can access your entity values directly
     }
 }

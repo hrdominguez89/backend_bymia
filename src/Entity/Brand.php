@@ -107,7 +107,7 @@ class Brand
 
     /**
      * @ORM\ManyToOne(targetEntity=CommunicationStatesBetweenPlatforms::class, inversedBy="brands")
-     * @ORM\JoinColumn(nullable=false, options={"default":0})
+     * @ORM\JoinColumn(nullable=false, options={"default":1})
      * 
      */
     private $status_sent_3pl;

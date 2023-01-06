@@ -2,17 +2,17 @@
 
 namespace App\Controller\Secure;
 
-use App\Constants\Constants;
 use App\Entity\Brand;
 use App\Form\BrandType;
 use App\Repository\BrandRepository;
-use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\FileUploader;
+use App\Repository\CommunicationStatesBetweenPlatformsRepository;
+use App\Constants\Constants;
 use App\Helpers\SendBrandTo3pl;
 
 /**
@@ -74,7 +74,7 @@ class CrudBrandController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_brand_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, BrandRepository $brandRepository, FileUploader $fileUploader, SendBrandTo3pl $sendBrandTo3pl): Response
+    public function edit($id, Request $request, BrandRepository $brandRepository, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendBrandTo3pl $sendBrandTo3pl): Response
     {
         $data['title'] = 'Editar marca';
         $data['breadcrumbs'] = array(
@@ -92,9 +92,13 @@ class CrudBrandController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile, $this->pathImg, $form->get('name')->getData());
                 $data['brand']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
-            $this->getDoctrine()->getManager()->flush();
             if ($data['old_name'] !== $data['brand']->getName()) {
+                $data['brand']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
+                $data['brand']->setAttemptsSend3pl(0);
+                $this->getDoctrine()->getManager()->flush();
                 $sendBrandTo3pl->send($data['brand'], 'PUT', 'update');
+            } else {
+                $this->getDoctrine()->getManager()->flush();
             }
             return $this->redirectToRoute('secure_crud_brand_index');
         }

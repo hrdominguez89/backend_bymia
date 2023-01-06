@@ -45,7 +45,7 @@ class CategoryRepository extends ServiceEntityRepository
     {
         $entity = $this->findOneBy(['slug' => $slug], ['name' => 'ASC']);
 
-        return $entity ;
+        return $entity;
     }
 
 
@@ -62,12 +62,11 @@ class CategoryRepository extends ServiceEntityRepository
             FROM App\Entity\Category e ';
 
         if ($filter == 'populars') {
-            $dql = $dql.'ORDER BY e.items DESC';
+            $dql = $dql . 'ORDER BY e.items DESC';
             $limit = 3;
         }
 
         return $entityManager->createQuery($dql)->setMaxResults($limit)->getResult();
-
     }
 
     public function listCategories()
@@ -89,6 +88,23 @@ class CategoryRepository extends ServiceEntityRepository
 
             FROM App:Category c 
             ')
+            ->getResult();
+    }
+
+    public function findCategoriesToSendTo3pl(array $statuses, array $orders = null, int $limit = null): array
+    {
+        $categories = $this->createQueryBuilder('c')
+            ->where('c.status_sent_3pl IN (:statuses)')
+            ->setParameter('statuses', $statuses);
+        if ($orders) {
+            foreach ($orders as $orderKey => $orderValue) {
+                $categories->orderBy('c.' . $orderKey, $orderValue);
+            }
+        }
+        if ($limit) {
+            $categories->setMaxResults($limit);
+        }
+        return $categories->getQuery()
             ->getResult();
     }
 }

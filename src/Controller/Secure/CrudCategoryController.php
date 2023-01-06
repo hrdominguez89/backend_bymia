@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\FileUploader;
+use App\Repository\CommunicationStatesBetweenPlatformsRepository;
+use App\Constants\Constants;
+use App\Helpers\SendCategoryTo3pl;
 
 /**
  * @Route("/category")
@@ -36,7 +39,7 @@ class CrudCategoryController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_category_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCategoryTo3pl $sendCategoryTo3pl): Response
     {
         $data['title'] = 'Nueva categoría';
         $data['breadcrumbs'] = array(
@@ -48,6 +51,7 @@ class CrudCategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data['category']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $imageFile = $form->get('image')->getData();
             if ($imageFile) {
                 $imageFileName = $fileUploader->upload($imageFile, $this->pathImg, $form->get('name')->getData());
@@ -56,8 +60,10 @@ class CrudCategoryController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['category']);
             $entityManager->flush();
+            $sendCategoryTo3pl->send($data['category']);
 
-            return $this->redirectToRoute('secure_crud_category_index', [], Response::HTTP_SEE_OTHER);
+
+            return $this->redirectToRoute('secure_crud_category_index');
         }
         $data['form'] = $form;
 
@@ -67,7 +73,7 @@ class CrudCategoryController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_category_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, CategoryRepository $categoryRepository, FileUploader $fileUploader): Response
+    public function edit($id, Request $request, CategoryRepository $categoryRepository, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCategoryTo3pl $sendCategoryTo3pl): Response
     {
         $data['title'] = 'Editar categoría';
         $data['breadcrumbs'] = array(
@@ -75,6 +81,7 @@ class CrudCategoryController extends AbstractController
             array('active' => true, 'title' => $data['title'])
         );
         $data['category'] = $categoryRepository->find($id);
+        $data['old_name'] = $data['category']->getName();
         $form = $this->createForm(CategoryType::class, $data['category']);
         $form->handleRequest($request);
 
@@ -84,9 +91,16 @@ class CrudCategoryController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile, $this->pathImg, $form->get('name')->getData());
                 $data['category']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
-            $this->getDoctrine()->getManager()->flush();
+            if ($data['old_name'] !== $data['category']->getName()) {
+                $data['category']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
+                $data['category']->setAttemptsSend3pl(0);
+                $this->getDoctrine()->getManager()->flush();
+                $sendCategoryTo3pl->send($data['category'], 'PUT', 'update');
+            } else {
+                $this->getDoctrine()->getManager()->flush();
+            }
 
-            return $this->redirectToRoute('secure_crud_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('secure_crud_category_index');
         }
         $data['form'] = $form;
 
