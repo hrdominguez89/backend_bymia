@@ -7,8 +7,8 @@ use App\Constants\Constants;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class SendCustomerToCrm
@@ -78,6 +78,7 @@ class SendCustomerToCrm
                         break;
                 }
             } catch (TransportExceptionInterface $e) {
+                $customer->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $customer->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
             }
             //grabo en base

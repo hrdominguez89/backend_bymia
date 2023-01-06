@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
 use DateTime;
+use App\Constants\Constants;
+use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -89,7 +91,7 @@ class Brand
     private $created_at;
 
     /**
-     * @ORM\Column(type="string", length=3, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=3, nullable=false, unique=true)
      */
     private $nomenclature;
 
@@ -103,12 +105,30 @@ class Brand
      */
     private $principal = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=CommunicationStatesBetweenPlatforms::class, inversedBy="brands")
+     * @ORM\JoinColumn(nullable=false, options={"default":0})
+     * 
+     */
+    private $status_sent_3pl;
+
+    /**
+     * @ORM\Column(type="smallint", options={"default":0})
+     */
+    private $attempts_send_3pl;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $error_message_3pl;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->visible = false;
         $this->principal = false;
+        $this->attempts_send_3pl = 0;
     }
 
     /**
@@ -308,5 +328,45 @@ class Brand
         $this->principal = $principal;
 
         return $this;
+    }
+
+    public function getStatusSent3pl(): ?CommunicationStatesBetweenPlatforms
+    {
+        return $this->status_sent_3pl;
+    }
+
+    public function setStatusSent3pl(?CommunicationStatesBetweenPlatforms $status_sent_3pl): self
+    {
+        $this->status_sent_3pl = $status_sent_3pl;
+
+        return $this;
+    }
+
+    public function getAttemptsSend3pl(): ?int
+    {
+        return $this->attempts_send_3pl;
+    }
+
+    public function setAttemptsSend3pl(int $attempts_send_3pl): self
+    {
+        $this->attempts_send_3pl = $attempts_send_3pl;
+
+        return $this;
+    }
+
+    public function getErrorMessage3pl(): ?string
+    {
+        return $this->error_message_3pl;
+    }
+
+    public function setErrorMessage3pl(?string $error_message_3pl): self
+    {
+        $this->error_message_3pl = $error_message_3pl;
+
+        return $this;
+    }
+    public function incrementAttemptsToSendBrandTo3pl()
+    {
+        $this->setAttemptsSend3pl($this->attempts_send_3pl + 1); //you can access your entity values directly
     }
 }

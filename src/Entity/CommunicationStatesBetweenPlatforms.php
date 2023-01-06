@@ -29,9 +29,15 @@ class CommunicationStatesBetweenPlatforms
      */
     private $customers;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Brand::class, mappedBy="status_sent_3pl")
+     */
+    private $brands;
+
     public function __construct()
     {
         $this->customers = new ArrayCollection();
+        $this->brands = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,6 +81,36 @@ class CommunicationStatesBetweenPlatforms
             // set the owning side to null (unless already changed)
             if ($customer->getStatusSentCrm() === $this) {
                 $customer->setStatusSentCrm(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Brand>
+     */
+    public function getBrands(): Collection
+    {
+        return $this->brands;
+    }
+
+    public function addBrand(Brand $brand): self
+    {
+        if (!$this->brands->contains($brand)) {
+            $this->brands[] = $brand;
+            $brand->setStatusSent3pl($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBrand(Brand $brand): self
+    {
+        if ($this->brands->removeElement($brand)) {
+            // set the owning side to null (unless already changed)
+            if ($brand->getStatusSent3pl() === $this) {
+                $brand->setStatusSent3pl(null);
             }
         }
 
