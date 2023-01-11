@@ -39,4 +39,25 @@ class CitiesRepository extends ServiceEntityRepository
             ->setParameter('state_id', $state_id)
             ->getResult();
     }
+    public function findVisibleCitiesByStateId($state_id): ?array
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            c.id,
+            c.name
+
+            FROM App:Cities c
+
+            INNER JOIN App:States st WITH st.id = c.state
+
+            WHERE st.id = :state_id and c.visible = :visible
+
+            ORDER BY c.name asc
+            ')
+            ->setParameter('state_id', $state_id)
+            ->setParameter('visible', true)
+            ->getResult();
+    }
+    
 }

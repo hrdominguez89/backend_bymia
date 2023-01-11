@@ -397,7 +397,7 @@ class Customer extends BaseUser
 
 
         return [
-            'id' => $this->getId(),
+            'id' => (int) $this->getId(),
             'email' => $this->getEmail(),
             'name' => $this->getName(),
             'phone' => $this->getPhone() ? $this->getCountryPhoneCode()->getPhonecode() . ($this->getStateCodePhone() ? $this->getStateCodePhone() : '') . $this->getPhone() : '',

@@ -54,8 +54,17 @@ class CustomerAddressesController extends AbstractController
             $data['customer_addresses']->setCustomer($data['customer']);
             $data['customer_addresses']->setRegistrationDate(new \DateTime());
             $data['customer_addresses']->setActive(true);
-            $data['customer_addresses']->setState($statesRepository->find($request->get('customer_addresses')['state']));
-            $data['customer_addresses']->setCity($citiesRepository->find($request->get('customer_addresses')['city']));
+
+            if (isset($request->get('customer_addresses')['state']) && (int)$request->get('customer_addresses')['state']) {
+                $data['customer_addresses']->setState($statesRepository->find($request->get('customer_addresses')['state']));
+            } else {
+                $data['customer_addresses']->setState(null);
+            }
+            if (isset($request->get('customer_addresses')['city']) && (int)$request->get('customer_addresses')['city']) {
+                $data['customer_addresses']->setCity($citiesRepository->find($request->get('customer_addresses')['city']));
+            } else {
+                $data['customer_addresses']->setCity(null);
+            }
 
             if (isset($request->get('customer_addresses')['favorite_address'])) {
                 $customerAddressesRepository->updateFavoriteAddress($customer_id);
@@ -118,10 +127,14 @@ class CustomerAddressesController extends AbstractController
     {
         $data['customer'] = $customerRepository->find($customer_id);
         $data['customer_addresses'] = $customerAddressesRepository->findBy(['id' => $customer_address_id])[0];
+        $data['old_favorite_value'] = $data['customer_addresses']->getFavoriteAddress();
+        $data['old_billing_value'] = $data['customer_addresses']->getBillingAddress();
+
         $form = $this->createForm(CustomerAddressesType::class, $data['customer_addresses']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $data['customer_addresses']->setCustomer($data['customer']);
             $data['customer_addresses']->setRegistrationDate(new \DateTime());
             $data['customer_addresses']->setActive(true);
@@ -136,11 +149,11 @@ class CustomerAddressesController extends AbstractController
                 $data['customer_addresses']->setCity(null);
             }
 
-            if (isset($request->get('customer_addresses')['favorite_address'])) {
+            if($data['old_favorite_value'] != (bool)@$request->get('customer_addresses')['favorite_address']){
                 $customerAddressesRepository->updateFavoriteAddress($customer_id);
             }
 
-            if (isset($request->get('customer_addresses')['billing_address'])) {
+            if($data['old_billing_value'] != (bool)@$request->get('customer_addresses')['billing_address']){
                 $customerAddressesRepository->updateBillingAddress($customer_id);
             }
 

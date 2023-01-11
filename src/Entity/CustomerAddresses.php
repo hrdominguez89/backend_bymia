@@ -79,7 +79,7 @@ class CustomerAddresses
     private $billing_address;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", options={"default":"CURRENT_TIMESTAMP"})
      */
     private $registration_date;
 
@@ -94,9 +94,15 @@ class CustomerAddresses
     private $registration_user;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":true})
      */
     private $active;
+
+    public function __construct()
+    {
+        $this->registration_date = new \DateTime();
+        $this->active = true;
+    }
 
     public function getId(): ?int
     {

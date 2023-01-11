@@ -39,4 +39,25 @@ class StatesRepository extends ServiceEntityRepository
             ->setParameter('country_id', $country_id)
             ->getResult();
     }
+
+    public function findVisibleStatesByCountryId($country_id): ?array
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+            s.id,
+            s.name
+
+            FROM App:States s
+
+            INNER JOIN App:Countries co WITH co.id = s.country
+
+            WHERE co.id = :country_id AND s.visible = :visible
+
+            ORDER BY s.name asc
+            ')
+            ->setParameter('country_id', $country_id)
+            ->setParameter('visible', 1)
+            ->getResult();
+    }
 }

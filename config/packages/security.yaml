@@ -47,7 +47,7 @@ security:
 
     access_control:
         - { path: ^/api/customer/*, roles: ROLE_CUSTOMER }
-        - { path: ^/api/crm/*, roles: PUBLIC_ACCESS }
+        - { path: ^/api/crm/*, roles: ROLE_CLIENT_CRM }
         - { path: ^/api/3pl/*, roles: PUBLIC_ACCESS }
         - { path: ^/api/front/*, roles: ROLE_CLIENT_FRONT }
         - { path: ^/security/*, roles: PUBLIC_ACCESS }

@@ -82,4 +82,43 @@ class CustomerAddressesRepository extends ServiceEntityRepository
             ->setParameter('customer_id', $customer_id)
             ->execute();
     }
+
+    public function findAddressesByCustomerId($customer_id){
+        return $this->getEntityManager()
+            ->createQuery('
+            SELECT
+                c.id as customer_id,
+                ca.id as customer_address_id,
+                co.id as country_id,
+                co.name as country_name,
+                st.id as state_id,
+                st.name as state_name,
+                ci.id as city_id,
+                ci.name as city_name,
+                ca.street,
+                ca.number_street,
+                ca.floor,
+                ca.department,
+                ca.postal_code,
+                ca.additional_info,
+                ca.active,
+                ca.registration_date,
+                ca.favorite_address,
+                ca.billing_address
+            
+            FROM App:CustomerAddresses ca
+
+            LEFT JOIN App:Countries as co WITH ca.country = co.id
+            LEFT JOIN App:States as st WITH ca.state = st.id
+            LEFT JOIN App:Cities as ci WITH ca.city = ci.id
+            LEFT JOIN App:Customer as c WITH ca.customer = c.id
+
+            WHERE ca.customer =:customer_id and ca.active = :active
+            ')
+            ->setParameter('customer_id', $customer_id)
+            ->setParameter('active', true)
+            ->getResult();
+    }
+
+    
 }
