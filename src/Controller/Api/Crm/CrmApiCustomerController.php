@@ -120,7 +120,7 @@ class CrmApiCustomerController extends AbstractController
                     $em->flush();
 
                     return $this->json(
-                        ['message' => 'Usuario creado'],
+                        ['message' => 'Dirección creada con éxito'],
                         Response::HTTP_CREATED,
                         ['Content-Type' => 'application/json']
                     );

@@ -25,6 +25,7 @@ class CustomerAddresses
 
     /**
      * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="customerAddresses")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $country;
 
