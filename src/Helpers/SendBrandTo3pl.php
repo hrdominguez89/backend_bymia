@@ -54,7 +54,9 @@ class SendBrandTo3pl
             $this->session = $this->requestStack->getSession();
             if (!$this->session->get('3pl_data')) {
                 $response_login = $this->login3pl->Login();
-                $this->session->set('3pl_data', $response_login['3pl_data']);
+                if (isset($response_login['3pl_data'])) {
+                    $this->session->set('3pl_data', $response_login['3pl_data']);
+                }
             } else {
                 $response_login['status'] = true;
             }
@@ -74,7 +76,6 @@ class SendBrandTo3pl
                             'Content-Type'  => 'application/json',
                         ],
                         'json'  => [
-                            'client_id' => ($command_execute ? $response_login['3pl_data']['clientId'] : $this->session->get('3pl_data')['clientId']),
                             'brand' => $brand->getName(),
                             'id' => $brand->getId3pl() ? $brand->getId3pl() : null,
                         ],
@@ -103,11 +104,13 @@ class SendBrandTo3pl
                         break;
                     default:
                         //leer error
+                        $this->attempts++;
                         $brand->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Error');
                         $brand->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
                 }
             } catch (TransportExceptionInterface $e) {
+                $this->attempts++;
                 $brand->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $brand->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
             }
@@ -118,10 +121,12 @@ class SendBrandTo3pl
         if ($this->unauthorized && $this->attempts < 2) {
             if (!$command_execute) {
                 $response_login = $this->login3pl->Login();
-                $this->session->set('3pl_data', $response_login['3pl_data']);
-                $this->session->save();
+                if (isset($response_login['3pl_data'])) {
+                    $this->session->set('3pl_data', $response_login['3pl_data']);
+                    $this->session->save();
+                }
+                $this->send($brand);
             }
-            $this->send($brand);
         }
     }
 

@@ -106,18 +106,4 @@ class CrudCategoryController extends AbstractController
 
         return $this->renderForm('secure/crud_category/form_categories.html.twig', $data);
     }
-
-    /**
-     * @Route("/{id}", name="secure_crud_category_delete", methods={"POST"})
-     */
-    public function delete(Request $request, Category $category): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($category);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('secure_crud_category_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

@@ -26,13 +26,32 @@ class SubcategoryRepository extends ServiceEntityRepository
             SELECT
             sc.id,
             sc.id3pl,
+            c.name as category_name,
             sc.name,
             sc.slug,
             sc.visible,
             sc.created_at
 
             FROM App:Subcategory sc 
+            LEFT JOIN App:Category c WITH sc.category = c.id
             ')
+            ->getResult();
+    }
+
+    public function findSubcategoriesToSendTo3pl(array $statuses, array $orders = null, int $limit = null): array
+    {
+        $categories = $this->createQueryBuilder('sc')
+            ->where('sc.status_sent_3pl IN (:statuses)')
+            ->setParameter('statuses', $statuses);
+        if ($orders) {
+            foreach ($orders as $orderKey => $orderValue) {
+                $categories->orderBy('sc.' . $orderKey, $orderValue);
+            }
+        }
+        if ($limit) {
+            $categories->setMaxResults($limit);
+        }
+        return $categories->getQuery()
             ->getResult();
     }
 }

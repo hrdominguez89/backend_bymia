@@ -107,6 +107,11 @@ class Category
      */
     private $error_message_3pl;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Subcategory::class, mappedBy="category")
+     */
+    private $subcategories;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -114,6 +119,7 @@ class Category
         $this->visible = false;
         $this->principal = false;
         $this->attempts_send_3pl = 0;
+        $this->subcategories = new ArrayCollection();
 
     }
 
@@ -391,5 +397,35 @@ class Category
     public function incrementAttemptsToSendCategoryTo3pl()
     {
         $this->setAttemptsSend3pl($this->attempts_send_3pl + 1); //you can access your entity values directly
+    }
+
+    /**
+     * @return Collection<int, Subcategory>
+     */
+    public function getSubcategories(): Collection
+    {
+        return $this->subcategories;
+    }
+
+    public function addSubcategory(Subcategory $subcategory): self
+    {
+        if (!$this->subcategories->contains($subcategory)) {
+            $this->subcategories[] = $subcategory;
+            $subcategory->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcategory(Subcategory $subcategory): self
+    {
+        if ($this->subcategories->removeElement($subcategory)) {
+            // set the owning side to null (unless already changed)
+            if ($subcategory->getCategory() === $this) {
+                $subcategory->setCategory(null);
+            }
+        }
+
+        return $this;
     }
 }

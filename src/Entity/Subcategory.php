@@ -12,7 +12,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SubcategoryRepository")
  * @ORM\Table("mia_sub_category")
- * @UniqueEntity(fields="name", message="La subcategoría indicada ya se encuentra registrada.")
+ * @UniqueEntity(
+ *      fields={"name","category"},
+ *      errorPath="name",
+ *      message="La subcategoría indicada ya se encuentra registrada para este tipo de categoría."
+ * )
  */
 class Subcategory
 {
@@ -26,21 +30,21 @@ class Subcategory
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * @ORM\Column(name="name",nullable=false, type="string", length=255)
      */
     protected $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255,nullable=false)
      */
     protected $slug;
 
 
     /**
      *
-     * @ORM\Column(name="id3pl", type="integer", nullable=true)
+     * @ORM\Column(name="id3pl", type="bigint", nullable=true)
      */
     protected $id3pl;
 
@@ -59,12 +63,37 @@ class Subcategory
      */
     private $created_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="subcategories")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CommunicationStatesBetweenPlatforms::class, inversedBy="subcategories")
+     * @ORM\JoinColumn(nullable=false, options={"default":1})
+     * 
+     */
+    private $status_sent_3pl;
+
+    /**
+     * @ORM\Column(type="smallint", options={"default":0})
+     * 
+     */
+    private $attempts_send_3pl;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $error_message_3pl;
+
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->visible = false;
+        $this->attempts_send_3pl = 0;
     }
 
     /**
@@ -92,7 +121,6 @@ class Subcategory
         $this->name = strtoupper($name);
 
         $slugify = new Slugify();
-
         $this->slug = $slugify->slugify($name);
 
         return $this;
@@ -220,5 +248,61 @@ class Subcategory
         $this->created_at = $created_at;
 
         return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+        
+        $slugify = new Slugify();
+        $this->slug = $slugify->slugify($category->getName().' '.$this->slug);
+
+        return $this;
+    }
+
+    public function getStatusSent3pl(): ?CommunicationStatesBetweenPlatforms
+    {
+        return $this->status_sent_3pl;
+    }
+
+    public function setStatusSent3pl(?CommunicationStatesBetweenPlatforms $status_sent_3pl): self
+    {
+        $this->status_sent_3pl = $status_sent_3pl;
+
+        return $this;
+    }
+
+    public function getAttemptsSend3pl(): ?int
+    {
+        return $this->attempts_send_3pl;
+    }
+
+    public function setAttemptsSend3pl(int $attempts_send_3pl): self
+    {
+        $this->attempts_send_3pl = $attempts_send_3pl;
+
+        return $this;
+    }
+
+    public function getErrorMessage3pl(): ?string
+    {
+        return $this->error_message_3pl;
+    }
+
+    public function setErrorMessage3pl(?string $error_message_3pl): self
+    {
+        $this->error_message_3pl = $error_message_3pl;
+
+        return $this;
+    }
+
+    public function incrementAttemptsToSendSubcategoryTo3pl()
+    {
+        $this->setAttemptsSend3pl($this->attempts_send_3pl + 1); //you can access your entity values directly
     }
 }
