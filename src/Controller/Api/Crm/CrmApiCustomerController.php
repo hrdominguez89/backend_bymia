@@ -2,12 +2,17 @@
 
 namespace App\Controller\Api\Crm;
 
+use App\Entity\Customer;
 use App\Entity\CustomerAddresses;
 use App\Form\CustomerAddressApiType;
+use App\Form\RegisterCustomerApiType;
 use App\Repository\CitiesRepository;
 use App\Repository\CountriesRepository;
 use App\Repository\CustomerAddressesRepository;
 use App\Repository\CustomerRepository;
+use App\Repository\CustomerStatusTypeRepository;
+use App\Repository\CustomersTypesRolesRepository;
+use App\Repository\GenderTypeRepository;
 use App\Repository\StatesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,23 +32,92 @@ class CrmApiCustomerController extends AbstractController
      * @Route("/customer/{customer_id}", name="api_customer",methods={"GET","PATCH"})
      * 
      */
-    public function customer(CustomerRepository $customerRepository, $customer_id): Response
-    {
-
+    public function customer(
+        CustomerRepository $customerRepository,
+        CustomersTypesRolesRepository $customersTypesRolesRepository,
+        CountriesRepository $countriesRepository,
+        CustomerStatusTypeRepository $customerStatusTypeRepository,
+        GenderTypeRepository $genderTypeRepository,
+        Request $request,
+        EntityManagerInterface $em,
+        $customer_id
+    ): Response {
         $customer = $customerRepository->find($customer_id);
         if ($customer) {
-            return $this->json(
-                $customer->getCustomerTotalInfo(),
-                Response::HTTP_OK,
-                ['Content-Type' => 'application/json']
-            );
-        } else {
-            return $this->json(
-                ['message' => 'Not found'],
-                Response::HTTP_NOT_FOUND,
-                ['Content-Type' => 'application/json']
-            );
+
+            switch ($request->getMethod()) {
+                case 'GET':
+                    return $this->json(
+                        $customer->getCustomerTotalInfo(),
+                        Response::HTTP_OK,
+                        ['Content-Type' => 'application/json']
+                    );
+                case 'PATCH':
+                    $body = $request->getContent();
+                    $data = json_decode($body, true);
+
+                    //Busco los objetos de cada relacion
+                    $customer_type_role = $customersTypesRolesRepository->findOneBy(['id' => @$data['customer_type_role']]) ?: null;
+                    $country_phone_code = $countriesRepository->findOneBy(['id' => @$data['country_phone_code']]) ?: null;
+                    $status_type = $customerStatusTypeRepository->findOneBy(['id' => @$data['status']]) ?: null;
+                    $gender_type = $genderTypeRepository->findOneBy(['id' => @$data['gender_type']]) ?: null;
+
+
+                    // seteo valores de los objetos de relacion al objeto
+                    if ($customer_type_role) $customer->setCustomerTypeRole($customer_type_role);
+                    if ($country_phone_code) $customer->setCountryPhoneCode($country_phone_code);
+                    if ($status_type) $customer->setStatus($status_type);
+                    if ($gender_type) $customer->setGenderType($gender_type);
+
+
+
+                    //creo el formulario para hacer las validaciones    
+                    $form = $this->createForm(RegisterCustomerApiType::class, $customer);
+                    $form->submit($data, false);
+
+                    if (!$form->isValid()) {
+                        $error_forms = $this->getErrorsFromForm($form);
+                        return $this->json(
+                            [
+                                'message' => 'Error de validación.',
+                                'validation' => $error_forms
+                            ],
+                            Response::HTTP_BAD_REQUEST,
+                            ['Content-Type' => 'application/json']
+                        );
+                    }
+
+                    try {
+                        $em->persist($customer);
+                        $em->flush();
+                    } catch (\Exception $e) {
+                        return $this->json(
+                            [
+                                'message' => 'Error al intentar grabar en la base de datos.',
+                                'validation' => ['others' => $e->getMessage()]
+                            ],
+                            Response::HTTP_UNPROCESSABLE_ENTITY,
+                            ['Content-Type' => 'application/json']
+                        );
+                    }
+
+                    return $this->json(
+                        [
+                            'message' => 'Cliente actualizado con éxito.',
+                            'customer_updated' => $customer->getCustomerTotalInfo()
+                        ],
+                        Response::HTTP_CREATED,
+                        ['Content-Type' => 'application/json']
+                    );
+                    break;
+            }
         }
+        //si no encontro ni customer en methodo get o customer en post retorno not found 
+        return $this->json(
+            ['message' => 'Not found'],
+            Response::HTTP_NOT_FOUND,
+            ['Content-Type' => 'application/json']
+        );
     }
 
     /**
@@ -164,20 +238,17 @@ class CrmApiCustomerController extends AbstractController
         CustomerAddressesRepository $customerAddressesRepository,
         $address_id
     ): Response {
-        switch ($request->getMethod()) {
-            case 'GET':
-                $customer_addresses = $customerAddressesRepository->find($address_id);
-                if ($customer_addresses) {
+        $customer_address = $customerAddressesRepository->find($address_id);
+        if ($customer_address) {
+            switch ($request->getMethod()) {
+                case 'GET':
                     return $this->json(
-                        $customer_addresses->getTotalCustomerAddressInfo(),
+                        $customer_address->getTotalCustomerAddressInfo(),
                         Response::HTTP_OK,
                         ['Content-Type' => 'application/json']
                     );
-                }
-                break;
-            case 'PATCH':
-                $customer_address = $customerAddressesRepository->find($address_id);
-                if ($customer_address) {
+                    break;
+                case 'PATCH':
 
                     $body = $request->getContent();
                     $data = json_decode($body, true);
@@ -247,9 +318,10 @@ class CrmApiCustomerController extends AbstractController
                         Response::HTTP_OK,
                         ['Content-Type' => 'application/json']
                     );
-                }
-                break;
+                    break;
+            }
         }
+
         //si no encontro ni customer address en methodo get o customer en post retorno not found 
         return $this->json(
             ['message' => 'Not found'],
