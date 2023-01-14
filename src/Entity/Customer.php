@@ -187,6 +187,16 @@ class Customer extends BaseUser
      */
     private $country_phone_code;
 
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $identity_type;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $identity_number;
+
 
     public function __construct()
     {
@@ -369,7 +379,7 @@ class Customer extends BaseUser
         foreach ($addresses as $address) {
             if ($address->getActive()) {
 
-                if ($address->getFavoriteAddress()) {
+                if ($address->getHomeAddress()) {
                     $home = [
                         'home_address_id' => $address->getId(),
                         'Country' => $address->getCountry() ? $address->getCountry()->getName() : '',
@@ -377,7 +387,7 @@ class Customer extends BaseUser
                         'City' => $address->getCity() ? $address->getCity()->getName() : '',
                         'address' => $address->getStreet() . ' ' . $address->getNumberStreet() . ', ' . $address->getFloor() . ' ' . $address->getDepartment(),
                         'postal_code' => $address->getPostalCode(),
-                        'aditional_info' => $address->getAdditionalInfo(),
+                        'additional_info' => $address->getAdditionalInfo(),
                     ];
                 }
 
@@ -389,7 +399,7 @@ class Customer extends BaseUser
                         'City' => $address->getCity() ? $address->getCity()->getName() : '',
                         'address' => $address->getStreet() . ' ' . $address->getNumberStreet() . ', ' . $address->getFloor() . ' ' . $address->getDepartment(),
                         'postal_code' => $address->getPostalCode(),
-                        'aditional_info' => $address->getAdditionalInfo(),
+                        'additional_info' => $address->getAdditionalInfo(),
                     ];
                 }
             }
@@ -400,9 +410,11 @@ class Customer extends BaseUser
             'id' => (int) $this->getId(),
             'email' => $this->getEmail(),
             'name' => $this->getName(),
+            'customer_type' => $this->getCustomerTypeRole()->getName(),
+            'identity_type' => $this->getIdentityType(),
+            'identity_number' => $this->getIdentityNumber(),
             'phone' => $this->getPhone() ? $this->getCountryPhoneCode()->getPhonecode() . ($this->getStateCodePhone() ? $this->getStateCodePhone() : '') . $this->getPhone() : '',
             'cel_phone' => $this->getCountryPhoneCode()->getPhonecode() . ($this->getStateCodePhone() ? $this->getStateCodePhone() : '') . $this->getCelPhone(),
-            'customer_type' => $this->getCustomerTypeRole()->getName(),
             'status' => $this->getStatus()->getName(),
             'gender' => $this->getGenderType() ? $this->getGenderType()->getInitials() : '',
             'birth_day' => $this->getDateOfBirth() ? $this->getDateOfBirth()->format('Y-m-d') : '',
@@ -736,5 +748,29 @@ class Customer extends BaseUser
     public function incrementAttemptsToSendCustomerToCrm()
     {
         $this->setAttemptsSendCrm($this->attempts_send_crm + 1); //you can access your entity values directly
+    }
+
+    public function getIdentityType(): ?string
+    {
+        return $this->identity_type;
+    }
+
+    public function setIdentityType(?string $identity_type): self
+    {
+        $this->identity_type = $identity_type;
+
+        return $this;
+    }
+
+    public function getIdentityNumber(): ?string
+    {
+        return $this->identity_number;
+    }
+
+    public function setIdentityNumber(?string $identity_number): self
+    {
+        $this->identity_number = $identity_number;
+
+        return $this;
     }
 }

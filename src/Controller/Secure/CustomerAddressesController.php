@@ -66,8 +66,8 @@ class CustomerAddressesController extends AbstractController
                 $data['customer_addresses']->setCity(null);
             }
 
-            if (isset($request->get('customer_addresses')['favorite_address'])) {
-                $customerAddressesRepository->updateFavoriteAddress($customer_id);
+            if (isset($request->get('customer_addresses')['home_address'])) {
+                $customerAddressesRepository->updateHomeAddress($customer_id);
             }
 
             if (isset($request->get('customer_addresses')['billing_address'])) {
@@ -127,7 +127,7 @@ class CustomerAddressesController extends AbstractController
     {
         $data['customer'] = $customerRepository->find($customer_id);
         $data['customer_addresses'] = $customerAddressesRepository->findBy(['id' => $customer_address_id])[0];
-        $data['old_favorite_value'] = $data['customer_addresses']->getFavoriteAddress();
+        $data['old_home_value'] = $data['customer_addresses']->getHomeAddress();
         $data['old_billing_value'] = $data['customer_addresses']->getBillingAddress();
 
         $form = $this->createForm(CustomerAddressesType::class, $data['customer_addresses']);
@@ -149,8 +149,8 @@ class CustomerAddressesController extends AbstractController
                 $data['customer_addresses']->setCity(null);
             }
 
-            if($data['old_favorite_value'] != (bool)@$request->get('customer_addresses')['favorite_address']){
-                $customerAddressesRepository->updateFavoriteAddress($customer_id);
+            if($data['old_home_value'] != (bool)@$request->get('customer_addresses')['home_address']){
+                $customerAddressesRepository->updateHomeAddress($customer_id);
             }
 
             if($data['old_billing_value'] != (bool)@$request->get('customer_addresses')['billing_address']){

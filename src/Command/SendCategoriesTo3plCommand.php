@@ -28,7 +28,7 @@ class SendCategoriesTo3plCommand extends Command
 
         $this->sendCategoryTo3pl->sendCategoryPendings();
 
-        $io->success('Se envio las marcas al 3pl.');
+        $io->success('Se envio las categorias al 3pl.');
 
         return Command::SUCCESS;
     }

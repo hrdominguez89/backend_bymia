@@ -72,7 +72,7 @@ class CustomerAddresses
     /**
      * @ORM\Column(type="boolean")
      */
-    private $favorite_address;
+    private $home_address;
 
     /**
      * @ORM\Column(type="boolean")
@@ -194,14 +194,14 @@ class CustomerAddresses
         return $this;
     }
 
-    public function getFavoriteAddress(): ?bool
+    public function getHomeAddress(): ?bool
     {
-        return $this->favorite_address;
+        return $this->home_address;
     }
 
-    public function setFavoriteAddress(bool $favorite_address): self
+    public function setHomeAddress(bool $home_address): self
     {
-        $this->favorite_address = $favorite_address;
+        $this->home_address = $home_address;
 
         return $this;
     }
@@ -300,5 +300,29 @@ class CustomerAddresses
         $this->city = $city;
 
         return $this;
+    }
+
+    public function getTotalCustomerAddressInfo()
+    {
+        return [
+            'customer_id' => $this->getCustomer()->getId(),
+            'customer_address_id' => $this->getId(),
+            'country_id' => $this->getCountry()->getId(),
+            'country_name' => $this->getCountry()->getName(),
+            'state_id' => $this->getState() ? $this->getState()->getId() : null,
+            'state_name' => $this->getState() ? $this->getState()->getName() : null,
+            'city_id' => $this->getCity() ? $this->getCity()->getId() : null,
+            'city_name' => $this->getCity() ? $this->getCity()->getName() : null,
+            'street' => $this->getStreet(),
+            'number_street' => $this->getNumberStreet(),
+            'floor' => $this->getFloor(),
+            'department' => $this->getDepartment(),
+            'postal_code' => $this->getPostalCode(),
+            'additional_info' => $this->getAdditionalInfo(),
+            'active' => $this->getActive(),
+            'registration_date' => $this->getRegistrationDate()->format('Y-m-d H:m:s'),
+            'home_address' => $this->getHomeAddress(),
+            'billing_address' => $this->getBillingAddress()
+        ];
     }
 }

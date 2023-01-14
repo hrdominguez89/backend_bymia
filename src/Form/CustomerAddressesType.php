@@ -63,7 +63,7 @@ class CustomerAddressesType extends AbstractType
                 'label' => 'Información adicional',
                 'required' => false
             ])
-            ->add('favorite_address', CheckboxType::class, [
+            ->add('home_address', CheckboxType::class, [
                 'label'    => 'Dirección predeterminada de envío',
                 'required' => false,
             ])

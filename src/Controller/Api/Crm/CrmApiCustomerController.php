@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
+
 /**
  * @Route("/api/crm")
  */
@@ -90,9 +91,9 @@ class CrmApiCustomerController extends AbstractController
                         ->setCountry($country)
                         ->setState($state)
                         ->setCity($city)
-                        ->setFavoriteAddress(@$data['home_address'] ?: false)
+                        ->setHomeAddress(@$data['home_address'] ?: false)
                         ->setBillingAddress(@$data['billing_address'] ?: false);
-                    //seteo valores de los objetos de relacion al objeto
+                    // seteo valores de los objetos de relacion al objeto
 
                     //creo el formulario para hacer las validaciones    
                     $form = $this->createForm(CustomerAddressApiType::class, $customer_address);
@@ -102,7 +103,7 @@ class CrmApiCustomerController extends AbstractController
                         $error_forms = $this->getErrorsFromForm($form);
                         return $this->json(
                             [
-                                'message' => 'Error de validación',
+                                'message' => 'Error de validación.',
                                 'validation' => $error_forms
                             ],
                             Response::HTTP_BAD_REQUEST,
@@ -110,17 +111,32 @@ class CrmApiCustomerController extends AbstractController
                         );
                     }
                     if (@$data['home_address'] ?: false) {
-                        $customerAddressesRepository->updateFavoriteAddress($customer_id);
+                        $customerAddressesRepository->updateHomeAddress($customer_id);
                     }
 
                     if (@$data['billing_address'] ?: false) {
                         $customerAddressesRepository->updateBillingAddress($customer_id);
                     }
-                    $em->persist($customer_address);
-                    $em->flush();
+
+                    try {
+                        $em->persist($customer_address);
+                        $em->flush();
+                    } catch (\Exception $e) {
+                        return $this->json(
+                            [
+                                'message' => 'Error al intentar grabar en la base de datos.',
+                                'validation' => ['others' => $e->getMessage()]
+                            ],
+                            Response::HTTP_UNPROCESSABLE_ENTITY,
+                            ['Content-Type' => 'application/json']
+                        );
+                    }
 
                     return $this->json(
-                        ['message' => 'Dirección creada con éxito'],
+                        [
+                            'message' => 'Dirección creada con éxito.',
+                            'new_address' => $customer_address->getTotalCustomerAddressInfo()
+                        ],
                         Response::HTTP_CREATED,
                         ['Content-Type' => 'application/json']
                     );
@@ -139,14 +155,105 @@ class CrmApiCustomerController extends AbstractController
      * @Route("/customer/address/{address_id}", name="api_customer_address",methods={"GET","PATCH"})
      * 
      */
-    public function customerAddress(CustomerRepository $customerRepository, $address_id = false): Response
-    {
+    public function customerAddress(
+        EntityManagerInterface $em,
+        CountriesRepository $countriesRepository,
+        StatesRepository $statesRepository,
+        CitiesRepository $citiesRepository,
+        Request $request,
+        CustomerAddressesRepository $customerAddressesRepository,
+        $address_id
+    ): Response {
+        switch ($request->getMethod()) {
+            case 'GET':
+                $customer_addresses = $customerAddressesRepository->find($address_id);
+                if ($customer_addresses) {
+                    return $this->json(
+                        $customer_addresses->getTotalCustomerAddressInfo(),
+                        Response::HTTP_OK,
+                        ['Content-Type' => 'application/json']
+                    );
+                }
+                break;
+            case 'PATCH':
+                $customer_address = $customerAddressesRepository->find($address_id);
+                if ($customer_address) {
 
-        $customer = $customerRepository->find();
+                    $body = $request->getContent();
+                    $data = json_decode($body, true);
 
+                    //Busco los objetos de cada relacion
+                    $country = $countriesRepository->findOneBy(['id' => @$data['country_id']]) ?: null;
+                    $state = $statesRepository->findOneBy(['id' => @$data['state_id']]) ?: null;
+                    $city = $citiesRepository->findOneBy(['id' => @$data['city_id']]) ?: null;
+
+                    // seteo valores de los objetos de relacion al objeto
+
+                    if ($country) $customer_address->setCountry($country);
+                    if ($state) $customer_address->setState($state);
+                    if ($city) $customer_address->setCity($city);
+
+                    if (isset($data['home_address'])) {
+                        $customer_address->setHomeAddress($data['home_address'] == true ?: false);
+                    }
+
+                    if (isset($data['billing_address'])) {
+                        $customer_address->setBillingAddress($data['billing_address'] == false ?: false);
+                    }
+
+
+                    //creo el formulario para hacer las validaciones    
+                    $form = $this->createForm(CustomerAddressApiType::class, $customer_address);
+                    $form->submit($data, false);
+
+                    if (!$form->isValid()) {
+                        $error_forms = $this->getErrorsFromForm($form);
+                        return $this->json(
+                            [
+                                'message' => 'Error de validación.',
+                                'validation' => $error_forms
+                            ],
+                            Response::HTTP_BAD_REQUEST,
+                            ['Content-Type' => 'application/json']
+                        );
+                    }
+                    if (isset($data['home_address']) && $data['home_address'] == true) {
+                        $customerAddressesRepository->updateHomeAddress($customer_address->getCustomer()->getId());
+                    }
+                    if (isset($data['billing_address']) && $data['billing_address'] == true) {
+                        $customerAddressesRepository->updateBillingAddress($customer_address->getCustomer()->getId());
+                    }
+
+
+                    try {
+                        $em->persist($customer_address);
+                        $em->flush();
+                    } catch (\Exception $e) {
+                        return $this->json(
+                            [
+                                'message' => 'Error al intentar grabar en la base de datos.',
+                                'validation' => ['others' => $e->getMessage()]
+                            ],
+                            Response::HTTP_UNPROCESSABLE_ENTITY,
+                            ['Content-Type' => 'application/json']
+                        );
+                    }
+
+                    return $this->json(
+                        [
+                            'message' => 'Dirección actualizada con éxito.',
+                            'updated_address' => $customer_address->getTotalCustomerAddressInfo()
+                        ],
+                        Response::HTTP_OK,
+                        ['Content-Type' => 'application/json']
+                    );
+                }
+                break;
+        }
+        //si no encontro ni customer address en methodo get o customer en post retorno not found 
         return $this->json(
-            $customer,
-            Response::HTTP_OK,
+            ['message' => 'Not found'],
+            Response::HTTP_NOT_FOUND,
             ['Content-Type' => 'application/json']
         );
     }

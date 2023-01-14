@@ -41,7 +41,7 @@ class CustomerAddressesRepository extends ServiceEntityRepository
                 ca.additional_info,
                 ca.active,
                 ca.registration_date,
-                ca.favorite_address,
+                ca.home_address,
                 ca.billing_address
             
             FROM App:CustomerAddresses ca
@@ -52,18 +52,19 @@ class CustomerAddressesRepository extends ServiceEntityRepository
             LEFT JOIN App:Customer as c WITH ca.customer = c.id
 
             WHERE ca.customer =:customer_id
+            ORDER BY ca.id asc
             ')
             ->setParameter('customer_id', $customer_id)
             ->getResult();
     }
 
-    public function updateFavoriteAddress($customer_id)
+    public function updateHomeAddress($customer_id)
     {
         $this->getEntityManager()
             ->createQuery('
             UPDATE App:CustomerAddresses ca
             SET
-                ca.favorite_address = false
+                ca.home_address = false
             WHERE ca.customer =:customer_id
             ')
             ->setParameter('customer_id', $customer_id)
@@ -103,7 +104,7 @@ class CustomerAddressesRepository extends ServiceEntityRepository
                 ca.additional_info,
                 ca.active,
                 ca.registration_date,
-                ca.favorite_address,
+                ca.home_address as home_address,
                 ca.billing_address
             
             FROM App:CustomerAddresses ca
@@ -114,6 +115,9 @@ class CustomerAddressesRepository extends ServiceEntityRepository
             LEFT JOIN App:Customer as c WITH ca.customer = c.id
 
             WHERE ca.customer =:customer_id and ca.active = :active
+
+            ORDER BY ca.id asc
+
             ')
             ->setParameter('customer_id', $customer_id)
             ->setParameter('active', true)
