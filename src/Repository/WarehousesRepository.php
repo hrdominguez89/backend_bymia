@@ -47,4 +47,22 @@ class WarehousesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllWarehouseAndInventories(): array
+    {
+        return $this->createQueryBuilder('w')
+            ->select('
+                w.id as warehouse_id_bymia,
+                w.id3pl as warehouse_id_3pl,
+                i.id as inventory_id_bymia,
+                i.id3pl as inventory_id_3pl,
+                i.cod as inventory_cod,
+                i.name as inventory_name,
+                i.created_at as inventory_created_at
+            ')
+            ->innerJoin('App:Inventory', 'i', 'WITH', 'w.id = i.warehouse')
+            ->orderBy('w.id3pl,i.id3pl', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

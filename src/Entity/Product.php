@@ -6,6 +6,8 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 /**
@@ -28,7 +30,12 @@ class Product
     /**
      * @var string|null
      *
-     * @ORM\Column(name="sku", type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(name="sku", type="string", length=255, nullable=false, unique=true)
+     * @Assert\Length(min=20, max=28)
+     * @Assert\Regex(
+     *     pattern="/^[A-Za-z0-9]{2}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{2}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
+     *     message="El sku no cumple con el formato requerido"
+     * )
      */
     protected $sku;
 
@@ -87,24 +94,24 @@ class Product
     private $part_number;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false, options={"default":0})
      */
     private $onhand;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false, options={"default":0})
      */
     private $commited;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false, options={"default":0})
      * 
      * 
      */
     private $incomming;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="integer", nullable=false, options={"default":0})
      */
     private $available;
 
@@ -112,11 +119,6 @@ class Product
      * @ORM\Column(name="id3pl",type="integer", nullable="true")
      */
     private $id3pl;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Warehouses::class, inversedBy="products")
-     */
-    private $warehouse;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
@@ -210,6 +212,10 @@ class Product
         $this->tag = new ArrayCollection();
         $this->visible = false;
         $this->image = new ArrayCollection();
+        $this->onhand = 0;
+        $this->commited = 0;
+        $this->incomming = 0;
+        $this->available = 0;
     }
 
     /**
@@ -445,18 +451,6 @@ class Product
     public function setId3pl(int $id3pl): self
     {
         $this->id3pl = $id3pl;
-
-        return $this;
-    }
-
-    public function getWarehouse(): ?Warehouses
-    {
-        return $this->warehouse;
-    }
-
-    public function setWarehouse(?Warehouses $warehouse): self
-    {
-        $this->warehouse = $warehouse;
 
         return $this;
     }

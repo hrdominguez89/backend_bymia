@@ -6,6 +6,8 @@ use App\Entity\Brand;
 use App\Entity\Category;
 use App\Entity\Product;
 use App\Entity\Subcategory;
+use App\Repository\BrandRepository;
+use App\Repository\CategoryRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -27,16 +29,26 @@ class ProductType extends AbstractType
             ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción español', 'required' => false])
             ->add('descriptionEn', TextareaType::class, ['label' => 'Descripción Inglés', 'required' => false])
             ->add('category', EntityType::class, [
+                'class'  => Category::class,
+                'query_builder' => function (CategoryRepository $cr) {
+                    return $cr->createQueryBuilder('c')
+                        ->where('c.id3pl is not null')
+                        ->orderBy('c.name');
+                },
                 'placeholder' => 'Seleccione una categoría',
                 'label' => 'Categoría',
-                'class'  => Category::class,
                 'choice_label' => 'name',
                 'required' => true,
             ])
             ->add('brand', EntityType::class, [
+                'class'  => Brand::class,
+                'query_builder' => function (BrandRepository $br) {
+                    return $br->createQueryBuilder('b')
+                        ->where('b.id3pl is not null')
+                        ->orderBy('b.name');
+                },
                 'placeholder' => 'Seleccione una marca',
                 'label' => 'Marca',
-                'class'  => Brand::class,
                 'choice_label' => 'name',
                 'required' => true,
             ])

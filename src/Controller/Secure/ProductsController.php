@@ -91,6 +91,7 @@ class ProductsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $imageFile = $form->get('image')->getData();
+            dd($imageFile);
             if ($imageFile) {
                 foreach ($form->get('image')->getData() as $file) {
                     $images = new ProductImages;

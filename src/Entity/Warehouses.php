@@ -6,6 +6,8 @@ use App\Repository\WarehousesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
+
 
 /**
  * @ORM\Entity(repositoryClass=WarehousesRepository::class)
@@ -25,23 +27,20 @@ class Warehouses
     private $id3pl;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $slug;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="warehouse")
-     */
-    private $products;
-
-    /**
      * @ORM\Column(type="datetime",nullable=false,options={"default":"CURRENT_TIMESTAMP"})
      */
     private $created_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Inventory::class, mappedBy="warehouse")
+     */
+    private $inventories;
+
     public function __construct()
     {
+        $this->created_at = new \DateTime();
         $this->products = new ArrayCollection();
+        $this->inventories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -61,48 +60,6 @@ class Warehouses
         return $this;
     }
 
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setWarehouse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getWarehouse() === $this) {
-                $product->setWarehouse(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
@@ -111,6 +68,36 @@ class Warehouses
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inventory>
+     */
+    public function getInventories(): Collection
+    {
+        return $this->inventories;
+    }
+
+    public function addInventory(Inventory $inventory): self
+    {
+        if (!$this->inventories->contains($inventory)) {
+            $this->inventories[] = $inventory;
+            $inventory->setWarehouse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventory(Inventory $inventory): self
+    {
+        if ($this->inventories->removeElement($inventory)) {
+            // set the owning side to null (unless already changed)
+            if ($inventory->getWarehouse() === $this) {
+                $inventory->setWarehouse(null);
+            }
+        }
 
         return $this;
     }
