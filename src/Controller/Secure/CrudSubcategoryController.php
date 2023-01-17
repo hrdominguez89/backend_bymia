@@ -97,4 +97,19 @@ class CrudSubcategoryController extends AbstractController
 
         return $this->renderForm('secure/crud_subcategory/form_subcategory.html.twig', $data);
     }
+
+    /**
+     * @Route("/subcategories/{category_id}", name="secure_customer_address_get_cities", methods={"GET"})
+     */
+    public function getCities($state_id, CitiesRepository $citiesRepository): Response
+    {
+        $data['data'] = $citiesRepository->findCitiesByStateId($state_id);
+        if ($data['data']) {
+            $data['status'] = true;
+        } else {
+            $data['status'] = false;
+            $data['message'] = 'No se encontraron estados con el id indicado';
+        }
+        return new JsonResponse($data);
+    }
 }

@@ -1,38 +1,46 @@
+const input = document.getElementById('product_images');
+let images = [];
+
 var uppy = new Uppy.Uppy()
     .use(Uppy.Dashboard, {
         inline: true,
         target: '#drag-drop-area',
+        showUploadButton: false,
+        showLinkToFileUploadResult: false,
+        showProgressDetails: false,
+        width: "100%",
         locale: {
             strings: {
                 // When `inline: false`, used as the screen reader label for the button that closes the modal.
-                closeModal: 'Close Modal',
+                closeModal: 'Cerrar Modal',
                 // Used as the screen reader label for the plus (+) button that shows the “Add more files” screen
-                addMoreFiles: 'Add more files',
-                addingMoreFiles: 'Adding more files',
+                addMoreFiles: 'Agregar mas archivos',
+                addingMoreFiles: 'Agregando mas archivos',
                 // Used as the header for import panels, e.g., “Import from Google Drive”.
-                importFrom: 'Import from %{name}',
+                importFrom: 'Importar desde %{name}',
                 // When `inline: false`, used as the screen reader label for the dashboard modal.
-                dashboardWindowTitle: 'Uppy Dashboard Window (Press escape to close)',
+                dashboardWindowTitle: 'Uppy Dashboard Window (Preciones Esc para cerrar)',
                 // When `inline: true`, used as the screen reader label for the dashboard area.
                 dashboardTitle: 'Uppy Dashboard',
                 // Shown in the Informer when a link to a file was copied to the clipboard.
                 copyLinkToClipboardSuccess: 'Link copied to clipboard.',
                 // Used when a link cannot be copied automatically — the user has to select the text from the
                 // input element below this string.
-                copyLinkToClipboardFallback: 'Copy the URL below',
+                copyLinkToClipboardFallback: 'Copiar la URL debajo',
                 // Used as the hover title and screen reader label for buttons that copy a file link.
-                copyLink: 'Copy link',
-                back: 'Back',
+                copyLink: 'Copiar link',
+
+                back: 'Volver',
                 // Used as the screen reader label for buttons that remove a file.
-                removeFile: 'Remove file',
+                removeFile: 'Eliminar archivo',
                 // Used as the screen reader label for buttons that open the metadata editor panel for a file.
-                editFile: 'Edit file',
+                editFile: 'Editar archivo',
                 // Shown in the panel header for the metadata editor. Rendered as “Editing image.png”.
-                editing: 'Editing %{file}',
+                editing: 'Editando %{file}',
                 // Used as the screen reader label for the button that saves metadata edits and returns to the
                 // file list view.
-                finishEditingFile: 'Finish editing file',
-                saveChanges: 'Save changes',
+                finishEditingFile: 'Finalizando edicion de archivo',
+                saveChanges: 'Guardar cambios',
                 // Used as the label for the tab button that opens the system file selection dialog.
                 myDevice: 'Mi pc',
                 dropHint: 'Arrastre sus archivos aquí',
@@ -41,13 +49,13 @@ var uppy = new Uppy.Uppy()
                 uploadComplete: 'Subida completada',
                 uploadPaused: 'Subida pausada',
                 // Used as the hover text and screen reader label for the buttons to resume paused uploads.
-                resumeUpload: 'Resume upload',
+                resumeUpload: 'Resumen de subida',
                 // Used as the hover text and screen reader label for the buttons to pause uploads.
-                pauseUpload: 'Pause upload',
+                pauseUpload: 'Pausar subida',
                 // Used as the hover text and screen reader label for the buttons to retry failed uploads.
-                retryUpload: 'Retry upload',
+                retryUpload: 'Reintentar subida',
                 // Used as the hover text and screen reader label for the buttons to cancel uploads.
-                cancelUpload: 'Cancel upload',
+                cancelUpload: 'Cancelar subida',
                 // Used in a title, how many files are currently selected
                 xFilesSelected: {
                     0: '%{smart_count} archivo seleccionado',
@@ -64,7 +72,7 @@ var uppy = new Uppy.Uppy()
                 // The "powered by Uppy" link at the bottom of the Dashboard.
                 poweredBy: '',
                 addMore: 'Añadir mas',
-                editFileWithFilename: 'Edit file %{file}',
+                editFileWithFilename: 'Editar archivo %{file}',
                 save: 'Guardar',
                 cancel: 'Cancelar',
                 dropPasteFiles: 'Arraste las imagenes hasta aquí ó %{browseFiles}',
@@ -94,10 +102,28 @@ var uppy = new Uppy.Uppy()
             },
         }
     })
-    .use(Uppy.Tus, {
-        endpoint: 'https://tusd.tusdemo.net/files/'
-    })
+uppy.on('file-added', (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const base64 = event.target.result;
+        images.push(base64);
+        input.value = images.join('*,*');
+    }
+    reader.readAsDataURL(file.data);
+});
 
-uppy.on('complete', (result) => {
-    console.log('Upload complete! We’ve uploaded these files:', result.successful)
-})
+uppy.on('file-removed', (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const base64 = event.target.result;
+        const index = images.indexOf(base64);
+        if (index > -1) {
+            console.log('elimino');
+            images.splice(index, 1);
+            input.value = images;
+        }
+        input.value = images.join(',');
+    }
+    reader.readAsDataURL(file.data);
+});
+

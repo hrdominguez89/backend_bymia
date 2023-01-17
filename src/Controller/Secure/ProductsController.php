@@ -22,7 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\FileUploader;
-
+use Aws\S3\S3Client;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/product")
@@ -76,35 +77,64 @@ class ProductsController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_product_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request, SluggerInterface $slugger): Response
     {
         $data['title'] = 'Nuevo producto';
         $data['breadcrumbs'] = array(
             array('path' => 'secure_crud_brand_index', 'title' => 'Productos'),
             array('active' => true, 'title' => $data['title'])
         );
-        $data['files_js'] = array('../uppy.min.js', 'product/upload_files.js?v=' . rand());
+        $data['files_js'] = array('../uppy.min.js', 'product/upload_files.js?v=' . rand(),'product/product.js?v=' . rand());
         $data['files_css'] = array('uppy.min.css');
         $data['product'] = new Product;
         $form = $this->createForm(ProductType::class, $data['product']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $imageFile = $form->get('image')->getData();
-            dd($imageFile);
-            if ($imageFile) {
-                foreach ($form->get('image')->getData() as $file) {
-                    $images = new ProductImages;
-                    $imageFileName = $fileUploader->upload($file, $this->pathImg, $form->get('title')->getData());
-                    $images->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
-                    $images->setProduct($data['product']);
-                    $entityManager->persist($images);
+            $productNameSlug = $slugger->slug($form->get('title')->getData());
+            $imagesFilesBase64 = $form->get('images')->getData();
+            $imagesFiles = explode('*,*', $imagesFilesBase64);
+
+            if ($imagesFiles) {
+                try {
+                    $s3 = new S3Client([
+                        'region' => $_ENV['AWS_S3_BUCKET_REGION'],
+                        'version' => 'latest',
+                        'credentials' => [
+                            'key' => $_ENV['AWS_S3_ACCESS_ID'],
+                            'secret' => $_ENV['AWS_S3_ACCESS_SECRET'],
+                        ],
+                    ]);
+                    echo '<pre>';
+                    foreach ($imagesFiles as $imageFile) {
+                        $file = base64_decode(explode(',', $imageFile)[1]);
+                        $path = 'products/' . $productNameSlug . '-' . uniqid() . '.jpg';
+                        // Upload the image to the S3 bucket
+                        $result = $s3->putObject([
+                            'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
+                            'Key' => $path,
+                            'Body' => $file,
+                            'ACL' => 'public-read',
+                        ]);
+                        var_dump($result);
+                        // var_dump(imagecreatefromstring($image));
+                        $images = new ProductImages;
+                        // $imageFileName = $fileUploaderBase64->upload($file, $this->pathImg, $form->get('title')->getData());
+                        // $images->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
+                        // $images->setProduct($data['product']);
+                        // $entityManager->persist($images);
+                        dd('aca');
+                    }
+                    echo '</pre>';
+                } catch (\Exception $e) {
+                    dd($e->getMessage());
                 }
             }
+            die();
             $entityManager->persist($data['product']);
             $entityManager->flush();
 
-            return $this->redirectToRoute('secure_crud_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('secure_crud_product_index');
         }
 
         $data['form'] = $form;
@@ -114,7 +144,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_product_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, FileUploader $fileUploader, ProductRepository $productRepository): Response
+    public function edit($id, Request $request, ProductRepository $productRepository): Response
     {
         $data['title'] = 'Editar producto';
         $data['breadcrumbs'] = array(
@@ -130,8 +160,8 @@ class ProductsController extends AbstractController
             if ($imageFile) {
                 foreach ($form->get('image')->getData() as $file) {
                     $images = new ProductImages;
-                    $imageFileName = $fileUploader->upload($file, $this->pathImg, $form->get('title')->getData());
-                    $images->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
+                    // $imageFileName = $fileUploaderBase64->upload($file, $this->pathImg, $form->get('title')->getData());
+                    // $images->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
                     $images->setProduct($data['product']);
                     $entityManager->persist($images);
                 }
@@ -139,7 +169,7 @@ class ProductsController extends AbstractController
             $entityManager->persist($data['product']);
             $entityManager->flush();
 
-            return $this->redirectToRoute('secure_crud_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('secure_crud_product_index');
         }
 
         $data['form'] = $form;

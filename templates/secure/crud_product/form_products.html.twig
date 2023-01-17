@@ -25,7 +25,12 @@
 	{% endif %}
 	<div class="row my-2">
 		<div class="col-12">
-			{{ form_row(form.title) }}
+			{{ form_row(form.inventory) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col-12">
+			{{ form_row(form.name) }}
 		</div>
 	</div>
 
@@ -43,12 +48,25 @@
 		</div>
 	</div>
 
+	<hr>
 	<div class="row my-2">
-		<hr>
-		<h3>SKU</h3>
+		<div class="col-12">
+			<h3>SKU</h3>
+			<small>Se conforma automaticamente de la siguiente manera:
+			</small>
+			<small>CA-MAR-MOD310-WH-VP1[-VP2-VP3] | (VP2 y VP3 son opcionales)</small>
+		</div>
+	</div>
+	<div class="row my-3">
+
 		<div class="col-3">
 			{{ form_row(form.category) }}
 		</div>
+
+		<div class="col-3">
+			{{ form_row(form.subcategory) }}
+		</div>
+
 		<div class="col-3">
 			{{ form_row(form.brand) }}
 		</div>
@@ -60,111 +78,124 @@
 		<div class="col-3">
 			{{ form_row(form.color) }}
 		</div>
-		<hr>
-	</div>
 
-
-	<div class="row my-2">
-		<div class="col-6">
-			{{ form_row(form.cod) }}
-		</div>
-		<div class="col-6">
-			{{ form_row(form.part_number) }}
-		</div>
-	</div>
-
-	<div class="row my-2">
-		<div class="col-4">
-			{{ form_row(form.weight) }}
-		</div>
-
-		<div class="col-4">
-			{{ form_row(form.screen_resolution) }}
-		</div>
-
-		<div class="col-4">
-			{{ form_row(form.screen_size) }}
-		</div>
-	</div>
-	<div class="row my-2">
-		<div class="col-4">
-			{{ form_row(form.cpu) }}
-		</div>
-		<div class="col-4">
-			{{ form_row(form.gpu) }}
-		</div>
-
-		<div class="col-4">
-			{{ form_row(form.ram) }}
-		</div>
-	</div>
-
-	<div class="row my-2">
-
-		<div class="col-4">
-			{{ form_row(form.memory) }}
-		</div>
-		<div class="col-4">
-			{{ form_row(form.op_sys) }}
-		</div>
-
-		<div class="col-4">
-			{{ form_row(form.conditium) }}
-		</div>
-	</div>
-
-
-	<div class="row my-2">
 		<div class="col-3">
-			{{ form_row(form.onhand) }}
-		</div>
-		<div class="col-3">
-			{{ form_row(form.commited) }}
+			{{ form_row(form.vp1) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.incomming) }}
+			{{ form_row(form.vp2) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.available) }}
+			{{ form_row(form.vp3) }}
 		</div>
-	</div>
-	{% if (product.getImage) %}
-		{% for image in product.getImage %}
+
+		<div class="col-12 text-center">
 			<div class="row">
-				<div class="col-xs-12 col-md-4">
-					<img class="img-fluid" style="width:100%" alt="Imagen" src="{{ image.image }}"/>
+				<div class="col-4"></div>
+
+				<div class="col-4">
+					{{ form_row(form.sku) }}
 				</div>
+
+				<div class="col-4"></div>
 			</div>
-		{% endfor %}
-	{% endif %}
 
-	<div class="row my-2">
-		<div class="col-12">
-			{{ form_row(form.image) }}
-		</div>
-	</div>
-
-	<div class="row my-2">
-		<div class="col-12">
-			<div id="drag-drop-area"></div>
 		</div>
 
-	</div>
+		<hr>
+		<div class="row my-2">
+			<div class="col-12">
+				<h3>Caracteristicas</h3>
+			</div>
+			<div class="col-3">
+				{{ form_row(form.cost) }}
+			</div>
 
-	<div>
+			<div class="col-3">
+				{{ form_row(form.price) }}
+			</div>
+
+			<div class="col-3">
+				{{ form_row(form.cod) }}
+			</div>
+			<div class="col-3">
+				{{ form_row(form.part_number) }}
+			</div>
+		</div>
+
+		<div class="row my-2">
+			<div class="col-4">
+				{{ form_row(form.weight) }}
+			</div>
+
+			<div class="col-4">
+				{{ form_row(form.screen_resolution) }}
+			</div>
+
+			<div class="col-4">
+				{{ form_row(form.screen_size) }}
+			</div>
+		</div>
+		<div class="row my-2">
+			<div class="col-4">
+				{{ form_row(form.cpu) }}
+			</div>
+			<div class="col-4">
+				{{ form_row(form.gpu) }}
+			</div>
+
+			<div class="col-4">
+				{{ form_row(form.ram) }}
+			</div>
+		</div>
+
 		<div class="row my-2">
 
-			<div class="col-12 text-end">
-				<a class="btn btn-secondary" href="{{ path('secure_crud_product_index') }}">Regresar</a>
+			<div class="col-4">
+				{{ form_row(form.memory) }}
+			</div>
+			<div class="col-4">
+				{{ form_row(form.op_sys) }}
+			</div>
 
-				<button class="btn btn-primary">Guardar</button>
+			<div class="col-4">
+				{{ form_row(form.conditium) }}
 			</div>
 		</div>
-	</div>
+
+		{% if (product.getImage) %}
+			{% for image in product.getImage %}
+				<div class="row">
+					<div class="col-xs-12 col-md-4">
+						<img class="img-fluid" style="width:100%" alt="Imagen" src="{{ image.image }}"/>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		<div class="row my-2">
+			<div class="col-12">
+				<h4>Cargar imagenes</h4>
+				<small>(La primer imagen será considerada la imagen de portada)</small>
+				{{ form_row(form.images) }}
+				<div id="drag-drop-area"></div>
+			</div>
+		</div>
 
 
-	{{ form_end(form) }}
+		<div>
+			<div class="row my-2">
 
-{% endblock %}
+				<div class="col-12 text-end">
+					<a class="btn btn-secondary" href="{{ path('secure_crud_product_index') }}">Regresar</a>
+
+					<button class="btn btn-primary">Guardar</button>
+				</div>
+			</div>
+		</div>
+
+
+		{{ form_end(form) }}
+	{% endblock %}

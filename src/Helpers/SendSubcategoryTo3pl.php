@@ -52,27 +52,29 @@ class SendSubcategoryTo3pl
             $response_login = $this->login3pl->Login();
         } else {
             $this->session = $this->requestStack->getSession();
-            if (!$this->session->get('3pl_data')) {
+
+            if ($this->session->get('3pl_data')) { //si existe la sesion la guardo con su status true.
+                $response_login = [
+                    'status' => true,
+                    '3pl_data' => $this->session->get('3pl_data')
+                ];
+            } else { //si no existe logueo y guardo la info en la variable, y si existe 3pl_data lo guardo en una variable de sesion
                 $response_login = $this->login3pl->Login();
                 if (isset($response_login['3pl_data'])) {
                     $this->session->set('3pl_data', $response_login['3pl_data']);
+                    $this->session->save();
                 }
-            } else {
-                $response_login['status'] = true;
             }
         }
 
-        if (!$response_login['status']) {
-            $subcategory->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
-            $subcategory->setErrorMessage3pl('code: ' . $response_login['code'] . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $response_login['message']);
-        } else {
+        if ($response_login['status']) {
             try {
                 $response = $this->client->request(
                     $method,
                     $_ENV['ML_API'] . '/subCategories/' . $endpoint,
                     [
                         'headers'   => [
-                            'Authorization' => 'Bearer ' . ($command_execute ? $response_login['3pl_data']['access_token'] : $this->session->get('3pl_data')['access_token']),
+                            'Authorization' => 'Bearer ' . $response_login['3pl_data']['access_token'],
                             'Content-Type'  => 'application/json',
                         ],
                         'json'  => [
@@ -115,17 +117,18 @@ class SendSubcategoryTo3pl
                 $subcategory->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $subcategory->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
             }
+        } else {
+            $subcategory->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
+            $subcategory->setErrorMessage3pl('code: ' . $response_login['code'] . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $response_login['message']);
         }
         //grabo en base
         $this->em->persist($subcategory);
         $this->em->flush();
-        if ($this->unauthorized && $this->attempts < 2) {
-            if (!$command_execute) {
-                $response_login = $this->login3pl->Login();
-                if (isset($response_login['3pl_data'])) {
-                    $this->session->set('3pl_data', $response_login['3pl_data']);
-                    $this->session->save();
-                }
+        if (!$command_execute && $this->unauthorized && $this->attempts < 2) {
+            $response_login = $this->login3pl->Login();
+            if (isset($response_login['3pl_data'])) {
+                $this->session->set('3pl_data', $response_login['3pl_data']);
+                $this->session->save();
                 $this->send($subcategory);
             }
         }

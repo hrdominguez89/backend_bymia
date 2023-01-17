@@ -325,7 +325,7 @@ class ProductRepository extends ServiceEntityRepository
 
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         $statement->executeQuery();
-        return $statement->fetchAll();
+        // return $statement->fetchAll();
     }
 
     /**
@@ -340,7 +340,7 @@ class ProductRepository extends ServiceEntityRepository
 
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         $statement->executeQuery();
-        return $statement->fetchAll();
+        // return $statement->fetchAll();
     }
 
 
@@ -359,14 +359,14 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     //obtener los 50 mas vendidos
-    public function findMostSale()
-    {
-        return $this->createQueryBuilder('p')
-            ->orderBy('p.sales', 'DESC')
-            ->getQuery()
-            ->getMaxResults(50)
-            ->getResult();
-    }
+    // public function findMostSale()
+    // {
+    //     return $this->createQueryBuilder('p')
+    //         ->orderBy('p.sales', 'DESC')
+    //         ->getQuery()
+    //         ->getMaxResults(50)
+    //         ->getResult();
+    // }
 
     //obtener los que estan en oferta---hacer
     public function findProductsInOffert()

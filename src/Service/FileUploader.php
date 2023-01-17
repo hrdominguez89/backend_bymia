@@ -27,7 +27,6 @@ class FileUploader
             $path = '/' . $path . '/' .  $newFilename;
         }else{
             $path = '/' .  $newFilename;
-
         }
         $stream = fopen($file->getPathname(), 'r');
         $result = $this->filesystem->writeStream($path, $stream, ['ACL' => 'public-read']);

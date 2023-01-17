@@ -43,9 +43,9 @@ class Product
     /**
      * @var string|null
      *
-     * @ORM\Column(name="title", type="string", nullable=false, length=255)
+     * @ORM\Column(name="name", type="string", nullable=false, length=255)
      */
-    protected $title;
+    protected $name;
 
     /**
      * @var string
@@ -64,9 +64,9 @@ class Product
     /**
      * @var float|null
      *
-     * @ORM\Column(name="cost", type="float", nullable=false, options={"default":0})
+     * @ORM\Column(name="cost", type="float", nullable=false)
      */
-    protected $cost = 0;
+    protected $cost;
 
     /**
      * @var string|null
@@ -183,7 +183,7 @@ class Product
     /**
      * @ORM\Column(type="boolean", nullable=true, options={"default":False})
      */
-    private $visible = false;
+    private $visible;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="products")
@@ -204,6 +204,17 @@ class Product
      * @ORM\Column(name="description_en",type="text")
      */
     private $descriptionEn;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $price;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Inventory::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $inventory;
 
     public function __construct()
     {
@@ -249,22 +260,22 @@ class Product
     /**
      * @return string|null
      */
-    public function getTitle(): ?string
+    public function getName(): ?string
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
-     * @param string|null $title
+     * @param string|null $name
      * @return $this
      */
-    public function setTitle(?string $title): self
+    public function setName(?string $name): self
     {
-        $this->title = $title;
+        $this->name = $name;
 
         $slugify = new Slugify();
 
-        $this->slug = $slugify->slugify($title);
+        $this->slug = $slugify->slugify($name);
 
         return $this;
     }
@@ -364,7 +375,7 @@ class Product
         return [
             "id" => $this->getId(),
             "slug" => $this->getSlug(),
-            "title" => $this->getTitle(),
+            "name" => $this->getName(),
             "sku" => $this->getSku(),
             "descriptionEs" => $this->getDescriptionEs(),
             "customFields" => "",
@@ -716,6 +727,30 @@ class Product
     public function setDescriptionEn(string $descriptionEn): self
     {
         $this->descriptionEn = $descriptionEn;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getInventory(): ?Inventory
+    {
+        return $this->inventory;
+    }
+
+    public function setInventory(?Inventory $inventory): self
+    {
+        $this->inventory = $inventory;
 
         return $this;
     }
