@@ -13,6 +13,7 @@ use App\Repository\SubcategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -67,7 +68,7 @@ class CrudSubcategoryController extends AbstractController
 
 
     /**
-     * @Route("/subcategory/{subcategory_id}/edit", name="secure_crud_subcategory_edit", methods={"GET","POST"})
+     * @Route("/{subcategory_id}/edit", name="secure_crud_subcategory_edit", methods={"GET","POST"})
      */
     public function edit($subcategory_id, Request $request, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendSubcategoryTo3pl $sendSubCategoryTo3pl): Response
     {
@@ -99,11 +100,11 @@ class CrudSubcategoryController extends AbstractController
     }
 
     /**
-     * @Route("/subcategories/{category_id}", name="secure_customer_address_get_cities", methods={"GET"})
+     * @Route("/getSubcategories/{category_id}", name="secure_get_categories", methods={"GET"})
      */
-    public function getCities($state_id, CitiesRepository $citiesRepository): Response
+    public function getSubcategories($category_id, SubcategoryRepository $subcategoryRepository): Response
     {
-        $data['data'] = $citiesRepository->findCitiesByStateId($state_id);
+        $data['data'] = $subcategoryRepository->findSubcategoriesWithId3plByCategoryId($category_id);
         if ($data['data']) {
             $data['status'] = true;
         } else {

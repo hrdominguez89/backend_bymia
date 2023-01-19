@@ -6,23 +6,18 @@ use App\Entity\Brand;
 use App\Entity\Category;
 use App\Entity\Inventory;
 use App\Entity\Product;
-use App\Entity\Subcategory;
 use App\Repository\BrandRepository;
 use App\Repository\CategoryRepository;
-use App\Repository\SubcategoryRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\All;
-use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -34,15 +29,13 @@ class ProductType extends AbstractType
             ->add('inventory', EntityType::class, [
                 'class'  => Inventory::class,
                 'placeholder' => 'Seleccione un inventario',
-                'label' => 'Inventario',
+                'label' => 'Inventario *',
                 'choice_label' => 'name',
                 'required' => true,
             ])
-            ->add('name', TextType::class, ['label' => 'Nombre', 'attr' => ['required' => true]])
-            ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción español', 'required' => false])
+            ->add('name', TextType::class, ['label' => 'Nombre *', 'attr' => ['required' => true]])
+            ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción español *', 'required' => true])
             ->add('descriptionEn', TextareaType::class, ['label' => 'Descripción Inglés', 'required' => false])
-            ->add('cost', NumberType::class, ['label' => 'Costo', 'required' => true])
-            ->add('price', NumberType::class, ['label' => 'Precio', 'required' => true])
 
             ->add('category', EntityType::class, [
                 'class'  => Category::class,
@@ -52,8 +45,10 @@ class ProductType extends AbstractType
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría',
-                'label' => 'Categoría',
-                'choice_label' => 'nomenclature',
+                'label' => 'Categoría *',
+                'choice_label' => function ($category, $key, $index) {
+                    return $category->getName() . ' - ' . $category->getNomenclature();
+                },
                 'required' => true,
             ])
             ->add('subcategory', ChoiceType::class, [
@@ -71,65 +66,85 @@ class ProductType extends AbstractType
                         ->orderBy('b.name');
                 },
                 'placeholder' => 'Seleccione una marca',
-                'label' => 'Marca',
-                'choice_label' => 'name',
+                'label' => 'Marca *',
+                'choice_label' => function ($brand, $key, $index) {
+                    return $brand->getName() . ' - ' . $brand->getNomenclature();
+                },
                 'required' => true,
             ])
-            ->add('color', TextType::class, [
-                'label' => 'Color',
+            ->add('model', TextType::class, [
+                'label' => 'Modelo *',
                 'required' => true,
-                'attr' => ['required' => true, "minlength" => 2, "maxlength" => 2],
+                'attr' => ["placeholder" => "Campo requerido", "minlength" => 6, 'style' => 'text-transform:uppercase', 'pattern' => '^[A-Za-z0-9]{6,}$', 'title' => 'Este campo debe contener 6 caracteres como mínimo sin espacios ni guiones'],
+                'constraints' => [
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
+                    ])
+                ]
+            ])
+            ->add('color', TextType::class, [
+                'label' => 'Color *',
+                'required' => true,
+                'attr' => ["placeholder" => "Campo requerido", "minlength" => 2, "maxlength" => 2, 'style' => 'text-transform:uppercase', 'pattern' => '^[A-Za-z0-9]{2}$', 'title' => 'Este campo debe contener 2 caracteres sin espacios ni guiones'],
                 'constraints' => [
                     new Length([
                         'min' => 2,
                         'max' => 2,
                         'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
                         'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
-                    ])
+                    ]),
+                    new Regex([
+                        'pattern' => "/^[A-Za-z0-9]{2}$/",
+                        'message' => 'El valor debe cumplir con el formato "XX"',
+                    ]),
                 ]
             ])
             ->add('vp1', TextType::class, [
-                'label' => 'Variable de producto 1',
+                'label' => 'Variable de producto 1 *',
                 'mapped' => false,
-                'attr' => ['required' => true, "minlength" => 3, "maxlength" => 3],
+                'required' => true,
+                'attr' => ["placeholder" => "Campo requerido", "minlength" => 3, "maxlength" => 3, 'style' => 'text-transform:uppercase', 'pattern' => '^[A-Za-z0-9]{3}$', 'title' => 'Este campo debe contener 3 caracteres sin espacios ni guiones'],
                 'constraints' => [
                     new Length([
                         'min' => 3,
                         'max' => 3,
                         'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
                         'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
-                    ])
+                    ]),
+                    new Regex([
+                        'pattern' => "/^[A-Za-z0-9]{3}$/",
+                        'message' => 'El valor debe cumplir con el formato "XXX"',
+                    ]),
                 ]
             ])
             ->add('vp2', TextType::class, [
                 'label' => 'Variable de producto 2',
                 'mapped' => false,
-                'attr' => ['required' => false, "disabled" => true, "minlength" => 3, "maxlength" => 3],
+                'required' => false,
+                'attr' => ["placeholder" => "Campo opcional", "disabled" => true, "maxlength" => 3, 'style' => 'text-transform:uppercase', 'pattern' => '^[A-Za-z0-9]{0-3}$', 'title' => 'Este campo puede estar vacio ó debe contener 3 caracteres sin espacios ni guiones'],
                 'constraints' => [
-                    new Length([
-                        'min' => 3,
-                        'max' => 3,
-                        'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
-                        'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
-                    ])
+                    new Regex([
+                        'pattern' => "/^[A-Za-z0-9]{0,3}$/",
+                        'message' => 'El valor debe cumplir con el formato "XXX"',
+                    ]),
                 ]
             ])
             ->add('vp3', TextType::class, [
                 'label' => 'Variable de producto 3',
                 'mapped' => false,
-                'attr' => ['required' => false, "disabled" => true, "minlength" => 3, "maxlength" => 3],
+                'required' => false,
+                'attr' => ["placeholder" => "Campo opcional", "disabled" => true, "maxlength" => 3, 'style' => 'text-transform:uppercase', 'pattern' => '^[A-Za-z0-9]{0-3}$', 'title' => 'Este campo puede estar vacio ó debe contener 3 caracteres sin espacios ni guiones'],
                 'constraints' => [
-                    new Length([
-                        'min' => 3,
-                        'max' => 3,
-                        'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
-                        'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
-                    ])
+                    new Regex([
+                        'pattern' => "/^[A-Za-z0-9]{0,3}$/",
+                        'message' => 'El valor debe cumplir con el formato "XXX"',
+                    ]),
                 ]
             ])
             ->add('sku', TextType::class, [
                 'label' => 'SKU',
-                'attr' => ['readonly' => 'readonly', "minlength" => 3, "maxlength" => 3],
+                'attr' => ['readonly' => 'readonly', "minlength" => 20, "maxlength" => 28, 'class' => 'text-center', 'style' => 'text-transform:uppercase'],
                 'constraints' => [
                     new Length([
                         'min' => 20,
@@ -139,24 +154,50 @@ class ProductType extends AbstractType
                     ]),
                     new Regex([
                         'pattern' => "/^[A-Za-z0-9]{2}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{2}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
-                        'message' => 'El valor debe cumplir con el formato "XXX-999"',
+                        'message' => 'El valor debe cumplir con el formato "CA-MAR-MOD31O-WH-8GB-128-19P"',
                     ]),
                 ]
             ])
-            ->add('model', TextType::class, [
-                'label' => 'Modelo', 'attr' => ['required' => false, "minlength" => 6, "maxlength" => 6],
+
+
+            ->add('cost', MoneyType::class, [
+                'currency' => 'USD',
+                'label' => 'Costo *',
+                'required' => true,
+                'attr' => ['placeholder' => '0.00', 'pattern' => '^\d+(\.\d{1,2}|,\d{1,2})?$', 'title' => 'El formato debe ser 0,00 o 0.00'],
                 'constraints' => [
-                    new Length([
-                        'min' => 6,
-                        'max' => 6,
-                        'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
-                        'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
-                    ])
+                    new Regex([
+                        'pattern' => "/^\d+(\.\d{1,2}|,\d{1,2})?$/",
+                        'message' => 'El valor debe cumplir con el formato 00,00 o 00.00',
+                    ]),
                 ]
             ])
-            ->add('weight', TextType::class, ['label' => 'Weight', 'attr' => ['required' => true]])
-            ->add('cod', TextType::class, ['label' => 'Cod', 'attr' => ['style' => 'text-transform: uppercase', 'required' => false]])
-            ->add('part_number', TextType::class, ['label' => 'Part number', 'attr' => ['style' => 'text-transform: uppercase', 'required' => false]])
+            ->add('price', MoneyType::class, [
+                'currency' => 'USD',
+                'label' => 'Precio *',
+                'required' => true,
+                'attr' => ['placeholder' => '0.00', 'pattern' => '^\d+(\.\d{1,2}|,\d{1,2})?$', 'title' => 'El formato debe ser 0,00 o 0.00'],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => "/^\d+(\.\d{1,2}|,\d{1,2})?$/",
+                        'message' => 'El valor debe cumplir con el formato 00,00 o 00.00',
+                    ]),
+                ]
+            ])
+            ->add('weight', NumberType::class, [
+                'label' => 'Weight',
+                'required' => false,
+                'attr' => ['placeholder' => '0.000', 'pattern' => '^\d+(\.\d{0,3}|,\d{0,3})?$', 'title' => 'El formato debe ser 0.1 o 0.12 o 0.123 o 0,1 o 0,12 o 0,123 o 1'],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => "/^\d+(\.\d{0,3}|,\d{0,3})?$/",
+                        'message' => 'El valor debe cumplir con el formato 00,00 o 00.00',
+                    ]),
+                ]
+            ])
+
+            ->add('cod', TextType::class, ['label' => 'Cod', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
+            ->add('part_number', TextType::class, ['label' => 'Part number', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
             ->add('screen_resolution', TextType::class, ['label' => 'Resolución de pantalla', 'required' => false])
             ->add('cpu', TextType::class, ['label' => 'CPU', 'required' => false])
             ->add('gpu', TextType::class, ['label' => 'GPU', 'required' => false])

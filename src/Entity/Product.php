@@ -175,10 +175,6 @@ class Product
      */
     private $model;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Subcategory::class, inversedBy="products")
-     */
-    private $subcategory;
 
     /**
      * @ORM\Column(type="boolean", nullable=true, options={"default":False})
@@ -216,10 +212,14 @@ class Product
      */
     private $inventory;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Subcategory::class, inversedBy="products")
+     */
+    private $subcategory;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->subcategory = new ArrayCollection();
         $this->tag = new ArrayCollection();
         $this->visible = false;
         $this->image = new ArrayCollection();
@@ -617,30 +617,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Subcategory>
-     */
-    public function getSubcategory(): Collection
-    {
-        return $this->subcategory;
-    }
-
-    public function addSubcategory(Subcategory $subcategory): self
-    {
-        if (!$this->subcategory->contains($subcategory)) {
-            $this->subcategory[] = $subcategory;
-        }
-
-        return $this;
-    }
-
-    public function removeSubcategory(Subcategory $subcategory): self
-    {
-        $this->subcategory->removeElement($subcategory);
-
-        return $this;
-    }
-
     public function getVisible(): ?bool
     {
         return $this->visible;
@@ -751,6 +727,18 @@ class Product
     public function setInventory(?Inventory $inventory): self
     {
         $this->inventory = $inventory;
+
+        return $this;
+    }
+
+    public function getSubcategory(): ?Subcategory
+    {
+        return $this->subcategory;
+    }
+
+    public function setSubcategory(?Subcategory $subcategory): self
+    {
+        $this->subcategory = $subcategory;
 
         return $this;
     }

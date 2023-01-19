@@ -376,4 +376,17 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findFreeSku($sku, $product_id)
+    {
+        $skuResult = $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->where('p.sku = :sku')
+            ->setParameter('sku', $sku);
+        if ($product_id) {
+            $skuResult->andWhere('p.id != :product_id')
+                ->setParameter('product_id', $product_id);
+        }
+        return $skuResult->getQuery()->getOneOrNullResult();;
+    }
 }

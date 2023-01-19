@@ -30,6 +30,11 @@ class ProductImages
      */
     private $product;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $principal;
+
 
     /**
      * @return mixed
@@ -66,6 +71,18 @@ class ProductImages
     public function setProduct(?Product $product): self
     {
         $this->product = $product;
+
+        return $this;
+    }
+
+    public function getPrincipal(): ?bool
+    {
+        return $this->principal;
+    }
+
+    public function setPrincipal(?bool $principal): self
+    {
+        $this->principal = $principal;
 
         return $this;
     }

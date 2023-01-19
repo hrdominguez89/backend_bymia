@@ -48,10 +48,6 @@ class Subcategory
      */
     protected $id3pl;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="subcategory")
-     */
-    private $products;
 
     /**
      * @ORM\Column(type="boolean", nullable=true, options={"default":False})
@@ -87,13 +83,18 @@ class Subcategory
      */
     private $error_message_3pl;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="subcategory")
+     */
+    private $products;
+
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->visible = false;
         $this->attempts_send_3pl = 0;
+        $this->products = new ArrayCollection();
     }
 
     /**
@@ -199,33 +200,6 @@ class Subcategory
         return $this;
     }
 
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->addSubcategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            $product->removeSubcategory($this);
-        }
-
-        return $this;
-    }
-
     public function getVisible(): ?bool
     {
         return $this->visible;
@@ -304,5 +278,35 @@ class Subcategory
     public function incrementAttemptsToSendSubcategoryTo3pl()
     {
         $this->setAttemptsSend3pl($this->attempts_send_3pl + 1); //you can access your entity values directly
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setSubcategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getSubcategory() === $this) {
+                $product->setSubcategory(null);
+            }
+        }
+
+        return $this;
     }
 }

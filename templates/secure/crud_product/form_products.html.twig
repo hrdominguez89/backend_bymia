@@ -25,26 +25,30 @@
 	{% endif %}
 	<div class="row my-2">
 		<div class="col-12">
-			{{ form_row(form.inventory) }}
+			{{ form_label (form.inventory) }}
+			{{ form_widget (form.inventory) }}
 		</div>
 	</div>
 	<div class="row my-2">
 		<div class="col-12">
-			{{ form_row(form.name) }}
-		</div>
-	</div>
-
-
-	<div class="row my-2">
-		<div class="col-12">
-			{{ form_row(form.descriptionEs) }}
+			{{ form_label (form.name) }}
+			{{ form_widget (form.name) }}
 		</div>
 	</div>
 
 
 	<div class="row my-2">
 		<div class="col-12">
-			{{ form_row(form.descriptionEn) }}
+			{{ form_label (form.descriptionEs) }}
+			{{ form_widget (form.descriptionEs) }}
+		</div>
+	</div>
+
+
+	<div class="row my-2">
+		<div class="col-12">
+			{{ form_label (form.descriptionEn) }}
+			{{ form_widget (form.descriptionEn) }}
 		</div>
 	</div>
 
@@ -60,48 +64,74 @@
 	<div class="row my-3">
 
 		<div class="col-3">
-			{{ form_row(form.category) }}
+			{{ form_label (
+				form.subcategory,
+				'Categoría',
+				{'label_attr': {'class': 'form-label','id':'label-category','data-category-id':product.category ? product.category.id:'0'}}
+			)}}
+			{{ form_widget (form.category) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.subcategory) }}
+			{{ form_label (
+				form.subcategory,
+				'Subcategoría',
+				{'label_attr': {'class': 'form-label','id':'label-subcategory','data-subcategory-id':product.subcategory ? product.subcategory.id:'0'}}
+			)}}
+			{{ form_widget (form.subcategory) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.brand) }}
+			{{ form_label (form.brand) }}
+			{{ form_widget (form.brand) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.model) }}
+			{{ form_label (form.model) }}
+			{{ form_widget (form.model) }}
+		</div>
+	</div>
+	<div class="row my-3">
+
+		<div class="col-3">
+			{{ form_label (form.color) }}
+			{{ form_widget (form.color) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.color) }}
+			{{ form_label (form.vp1) }}
+			{{ form_widget (form.vp1) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.vp1) }}
+			{{ form_label (form.vp2) }}
+			{{ form_widget (form.vp2) }}
 		</div>
 
 		<div class="col-3">
-			{{ form_row(form.vp2) }}
+			{{ form_label (form.vp3) }}
+			{{ form_widget (form.vp3) }}
 		</div>
+		<div class="row my-3">
 
-		<div class="col-3">
-			{{ form_row(form.vp3) }}
-		</div>
+			<div class="col-12 text-center">
+				<div class="row">
+					<div class="col-4"></div>
 
-		<div class="col-12 text-center">
-			<div class="row">
-				<div class="col-4"></div>
+					<div class="col-4">
+						{{ form_label (
+							form.sku,
+							'SKU',
+							{'label_attr': {'class': 'form-label','id':'label-sku','data-product-id':product.id ? product.id:'0'}}
+						)}}
+						{{ form_widget (form.sku) }}
+						<span id="message_sku">Complete todos los campos para verificar la disponibilidad del SKU.</span>
+					</div>
 
-				<div class="col-4">
-					{{ form_row(form.sku) }}
+					<div class="col-4"></div>
 				</div>
 
-				<div class="col-4"></div>
 			</div>
-
 		</div>
 
 		<hr>
@@ -110,92 +140,125 @@
 				<h3>Caracteristicas</h3>
 			</div>
 			<div class="col-3">
-				{{ form_row(form.cost) }}
+				{{ form_label (form.cost) }}
+				{{ form_widget (form.cost) }}
 			</div>
 
 			<div class="col-3">
-				{{ form_row(form.price) }}
+				{{ form_label (form.price) }}
+				{{ form_widget (form.price) }}
 			</div>
 
 			<div class="col-3">
-				{{ form_row(form.cod) }}
+				{{ form_label (form.cod) }}
+				{{ form_widget (form.cod) }}
 			</div>
 			<div class="col-3">
-				{{ form_row(form.part_number) }}
+				{{ form_label (form.part_number) }}
+				{{ form_widget (form.part_number) }}
 			</div>
 		</div>
 
 		<div class="row my-2">
 			<div class="col-4">
-				{{ form_row(form.weight) }}
+				{{ form_label (form.weight) }}
+				{{ form_widget (form.weight) }}
 			</div>
 
 			<div class="col-4">
-				{{ form_row(form.screen_resolution) }}
+				{{ form_label (form.screen_resolution) }}
+				{{ form_widget (form.screen_resolution) }}
 			</div>
 
 			<div class="col-4">
-				{{ form_row(form.screen_size) }}
+				{{ form_label (form.screen_size) }}
+				{{ form_widget (form.screen_size) }}
 			</div>
 		</div>
 		<div class="row my-2">
 			<div class="col-4">
-				{{ form_row(form.cpu) }}
+				{{ form_label (form.cpu) }}
+				{{ form_widget (form.cpu) }}
 			</div>
 			<div class="col-4">
-				{{ form_row(form.gpu) }}
+				{{ form_label (form.gpu) }}
+				{{ form_widget (form.gpu) }}
 			</div>
 
 			<div class="col-4">
-				{{ form_row(form.ram) }}
+				{{ form_label (form.ram) }}
+				{{ form_widget (form.ram) }}
 			</div>
 		</div>
 
 		<div class="row my-2">
 
 			<div class="col-4">
-				{{ form_row(form.memory) }}
+				{{ form_label (form.memory) }}
+				{{ form_widget (form.memory) }}
 			</div>
 			<div class="col-4">
-				{{ form_row(form.op_sys) }}
+				{{ form_label (form.op_sys) }}
+				{{ form_widget (form.op_sys) }}
 			</div>
 
 			<div class="col-4">
-				{{ form_row(form.conditium) }}
+				{{ form_label (form.conditium) }}
+				{{ form_widget (form.conditium) }}
 			</div>
 		</div>
 
 		{% if (product.getImage) %}
-			{% for image in product.getImage %}
-				<div class="row">
-					<div class="col-xs-12 col-md-4">
-						<img class="img-fluid" style="width:100%" alt="Imagen" src="{{ image.image }}"/>
-					</div>
-				</div>
-			{% endfor %}
-		{% endif %}
+			<table class="table table-sm table-striped">
+				<thead>
+					<tr>
+						<th class="text-center">Imagen</th>
+						<th class="text-center">Portada</th>
+						<th style="width:300px;" class="text-center">Acciones</th>
+					</tr>
+				</thead>
+			</thead>
+			<tbody>
+				{% for image in product.getImage %}
+					<tr>
+						<th class="text-center" style="width:200px"><img class="img-fluid" style="width:100%" alt="Imagen" src="{{ image.image }}"/></th>
 
+						<th class="text-center">
+							{% if (image.getPrincipal) %}
+								<span class="fas fa-check-circle"></span>
+							{% endif %}
+						</th>
+						<th class="text-left">
+							<a class="py-5" href="javascript:void(0);">
+								<span class="text-success fas fa-images"></span>
+								Establecer como imagen principal
+							</a>
+							<br>
+							<a class="py-5" href="javascript:void(0);">
+								<span class="text-danger fas fa-trash-alt"></span>
+								Eliminar
+							</a>
+						</th>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+	<div class="row my-2">
+		<div class="col-12">
+			<h4>Cargar imagenes</h4>
+			<small>(La primer imagen será considerada la imagen de portada)</small>
+			{{ form_label (form.images) }}{{ form_widget (form.images) }}<div id="drag-drop-area"></div>
+		</div>
+	</div>
+	<div>
 		<div class="row my-2">
-			<div class="col-12">
-				<h4>Cargar imagenes</h4>
-				<small>(La primer imagen será considerada la imagen de portada)</small>
-				{{ form_row(form.images) }}
-				<div id="drag-drop-area"></div>
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_crud_product_index') }}">Regresar</a>
+
+				<button class="btn btn-primary">Guardar</button>
 			</div>
 		</div>
-
-
-		<div>
-			<div class="row my-2">
-
-				<div class="col-12 text-end">
-					<a class="btn btn-secondary" href="{{ path('secure_crud_product_index') }}">Regresar</a>
-
-					<button class="btn btn-primary">Guardar</button>
-				</div>
-			</div>
-		</div>
-
-
-		{{ form_end(form) }}
-	{% endblock %}
+	</div>
+	{{ form_end(form) }}
+{% endblock %}

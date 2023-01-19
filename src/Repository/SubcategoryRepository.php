@@ -54,4 +54,16 @@ class SubcategoryRepository extends ServiceEntityRepository
         return $categories->getQuery()
             ->getResult();
     }
+
+    public function findSubcategoriesWithId3plByCategoryId($category_id): array
+    {
+        $subcategories = $this->createQueryBuilder('sc')
+            ->select('sc.name,sc.id')
+            ->where('sc.id3pl is not null')
+            ->where('sc.category = :category_id')
+            ->setParameter('category_id', $category_id)
+            ->orderBy('sc.name', 'ASC');
+        return $subcategories->getQuery()
+            ->getResult();
+    }
 }
