@@ -69,6 +69,7 @@ class SendProductTo3pl
         }
 
         if ($response_login['status']) {
+            // dd($product->getProductTo3pl());
             try {
                 $response = $this->client->request(
                     $method,
@@ -78,7 +79,7 @@ class SendProductTo3pl
                             'Authorization' => 'Bearer ' . $response_login['3pl_data']['access_token'],
                             'Content-Type'  => 'application/json',
                         ],
-                        'json'  => [$product->getProductTo3pl()],
+                        'json'  => $product->getProductTo3pl(),
                     ]
                 );
 
@@ -93,13 +94,18 @@ class SendProductTo3pl
                         break;
 
                     case Response::HTTP_OK:
-                        if ($body['error']) {
-                            $error3pl = $body['errors'][0];
+                        if (@$data_response['error']) {
+                            $error3pl = '';
+                            foreach ($data_response['errors'] as $error) {
+                                $error3pl = $error3pl . ' / ' . $error;
+                            }
+                            dd($error3pl);
+                            $product->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                             $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $error3pl);
                         } else {
                             $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Producto actualizado correctamente');
+                            $product->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_SENT));
                         }
-                        $product->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_SENT));
                         break;
 
                     case Response::HTTP_UNAUTHORIZED:

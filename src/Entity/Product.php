@@ -507,18 +507,6 @@ class Product
         return $this;
     }
 
-    public function getCondition(): ?ProductCondition
-    {
-        return $this->condition;
-    }
-
-    public function setCondition(?ProductCondition $condition): self
-    {
-        $this->condition = $condition;
-
-        return $this;
-    }
-
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
@@ -814,7 +802,7 @@ class Product
             'name' => $this->getName(),
             'description' => $this->getDescriptionEs(),
             'weight' => $this->getWeight(),
-            'conditium' => $this->getCondition(),
+            'conditium' => $this->getConditium(),
             'cost' => $this->getCost(),
             'price' => $this->getPrice()
         ];

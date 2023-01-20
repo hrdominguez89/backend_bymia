@@ -185,12 +185,12 @@ class ProductType extends AbstractType
                 ]
             ])
             ->add('weight', NumberType::class, [
-                'label' => 'Peso en Lb',
-                'required' => false,
+                'label' => 'Peso en Lb *',
+                'required' => true,
                 'attr' => ['placeholder' => '0.00', 'pattern' => '^\d+(\.\d{0,3}|,\d{0,2})?$', 'title' => 'El formato debe ser 0.1 o 0.12 o 0.12 o 0,1 o 0,1 o 0,12 o 1'],
                 'constraints' => [
                     new Regex([
-                        'pattern' => "/^\d+(\.\d{0,2}|,\d{0,2})?$/",
+                        'pattern' => "/^\d+(\.\d{0,3}|,\d{0,2})?$/",
                         'message' => 'El valor debe cumplir con el formato 00,00 o 00.00',
                     ]),
                 ]
