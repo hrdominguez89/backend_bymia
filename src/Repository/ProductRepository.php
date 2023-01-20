@@ -389,4 +389,21 @@ class ProductRepository extends ServiceEntityRepository
         }
         return $skuResult->getQuery()->getOneOrNullResult();;
     }
+
+    public function findProductsToSendTo3pl(array $statuses, array $orders = null, int $limit = null): array
+    {
+        $brands = $this->createQueryBuilder('p')
+            ->where('p.status_sent_3pl IN (:statuses)')
+            ->setParameter('statuses', $statuses);
+        if ($orders) {
+            foreach ($orders as $orderKey => $orderValue) {
+                $brands->orderBy('p.' . $orderKey, $orderValue);
+            }
+        }
+        if ($limit) {
+            $brands->setMaxResults($limit);
+        }
+        return $brands->getQuery()
+            ->getResult();
+    }
 }

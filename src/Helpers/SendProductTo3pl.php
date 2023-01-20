@@ -135,9 +135,9 @@ class SendProductTo3pl
         }
     }
 
-    public function sendProductPendings()
+    public function sendProductsPendings()
     {
-        $products = $this->productRepository->findProductsToSendTo3pl([Constants::CBP_STATUS_PENDING, Constants::CBP_STATUS_ERROR], ['created_at' => 'ASC'], $_ENV['MAX_LIMIT_BRAND_TO_SYNC']);
+        $products = $this->productRepository->findProductsToSendTo3pl([Constants::CBP_STATUS_PENDING, Constants::CBP_STATUS_ERROR], ['created_at' => 'ASC'], $_ENV['MAX_LIMIT_PRODUCT_TO_SYNC']);
         foreach ($products as $product) {
             if ($product->getId3pl()) {
                 $this->send($product, 'PUT', 'update', true);
