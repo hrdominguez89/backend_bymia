@@ -69,7 +69,6 @@ class SendProductTo3pl
         }
 
         if ($response_login['status']) {
-            // dd($product->getProductTo3pl());
             try {
                 $response = $this->client->request(
                     $method,
@@ -99,7 +98,6 @@ class SendProductTo3pl
                             foreach ($data_response['errors'] as $error) {
                                 $error3pl = $error3pl . ' / ' . $error;
                             }
-                            dd($error3pl);
                             $product->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                             $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $error3pl);
                         } else {
