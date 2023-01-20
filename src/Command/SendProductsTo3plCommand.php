@@ -8,27 +8,27 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Helpers\SendSubcategoryTo3pl;
+use App\Helpers\SendProductTo3pl;
 
-class SendBrandsTo3plCommand extends Command
+class SendProductsTo3plCommand extends Command
 {
-    protected static $defaultName = 'app:send-subcategories-to-3pl';
-    protected static $defaultDescription = 'This command send to 3pl the subcategories data';
-    protected $sendSubcategoryTo3pl;
+    protected static $defaultName = 'app:send-products-to-3pl';
+    protected static $defaultDescription = 'This command send to 3pl the products data';
+    protected $sendProductTo3pl;
 
-    public function __construct(SendSubcategoryTo3pl $sendSubcategoryTo3pl)
+    public function __construct(SendProductTo3pl $sendProductTo3pl)
     {
         parent::__construct(null);
-        $this->sendSubcategoryTo3pl = $sendSubcategoryTo3pl;
+        $this->sendProductTo3pl = $sendProductTo3pl;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->sendSubcategoryTo3pl->sendSubcategoryPendings();
+        $this->sendProductTo3pl->sendProductsPendings();
 
-        $io->success('Se enviaron las subcategorias al 3pl.');
+        $io->success('Se enviaron los productos al 3pl.');
 
         return Command::SUCCESS;
     }
