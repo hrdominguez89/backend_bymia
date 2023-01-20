@@ -2,10 +2,13 @@
 
 namespace App\Controller\Secure;
 
+use App\Constants\Constants;
 use App\Entity\Product;
 use App\Entity\ProductImages;
 use App\Form\ProductType;
+use App\Helpers\SendProductTo3pl;
 use App\Repository\BrandRepository;
+use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\ProductImagesRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductSubcategoryRepository;
@@ -77,7 +80,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_product_new", methods={"GET","POST"})
      */
-    public function new(Request $request, SluggerInterface $slugger, SubcategoryRepository $subcategoryRepository): Response
+    public function new(Request $request, SluggerInterface $slugger, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
     {
         $data['title'] = 'Nuevo producto';
         $data['breadcrumbs'] = array(
@@ -90,7 +93,7 @@ class ProductsController extends AbstractController
         $form = $this->createForm(ProductType::class, $data['product']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $data['product']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => $request->get('product')['subcategory']]));
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -111,17 +114,24 @@ class ProductsController extends AbstractController
                             'secret' => $_ENV['AWS_S3_ACCESS_SECRET'],
                         ],
                     ]);
+                    $indexImage = 0;
                     foreach ($imagesFiles as $imageFile) {
+
+                        $images = new ProductImages;
+                        if ($indexImage == 0) {
+                            $images->setPrincipal(true);
+                            $indexImage++;
+                        }
+
                         $file = base64_decode(explode(',', $imageFile)[1]);
                         $path = $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
                         // Upload the image to the S3 bucket
-                        $result = $s3->putObject([
+                        $s3->putObject([
                             'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
                             'Key' => $path,
                             'Body' => $file,
                             'ACL' => 'public-read',
                         ]);
-                        $images = new ProductImages;
                         $images->setImage($_ENV['AWS_S3_URL'] . '/' . $path);
                         $images->setProduct($data['product']);
                         $entityManager->persist($images);
@@ -131,6 +141,7 @@ class ProductsController extends AbstractController
                 }
             }
             $entityManager->flush();
+            $sendProductTo3pl->send($data['product']);
 
             return $this->redirectToRoute('secure_crud_product_index');
         }
@@ -142,7 +153,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_product_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, SluggerInterface $slugger, ProductRepository $productRepository, SubcategoryRepository $subcategoryRepository): Response
+    public function edit($id, Request $request, SluggerInterface $slugger, ProductRepository $productRepository, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
     {
         $data['title'] = 'Editar producto';
         $data['breadcrumbs'] = array(
@@ -187,7 +198,7 @@ class ProductsController extends AbstractController
                             'secret' => $_ENV['AWS_S3_ACCESS_SECRET'],
                         ],
                     ]);
-                    $indexImage = 0;
+                    $indexImage = !$data['product']->getImage()[0] ? 0 : 1;
                     foreach ($imagesFiles as $imageFile) {
                         $images = new ProductImages;
                         if ($indexImage == 0) {
@@ -197,7 +208,7 @@ class ProductsController extends AbstractController
                         $file = base64_decode(explode(',', $imageFile)[1]);
                         $path = $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
                         // Upload the image to the S3 bucket
-                        $result = $s3->putObject([
+                        $s3->putObject([
                             'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
                             'Key' => $path,
                             'Body' => $file,
@@ -211,7 +222,11 @@ class ProductsController extends AbstractController
                     //ver como manejar este error
                 }
             }
+
+            $data['product']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
+            $data['product']->setAttemptsSend3pl(0);
             $entityManager->flush();
+            $sendProductTo3pl->send($data['product'], 'PUT', 'update');
 
             return $this->redirectToRoute('secure_crud_product_index');
         }

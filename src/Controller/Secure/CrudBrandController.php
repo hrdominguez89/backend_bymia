@@ -92,14 +92,12 @@ class CrudBrandController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile, $this->pathImg, $form->get('name')->getData());
                 $data['brand']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
-            if ($data['old_name'] !== $data['brand']->getName()) {
-                $data['brand']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
-                $data['brand']->setAttemptsSend3pl(0);
-                $this->getDoctrine()->getManager()->flush();
-                $sendBrandTo3pl->send($data['brand'], 'PUT', 'update');
-            } else {
-                $this->getDoctrine()->getManager()->flush();
-            }
+
+            $data['brand']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
+            $data['brand']->setAttemptsSend3pl(0);
+            $this->getDoctrine()->getManager()->flush();
+            $sendBrandTo3pl->send($data['brand'], 'PUT', 'update');
+
             return $this->redirectToRoute('secure_crud_brand_index');
         }
         $data['form'] = $form;

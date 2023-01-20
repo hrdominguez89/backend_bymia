@@ -44,12 +44,18 @@ class CommunicationStatesBetweenPlatforms
      */
     private $subcategories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="status_sent_3pl")
+     */
+    private $products;
+
     public function __construct()
     {
         $this->customers = new ArrayCollection();
         $this->brands = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->subcategories = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +189,36 @@ class CommunicationStatesBetweenPlatforms
             // set the owning side to null (unless already changed)
             if ($subcategory->getStatusSent3pl() === $this) {
                 $subcategory->setStatusSent3pl(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setStatusSent3pl($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getStatusSent3pl() === $this) {
+                $product->setStatusSent3pl(null);
             }
         }
 

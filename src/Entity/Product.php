@@ -217,6 +217,22 @@ class Product
      */
     private $subcategory;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=CommunicationStatesBetweenPlatforms::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false, options={"default":1})
+     */
+    private $status_sent_3pl;
+
+    /**
+     * @ORM\Column(type="smallint", options={"default":0})
+     */
+    private $attempts_send_3pl;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $error_message_3pl;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -227,6 +243,7 @@ class Product
         $this->commited = 0;
         $this->incomming = 0;
         $this->available = 0;
+        $this->attempts_send_3pl = 0;
     }
 
     /**
@@ -741,5 +758,65 @@ class Product
         $this->subcategory = $subcategory;
 
         return $this;
+    }
+
+    public function getStatusSent3pl(): ?CommunicationStatesBetweenPlatforms
+    {
+        return $this->status_sent_3pl;
+    }
+
+    public function setStatusSent3pl(?CommunicationStatesBetweenPlatforms $status_sent_3pl): self
+    {
+        $this->status_sent_3pl = $status_sent_3pl;
+
+        return $this;
+    }
+
+    public function getAttemptsSend3pl(): ?int
+    {
+        return $this->attempts_send_3pl;
+    }
+
+    public function setAttemptsSend3pl(int $attempts_send_3pl): self
+    {
+        $this->attempts_send_3pl = $attempts_send_3pl;
+
+        return $this;
+    }
+
+    public function getErrorMessage3pl(): ?string
+    {
+        return $this->error_message_3pl;
+    }
+
+    public function setErrorMessage3pl(?string $error_message_3pl): self
+    {
+        $this->error_message_3pl = $error_message_3pl;
+
+        return $this;
+    }
+
+    public function incrementAttemptsToSendProductTo3pl()
+    {
+        $this->setAttemptsSend3pl($this->attempts_send_3pl + 1); //you can access your entity values directly
+    }
+
+    public function getProductTo3pl()
+    {
+        return [
+            'inventory_id' => $this->getInventory()->getId3pl(),
+            'category_id' => $this->getCategory()->getId3pl(),
+            'subcategory_id' => $this->getSubcategory() ? $this->getSubcategory()->getId3pl() : '',
+            'brand_id' => $this->getBrand()->getId3pl(),
+            'sku' => $this->getSku(),
+            'cod' => $this->getCod(),
+            'part_number' => $this->getPartNumber(),
+            'name' => $this->getName(),
+            'description' => $this->getDescriptionEs(),
+            'weight' => $this->getWeight(),
+            'conditium' => $this->getCondition(),
+            'cost' => $this->getCost(),
+            'price' => $this->getPrice()
+        ];
     }
 }
