@@ -6,6 +6,25 @@
 
 {% block content %}
 	{{parent()}}
+	<!-- Modal -->
+	<div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="modalDeleteLabel">Eliminar imagen</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					¿Está seguro que desea eliminar esta imagen? una vez eliminada no se podrá recuperar.
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button id="deleteImage" href="javascript:void(0);" type="button" class="btn btn-danger">Eliminar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="row">
 		<div class="col-12">
 			<h1 class="mr-auto mb-0 title-table">{{ title }}</h1>
@@ -207,58 +226,61 @@
 				{{ form_widget (form.conditium) }}
 			</div>
 		</div>
+		{% if (product.getImage|length > 0) %}
+			<div id="images_galery_div">
+				<hr>
 
-		{% if (product.getImage) %}
-			<table class="table table-sm table-striped">
-				<thead>
-					<tr>
-						<th class="text-center">Imagen</th>
-						<th class="text-center">Portada</th>
-						<th style="width:300px;" class="text-center">Acciones</th>
-					</tr>
-				</thead>
-			</thead>
-			<tbody>
-				{% for image in product.getImage %}
-					<tr>
-						<th class="text-center" style="width:200px"><img class="img-fluid" style="width:100%" alt="Imagen" src="{{ image.image }}"/></th>
+				<div class="row my-2">
+					<h4>Imágenes cargadas</h4>
+					<div class="col-12 my-2">
+						<ul class="pgwSlideshow">
+							{% for image in product.getImage %}
+								<li id="img-{{image.id}}" data-id="{{image.id}}" data-principal-image="{{image.principal}}">
+									<img src="{{ image.image }}" id="imagen-{{image.id}}">
 
-						<th class="text-center">
-							{% if (image.getPrincipal) %}
-								<span class="fas fa-check-circle"></span>
-							{% endif %}
-						</th>
-						<th class="text-left">
-							<a class="py-5" href="javascript:void(0);">
-								<span class="text-success fas fa-images"></span>
-								Establecer como imagen principal
-							</a>
-							<br>
-							<a class="py-5" href="javascript:void(0);">
-								<span class="text-danger fas fa-trash-alt"></span>
-								Eliminar
-							</a>
-						</th>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-	{% endif %}
-	<div class="row my-2">
-		<div class="col-12">
-			<h4>Cargar imagenes</h4>
-			<small>(La primer imagen será considerada la imagen de portada)</small>
-			{{ form_label (form.images) }}{{ form_widget (form.images) }}<div id="drag-drop-area"></div>
-		</div>
-	</div>
-	<div>
+									{% if (image.principal) %}
+										<p id="p-portada" data-image-id="{{image.id}}" class="text-center text-black bg-white m-0 p-0 b-0">Portada</p>
+									{% endif %}
+
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-12 text-center my-2">
+					<a class="text-danger" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modalDelete">
+						<spam class="fas fa-trash"></spam>
+						Eliminar imagen
+					</a>
+					|
+					<a class="text-primary" id="principalImageButton" href="javascript:void(0);">
+						<spam class="fas fa-images"></spam>
+						Establecer como imagen de portada
+					</a>
+				</div>
+			</div>
+
+		{% endif %}
+
+
+		<hr>
 		<div class="row my-2">
-			<div class="col-12 text-end">
-				<a class="btn btn-secondary" href="{{ path('secure_crud_product_index') }}">Regresar</a>
-
-				<button class="btn btn-primary">Guardar</button>
+			<div class="col-12">
+				<h4>Cargar imágenes</h4>
+				<small>(La primer imagen será considerada la imagen de portada)</small>
+				{{ form_widget (form.images) }}
+				<div id="drag-drop-area"></div>
 			</div>
 		</div>
-	</div>
-	{{ form_end(form) }}
-{% endblock %}
+		<div>
+			<div class="row my-2">
+				<div class="col-12 text-end">
+					<a class="btn btn-secondary" href="{{ path('secure_crud_product_index') }}">Regresar</a>
+
+					<button class="btn btn-primary">Guardar</button>
+				</div>
+			</div>
+		</div>
+		{{ form_end(form) }}
+	{% endblock %}

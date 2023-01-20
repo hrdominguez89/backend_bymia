@@ -23,13 +23,23 @@ class ProductImagesRepository extends ServiceEntityRepository
      * @param int $parentId
      * @return Product[]
      */
-    public function getDataImages($id):array
+    public function getDataImages($id): array
     {
         $entityManager = $this->getEntityManager();
         return $entityManager->createQuery('SELECT e.id,e.image as src, e.new as nueva
             FROM App\Entity\ProductImages e 
-            WHERE e.productId =:id')->setParameter('id',$id)->getResult();
+            WHERE e.productId =:id')->setParameter('id', $id)->getResult();
     }
 
-
+    public function getImageNotPrincipal($product_id): array
+    {
+        $entityManager = $this->getEntityManager();
+        return $entityManager->createQuery('SELECT i.id,i.principal
+            FROM App\Entity\ProductImages i 
+            WHERE i.product =:id and i.principal = :principal')
+            ->setParameter('principal', false)
+            ->setParameter('id', $product_id)
+            ->setMaxResults(1)
+            ->getResult();
+    }
 }

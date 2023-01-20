@@ -149,8 +149,8 @@ class ProductsController extends AbstractController
             array('path' => 'secure_crud_product_index', 'title' => 'Productos'),
             array('active' => true, 'title' => $data['title'])
         );
-        $data['files_js'] = array('../uppy.min.js', 'product/upload_files.js?v=' . rand(), 'product/product.js?v=' . rand());
-        $data['files_css'] = array('uppy.min.css');
+        $data['files_js'] = array('../uppy.min.js', '../pgwslideshow.min.js', 'product/upload_files.js?v=' . rand(), 'product/product.js?v=' . rand());
+        $data['files_css'] = array('uppy.min.css', 'pgwslideshow.min.css');
         $data['product'] = $productRepository->find($id);
         $form = $this->createForm(ProductType::class, $data['product']);
 
@@ -231,6 +231,84 @@ class ProductsController extends AbstractController
         } else {
             $data['status'] = false;
             $data['message'] = 'El SKU ya se encuentra registrado para ver el producto haga <a target="_blank" href="/secure/product/' . $data['data']['id'] . '/edit">click aquí</a>';
+        }
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/deleteImageProduct", name="secure_delete_image_product", methods={"POST"})
+     */
+    public function deleteImageProduct(ProductImagesRepository $productImagesRepository, Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $image_id = $request->get('image_id');
+        $principal_image = (bool)$request->get('principal_image');
+        $imageObject = $productImagesRepository->find($image_id);
+        if ($imageObject) {
+            if ($principal_image) {
+                $next_image_not_principal = $productImagesRepository->getImageNotPrincipal($imageObject->getProduct()->getId());
+                if ($next_image_not_principal) {
+                    $next_image_principal = $productImagesRepository->find($next_image_not_principal[0]['id']);
+                    $next_image_principal->setPrincipal(true);
+                    $em->persist($next_image_principal);
+                }
+            }
+
+            $path = explode($_ENV['AWS_S3_URL'] . '/', $imageObject->getImage())[1];
+
+            $em->remove($imageObject);
+            $em->flush();
+
+
+            $s3 = new S3Client([
+                'region' => $_ENV['AWS_S3_BUCKET_REGION'],
+                'version' => 'latest',
+                'credentials' => [
+                    'key' => $_ENV['AWS_S3_ACCESS_ID'],
+                    'secret' => $_ENV['AWS_S3_ACCESS_SECRET'],
+                ],
+            ]);
+
+            $s3->deleteObject([
+                'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
+                'Key'    => $path
+            ]);
+
+            $data['status'] = true;
+            $data['new_principal_image_id'] = $principal_image ? ($next_image_not_principal ? $next_image_not_principal[0]['id'] : false) : false;
+        } else {
+            $data['status'] = false;
+            $data['message'] = 'No se encontro la imagen que se desea eliminar';
+        }
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/newPrincipalImage", name="secure_new_principal_image_product", methods={"POST"})
+     */
+    public function newPrincipalImage(ProductImagesRepository $productImagesRepository, Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $old_principal_image_id = $request->get('old_principal_image_id');
+        $new_principal_image_id = $request->get('new_principal_image_id');
+
+        $imageObjectOldPrincipal = $productImagesRepository->find($old_principal_image_id);
+        $imageObjectNewPrincipal = $productImagesRepository->find($new_principal_image_id);
+
+        if ($imageObjectOldPrincipal && $imageObjectNewPrincipal) {
+
+            $imageObjectOldPrincipal->setPrincipal(false);
+            $imageObjectNewPrincipal->setPrincipal(true);
+
+            $em->persist($imageObjectOldPrincipal);
+            $em->persist($imageObjectNewPrincipal);
+            $em->flush();
+
+            $data['status'] = true;
+        } else {
+            $data['status'] = false;
+            $data['message'] = 'No se encontro la imagen.';
         }
         return new JsonResponse($data);
     }

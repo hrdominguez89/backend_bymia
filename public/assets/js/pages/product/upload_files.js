@@ -118,7 +118,6 @@ uppy.on('file-removed', (file) => {
         const base64 = event.target.result;
         const index = images.indexOf(base64);
         if (index > -1) {
-            console.log('elimino');
             images.splice(index, 1);
             input.value = images;
         }

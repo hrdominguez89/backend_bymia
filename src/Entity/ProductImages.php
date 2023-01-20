@@ -31,10 +31,14 @@ class ProductImages
     private $product;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true, options={"default":false})
      */
     private $principal;
 
+    public function __construct()
+    {
+        $this->principal = false;
+    }
 
     /**
      * @return mixed
@@ -86,5 +90,4 @@ class ProductImages
 
         return $this;
     }
-
 }

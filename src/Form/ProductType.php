@@ -185,12 +185,12 @@ class ProductType extends AbstractType
                 ]
             ])
             ->add('weight', NumberType::class, [
-                'label' => 'Weight',
+                'label' => 'Peso en Lb',
                 'required' => false,
-                'attr' => ['placeholder' => '0.000', 'pattern' => '^\d+(\.\d{0,3}|,\d{0,3})?$', 'title' => 'El formato debe ser 0.1 o 0.12 o 0.123 o 0,1 o 0,12 o 0,123 o 1'],
+                'attr' => ['placeholder' => '0.00', 'pattern' => '^\d+(\.\d{0,3}|,\d{0,2})?$', 'title' => 'El formato debe ser 0.1 o 0.12 o 0.12 o 0,1 o 0,1 o 0,12 o 1'],
                 'constraints' => [
                     new Regex([
-                        'pattern' => "/^\d+(\.\d{0,3}|,\d{0,3})?$/",
+                        'pattern' => "/^\d+(\.\d{0,2}|,\d{0,2})?$/",
                         'message' => 'El valor debe cumplir con el formato 00,00 o 00.00',
                     ]),
                 ]
@@ -202,7 +202,7 @@ class ProductType extends AbstractType
             ->add('cpu', TextType::class, ['label' => 'CPU', 'required' => false])
             ->add('gpu', TextType::class, ['label' => 'GPU', 'required' => false])
             ->add('ram', TextType::class, ['label' => 'RAM', 'required' => false])
-            ->add('memory', TextType::class, ['label' => 'Memoria', 'required' => false])
+            ->add('memory', TextType::class, ['label' => 'Memoria externa', 'required' => false])
             ->add('screen_size', TextType::class, ['label' => 'Tamaño de pantalla', 'required' => false])
             ->add('op_sys', TextType::class, ['label' => 'S.O.', 'required' => false])
             ->add('conditium', TextType::class, ['label' => 'Condición', 'required' => false])
