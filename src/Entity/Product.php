@@ -80,7 +80,7 @@ class Product
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
-    protected $createdAt;
+    protected $created_at;
 
     /**
      * @ORM\Column(type="string", length=100, nullable="true")
@@ -235,7 +235,7 @@ class Product
 
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->created_at = new \DateTime();
         $this->tag = new ArrayCollection();
         $this->visible = false;
         $this->image = new ArrayCollection();
@@ -370,16 +370,16 @@ class Product
      */
     public function getCreatedAt(): ?\DateTime
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param \DateTime $created_at
      * @return $this
      */
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(\DateTime $created_at): self
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
