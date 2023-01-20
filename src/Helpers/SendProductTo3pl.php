@@ -93,7 +93,12 @@ class SendProductTo3pl
                         break;
 
                     case Response::HTTP_OK:
-                        $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Producto actualizado correctamente');
+                        if ($body['error']) {
+                            $error3pl = $body['errors'][0];
+                            $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $error3pl);
+                        } else {
+                            $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Producto actualizado correctamente');
+                        }
                         $product->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_SENT));
                         break;
 
