@@ -789,9 +789,10 @@ class Product
         $this->setAttemptsSend3pl($this->attempts_send_3pl + 1); //you can access your entity values directly
     }
 
-    public function getProductTo3pl()
+    public function getProductTo3pl($edit = false)
     {
-        return [
+
+        $product = [
             'inventory_id' => $this->getInventory()->getId3pl(),
             'category_id' => $this->getCategory()->getId3pl(),
             'subcategory_id' => $this->getSubcategory() ? $this->getSubcategory()->getId3pl() : '',
@@ -806,5 +807,9 @@ class Product
             'cost' => $this->getCost(),
             'price' => $this->getPrice()
         ];
+        if ($edit) {
+            array_push($product, ['id', $this->getId()]);
+        }
+        return $product;
     }
 }

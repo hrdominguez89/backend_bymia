@@ -78,7 +78,7 @@ class SendProductTo3pl
                             'Authorization' => 'Bearer ' . $response_login['3pl_data']['access_token'],
                             'Content-Type'  => 'application/json',
                         ],
-                        'json'  => $product->getProductTo3pl(),
+                        'json'  => $product->getProductTo3pl($method == 'PUT' ? true : false),
                     ]
                 );
 
