@@ -94,7 +94,7 @@ class ProductsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data['product']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
-            $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => $request->get('product')['subcategory']]));
+            $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)$request->get('product')['subcategory']]));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['product']);
@@ -177,9 +177,7 @@ class ProductsController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
 
-            if ($form->get('subcategory')->getData()) {
-                $data['product']->setSubcategory($subcategoryRepository->find($form->get('subcategory')->getData()));
-            }
+            $data['product']->setSubcategory($subcategoryRepository->find((int)$form->get('subcategory')->getData()));
 
             $entityManager->persist($data['product']);
 

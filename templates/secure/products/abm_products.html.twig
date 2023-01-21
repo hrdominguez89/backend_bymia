@@ -35,17 +35,17 @@
 
 							<th>Part number / UPC &nbsp;</th>
 
-							<th>Título &nbsp;</th>
+							<th>Nombre &nbsp;</th>
 
 							<th>Descripcion &nbsp;</th>
 
 							<th>Marca &nbsp;</th>
 
-							{# <th>Categoría &nbsp;</th> #}
+							<th>Categoría &nbsp;</th>
 
-							{# <th>Subcategoría &nbsp;</th> #}
+							<th>Subcategoría &nbsp;</th>
 
-							<th>Peso &nbsp;</th>
+							<th>Costo &nbsp;</th>
 
 							<th>Precio &nbsp;</th>
 
@@ -91,15 +91,13 @@
 
 								<td>{{ product.brand.name}}</td>
 
-								{# <td>{{product.category}}</td> #}
-
-								{# <td>{{product.subcategory}}</td> #}
-
 								<td>{{product.category.name}}</td>
 
-								{# <td>{{product.subcategory.name}}</td> #}
+								<td>{{product.subcategory ? product.subcategory.name:''}}</td>
 
 								<td class="text-center">{{product.cost}}</td>
+
+								<td class="text-center">{{product.price}}</td>
 
 
 								<td class="text-center">{{product.onhand}}</td>

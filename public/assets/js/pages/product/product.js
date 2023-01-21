@@ -36,7 +36,7 @@ $(document).ready(() => {
 });
 
 const loadGalery = () => {
-  if ($('.pgwSlideshow')) {
+  if ($('.pgwSlideshow').length > 0) {
     slider = $('.pgwSlideshow').pgwSlideshow();
     totalImages = slider.getSlideCount();
     listenButtonDelete();
