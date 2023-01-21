@@ -268,7 +268,9 @@
 		<div class="row my-2">
 			<div class="col-12">
 				<h4>Cargar imágenes</h4>
-				<small>(La primer imagen será considerada la imagen de portada)</small>
+				{% if not product.getImage|length > 0 %}
+					<small>(La primer imagen será considerada la imagen de portada)</small>
+				{% endif %}
 				{{ form_widget (form.images) }}
 				<div id="drag-drop-area"></div>
 			</div>

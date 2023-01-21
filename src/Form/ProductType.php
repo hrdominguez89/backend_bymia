@@ -205,7 +205,7 @@ class ProductType extends AbstractType
             ->add('memory', TextType::class, ['label' => 'Memoria externa', 'required' => false])
             ->add('screen_size', TextType::class, ['label' => 'Tamaño de pantalla', 'required' => false])
             ->add('op_sys', TextType::class, ['label' => 'S.O.', 'required' => false])
-            ->add('conditium', TextType::class, ['label' => 'Condición', 'required' => false])
+            ->add('conditium', TextType::class, ['label' => 'Condición *', 'required' => true])
 
             ->add('images', HiddenType::class, [
                 'mapped' => false,
