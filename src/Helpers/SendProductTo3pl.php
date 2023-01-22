@@ -116,8 +116,16 @@ class SendProductTo3pl
                     default:
                         //leer error
                         $this->attempts++;
-                        $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Error');
                         $product->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
+                        if (@$data_response['error']) {
+                            $error3pl = '';
+                            foreach ($data_response['errors'] as $error) {
+                                $error3pl = $error3pl . ' / ' . $error;
+                            }
+                            $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $error3pl);
+                        } else {
+                            $product->setErrorMessage3pl('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Error');
+                        }
                         break;
                 }
             } catch (TransportExceptionInterface $e) {
