@@ -1,7 +1,7 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     default_locale: 'es'
-    timezone: America/Argentina/Buenos_Aires
+    timezone: 'America/Argentina/Buenos_Aires'
 
     secret: '%env(APP_SECRET)%'
     #csrf_protection: true
