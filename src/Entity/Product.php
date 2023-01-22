@@ -808,7 +808,7 @@ class Product
             'price' => $this->getPrice()
         ];
         if ($edit) {
-            array_push($product, ['id', $this->getId()]);
+            $product['id'] = $this->getId();
         }
         return $product;
     }
