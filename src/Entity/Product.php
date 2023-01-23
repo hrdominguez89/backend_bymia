@@ -233,6 +233,11 @@ class Product
      */
     private $error_message_3pl;
 
+    /**
+     * @ORM\OneToMany(targetEntity=HistoryProductStockUpdated::class, mappedBy="product")
+     */
+    private $historyProductStockUpdateds;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -244,6 +249,7 @@ class Product
         $this->incomming = 0;
         $this->available = 0;
         $this->attempts_send_3pl = 0;
+        $this->historyProductStockUpdateds = new ArrayCollection();
     }
 
     /**
@@ -835,5 +841,35 @@ class Product
             'incomming' => $this->getIncomming(),
             'available' => $this->getAvailable()
         ];
+    }
+
+    /**
+     * @return Collection<int, HistoryProductStockUpdated>
+     */
+    public function getHistoryProductStockUpdateds(): Collection
+    {
+        return $this->historyProductStockUpdateds;
+    }
+
+    public function addHistoryProductStockUpdated(HistoryProductStockUpdated $historyProductStockUpdated): self
+    {
+        if (!$this->historyProductStockUpdateds->contains($historyProductStockUpdated)) {
+            $this->historyProductStockUpdateds[] = $historyProductStockUpdated;
+            $historyProductStockUpdated->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoryProductStockUpdated(HistoryProductStockUpdated $historyProductStockUpdated): self
+    {
+        if ($this->historyProductStockUpdateds->removeElement($historyProductStockUpdated)) {
+            // set the owning side to null (unless already changed)
+            if ($historyProductStockUpdated->getProduct() === $this) {
+                $historyProductStockUpdated->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }
