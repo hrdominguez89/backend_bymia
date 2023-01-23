@@ -95,7 +95,7 @@ class Api3plProductController extends AbstractController
                             'message' => 'Stock de producto actualizado con éxito.',
                             'product_updated' => $product->getFullDataProduct()
                         ],
-                        Response::HTTP_CREATED,
+                        Response::HTTP_OK,
                         ['Content-Type' => 'application/json']
                     );
                     break;
