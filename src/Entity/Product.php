@@ -812,4 +812,28 @@ class Product
         }
         return $product;
     }
+
+    public function getFullDataProduct()
+    {
+        return [
+            'id' => $this->getId3pl(),
+            'inventory_id' => $this->getInventory()->getId3pl(),
+            'category_id' => $this->getCategory()->getId3pl(),
+            'subcategory_id' => $this->getSubcategory() ? $this->getSubcategory()->getId3pl() : '',
+            'brand_id' => $this->getBrand()->getId3pl(),
+            'sku' => $this->getSku(),
+            'cod' => $this->getCod(),
+            'part_number' => $this->getPartNumber(),
+            'name' => $this->getName(),
+            'description' => $this->getDescriptionEs(),
+            'weight' => $this->getWeight(),
+            'conditium' => $this->getConditium(),
+            'cost' => $this->getCost(),
+            'price' => $this->getPrice(),
+            'onhand' => $this->getOnhand(),
+            'commited' => $this->getCommited(),
+            'incomming' => $this->getIncomming(),
+            'available' => $this->getAvailable()
+        ];
+    }
 }
