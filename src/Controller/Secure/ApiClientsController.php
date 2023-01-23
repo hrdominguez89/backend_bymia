@@ -24,7 +24,7 @@ class ApiClientsController extends AbstractController
     {
         $data['title'] = 'Usuarios API';
         $data['api_clients'] = $apiClientsRepository->findAll();
-        $data['files_js'] = array('table_full_buttons.js?v=' . rand(), 'copy_html.js?v=' . rand());
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         $data['breadcrumbs'] = array(
             array('active' => true, 'title' => $data['title'])
         );
@@ -68,11 +68,11 @@ class ApiClientsController extends AbstractController
                 <br>
                 <span class="fw-bold">Authentication: </span> Basic
                 <br>               
-                <span class="fw-bold">Username: </span><a title="Copiar" href="javascript:void(0);" class="data_to_copy" data-value="' . $clave['api_client_id'] . '"><i class="far fa-copy"></i></a> ' . $clave['api_client_id'] . '
+                <span class="fw-bold">Username: </span> ' . $clave['api_client_id'] . '
                 <br>
-                <span class="fw-bold">Password: </span><a title="Copiar" href="javascript:void(0);" class="data_to_copy" data-value="' . $clave['api_key'] . '"><i class="far fa-copy"></i></a> ' . $clave['api_key'] . '
+                <span class="fw-bold">Password: </span> ' . $clave['api_key'] . '
                 <br>
-                <span class="fw-bold">Clave encriptada: </span><a title="Copiar" href="javascript:void(0);" class="data_to_copy" data-value="' . base64_encode($clave['api_client_id'] . ':' . $clave['api_key']) . '"><i class="far fa-copy"></i></a> ' . base64_encode($clave['api_client_id'] . ':' . $clave['api_key']) . '
+                <span class="fw-bold">Clave encriptada: </span> ' . base64_encode($clave['api_client_id'] . ':' . $clave['api_key']) . '
                 <br>
                 ';
             $this->addFlash('message', $message);
@@ -118,11 +118,11 @@ class ApiClientsController extends AbstractController
                     <br>                
                     <span class="fw-bold">Authentication: </span> Basic
                     <br>                
-                    <span class="fw-bold">Username: </span><a title="Copiar" href="javascript:void(0);" class="data_to_copy" data-value="' . $data['api_client']->getApiClientId() . '"><i class="far fa-copy"></i></a> ' . $data['api_client']->getApiClientId() . '
+                    <span class="fw-bold">Username: </span> ' . $data['api_client']->getApiClientId() . '
                     <br>
-                    <span class="fw-bold">Password: </span><a title="Copiar" href="javascript:void(0);" class="data_to_copy" data-value="' . $clave['api_key'] . '"><i class="far fa-copy"></i></a> ' . $clave['api_key'] . '
+                    <span class="fw-bold">Password: </span> ' . $clave['api_key'] . '
                     <br>
-                    <span class="fw-bold">Clave encriptada: </span><a title="Copiar" href="javascript:void(0);" class="data_to_copy" data-value="' . base64_encode($data['api_client']->getApiClientId() . ':' . $clave['api_key']) . '"><i class="far fa-copy"></i></a> ' . base64_encode($data['api_client']->getApiClientId() . ':' . $clave['api_key']) . '
+                    <span class="fw-bold">Clave encriptada: </span> ' . base64_encode($data['api_client']->getApiClientId() . ':' . $clave['api_key']) . '
                     <br>
                     ';
                 $this->addFlash('message', $message);
