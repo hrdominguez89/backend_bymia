@@ -95,13 +95,20 @@ class States
      */
     private $visible;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="bill_state")
+     */
+    private $orders;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
         $this->customerAddresses = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->name;
     }
 
@@ -322,6 +329,36 @@ class States
     public function setVisible(?bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setBillState($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getBillState() === $this) {
+                $order->setBillState(null);
+            }
+        }
 
         return $this;
     }

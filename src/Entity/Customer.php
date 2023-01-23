@@ -197,6 +197,11 @@ class Customer extends BaseUser
      */
     private $identity_number;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="customer")
+     */
+    private $orders;
+
 
     public function __construct()
     {
@@ -210,6 +215,7 @@ class Customer extends BaseUser
         $this->registration_date = new \DateTime();
         $this->attempts_send_crm = 0;
         $this->change_password = false;
+        $this->orders = new ArrayCollection();
     }
 
     /**
@@ -773,6 +779,36 @@ class Customer extends BaseUser
     public function setIdentityNumber(?string $identity_number): self
     {
         $this->identity_number = $identity_number;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
+            }
+        }
 
         return $this;
     }

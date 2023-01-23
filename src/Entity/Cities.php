@@ -86,9 +86,15 @@ class Cities
      */
     private $visible;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="bill_city")
+     */
+    private $orders;
+
     public function __construct()
     {
         $this->customerAddresses = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function __toString()
@@ -271,6 +277,36 @@ class Cities
     public function setVisible(?bool $visible): self
     {
         $this->visible = $visible;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setBillCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getBillCity() === $this) {
+                $order->setBillCity(null);
+            }
+        }
 
         return $this;
     }

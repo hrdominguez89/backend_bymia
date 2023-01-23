@@ -238,6 +238,16 @@ class Product
      */
     private $historyProductStockUpdateds;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ItemsGuideNumber::class, mappedBy="product")
+     */
+    private $itemsGuideNumbers;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrdersProducts::class, mappedBy="product")
+     */
+    private $ordersProducts;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -250,6 +260,8 @@ class Product
         $this->available = 0;
         $this->attempts_send_3pl = 0;
         $this->historyProductStockUpdateds = new ArrayCollection();
+        $this->itemsGuideNumbers = new ArrayCollection();
+        $this->ordersProducts = new ArrayCollection();
     }
 
     /**
@@ -867,6 +879,66 @@ class Product
             // set the owning side to null (unless already changed)
             if ($historyProductStockUpdated->getProduct() === $this) {
                 $historyProductStockUpdated->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ItemsGuideNumber>
+     */
+    public function getItemsGuideNumbers(): Collection
+    {
+        return $this->itemsGuideNumbers;
+    }
+
+    public function addItemsGuideNumber(ItemsGuideNumber $itemsGuideNumber): self
+    {
+        if (!$this->itemsGuideNumbers->contains($itemsGuideNumber)) {
+            $this->itemsGuideNumbers[] = $itemsGuideNumber;
+            $itemsGuideNumber->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemsGuideNumber(ItemsGuideNumber $itemsGuideNumber): self
+    {
+        if ($this->itemsGuideNumbers->removeElement($itemsGuideNumber)) {
+            // set the owning side to null (unless already changed)
+            if ($itemsGuideNumber->getProduct() === $this) {
+                $itemsGuideNumber->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrdersProducts>
+     */
+    public function getOrdersProducts(): Collection
+    {
+        return $this->ordersProducts;
+    }
+
+    public function addOrdersProduct(OrdersProducts $ordersProduct): self
+    {
+        if (!$this->ordersProducts->contains($ordersProduct)) {
+            $this->ordersProducts[] = $ordersProduct;
+            $ordersProduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdersProduct(OrdersProducts $ordersProduct): self
+    {
+        if ($this->ordersProducts->removeElement($ordersProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($ordersProduct->getProduct() === $this) {
+                $ordersProduct->setProduct(null);
             }
         }
 

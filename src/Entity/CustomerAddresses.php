@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CustomerAddressesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -99,10 +101,16 @@ class CustomerAddresses
      */
     private $active;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="bill_address_id")
+     */
+    private $orders;
+
     public function __construct()
     {
         $this->registration_date = new \DateTime();
         $this->active = true;
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -324,5 +332,35 @@ class CustomerAddresses
             'home_address' => $this->getHomeAddress(),
             'billing_address' => $this->getBillingAddress()
         ];
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setBillAddressId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getBillAddressId() === $this) {
+                $order->setBillAddressId(null);
+            }
+        }
+
+        return $this;
     }
 }
