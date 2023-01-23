@@ -106,7 +106,7 @@ class CrmApiCustomerController extends AbstractController
                             'message' => 'Cliente actualizado con éxito.',
                             'customer_updated' => $customer->getCustomerTotalInfo()
                         ],
-                        Response::HTTP_CREATED,
+                        Response::HTTP_OK,
                         ['Content-Type' => 'application/json']
                     );
                     break;
@@ -114,7 +114,7 @@ class CrmApiCustomerController extends AbstractController
         }
         //si no encontro ni customer en methodo get o customer en post retorno not found 
         return $this->json(
-            ['message' => 'Not found'],
+            ['message' => 'Not found.'],
             Response::HTTP_NOT_FOUND,
             ['Content-Type' => 'application/json']
         );
