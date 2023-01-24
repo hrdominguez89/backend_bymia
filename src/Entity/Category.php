@@ -41,7 +41,6 @@ class Category
      */
     protected $slug;
 
-
     /**
      *
      * @ORM\Column(name="id3pl", type="bigint", nullable=true)
@@ -66,7 +65,7 @@ class Category
     private $descriptionEs;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true, unique=true)
+     * @ORM\Column(type="string", length=3, nullable=true, unique=true)
      */
     private $nomenclature;
 

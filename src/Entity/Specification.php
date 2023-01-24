@@ -18,24 +18,18 @@ class Specification
      */
     private $id;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
-     */
-    private $apiId;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=100)
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=100)
+     * @ORM\Column(name="slug", type="string", length=255)
      */
     private $slug;
 
@@ -47,16 +41,15 @@ class Specification
     private $active;
 
     /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="filter", type="boolean", nullable=true)
+     * @ORM\ManyToOne(targetEntity=SpecificationTypes::class, inversedBy="specifications")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $filter;
+    private $specification_type;
+
 
     public function __construct()
     {
         $this->active = true;
-        $this->filter = false;
     }
 
     /**
@@ -98,6 +91,13 @@ class Specification
         return $this->slug;
     }
 
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
     /**
      * @return bool
      */
@@ -117,54 +117,21 @@ class Specification
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
-    public function getFilter(): ?bool
-    {
-        return $this->filter;
-    }
-
-    /**
-     * @param bool|null $filter
-     * @return $this
-     */
-    public function setFilter(?bool $filter): Specification
-    {
-        $this->filter = $filter;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getApiId(): ?string
-    {
-        return $this->apiId;
-    }
-
-    /**
-     * @param string|null $apiId
-     * @return $this
-     */
-    public function setApiId(?string $apiId): Specification
-    {
-        $this->apiId = $apiId;
-
-        return $this;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
     public function getActive(): ?bool
     {
         return $this->active;
+    }
+
+    public function getSpecificationType(): ?SpecificationTypes
+    {
+        return $this->specification_type;
+    }
+
+    public function setSpecificationType(?SpecificationTypes $specification_type): self
+    {
+        $this->specification_type = $specification_type;
+
+        return $this;
     }
 
 }

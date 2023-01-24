@@ -153,8 +153,8 @@ class ProductType extends AbstractType
                         'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
                     ]),
                     new Regex([
-                        'pattern' => "/^[A-Za-z0-9]{2}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{2}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
-                        'message' => 'El valor debe cumplir con el formato "CA-MAR-MOD31O-WH-8GB-128-19P"',
+                        'pattern' => "/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
+                        'message' => 'El valor debe cumplir con el formato "CAT-MAR-MOD31O-WHI-8GB-128-19P"',
                     ]),
                 ]
             ])
@@ -202,7 +202,7 @@ class ProductType extends AbstractType
             ->add('cpu', TextType::class, ['label' => 'CPU', 'required' => false])
             ->add('gpu', TextType::class, ['label' => 'GPU', 'required' => false])
             ->add('ram', TextType::class, ['label' => 'RAM', 'required' => false])
-            ->add('memory', TextType::class, ['label' => 'Memoria externa', 'required' => false])
+            ->add('storage', TextType::class, ['label' => 'Tamaño (Capacidad de almacenamiento)', 'required' => false])
             ->add('screen_size', TextType::class, ['label' => 'Tamaño de pantalla', 'required' => false])
             ->add('op_sys', TextType::class, ['label' => 'S.O.', 'required' => false])
             ->add('conditium', TextType::class, ['label' => 'Condición *', 'required' => true])

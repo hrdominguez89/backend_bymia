@@ -33,7 +33,7 @@ class Product
      * @ORM\Column(name="sku", type="string", length=255, nullable=false, unique=true)
      * @Assert\Length(min=20, max=28)
      * @Assert\Regex(
-     *     pattern="/^[A-Za-z0-9]{2}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{2}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
+     *     pattern="/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
      *     message="El sku no cumple con el formato requerido"
      * )
      */
@@ -156,9 +156,9 @@ class Product
     private $ram;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(name="storage", type="string", length=255, nullable=true)
      */
-    private $memory;
+    private $storage;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -592,14 +592,14 @@ class Product
         return $this;
     }
 
-    public function getMemory(): ?string
+    public function getStorage(): ?string
     {
-        return $this->memory;
+        return $this->storage;
     }
 
-    public function setMemory(?string $memory): self
+    public function setStorage(?string $storage): self
     {
-        $this->memory = $memory;
+        $this->storage = $storage;
 
         return $this;
     }

@@ -44,7 +44,7 @@ class CategoryType extends AbstractType
             ])
             ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción español', 'required' => false])
             ->add('descriptionEn', TextareaType::class, ['label' => 'Descripción inglés', 'required' => false])
-            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 2, 'maxlength' => 2]])
+            ->add('nomenclature', TextType::class, ['label' => 'Nomenclatura', 'attr' => ['style' => 'text-transform: uppercase', 'minlength' => 3, 'maxlength' => 3]])
             ->add('principal', CheckboxType::class, [
                 'label'    => 'Establecer como categoría principal',
                 'required' => false,

@@ -14,7 +14,6 @@ class SpecificationType extends AbstractType
     {
         $builder
             ->add('name',TextType::class,['label'=>'Nombre'])
-            ->add('apiId',TextType::class,['label'=>'Id de la Api'])
         ;
     }
 
