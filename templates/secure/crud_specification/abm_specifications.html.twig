@@ -26,41 +26,49 @@
 								Especificación &nbsp;
 							</th>
 
+							{% if (specification_type.name == 'Color') %}
+								<th>
+									Color &nbsp;
+								</th>
+							{% endif %}
+
 							<th class="text-center" data-orderable="false">
 								Acciones &nbsp;
 							</th>
-
 						</tr>
 					</thead>
-					<tbody>
-						{% for specification in specifications %}
-							<tr>
-								<td>
-									{{specification.name}}
-									&nbsp;
-								</td>
+				</tr>
+			</thead>
+			<tbody>
+				{% for specification in specifications %}
+					<tr>
+						<td>
+							{{specification.name}}
+							&nbsp;
+						</td>
 
-								<td class="text-center">
+						{% if (specification_type.name == 'Color') %}
+							<td>
+								<div style="width:30px;height:30px; border-radius:30px; background-color:{{ specification.colorHexadecimal}};">
+								</div>
+								&nbsp;
+							</td>
+						{% endif %}
 
-									<a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_crud_specification_edit', {'specification_id': specification.id}) }}" title="Editar especificación.">
-										<i class="fas fa-edit"></i>
-									</a>
-								</td>
+						<td class="text-center">
 
-							</tr>
+							<a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_crud_specification_edit', {'specification_id': specification.id}) }}" title="Editar especificación.">
+								<i class="fas fa-edit"></i>
+							</a>
+						</td>
 
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		</div>
+					</tr>
+
+				{% endfor %}
+			</tbody>
+		</table>
 	</div>
-	<div class="row mt-5 mb-5">
-		<div class="col-12 text-end">
-			<a class="btn btn-secondary" href="{{ path('app_homepage') }}">Regresar</a>
-		</div>
-	</div>
-{% endblock %}
-{% block javascripts %}
-	{{ parent() }}
-{% endblock %}
+</div></div><div class="row mt-5 mb-5">
+<div class="col-12 text-end">
+	<a class="btn btn-secondary" href="{{ path('app_homepage') }}">Regresar</a>
+</div></div>{% endblock %}{% block javascripts %}{{ parent() }}{% endblock %}

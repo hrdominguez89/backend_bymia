@@ -4,10 +4,18 @@ namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SpecificationRepository")
  * @ORM\Table("mia_specification")
+ * @UniqueEntity(
+ *      fields={"name","specification_type"},
+ *      errorPath="name",
+ *      message="La especificación indicada ya existe."
+ * )
  */
 class Specification
 {
@@ -22,7 +30,7 @@ class Specification
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name",nullable=false, type="string", length=255)
      */
     private $name;
 
@@ -45,6 +53,11 @@ class Specification
      * @ORM\JoinColumn(nullable=false)
      */
     private $specification_type;
+
+    /**
+     * @ORM\Column(type="string", length=7, nullable=true)
+     */
+    private $colorHexadecimal;
 
 
     public function __construct()
@@ -134,4 +147,15 @@ class Specification
         return $this;
     }
 
+    public function getColorHexadecimal(): ?string
+    {
+        return $this->colorHexadecimal;
+    }
+
+    public function setColorHexadecimal(?string $colorHexadecimal): self
+    {
+        $this->colorHexadecimal = $colorHexadecimal;
+
+        return $this;
+    }
 }

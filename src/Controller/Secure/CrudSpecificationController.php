@@ -47,12 +47,14 @@ class CrudSpecificationController extends AbstractController
             array('active' => true, 'title' => $data['title'])
         );
         $specification = new Specification;
+        $specification->setSpecificationType($data['specification_type']);
 
-        $data['form'] = $this->createForm(SpecificationType::class, $specification);
+        $form = $this->createForm(SpecificationType::class, $specification);
 
-        $data['form']->handleRequest($request);
-        if ($data['form']->isSubmitted() && $data['form']->isValid()) {
-            $specification->setSpecificationType($data['specification_type']);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($specification);
@@ -60,6 +62,7 @@ class CrudSpecificationController extends AbstractController
 
             return $this->redirectToRoute('secure_crud_specification_index', ['specification_type_id' => $specification_type_id]);
         }
+        $data['form'] = $form;
         return $this->renderForm('secure/crud_specification/form_specifications.html.twig', $data);
     }
 
@@ -68,9 +71,9 @@ class CrudSpecificationController extends AbstractController
      */
     public function edit(Request $request, SpecificationRepository $specificationRepository, $specification_id): Response
     {
-        $specification = $specificationRepository->findOneBy(['id' => $specification_id]);
+        $data['specification'] = $specificationRepository->findOneBy(['id' => $specification_id]);
 
-        $data['specification_type'] = $specification->getSpecificationType();
+        $data['specification_type'] = $data['specification']->getSpecificationType();
         $data['title'] = 'Nueva especificación de: ' . $data['specification_type']->getName();
         // $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         $data['breadcrumbs'] = array(
@@ -78,17 +81,20 @@ class CrudSpecificationController extends AbstractController
             array('active' => true, 'title' => $data['title'])
         );
 
-        $data['form'] = $this->createForm(SpecificationType::class, $specification);
+        $form = $this->createForm(SpecificationType::class, $data['specification']);
 
-        $data['form']->handleRequest($request);
-        if ($data['form']->isSubmitted() && $data['form']->isValid()) {
-
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($data['specification_type']->getName() == 'Color') {
+                $data['specification']->setColorHexadecimal($request->get('specification')['color']);
+            }
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($specification);
+            $entityManager->persist($data['specification']);
             $entityManager->flush();
 
             return $this->redirectToRoute('secure_crud_specification_index', ['specification_type_id' => $data['specification_type']->getId()]);
         }
+        $data['form'] = $form;
         return $this->renderForm('secure/crud_specification/form_specifications.html.twig', $data);
     }
 
@@ -99,7 +105,7 @@ class CrudSpecificationController extends AbstractController
     {
         $data['specification_type'] = $specificationTypesRepository->findOneBy(["id" => $specification_type_id]);
         $data['title'] = 'Especificación: ' . $data['specification_type']->getName();
-        $data['specifications'] = $specificationRepository->findAllSpecificationsOrdered();
+        $data['specifications'] = $specificationRepository->findAllSpecificationsOrdered($specification_type_id);
         $data['files_js'] = array('table_full_buttons.js?v=' . rand());
         $data['breadcrumbs'] = array(
             array('path' => 'secure_crud_specification_type_index', 'title' => 'Tipos de especificaciones'),

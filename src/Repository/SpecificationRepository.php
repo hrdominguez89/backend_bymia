@@ -19,9 +19,11 @@ class SpecificationRepository extends ServiceEntityRepository
         parent::__construct($registry, Specification::class);
     }
 
-    public function findAllSpecificationsOrdered()
+    public function findAllSpecificationsOrdered($specification_type_id)
     {
         return $this->createQueryBuilder('s')
+            ->where('s.specification_type = :specification_type_id')
+            ->setParameter('specification_type_id',$specification_type_id)
             ->orderBy('s.name', 'ASC')
             ->getQuery()
             ->getResult();

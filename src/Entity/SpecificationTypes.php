@@ -6,9 +6,12 @@ use App\Repository\SpecificationTypesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity(repositoryClass=SpecificationTypesRepository::class)
+ * @UniqueEntity(fields="name", message="El tipo de especificación indicado ya se encuentra registrado.")
  */
 class SpecificationTypes
 {
@@ -20,7 +23,7 @@ class SpecificationTypes
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, unique=true)
      */
     private $name;
 

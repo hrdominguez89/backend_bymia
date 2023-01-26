@@ -12,22 +12,33 @@
 		</div>
 	</div>
 
-	{{ form_start(form) }}
-	{% if form_errors(form) %}
+	{{ form_start (form) }}
+	{% if form_errors (form) %}
 		<div class="row">
 			<div class="col-12">
 				<div class="alert alert-danger">
-					{{ form_errors(form) }}
+					{{ form_errors (form) }}
 				</div>
 			</div>
 		</div>
 	{% endif %}
 
 	<div class="row my-4">
-		<div class="col-12">
+		<div class="col-6">
 			{{ form_label (form.name, specification_type.name ~ ':') }}
 			{{ form_widget (form.name) }}
+			{{ form_errors (form.name) }}
 		</div>
+
+		{% if (specification_type.name == 'Color') %}
+			<div class="col-6">
+				<label class="form-label required">
+					Color hexadecimal
+				</label>
+				<input type="color" name="specification[color]" required class="form-control" value="{{specification.colorHexadecimal ? specification.colorHexadecimal : ''}}">
+			</div>
+		{% endif %}
+
 	</div>
 
 	<div>

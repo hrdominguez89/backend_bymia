@@ -196,7 +196,7 @@ class ProductType extends AbstractType
                 ]
             ])
 
-            ->add('cod', TextType::class, ['label' => 'Cod', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
+            ->add('cod', TextType::class, ['label' => 'Cod.', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
             ->add('part_number', TextType::class, ['label' => 'Part number', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
             ->add('screen_resolution', TextType::class, ['label' => 'Resolución de pantalla', 'required' => false])
             ->add('cpu', TextType::class, ['label' => 'CPU', 'required' => false])
