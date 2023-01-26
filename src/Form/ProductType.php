@@ -160,7 +160,7 @@ class ProductType extends AbstractType
                     ]),
                     new Regex([
                         'pattern' => "/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
-                        'message' => 'El valor debe cumplir con el formato "CAT-MAR-MOD31O-WHI-8GB-128-19P"',
+                        'message' => 'El valor debe cumplir con el formato "CAT-MAR-MOD31O-COL-VP1[-VP2-VP3] (VP2 y VP3 son opcionales."',
                     ]),
                 ]
             ])

@@ -108,7 +108,7 @@
 
 								<td class="text-center">{{product.available}}</td>
 
-								<td class="text-center">{{product.conditium}}</td>
+								<td class="text-center">{{ product.conditium.name }}</td>
 
 								<td data-order="{{product.createdAt ? product.createdAt|date('U'):0}}" class="text-center">{{product.createdAt ? product.createdAt|date("d/m/Y"):'-'}}</td>
 

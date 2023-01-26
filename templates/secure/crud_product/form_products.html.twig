@@ -31,13 +31,13 @@
 		</div>
 	</div>
 
-	{{ form_start(form) }}
+	{{ form_start (form) }}
 
-	{% if form_errors(form) %}
+	{% if form_errors (form) %}
 		<div class="row">
 			<div class="col-12">
 				<div class="alert alert-danger">
-					{{ form_errors(form) }}
+					{{ form_errors (form) }}
 				</div>
 			</div>
 		</div>
@@ -46,12 +46,14 @@
 		<div class="col-12">
 			{{ form_label (form.inventory) }}
 			{{ form_widget (form.inventory) }}
+			{{ form_errors (form.inventory)}}
 		</div>
 	</div>
 	<div class="row my-2">
 		<div class="col-12">
 			{{ form_label (form.name) }}
 			{{ form_widget (form.name) }}
+			{{ form_errors (form.name)}}
 		</div>
 	</div>
 
@@ -59,12 +61,14 @@
 		<div class="col-6">
 			{{ form_label (form.descriptionEs) }}
 			{{ form_widget (form.descriptionEs) }}
+			{{ form_errors (form.descriptionEs)}}
 		</div>
 
 
 		<div class="col-6">
 			{{ form_label (form.long_description_es) }}
 			{{ form_widget (form.long_description_es) }}
+			{{ form_errors (form.long_description_es)}}
 		</div>
 	</div>
 
@@ -73,12 +77,14 @@
 		<div class="col-6">
 			{{ form_label (form.descriptionEn) }}
 			{{ form_widget (form.descriptionEn) }}
+			{{ form_errors (form.descriptionEn)}}
 		</div>
 
 
 		<div class="col-6">
 			{{ form_label (form.long_description_en) }}
 			{{ form_widget (form.long_description_en) }}
+			{{ form_errors (form.long_description_en)}}
 		</div>
 	</div>
 	<hr>
@@ -99,6 +105,7 @@
 				{'label_attr': {'class': 'form-label','id':'label-category','data-category-id':product.category ? product.category.id:'0'}}
 			)}}
 			{{ form_widget (form.category) }}
+			{{ form_errors (form.category)}}
 		</div>
 
 		<div class="col-3">
@@ -108,16 +115,19 @@
 				{'label_attr': {'class': 'form-label','id':'label-subcategory','data-subcategory-id':product.subcategory ? product.subcategory.id:'0'}}
 			)}}
 			{{ form_widget (form.subcategory) }}
+			{{ form_errors (form.subcategory)}}
 		</div>
 
 		<div class="col-3">
 			{{ form_label (form.brand) }}
 			{{ form_widget (form.brand) }}
+			{{ form_errors (form.brand)}}
 		</div>
 
 		<div class="col-3">
 			{{ form_label (form.model) }}
 			{{ form_widget (form.model) }}
+			{{ form_errors (form.model)}}
 		</div>
 	</div>
 	<div class="row my-3">
@@ -125,21 +135,25 @@
 		<div class="col-3">
 			{{ form_label (form.color) }}
 			{{ form_widget (form.color) }}
+			{{ form_errors (form.color)}}
 		</div>
 
 		<div class="col-3">
 			{{ form_label (form.vp1) }}
 			{{ form_widget (form.vp1) }}
+			{{ form_errors (form.vp1)}}
 		</div>
 
 		<div class="col-3">
 			{{ form_label (form.vp2) }}
 			{{ form_widget (form.vp2) }}
+			{{ form_errors (form.vp2)}}
 		</div>
 
 		<div class="col-3">
 			{{ form_label (form.vp3) }}
 			{{ form_widget (form.vp3) }}
+			{{ form_errors (form.vp3)}}
 		</div>
 		<div class="row my-3">
 
@@ -154,6 +168,15 @@
 							{'label_attr': {'class': 'form-label','id':'label-sku','data-product-id':product.id ? product.id:'0'}}
 						)}}
 						{{ form_widget (form.sku) }}
+						{% if form_errors (form.sku) %}
+							<div class="row">
+								<div class="col-12">
+									<div class="alert alert-danger">
+										<span>{{ form_errors (form.sku) }}.</span>
+									</div>
+								</div>
+							</div>
+						{% endif %}
 						<span id="message_sku">Complete todos los campos para verificar la disponibilidad del SKU.</span>
 					</div>
 
@@ -171,20 +194,24 @@
 			<div class="col-3">
 				{{ form_label (form.cost) }}
 				{{ form_widget (form.cost) }}
+				{{ form_errors (form.cost)}}
 			</div>
 
 			<div class="col-3">
 				{{ form_label (form.price) }}
 				{{ form_widget (form.price) }}
+				{{ form_errors (form.price)}}
 			</div>
 
 			<div class="col-3">
 				{{ form_label (form.cod) }}
 				{{ form_widget (form.cod) }}
+				{{ form_errors (form.cod)}}
 			</div>
 			<div class="col-3">
 				{{ form_label (form.part_number) }}
 				{{ form_widget (form.part_number) }}
+				{{ form_errors (form.part_number)}}
 			</div>
 		</div>
 
@@ -192,31 +219,37 @@
 			<div class="col-4">
 				{{ form_label (form.weight) }}
 				{{ form_widget (form.weight) }}
+				{{ form_errors (form.weight)}}
 			</div>
 
 			<div class="col-4">
 				{{ form_label (form.screen_resolution) }}
 				{{ form_widget (form.screen_resolution) }}
+				{{ form_errors (form.screen_resolution)}}
 			</div>
 
 			<div class="col-4">
 				{{ form_label (form.screen_size) }}
 				{{ form_widget (form.screen_size) }}
+				{{ form_errors (form.screen_size)}}
 			</div>
 		</div>
 		<div class="row my-2">
 			<div class="col-4">
 				{{ form_label (form.cpu) }}
 				{{ form_widget (form.cpu) }}
+				{{ form_errors (form.cpu)}}
 			</div>
 			<div class="col-4">
 				{{ form_label (form.gpu) }}
 				{{ form_widget (form.gpu) }}
+				{{ form_errors (form.gpu)}}
 			</div>
 
 			<div class="col-4">
 				{{ form_label (form.memory) }}
 				{{ form_widget (form.memory) }}
+				{{ form_errors (form.memory)}}
 			</div>
 		</div>
 
@@ -225,15 +258,18 @@
 			<div class="col-4">
 				{{ form_label (form.storage) }}
 				{{ form_widget (form.storage) }}
+				{{ form_errors (form.storage)}}
 			</div>
 			<div class="col-4">
 				{{ form_label (form.op_sys) }}
 				{{ form_widget (form.op_sys) }}
+				{{ form_errors (form.op_sys)}}
 			</div>
 
 			<div class="col-4">
 				{{ form_label (form.conditium) }}
 				{{ form_widget (form.conditium) }}
+				{{ form_errors (form.conditium)}}
 			</div>
 		</div>
 		{% if (product.getImage|length > 0) %}
@@ -282,6 +318,7 @@
 					<small>(La primer imagen será considerada la imagen de portada)</small>
 				{% endif %}
 				{{ form_widget (form.images) }}
+				{{ form_errors (form.images)}}
 				<div id="drag-drop-area"></div>
 			</div>
 		</div>
@@ -294,5 +331,5 @@
 				</div>
 			</div>
 		</div>
-		{{ form_end(form) }}
+		{{ form_end (form) }}
 	{% endblock %}

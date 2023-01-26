@@ -76,6 +76,7 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=100, nullable="true")
+     * 
      */
     private $cod;
 
@@ -138,7 +139,8 @@ class Product
     private $image;
 
     /**
-     * @ORM\Column(name="description_en",type="text")
+     * @ORM\Column(name="description_en", nullable=true ,type="text")
+     * 
      */
     private $descriptionEn;
 
@@ -155,6 +157,7 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity=Subcategory::class, inversedBy="products")
+     * 
      */
     private $subcategory;
 
@@ -191,11 +194,13 @@ class Product
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * 
      */
     private $long_description_es;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * 
      */
     private $long_description_en;
 
@@ -397,7 +402,7 @@ class Product
         return $this->cod;
     }
 
-    public function setCod(string $cod): self
+    public function setCod(?string $cod): self
     {
         $this->cod = $cod;
 
@@ -409,7 +414,7 @@ class Product
         return $this->part_number;
     }
 
-    public function setPartNumber(string $part_number): self
+    public function setPartNumber(?string $part_number): self
     {
         $this->part_number = $part_number;
 
@@ -578,7 +583,11 @@ class Product
         return $this->descriptionEn;
     }
 
-    public function setDescriptionEn(string $descriptionEn): self
+    /**
+     * @param string|null $descriptionEn
+     * @return $this
+     */
+    public function setDescriptionEn(?string $descriptionEn): self
     {
         $this->descriptionEn = $descriptionEn;
 
@@ -675,8 +684,8 @@ class Product
             'part_number' => $this->getPartNumber(),
             'name' => $this->getName(),
             'description' => $this->getDescriptionEs(),
-            // 'weight' => $this->getWeight(),
-            // 'conditium' => $this->getConditium(),
+            'weight' => $this->getWeight(),
+            'conditium' => $this->getConditium()->getName(),
             'cost' => $this->getCost(),
             'price' => $this->getPrice()
         ];
@@ -699,8 +708,8 @@ class Product
             'part_number' => $this->getPartNumber(),
             'name' => $this->getName(),
             'description' => $this->getDescriptionEs(),
-            // 'weight' => $this->getWeight(),
-            // 'conditium' => $this->getConditium(),
+            'weight' => $this->getWeight(),
+            'conditium' => $this->getConditium()->getName(),
             'cost' => $this->getCost(),
             'price' => $this->getPrice(),
             'onhand' => $this->getOnhand(),
