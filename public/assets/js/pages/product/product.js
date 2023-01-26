@@ -10,8 +10,8 @@ let subcategories;
 let sku = '';
 let categoryNomenclature = '';
 let brandNomenclature = '';
-let model = '';
-let color = '';
+let modelNomenclature = '';
+let colorNomenclature = '';
 let vp1 = '';
 let vp2 = '';
 let vp3 = '';
@@ -23,17 +23,25 @@ let totalImages;
 
 
 $(document).ready(() => {
+  initSelect2();
   initSku();
   initInputs();
   listenSelectCategories();
   listenBrand();
-  listenModel();
+  listenSelectModel();
   listenColor();
   listenVp1();
   listenVp2();
   listenVp3();
   loadGalery();
 });
+
+
+const initSelect2 = () => {
+  $('select').select2({
+    theme: 'bootstrap4',
+  });
+}
 
 const loadGalery = () => {
   if ($('.pgwSlideshow').length > 0) {
@@ -132,16 +140,16 @@ const initInputs = () => {
 const initSku = async () => {
   categoryNomenclature = $("#product_category option:selected").text().split(" - ")[1] ? $("#product_category option:selected").text().split(" - ")[1] : '';
   brandNomenclature = $("#product_brand option:selected").text().split(" - ")[1] ? '-' + $("#product_brand option:selected").text().split(" - ")[1] : '';
-  model = $('#product_model').val() ? '-' + $('#product_model').val().substring(0, 6) : '';
-  color = $('#product_color').val() ? '-' + $('#product_color').val() : '';
+  modelNomenclature = $('#product_model').val() ? '-' + $('#product_model').val().substring(0, 6) : '';
+  colorNomenclature = $('#product_color').val() ? '-' + $('#product_color').val() : '';
   vp1 = $('#product_vp1').val() ? '-' + $('#product_vp1').val() : '';
   vp2 = $('#product_vp2').val() ? '-' + $('#product_vp2').val() : '';
   vp3 = $('#product_vp3').val() ? '-' + $('#product_vp3').val() : '';
 }
 
 const updateSku = () => {
-  sku = (categoryNomenclature + brandNomenclature + model + color + vp1 + vp2 + vp3).toUpperCase();
-  if (categoryNomenclature && brandNomenclature && model.length == 7 && color.length == 3 && vp1.length == 4) {
+  sku = (categoryNomenclature + brandNomenclature + modelNomenclature + colorNomenclature + vp1 + vp2 + vp3).toUpperCase();
+  if (categoryNomenclature && brandNomenclature && modelNomenclature && colorNomenclature && vp1.length == 4) {
     consultFreeSku();
   } else {
     changeBorderColor('warning');
@@ -170,15 +178,16 @@ const changeBorderColor = (status, message = false) => {
 
 const listenSelectCategories = () => {
   selectCategory = $('#product_category');
-  selectCategory.on("change", () => {
+  selectCategory.on("change", async () => {
     categoryId = parseInt(selectCategory.val());
     categoryNomenclature = $("#product_category option:selected").text().split(" - ")[1];
     if (!categoryNomenclature) {
       categoryNomenclature = '';
       cleanSelects(true);
     } else {
-      getSubcategories();
+      await getSubcategories();
     }
+    $("#product_subcategory").trigger("chosen:updated");
     updateSku();
   });
 };
@@ -190,20 +199,39 @@ const listenBrand = () => {
   });
 
 }
-const listenModel = () => {
-  $("#product_model").keyup(function () {
-    model = '-' + $(this).val().substring(0, 6);
-    if (model == '-') {
-      model = '';
+function addZeros(text, zerosQuantity) {
+  while (text.length < zerosQuantity) {
+    text = text + "0";
+  }
+  return text;
+}
+
+const listenSelectModel = () => {
+  $("#product_model").change(function () {
+    if (parseInt($("#product_model").val())) {
+      modelNomenclature = $("#product_model option:selected").text().substring(0, 6);
+      modelNomenclature = addZeros(modelNomenclature, 6);
+      modelNomenclature = '-' + modelNomenclature;
+      if (modelNomenclature == '-') {
+        modelNomenclature = '';
+      }
+    } else {
+      modelNomenclature = '';
     }
     updateSku();
   });
 }
 const listenColor = () => {
-  $("#product_color").keyup(function () {
-    color = '-' + $(this).val();
-    if (color == '-') {
-      color = '';
+  $("#product_color").change(function () {
+    if (parseInt($("#product_color").val())) {
+      colorNomenclature = $("#product_color option:selected").text().substring(0, 3);
+      colorNomenclature = addZeros(colorNomenclature, 3);
+      colorNomenclature = '-' + colorNomenclature;
+      if (colorNomenclature == '-') {
+        colorNomenclature = '';
+      }
+    } else {
+      modelNomenclature = '';
     }
     updateSku();
   });
@@ -274,7 +302,6 @@ const getSubcategories = () => {
           }
           $("#product_subcategory").append(option);
         }
-
       } else {
         cleanSelects(true);
       }

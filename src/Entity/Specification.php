@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -59,10 +61,16 @@ class Specification
      */
     private $colorHexadecimal;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="model")
+     */
+    private $products;
+
 
     public function __construct()
     {
         $this->active = true;
+        $this->products = new ArrayCollection();
     }
 
     /**
@@ -155,6 +163,36 @@ class Specification
     public function setColorHexadecimal(?string $colorHexadecimal): self
     {
         $this->colorHexadecimal = $colorHexadecimal;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setModel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getModel() === $this) {
+                $product->setModel(null);
+            }
+        }
 
         return $this;
     }

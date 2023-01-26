@@ -55,29 +55,39 @@
 		</div>
 	</div>
 
-
 	<div class="row my-2">
-		<div class="col-12">
+		<div class="col-6">
 			{{ form_label (form.descriptionEs) }}
 			{{ form_widget (form.descriptionEs) }}
 		</div>
+
+
+		<div class="col-6">
+			{{ form_label (form.long_description_es) }}
+			{{ form_widget (form.long_description_es) }}
+		</div>
 	</div>
 
 
 	<div class="row my-2">
-		<div class="col-12">
+		<div class="col-6">
 			{{ form_label (form.descriptionEn) }}
 			{{ form_widget (form.descriptionEn) }}
 		</div>
-	</div>
 
+
+		<div class="col-6">
+			{{ form_label (form.long_description_en) }}
+			{{ form_widget (form.long_description_en) }}
+		</div>
+	</div>
 	<hr>
 	<div class="row my-2">
 		<div class="col-12">
 			<h3>SKU</h3>
 			<small>Se conforma automaticamente de la siguiente manera:
 			</small>
-			<small>CA-MAR-MOD310-WH-VP1[-VP2-VP3] | (VP2 y VP3 son opcionales)</small>
+			<small>CAT-MAR-MOD310-COL-VP1[-VP2-VP3] | (VP2 y VP3 son opcionales)</small>
 		</div>
 	</div>
 	<div class="row my-3">
@@ -85,7 +95,7 @@
 		<div class="col-3">
 			{{ form_label (
 				form.subcategory,
-				'Categoría',
+				'Categoría *',
 				{'label_attr': {'class': 'form-label','id':'label-category','data-category-id':product.category ? product.category.id:'0'}}
 			)}}
 			{{ form_widget (form.category) }}
@@ -205,12 +215,12 @@
 			</div>
 
 			<div class="col-4">
-				{{ form_label (form.ram) }}
-				{{ form_widget (form.ram) }}
+				{{ form_label (form.memory) }}
+				{{ form_widget (form.memory) }}
 			</div>
 		</div>
 
-		<div class="row my-2">
+		<div class="row mt-2 mb-4">
 
 			<div class="col-4">
 				{{ form_label (form.storage) }}
@@ -227,7 +237,7 @@
 			</div>
 		</div>
 		{% if (product.getImage|length > 0) %}
-			<div id="images_galery_div">
+			<div id="images_galery_div my-2">
 				<hr>
 
 				<div class="row my-2">

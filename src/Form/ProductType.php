@@ -2,12 +2,15 @@
 
 namespace App\Form;
 
+use App\Constants\Constants;
 use App\Entity\Brand;
 use App\Entity\Category;
 use App\Entity\Inventory;
 use App\Entity\Product;
+use App\Entity\Specification;
 use App\Repository\BrandRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\SpecificationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -34,8 +37,10 @@ class ProductType extends AbstractType
                 'required' => true,
             ])
             ->add('name', TextType::class, ['label' => 'Nombre *', 'attr' => ['required' => true]])
-            ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción español *', 'required' => true])
-            ->add('descriptionEn', TextareaType::class, ['label' => 'Descripción Inglés', 'required' => false])
+            ->add('descriptionEs', TextareaType::class, ['label' => 'Descripción corta español *', 'required' => true, 'attr' => ['rows' => 4]])
+            ->add('long_description_es', TextareaType::class, ['label' => 'Descripción larga en español', 'required' => false, 'attr' => ['rows' => 4]])
+            ->add('descriptionEn', TextareaType::class, ['label' => 'Descripción corta Inglés', 'required' => false, 'attr' => ['rows' => 4]])
+            ->add('long_description_en', TextareaType::class, ['label' => 'Descripción larga en Inglés', 'required' => false, 'attr' => ['rows' => 4]])
 
             ->add('category', EntityType::class, [
                 'class'  => Category::class,
@@ -72,34 +77,35 @@ class ProductType extends AbstractType
                 },
                 'required' => true,
             ])
-            ->add('model', TextType::class, [
+            ->add('model', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_MODEL)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione un modelo.',
                 'label' => 'Modelo *',
                 'required' => true,
-                'attr' => ["placeholder" => "Campo requerido", "minlength" => 6, 'style' => 'text-transform:uppercase', 'pattern' => '^[A-Za-z0-9]{6,}$', 'title' => 'Este campo debe contener 6 caracteres como mínimo sin espacios ni guiones'],
-                'constraints' => [
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
-                    ])
-                ]
+                'choice_label' => 'name',
             ])
-            ->add('color', TextType::class, [
+            ->add('color', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_COLOR)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione Color.',
                 'label' => 'Color *',
                 'required' => true,
-                'attr' => ["placeholder" => "Campo requerido", "minlength" => 2, "maxlength" => 2, 'style' => 'text-transform:uppercase', 'pattern' => '^[A-Za-z0-9]{2}$', 'title' => 'Este campo debe contener 2 caracteres sin espacios ni guiones'],
-                'constraints' => [
-                    new Length([
-                        'min' => 2,
-                        'max' => 2,
-                        'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
-                        'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
-                    ]),
-                    new Regex([
-                        'pattern' => "/^[A-Za-z0-9]{2}$/",
-                        'message' => 'El valor debe cumplir con el formato "XX"',
-                    ]),
-                ]
+                'choice_label' => 'name',
             ])
+
             ->add('vp1', TextType::class, [
                 'label' => 'Variable de producto 1 *',
                 'mapped' => false,
@@ -144,11 +150,11 @@ class ProductType extends AbstractType
             ])
             ->add('sku', TextType::class, [
                 'label' => 'SKU',
-                'attr' => ['readonly' => 'readonly', "minlength" => 20, "maxlength" => 28, 'class' => 'text-center', 'style' => 'text-transform:uppercase'],
+                'attr' => ['readonly' => 'readonly', "minlength" => 22, "maxlength" => 30, 'class' => 'text-center', 'style' => 'text-transform:uppercase'],
                 'constraints' => [
                     new Length([
-                        'min' => 20,
-                        'max' => 28,
+                        'min' => 22,
+                        'max' => 30,
                         'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
                         'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
                     ]),
@@ -198,14 +204,118 @@ class ProductType extends AbstractType
 
             ->add('cod', TextType::class, ['label' => 'Cod.', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
             ->add('part_number', TextType::class, ['label' => 'Part number', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
-            ->add('screen_resolution', TextType::class, ['label' => 'Resolución de pantalla', 'required' => false])
-            ->add('cpu', TextType::class, ['label' => 'CPU', 'required' => false])
-            ->add('gpu', TextType::class, ['label' => 'GPU', 'required' => false])
-            ->add('ram', TextType::class, ['label' => 'RAM', 'required' => false])
-            ->add('storage', TextType::class, ['label' => 'Tamaño (Capacidad de almacenamiento)', 'required' => false])
-            ->add('screen_size', TextType::class, ['label' => 'Tamaño de pantalla', 'required' => false])
-            ->add('op_sys', TextType::class, ['label' => 'S.O.', 'required' => false])
-            ->add('conditium', TextType::class, ['label' => 'Condición *', 'required' => true])
+            ->add('screen_resolution', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_SCREEN_RESOLUTION)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione tipo de resolución de pantalla.',
+                'label' => 'Resolución de pantalla',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+            ->add('cpu', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_CPU)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione tipo de CPU.',
+                'label' => 'CPU',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+            ->add('gpu', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_GPU)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione tipo de GPU.',
+                'label' => 'GPU',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+            ->add('memory', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_MEMORY)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione tipo memoria.',
+                'label' => 'Memoria',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+            ->add('storage', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_STORAGE)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione tamaño de almacenamiento.',
+                'label' => 'Tamaño (Capacidad de almacenamiento)',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+            ->add('screen_size', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_SCREEN_SIZE)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione tamaño de pantalla.',
+                'label' => 'Tamaño de pantalla',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+            ->add('op_sys', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_SO)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione sistema operativo.',
+                'label' => 'O.S.',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+            ->add('conditium', EntityType::class, [
+                'class'  => Specification::class,
+                'query_builder' => function (SpecificationRepository $br) {
+                    return $br->createQueryBuilder('s')
+                        ->where('st.id = :id')
+                        ->setParameter('id', Constants::SPECIFICATION_CONDITUM)
+                        ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
+                        ->orderBy('s.name');
+                },
+                'placeholder' => 'Seleccione condición del producto.',
+                'label' => 'Condición *',
+                'required' => true,
+                'choice_label' => 'name',
+            ])
 
             ->add('images', HiddenType::class, [
                 'mapped' => false,

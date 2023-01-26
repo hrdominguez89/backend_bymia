@@ -87,8 +87,8 @@ class ProductsController extends AbstractController
             array('path' => 'secure_crud_product_index', 'title' => 'Productos'),
             array('active' => true, 'title' => $data['title'])
         );
-        $data['files_js'] = array('../uppy.min.js', 'product/upload_files.js?v=' . rand(), 'product/product.js?v=' . rand());
-        $data['files_css'] = array('uppy.min.css');
+        $data['files_js'] = array('../uppy.min.js', '../select2.min.js', 'product/upload_files.js?v=' . rand(), 'product/product.js?v=' . rand());
+        $data['files_css'] = array('uppy.min.css', 'select2.min.css', 'select2-bootstrap4.min.css');
         $data['product'] = new Product;
         $form = $this->createForm(ProductType::class, $data['product']);
         $form->handleRequest($request);

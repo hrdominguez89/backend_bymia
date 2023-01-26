@@ -28,10 +28,10 @@ class Product
     protected $id;
 
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="sku", type="string", length=255, nullable=false, unique=true)
-     * @Assert\Length(min=20, max=28)
+     * @Assert\Length(min=22, max=30)
      * @Assert\Regex(
      *     pattern="/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
      *     message="El sku no cumple con el formato requerido"
@@ -39,9 +39,8 @@ class Product
      */
     protected $sku;
 
-
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="name", type="string", nullable=false, length=255)
      */
@@ -55,21 +54,14 @@ class Product
     protected $slug;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="weight", type="string", length=255, nullable=true)
-     */
-    protected $weight;
-
-    /**
-     * @var float|null
+     * @var float
      *
      * @ORM\Column(name="cost", type="float", nullable=false)
      */
     protected $cost;
 
     /**
-     * @var string|null
+     * @var string
      *
      * @ORM\Column(name="description_es", type="text", nullable=true)
      */
@@ -131,52 +123,6 @@ class Product
     private $brand;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $color;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $screen_resolution;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $cpu;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $gpu;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $ram;
-
-    /**
-     * @ORM\Column(name="storage", type="string", length=255, nullable=true)
-     */
-    private $storage;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $screen_size;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $op_sys;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $model;
-
-
-    /**
      * @ORM\Column(type="boolean", nullable=true, options={"default":False})
      */
     private $visible;
@@ -185,11 +131,6 @@ class Product
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="products")
      */
     private $tag;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     */
-    private $conditium;
 
     /**
      * @ORM\OneToMany(targetEntity=ProductImages::class, mappedBy="product", orphanRemoval=true)
@@ -202,7 +143,7 @@ class Product
     private $descriptionEn;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float",nullable=false)
      */
     private $price;
 
@@ -247,6 +188,75 @@ class Product
      * @ORM\OneToMany(targetEntity=OrdersProducts::class, mappedBy="product")
      */
     private $ordersProducts;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $long_description_es;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $long_description_en;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $weight;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $model;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $color;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     */
+    private $screen_resolution;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     */
+    private $screen_size;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     */
+    private $cpu;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     */
+    private $gpu;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     */
+    private $memory;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     */
+    private $storage;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     */
+    private $op_sys;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $conditium;
+
 
     public function __construct()
     {
@@ -323,29 +333,8 @@ class Product
         return $this->slug;
     }
 
-
-
     /**
-     * @return string|null
-     */
-    public function getWeight(): ?string
-    {
-        return $this->weight;
-    }
-
-    /**
-     * @param string|null $weight
-     * @return $this
-     */
-    public function setWeight(?string $weight): self
-    {
-        $this->weight = $weight;
-
-        return $this;
-    }
-
-    /**
-     * @return float|null
+     * @return float
      */
     public function getCost(): ?float
     {
@@ -353,7 +342,7 @@ class Product
     }
 
     /**
-     * @param float|null $cost
+     * @param float $cost
      * @return $this
      */
     public function setCost(?float $cost): self
@@ -402,20 +391,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function asArray(): array
-    {
-        return [
-            "id" => $this->getId(),
-            "slug" => $this->getSlug(),
-            "name" => $this->getName(),
-            "sku" => $this->getSku(),
-            "descriptionEs" => $this->getDescriptionEs(),
-            "customFields" => "",
-        ];
-    }
 
     public function getCod(): ?string
     {
@@ -532,114 +507,6 @@ class Product
         return $this;
     }
 
-    public function getColor(): ?string
-    {
-        return $this->color;
-    }
-
-    public function setColor(?string $color): self
-    {
-        $this->color = $color;
-
-        return $this;
-    }
-
-    public function getScreenResolution(): ?string
-    {
-        return $this->screen_resolution;
-    }
-
-    public function setScreenResolution(string $screen_resolution): self
-    {
-        $this->screen_resolution = $screen_resolution;
-
-        return $this;
-    }
-
-    public function getCpu(): ?string
-    {
-        return $this->cpu;
-    }
-
-    public function setCpu(?string $cpu): self
-    {
-        $this->cpu = $cpu;
-
-        return $this;
-    }
-
-    public function getGpu(): ?string
-    {
-        return $this->gpu;
-    }
-
-    public function setGpu(?string $gpu): self
-    {
-        $this->gpu = $gpu;
-
-        return $this;
-    }
-
-    public function getRam(): ?string
-    {
-        return $this->ram;
-    }
-
-    public function setRam(?string $ram): self
-    {
-        $this->ram = $ram;
-
-        return $this;
-    }
-
-    public function getStorage(): ?string
-    {
-        return $this->storage;
-    }
-
-    public function setStorage(?string $storage): self
-    {
-        $this->storage = $storage;
-
-        return $this;
-    }
-
-    public function getScreenSize(): ?string
-    {
-        return $this->screen_size;
-    }
-
-    public function setScreenSize(?string $screen_size): self
-    {
-        $this->screen_size = $screen_size;
-
-        return $this;
-    }
-
-    public function getOpSys(): ?string
-    {
-        return $this->op_sys;
-    }
-
-    public function setOpSys(?string $op_sys): self
-    {
-        $this->op_sys = $op_sys;
-
-        return $this;
-    }
-
-    public function getModel(): ?string
-    {
-        return $this->model;
-    }
-
-    public function setModel(?string $model): self
-    {
-        $this->model = $model;
-
-        return $this;
-    }
-
     public function getVisible(): ?bool
     {
         return $this->visible;
@@ -672,18 +539,6 @@ class Product
     public function removeTag(Tag $tag): self
     {
         $this->tag->removeElement($tag);
-
-        return $this;
-    }
-
-    public function getConditium(): ?string
-    {
-        return $this->conditium;
-    }
-
-    public function setConditium(?string $conditium): self
-    {
-        $this->conditium = $conditium;
 
         return $this;
     }
@@ -820,8 +675,8 @@ class Product
             'part_number' => $this->getPartNumber(),
             'name' => $this->getName(),
             'description' => $this->getDescriptionEs(),
-            'weight' => $this->getWeight(),
-            'conditium' => $this->getConditium(),
+            // 'weight' => $this->getWeight(),
+            // 'conditium' => $this->getConditium(),
             'cost' => $this->getCost(),
             'price' => $this->getPrice()
         ];
@@ -844,8 +699,8 @@ class Product
             'part_number' => $this->getPartNumber(),
             'name' => $this->getName(),
             'description' => $this->getDescriptionEs(),
-            'weight' => $this->getWeight(),
-            'conditium' => $this->getConditium(),
+            // 'weight' => $this->getWeight(),
+            // 'conditium' => $this->getConditium(),
             'cost' => $this->getCost(),
             'price' => $this->getPrice(),
             'onhand' => $this->getOnhand(),
@@ -941,6 +796,162 @@ class Product
                 $ordersProduct->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLongDescriptionEs(): ?string
+    {
+        return $this->long_description_es;
+    }
+
+    public function setLongDescriptionEs(?string $long_description_es): self
+    {
+        $this->long_description_es = $long_description_es;
+
+        return $this;
+    }
+
+    public function getLongDescriptionEn(): ?string
+    {
+        return $this->long_description_en;
+    }
+
+    public function setLongDescriptionEn(?string $long_description_en): self
+    {
+        $this->long_description_en = $long_description_en;
+
+        return $this;
+    }
+
+    public function getWeight(): ?float
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(float $weight): self
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function getModel(): ?Specification
+    {
+        return $this->model;
+    }
+
+    public function setModel(?Specification $model): self
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    public function getColor(): ?Specification
+    {
+        return $this->color;
+    }
+
+    public function setColor(?Specification $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function getScreenResolution(): ?Specification
+    {
+        return $this->screen_resolution;
+    }
+
+    public function setScreenResolution(?Specification $screen_resolution): self
+    {
+        $this->screen_resolution = $screen_resolution;
+
+        return $this;
+    }
+
+    public function getScreenSize(): ?Specification
+    {
+        return $this->screen_size;
+    }
+
+    public function setScreenSize(?Specification $screen_size): self
+    {
+        $this->screen_size = $screen_size;
+
+        return $this;
+    }
+
+    public function getCpu(): ?Specification
+    {
+        return $this->cpu;
+    }
+
+    public function setCpu(?Specification $cpu): self
+    {
+        $this->cpu = $cpu;
+
+        return $this;
+    }
+
+    public function getGpu(): ?Specification
+    {
+        return $this->gpu;
+    }
+
+    public function setGpu(?Specification $gpu): self
+    {
+        $this->gpu = $gpu;
+
+        return $this;
+    }
+
+    public function getMemory(): ?Specification
+    {
+        return $this->memory;
+    }
+
+    public function setMemory(?Specification $memory): self
+    {
+        $this->memory = $memory;
+
+        return $this;
+    }
+
+    public function getStorage(): ?Specification
+    {
+        return $this->storage;
+    }
+
+    public function setStorage(?Specification $storage): self
+    {
+        $this->storage = $storage;
+
+        return $this;
+    }
+
+    public function getOpSys(): ?Specification
+    {
+        return $this->op_sys;
+    }
+
+    public function setOpSys(?Specification $op_sys): self
+    {
+        $this->op_sys = $op_sys;
+
+        return $this;
+    }
+
+    public function getConditium(): ?Specification
+    {
+        return $this->conditium;
+    }
+
+    public function setConditium(?Specification $conditium): self
+    {
+        $this->conditium = $conditium;
 
         return $this;
     }

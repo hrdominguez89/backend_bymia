@@ -109,7 +109,7 @@ class CrudSubcategoryController extends AbstractController
             $data['status'] = true;
         } else {
             $data['status'] = false;
-            $data['message'] = 'No se encontraron estados con el id indicado';
+            $data['message'] = 'No se encontraron subcategorias con el id indicado';
         }
         return new JsonResponse($data);
     }

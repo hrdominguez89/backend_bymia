@@ -32,10 +32,10 @@
 
 		{% if (specification_type.name == 'Color') %}
 			<div class="col-6">
-				<label class="form-label required">
+				<label for="specification_color" class="form-label required">
 					Color hexadecimal
 				</label>
-				<input type="color" name="specification[color]" required class="form-control" value="{{specification.colorHexadecimal ? specification.colorHexadecimal : ''}}">
+				<input type="color" id="specification_color" name="specification[color]" required class="form-control" value="{{specification.colorHexadecimal ? specification.colorHexadecimal : ''}}">
 			</div>
 		{% endif %}
 
