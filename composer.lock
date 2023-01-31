@@ -4,8 +4,828 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fa357e289360dc297629098291b7e4a",
+    "content-hash": "d231c1dc7e8bb95d60fa4a2eb50c66bc",
     "packages": [
+        {
+            "name": "adbario/php-dot-notation",
+            "version": "2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adbario/php-dot-notation.git",
+                "reference": "081e2cca50c84bfeeea2e3ef9b2c8d206d80ccae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/081e2cca50c84bfeeea2e3ef9b2c8d206d80ccae",
+                "reference": "081e2cca50c84bfeeea2e3ef9b2c8d206d80ccae",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^5.5 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8|^5.7|^6.6|^7.5|^8.5|^9.5",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Adbar\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Riku Särkinen",
+                    "email": "riku@adbar.io"
+                }
+            ],
+            "description": "PHP dot notation access to arrays",
+            "homepage": "https://github.com/adbario/php-dot-notation",
+            "keywords": [
+                "ArrayAccess",
+                "dotnotation"
+            ],
+            "support": {
+                "issues": "https://github.com/adbario/php-dot-notation/issues",
+                "source": "https://github.com/adbario/php-dot-notation/tree/2.5.0"
+            },
+            "time": "2022-10-14T20:31:46+00:00"
+        },
+        {
+            "name": "alibabacloud/client",
+            "version": "1.5.32",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aliyun/openapi-sdk-php-client.git",
+                "reference": "5bc6f6d660797dcee2c3aef29700ab41ee764f4d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aliyun/openapi-sdk-php-client/zipball/5bc6f6d660797dcee2c3aef29700ab41ee764f4d",
+                "reference": "5bc6f6d660797dcee2c3aef29700ab41ee764f4d",
+                "shasum": ""
+            },
+            "require": {
+                "adbario/php-dot-notation": "^2.4.1",
+                "clagiordano/weblibs-configmanager": "^1.0",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-xmlwriter": "*",
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "mtdowling/jmespath.php": "^2.5",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8",
+                "drupal/coder": "^8.3",
+                "ext-dom": "*",
+                "ext-pcre": "*",
+                "ext-sockets": "*",
+                "ext-spl": "*",
+                "league/climate": "^3.2.4",
+                "mikey179/vfsstream": "^1.6",
+                "monolog/monolog": "^1.24",
+                "phpunit/phpunit": "^5.7|^6.6|^7.5|^8.5|^9.5",
+                "psr/cache": "^1.0",
+                "symfony/dotenv": "^3.4",
+                "symfony/var-dumper": "^3.4"
+            },
+            "suggest": {
+                "ext-sockets": "To use client-side monitoring"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "AlibabaCloud\\Client\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com",
+                    "homepage": "http://www.alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Client for PHP - Use Alibaba Cloud in your PHP project",
+            "homepage": "https://www.alibabacloud.com/",
+            "keywords": [
+                "alibaba",
+                "alibabacloud",
+                "aliyun",
+                "client",
+                "cloud",
+                "library",
+                "sdk",
+                "tool"
+            ],
+            "support": {
+                "issues": "https://github.com/aliyun/openapi-sdk-php-client/issues",
+                "source": "https://github.com/aliyun/openapi-sdk-php-client"
+            },
+            "time": "2022-12-09T04:05:55+00:00"
+        },
+        {
+            "name": "alibabacloud/credentials",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aliyun/credentials-php.git",
+                "reference": "e79d4151ad8924c0cf79d4fe0ec151b8d7663a25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aliyun/credentials-php/zipball/e79d4151ad8924c0cf79d4fe0ec151b8d7663a25",
+                "reference": "e79d4151ad8924c0cf79d4fe0ec151b8d7663a25",
+                "shasum": ""
+            },
+            "require": {
+                "adbario/php-dot-notation": "^2.2",
+                "alibabacloud/tea": "^3.0",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-xmlwriter": "*",
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8",
+                "drupal/coder": "^8.3",
+                "ext-dom": "*",
+                "ext-pcre": "*",
+                "ext-sockets": "*",
+                "ext-spl": "*",
+                "mikey179/vfsstream": "^1.6",
+                "monolog/monolog": "^1.24",
+                "phpunit/phpunit": "^4.8.35|^5.4.3",
+                "psr/cache": "^1.0",
+                "symfony/dotenv": "^3.4",
+                "symfony/var-dumper": "^3.4"
+            },
+            "suggest": {
+                "ext-sockets": "To use client-side monitoring"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\Credentials\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com",
+                    "homepage": "http://www.alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Credentials for PHP",
+            "homepage": "https://www.alibabacloud.com/",
+            "keywords": [
+                "alibaba",
+                "alibabacloud",
+                "aliyun",
+                "client",
+                "cloud",
+                "credentials",
+                "library",
+                "sdk",
+                "tool"
+            ],
+            "support": {
+                "issues": "https://github.com/aliyun/credentials-php/issues",
+                "source": "https://github.com/aliyun/credentials-php"
+            },
+            "time": "2021-06-08T10:49:34+00:00"
+        },
+        {
+            "name": "alibabacloud/darabonba-openapi",
+            "version": "0.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/darabonba-openapi.git",
+                "reference": "aabc61b3049caed6442ca332cf45d3b51af633ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/darabonba-openapi/zipball/aabc61b3049caed6442ca332cf45d3b51af633ef",
+                "reference": "aabc61b3049caed6442ca332cf45d3b51af633ef",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/credentials": "^1.1",
+                "alibabacloud/gateway-spi": "^1",
+                "alibabacloud/openapi-util": "^0.1.10",
+                "alibabacloud/tea-utils": "^0.2.16",
+                "alibabacloud/tea-xml": "^0.2",
+                "php": ">5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Darabonba\\OpenApi\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud OpenApi Client",
+            "support": {
+                "issues": "https://github.com/alibabacloud-sdk-php/darabonba-openapi/issues",
+                "source": "https://github.com/alibabacloud-sdk-php/darabonba-openapi/tree/0.2.8"
+            },
+            "time": "2022-11-14T03:38:23+00:00"
+        },
+        {
+            "name": "alibabacloud/endpoint-util",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/endpoint-util.git",
+                "reference": "f3fe88a25d8df4faa3b0ae14ff202a9cc094e6c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/endpoint-util/zipball/f3fe88a25d8df4faa3b0ae14ff202a9cc094e6c5",
+                "reference": "f3fe88a25d8df4faa3b0ae14ff202a9cc094e6c5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|^5.4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\Endpoint\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Endpoint Library for PHP",
+            "support": {
+                "source": "https://github.com/alibabacloud-sdk-php/endpoint-util/tree/0.1.1"
+            },
+            "time": "2020-06-04T10:57:15+00:00"
+        },
+        {
+            "name": "alibabacloud/gateway-spi",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/alibabacloud-gateway-spi.git",
+                "reference": "7440f77750c329d8ab252db1d1d967314ccd1fcb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/alibabacloud-gateway-spi/zipball/7440f77750c329d8ab252db1d1d967314ccd1fcb",
+                "reference": "7440f77750c329d8ab252db1d1d967314ccd1fcb",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/credentials": "^1.1",
+                "php": ">5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Darabonba\\GatewaySpi\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Gateway SPI Client",
+            "support": {
+                "source": "https://github.com/alibabacloud-sdk-php/alibabacloud-gateway-spi/tree/1.0.0"
+            },
+            "time": "2022-07-14T05:31:35+00:00"
+        },
+        {
+            "name": "alibabacloud/openapi-util",
+            "version": "0.1.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/openapi-util.git",
+                "reference": "870e59984f05e104aa303c85b8214e339ba0a0ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/openapi-util/zipball/870e59984f05e104aa303c85b8214e339ba0a0ac",
+                "reference": "870e59984f05e104aa303c85b8214e339ba0a0ac",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/tea": "^3.1",
+                "alibabacloud/tea-utils": "^0.2",
+                "lizhichao/one-sm": "^1.5",
+                "php": ">5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\OpenApiUtil\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud OpenApi Util",
+            "support": {
+                "issues": "https://github.com/alibabacloud-sdk-php/openapi-util/issues",
+                "source": "https://github.com/alibabacloud-sdk-php/openapi-util/tree/0.2.0"
+            },
+            "time": "2022-11-06T05:49:55+00:00"
+        },
+        {
+            "name": "alibabacloud/opensearch-20171225",
+            "version": "1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/opensearch-20171225.git",
+                "reference": "3924d8f979fb9952ded5d30c92b79c70f9dcb2b0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/opensearch-20171225/zipball/3924d8f979fb9952ded5d30c92b79c70f9dcb2b0",
+                "reference": "3924d8f979fb9952ded5d30c92b79c70f9dcb2b0",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/darabonba-openapi": "^0.2.8",
+                "alibabacloud/endpoint-util": "^0.1.0",
+                "alibabacloud/openapi-util": "^0.1.10|^0.2.0",
+                "alibabacloud/tea-utils": "^0.2.17",
+                "php": ">5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\SDK\\OpenSearch\\V20171225\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Open Search (20171225) SDK Library for PHP",
+            "support": {
+                "source": "https://github.com/alibabacloud-sdk-php/opensearch-20171225/tree/1.1.3"
+            },
+            "time": "2022-12-01T03:00:11+00:00"
+        },
+        {
+            "name": "alibabacloud/sdk",
+            "version": "1.8.1654",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aliyun/openapi-sdk-php.git",
+                "reference": "887d76d6a8d5c434c1839c3f80f2bdb5ca0b57d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aliyun/openapi-sdk-php/zipball/887d76d6a8d5c434c1839c3f80f2bdb5ca0b57d3",
+                "reference": "887d76d6a8d5c434c1839c3f80f2bdb5ca0b57d3",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/client": "^1.5",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.5"
+            },
+            "replace": {
+                "alibabacloud/aas": "self.version",
+                "alibabacloud/actiontrail": "self.version",
+                "alibabacloud/adb": "self.version",
+                "alibabacloud/aegis": "self.version",
+                "alibabacloud/afs": "self.version",
+                "alibabacloud/airec": "self.version",
+                "alibabacloud/alidns": "self.version",
+                "alibabacloud/alikafka": "self.version",
+                "alibabacloud/alimt": "self.version",
+                "alibabacloud/aliprobe": "self.version",
+                "alibabacloud/aliyuncvc": "self.version",
+                "alibabacloud/appmallsservice": "self.version",
+                "alibabacloud/arms": "self.version",
+                "alibabacloud/arms4finance": "self.version",
+                "alibabacloud/baas": "self.version",
+                "alibabacloud/batchcompute": "self.version",
+                "alibabacloud/bss": "self.version",
+                "alibabacloud/bssopenapi": "self.version",
+                "alibabacloud/cas": "self.version",
+                "alibabacloud/cbn": "self.version",
+                "alibabacloud/ccc": "self.version",
+                "alibabacloud/ccs": "self.version",
+                "alibabacloud/cdn": "self.version",
+                "alibabacloud/cds": "self.version",
+                "alibabacloud/cf": "self.version",
+                "alibabacloud/chatbot": "self.version",
+                "alibabacloud/cloudapi": "self.version",
+                "alibabacloud/cloudauth": "self.version",
+                "alibabacloud/cloudesl": "self.version",
+                "alibabacloud/cloudmarketing": "self.version",
+                "alibabacloud/cloudphoto": "self.version",
+                "alibabacloud/cloudwf": "self.version",
+                "alibabacloud/cms": "self.version",
+                "alibabacloud/commondriver": "self.version",
+                "alibabacloud/companyreg": "self.version",
+                "alibabacloud/cr": "self.version",
+                "alibabacloud/crm": "self.version",
+                "alibabacloud/cs": "self.version",
+                "alibabacloud/csb": "self.version",
+                "alibabacloud/cusanalyticsconline": "self.version",
+                "alibabacloud/dataworkspublic": "self.version",
+                "alibabacloud/dbs": "self.version",
+                "alibabacloud/dcdn": "self.version",
+                "alibabacloud/dds": "self.version",
+                "alibabacloud/democenter": "self.version",
+                "alibabacloud/dm": "self.version",
+                "alibabacloud/dmsenterprise": "self.version",
+                "alibabacloud/domain": "self.version",
+                "alibabacloud/domainintl": "self.version",
+                "alibabacloud/drcloud": "self.version",
+                "alibabacloud/drds": "self.version",
+                "alibabacloud/dts": "self.version",
+                "alibabacloud/dybaseapi": "self.version",
+                "alibabacloud/dyplsapi": "self.version",
+                "alibabacloud/dypnsapi": "self.version",
+                "alibabacloud/dysmsapi": "self.version",
+                "alibabacloud/dyvmsapi": "self.version",
+                "alibabacloud/eci": "self.version",
+                "alibabacloud/ecs": "self.version",
+                "alibabacloud/ecsinc": "self.version",
+                "alibabacloud/edas": "self.version",
+                "alibabacloud/ehpc": "self.version",
+                "alibabacloud/elasticsearch": "self.version",
+                "alibabacloud/emr": "self.version",
+                "alibabacloud/ess": "self.version",
+                "alibabacloud/facebody": "self.version",
+                "alibabacloud/fnf": "self.version",
+                "alibabacloud/foas": "self.version",
+                "alibabacloud/ft": "self.version",
+                "alibabacloud/goodstech": "self.version",
+                "alibabacloud/gpdb": "self.version",
+                "alibabacloud/green": "self.version",
+                "alibabacloud/hbase": "self.version",
+                "alibabacloud/hiknoengine": "self.version",
+                "alibabacloud/hpc": "self.version",
+                "alibabacloud/hsm": "self.version",
+                "alibabacloud/httpdns": "self.version",
+                "alibabacloud/idst": "self.version",
+                "alibabacloud/imageaudit": "self.version",
+                "alibabacloud/imageenhan": "self.version",
+                "alibabacloud/imagerecog": "self.version",
+                "alibabacloud/imagesearch": "self.version",
+                "alibabacloud/imageseg": "self.version",
+                "alibabacloud/imm": "self.version",
+                "alibabacloud/industrybrain": "self.version",
+                "alibabacloud/iot": "self.version",
+                "alibabacloud/iqa": "self.version",
+                "alibabacloud/itaas": "self.version",
+                "alibabacloud/ivision": "self.version",
+                "alibabacloud/ivpd": "self.version",
+                "alibabacloud/jaq": "self.version",
+                "alibabacloud/jarvis": "self.version",
+                "alibabacloud/jarvispublic": "self.version",
+                "alibabacloud/kms": "self.version",
+                "alibabacloud/linkedmall": "self.version",
+                "alibabacloud/linkface": "self.version",
+                "alibabacloud/linkwan": "self.version",
+                "alibabacloud/live": "self.version",
+                "alibabacloud/lubancloud": "self.version",
+                "alibabacloud/lubanruler": "self.version",
+                "alibabacloud/market": "self.version",
+                "alibabacloud/mopen": "self.version",
+                "alibabacloud/mpserverless": "self.version",
+                "alibabacloud/mts": "self.version",
+                "alibabacloud/multimediaai": "self.version",
+                "alibabacloud/nas": "self.version",
+                "alibabacloud/netana": "self.version",
+                "alibabacloud/nlp": "self.version",
+                "alibabacloud/nlpautoml": "self.version",
+                "alibabacloud/nlscloudmeta": "self.version",
+                "alibabacloud/nlsfiletrans": "self.version",
+                "alibabacloud/objectdet": "self.version",
+                "alibabacloud/ocr": "self.version",
+                "alibabacloud/ocs": "self.version",
+                "alibabacloud/oms": "self.version",
+                "alibabacloud/ons": "self.version",
+                "alibabacloud/onsmqtt": "self.version",
+                "alibabacloud/oos": "self.version",
+                "alibabacloud/openanalytics": "self.version",
+                "alibabacloud/ossadmin": "self.version",
+                "alibabacloud/ots": "self.version",
+                "alibabacloud/outboundbot": "self.version",
+                "alibabacloud/petadata": "self.version",
+                "alibabacloud/polardb": "self.version",
+                "alibabacloud/productcatalog": "self.version",
+                "alibabacloud/pts": "self.version",
+                "alibabacloud/push": "self.version",
+                "alibabacloud/pvtz": "self.version",
+                "alibabacloud/qualitycheck": "self.version",
+                "alibabacloud/ram": "self.version",
+                "alibabacloud/rds": "self.version",
+                "alibabacloud/reid": "self.version",
+                "alibabacloud/retailcloud": "self.version",
+                "alibabacloud/rkvstore": "self.version",
+                "alibabacloud/ros": "self.version",
+                "alibabacloud/rtc": "self.version",
+                "alibabacloud/saf": "self.version",
+                "alibabacloud/sas": "self.version",
+                "alibabacloud/sasapi": "self.version",
+                "alibabacloud/scdn": "self.version",
+                "alibabacloud/schedulerx2": "self.version",
+                "alibabacloud/skyeye": "self.version",
+                "alibabacloud/slb": "self.version",
+                "alibabacloud/smartag": "self.version",
+                "alibabacloud/smc": "self.version",
+                "alibabacloud/sms": "self.version",
+                "alibabacloud/smsintl": "self.version",
+                "alibabacloud/snsuapi": "self.version",
+                "alibabacloud/sts": "self.version",
+                "alibabacloud/taginner": "self.version",
+                "alibabacloud/tesladam": "self.version",
+                "alibabacloud/teslamaxcompute": "self.version",
+                "alibabacloud/teslastream": "self.version",
+                "alibabacloud/ubsms": "self.version",
+                "alibabacloud/ubsmsinner": "self.version",
+                "alibabacloud/uis": "self.version",
+                "alibabacloud/unimkt": "self.version",
+                "alibabacloud/visionai": "self.version",
+                "alibabacloud/vod": "self.version",
+                "alibabacloud/voicenavigator": "self.version",
+                "alibabacloud/vpc": "self.version",
+                "alibabacloud/vs": "self.version",
+                "alibabacloud/wafopenapi": "self.version",
+                "alibabacloud/welfareinner": "self.version",
+                "alibabacloud/xspace": "self.version",
+                "alibabacloud/xtrace": "self.version",
+                "alibabacloud/yqbridge": "self.version",
+                "alibabacloud/yundun": "self.version"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8",
+                "league/climate": "^3.2.4",
+                "phpunit/phpunit": "^4.8",
+                "symfony/dotenv": "^3.4",
+                "symfony/var-dumper": "^3.4"
+            },
+            "suggest": {
+                "ext-sockets": "To use client-side monitoring"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com",
+                    "homepage": "http://www.alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud SDK for PHP - Easier to Use Alibaba Cloud in your PHP project",
+            "homepage": "https://www.alibabacloud.com/",
+            "keywords": [
+                "alibaba",
+                "alibabacloud",
+                "aliyun",
+                "cloud",
+                "library",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/aliyun/openapi-sdk-php/issues",
+                "source": "https://github.com/aliyun/openapi-sdk-php"
+            },
+            "time": "2023-01-19T04:32:48+00:00"
+        },
+        {
+            "name": "alibabacloud/tea",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aliyun/tea-php.git",
+                "reference": "f2bfe50b810f598e1a48e85ee94b7164049d5184"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aliyun/tea-php/zipball/f2bfe50b810f598e1a48e85ee94b7164049d5184",
+                "reference": "f2bfe50b810f598e1a48e85ee94b7164049d5184",
+                "shasum": ""
+            },
+            "require": {
+                "adbario/php-dot-notation": "^2.4",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-xmlwriter": "*",
+                "guzzlehttp/guzzle": "^6.3|^7.0",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*",
+                "symfony/dotenv": "^3.4",
+                "symfony/var-dumper": "^3.4"
+            },
+            "suggest": {
+                "ext-sockets": "To use client-side monitoring"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\Tea\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com",
+                    "homepage": "http://www.alibabacloud.com"
+                }
+            ],
+            "description": "Client of Tea for PHP",
+            "homepage": "https://www.alibabacloud.com/",
+            "keywords": [
+                "alibabacloud",
+                "client",
+                "cloud",
+                "tea"
+            ],
+            "support": {
+                "issues": "https://github.com/aliyun/tea-php/issues",
+                "source": "https://github.com/aliyun/tea-php"
+            },
+            "time": "2022-10-20T06:58:05+00:00"
+        },
+        {
+            "name": "alibabacloud/tea-utils",
+            "version": "0.2.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/tea-utils.git",
+                "reference": "dad2f3e1791998d573ef2d9ebad01e7e0f053866"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/tea-utils/zipball/dad2f3e1791998d573ef2d9ebad01e7e0f053866",
+                "reference": "dad2f3e1791998d573ef2d9ebad01e7e0f053866",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/tea": "^3.1",
+                "php": ">5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\Tea\\Utils\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Tea Utils for PHP",
+            "support": {
+                "issues": "https://github.com/aliyun/tea-util/issues",
+                "source": "https://github.com/aliyun/tea-util"
+            },
+            "time": "2022-11-16T09:28:02+00:00"
+        },
+        {
+            "name": "alibabacloud/tea-xml",
+            "version": "0.2.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/tea-xml.git",
+                "reference": "4bd2303d71c968cb7ae4e487c5fa3023aed3ff3b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/tea-xml/zipball/4bd2303d71c968cb7ae4e487c5fa3023aed3ff3b",
+                "reference": "4bd2303d71c968cb7ae4e487c5fa3023aed3ff3b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|^5.4.3",
+                "symfony/var-dumper": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\Tea\\XML\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Tea XML Library for PHP",
+            "support": {
+                "source": "https://github.com/alibabacloud-sdk-php/tea-xml/tree/0.2.3"
+            },
+            "time": "2021-12-08T06:43:00+00:00"
+        },
         {
             "name": "async-aws/core",
             "version": "1.18.0",
@@ -273,6 +1093,58 @@
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.257.4"
             },
             "time": "2023-01-19T21:18:37+00:00"
+        },
+        {
+            "name": "clagiordano/weblibs-configmanager",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clagiordano/weblibs-configmanager.git",
+                "reference": "5c8ebcc62782313b1278afe802b120d18c07a059"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clagiordano/weblibs-configmanager/zipball/5c8ebcc62782313b1278afe802b120d18c07a059",
+                "reference": "5c8ebcc62782313b1278afe802b120d18c07a059",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "clagiordano/phpunit-result-printer": "^1",
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "clagiordano\\weblibs\\configmanager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Claudio Giordano",
+                    "email": "claudio.giordano@autistici.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "weblibs-configmanager is a tool library for easily read and access to php config array file and direct read/write configuration file / object",
+            "keywords": [
+                "clagiordano",
+                "configuration",
+                "manager",
+                "tool",
+                "weblibs"
+            ],
+            "support": {
+                "issues": "https://github.com/clagiordano/weblibs-configmanager/issues",
+                "source": "https://github.com/clagiordano/weblibs-configmanager/tree/v1.2.0"
+            },
+            "time": "2021-05-18T17:55:57+00:00"
         },
         {
             "name": "cocur/slugify",
@@ -2440,6 +3312,253 @@
             "time": "2022-10-26T14:07:24+00:00"
         },
         {
+            "name": "jms/metadata",
+            "version": "2.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/metadata.git",
+                "reference": "283c714831d272d78ddd6e52e08ac16d76be30fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/metadata/zipball/283c714831d272d78ddd6e52e08ac16d76be30fd",
+                "reference": "283c714831d272d78ddd6e52e08ac16d76be30fd",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "doctrine/cache": "^1.0",
+                "doctrine/coding-standard": "^8.0",
+                "mikey179/vfsstream": "^1.6.7",
+                "phpunit/phpunit": "^8.5|^9.0",
+                "psr/container": "^1.0",
+                "symfony/cache": "^3.1|^4.0|^5.0",
+                "symfony/dependency-injection": "^3.1|^4.0|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Metadata\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "Class/method/property metadata management in PHP",
+            "keywords": [
+                "annotations",
+                "metadata",
+                "xml",
+                "yaml"
+            ],
+            "support": {
+                "issues": "https://github.com/schmittjoh/metadata/issues",
+                "source": "https://github.com/schmittjoh/metadata/tree/2.7.0"
+            },
+            "time": "2022-09-13T19:18:27+00:00"
+        },
+        {
+            "name": "jms/serializer",
+            "version": "3.21.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/serializer.git",
+                "reference": "cc49ca6cd97baa173166c1f4fc54521964cf28bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/serializer/zipball/cc49ca6cd97baa173166c1f4fc54521964cf28bd",
+                "reference": "cc49ca6cd97baa173166c1f4fc54521964cf28bd",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.13 || ^2.0",
+                "doctrine/instantiator": "^1.0.3",
+                "doctrine/lexer": "^1.1 || ^2",
+                "jms/metadata": "^2.6",
+                "php": "^7.2||^8.0",
+                "phpstan/phpdoc-parser": "^0.4 || ^0.5 || ^1.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^8.1",
+                "doctrine/orm": "~2.1",
+                "doctrine/persistence": "^1.3.3|^2.0|^3.0",
+                "doctrine/phpcr-odm": "^1.3|^2.0",
+                "ext-pdo_sqlite": "*",
+                "jackalope/jackalope-doctrine-dbal": "^1.1.5",
+                "ocramius/proxy-manager": "^1.0|^2.0",
+                "phpbench/phpbench": "^1.0",
+                "phpstan/phpstan": "^1.0.2",
+                "phpunit/phpunit": "^8.5.21||^9.0",
+                "psr/container": "^1.0",
+                "symfony/dependency-injection": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/expression-language": "^3.2|^4.0|^5.0|^6.0",
+                "symfony/filesystem": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/form": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/translation": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/uid": "^5.1|^6.0",
+                "symfony/validator": "^3.1.9|^4.0|^5.0|^6.0",
+                "symfony/yaml": "^3.3|^4.0|^5.0|^6.0",
+                "twig/twig": "~1.34|~2.4|^3.0"
+            },
+            "suggest": {
+                "doctrine/collections": "Required if you like to use doctrine collection types as ArrayCollection.",
+                "symfony/cache": "Required if you like to use cache functionality.",
+                "symfony/uid": "Required if you'd like to serialize UID objects.",
+                "symfony/yaml": "Required if you'd like to use the YAML metadata format."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JMS\\Serializer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "Library for (de-)serializing data of any complexity; supports XML, and JSON.",
+            "homepage": "http://jmsyst.com/libs/serializer",
+            "keywords": [
+                "deserialization",
+                "jaxb",
+                "json",
+                "serialization",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/schmittjoh/serializer/issues",
+                "source": "https://github.com/schmittjoh/serializer/tree/3.21.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/goetas",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-01-10T13:08:17+00:00"
+        },
+        {
+            "name": "jms/serializer-bundle",
+            "version": "5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/JMSSerializerBundle.git",
+                "reference": "cdc876a8bc4611279a7ec970f3da2052cda55078"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/JMSSerializerBundle/zipball/cdc876a8bc4611279a7ec970f3da2052cda55078",
+                "reference": "cdc876a8bc4611279a7ec970f3da2052cda55078",
+                "shasum": ""
+            },
+            "require": {
+                "jms/metadata": "^2.5",
+                "jms/serializer": "^3.20",
+                "php": "^7.2 || ^8.0",
+                "symfony/dependency-injection": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0 || ^6.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^8.1",
+                "doctrine/orm": "^2.4",
+                "phpunit/phpunit": "^8.0 || ^9.0",
+                "symfony/expression-language": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/finder": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/form": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/stopwatch": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/templating": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/twig-bundle": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/uid": "^5.1 || ^6.0",
+                "symfony/validator": "^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/yaml": "^3.4 || ^4.0 || ^5.0 || ^6.0"
+            },
+            "suggest": {
+                "symfony/expression-language": "Required for opcache preloading ^3.4 || ^4.0 || ^5.0 || ^6.0",
+                "symfony/finder": "Required for cache warmup, supported versions ^3.4 || ^4.0 || ^5.0 || ^6.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JMS\\SerializerBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "Allows you to easily serialize, and deserialize data of any complexity",
+            "homepage": "http://jmsyst.com/bundles/JMSSerializerBundle",
+            "keywords": [
+                "deserialization",
+                "json",
+                "serialization",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/schmittjoh/JMSSerializerBundle/issues",
+                "source": "https://github.com/schmittjoh/JMSSerializerBundle/tree/5.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/goetas",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-01-09T16:25:13+00:00"
+        },
+        {
             "name": "knplabs/knp-components",
             "version": "v3.3.0",
             "source": {
@@ -3205,6 +4324,60 @@
             "time": "2022-06-12T16:22:12+00:00"
         },
         {
+            "name": "lizhichao/one-sm",
+            "version": "1.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lizhichao/sm.git",
+                "reference": "687a012a44a5bfd4d9143a0234e1060543be455a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lizhichao/sm/zipball/687a012a44a5bfd4d9143a0234e1060543be455a",
+                "reference": "687a012a44a5bfd4d9143a0234e1060543be455a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OneSm\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "tanszhe",
+                    "email": "1018595261@qq.com"
+                }
+            ],
+            "description": "国密sm3",
+            "keywords": [
+                "php",
+                "sm3"
+            ],
+            "support": {
+                "issues": "https://github.com/lizhichao/sm/issues",
+                "source": "https://github.com/lizhichao/sm/tree/1.10"
+            },
+            "funding": [
+                {
+                    "url": "https://www.vicsdf.com/img/w.jpg",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.vicsdf.com/img/z.jpg",
+                    "type": "custom"
+                }
+            ],
+            "time": "2021-05-26T06:19:22+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "2.8.0",
             "source": {
@@ -3605,6 +4778,50 @@
             "time": "2021-08-02T12:11:02+00:00"
         },
         {
+            "name": "opensearch/opensearch-sdk-php",
+            "version": "v3.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wangzhoudong/opensearch-sdk-php.git",
+                "reference": "d44fd9741ad18080b2e58452e2621deef397cdc2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wangzhoudong/opensearch-sdk-php/zipball/d44fd9741ad18080b2e58452e2621deef397cdc2",
+                "reference": "d44fd9741ad18080b2e58452e2621deef397cdc2",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/darabonba-openapi": "^0.2.5",
+                "alibabacloud/opensearch-20171225": "^1.0.5",
+                "alibabacloud/sdk": "^1.8",
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "./OpenSearch/Autoloader/Autoloader.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aliyuncs",
+                    "homepage": "http://www.aliyun.com"
+                }
+            ],
+            "description": "Aliyun OSS SDK for PHP",
+            "homepage": "https://www.aliyun.com/product/opensearch",
+            "support": {
+                "issues": "https://github.com/wangzhoudong/opensearch-sdk-php/issues",
+                "source": "https://github.com/wangzhoudong/opensearch-sdk-php/tree/v3.3.3"
+            },
+            "time": "2022-06-15T09:07:14+00:00"
+        },
+        {
             "name": "phpdocumentor/reflection-common",
             "version": "2.2.0",
             "source": {
@@ -3768,6 +4985,51 @@
                 "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.6.2"
             },
             "time": "2022-10-14T12:47:21+00:00"
+        },
+        {
+            "name": "phpstan/phpdoc-parser",
+            "version": "1.15.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpdoc-parser.git",
+                "reference": "61800f71a5526081d1b5633766aa88341f1ade76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/61800f71a5526081d1b5633766aa88341f1ade76",
+                "reference": "61800f71a5526081d1b5633766aa88341f1ade76",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^1.5",
+                "phpstan/phpstan-phpunit": "^1.1",
+                "phpstan/phpstan-strict-rules": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "symfony/process": "^5.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\PhpDocParser\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPDoc parser with support for nullable, intersection and generic types",
+            "support": {
+                "issues": "https://github.com/phpstan/phpdoc-parser/issues",
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.15.3"
+            },
+            "time": "2022-12-20T20:56:55+00:00"
         },
         {
             "name": "psr/cache",

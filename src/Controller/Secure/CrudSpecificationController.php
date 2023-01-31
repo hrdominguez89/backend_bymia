@@ -46,18 +46,20 @@ class CrudSpecificationController extends AbstractController
             array('path' => 'secure_crud_specification_type_index', 'title' => 'Tipos de especificaciones'),
             array('active' => true, 'title' => $data['title'])
         );
-        $specification = new Specification;
-        $specification->setSpecificationType($data['specification_type']);
+        $data['specification'] = new Specification;
+        $data['specification']->setSpecificationType($data['specification_type']);
 
-        $form = $this->createForm(SpecificationType::class, $specification);
+        $form = $this->createForm(SpecificationType::class, $data['specification']);
 
         $form->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            if ($data['specification_type']->getName() == 'Color') {
+                $data['specification']->setColorHexadecimal($request->get('specification')['color']);
+            }
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($specification);
+            $entityManager->persist($data['specification']);
             $entityManager->flush();
 
             return $this->redirectToRoute('secure_crud_specification_index', ['specification_type_id' => $specification_type_id]);

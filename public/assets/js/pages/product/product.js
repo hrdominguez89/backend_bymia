@@ -200,7 +200,7 @@ const listenBrand = () => {
 }
 function addZeros(text, zerosQuantity) {
   while (text.length < zerosQuantity) {
-    text = text + "0";
+    text = "0" + text;
   }
   return text;
 }
