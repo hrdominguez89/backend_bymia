@@ -139,7 +139,7 @@ const initInputs = () => {
 const initSku = async () => {
   categoryNomenclature = $("#product_category option:selected").text().split(" - ")[1] ? $("#product_category option:selected").text().split(" - ")[1] : '';
   brandNomenclature = $("#product_brand option:selected").text().split(" - ")[1] ? '-' + $("#product_brand option:selected").text().split(" - ")[1] : '';
-  modelNomenclature = $("#product_model option:selected").val() ? '-' + addZeros($("#product_model option:selected").text().substring($("#product_color option:selected").text().length - 6), 6) : '';
+  modelNomenclature = $("#product_model option:selected").val() ? '-' + addZeros($("#product_model option:selected").text().substring($("#product_model option:selected").text().length - 6), 6) : '';
   colorNomenclature = $("#product_color option:selected").val() ? '-' + addZeros($("#product_color option:selected").text().substring(0, 3), 3) : '';
   vp1 = $('#product_vp1').val() ? '-' + $('#product_vp1').val() : '';
   vp2 = $('#product_vp2').val() ? '-' + $('#product_vp2').val() : '';
