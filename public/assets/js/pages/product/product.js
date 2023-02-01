@@ -130,7 +130,7 @@ const initInputs = () => {
   if (vp1.length == 4) {
     $('#product_vp2').prop('disabled', false);
   }
-  if (vp2.length == 3) {
+  if (vp2.length == 4) {
     $('#product_vp3').prop('disabled', false);
   }
   updateSku();
@@ -230,7 +230,7 @@ const listenColor = () => {
         colorNomenclature = '';
       }
     } else {
-      modelNomenclature = '';
+      colorNomenclature = '';
     }
     updateSku();
   });
@@ -276,7 +276,7 @@ const listenVp2 = () => {
 const listenVp3 = () => {
   $("#product_vp3").keyup(function () {
     vp3 = '-' + $(this).val();
-    if (vp3 == '-') {
+    if (vp3 == '-' || vp3.length <= 3) {
       vp3 = '';
     }
     updateSku();

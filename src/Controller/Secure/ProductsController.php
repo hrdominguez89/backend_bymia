@@ -177,7 +177,7 @@ class ProductsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
-            $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)$request->get('product')['subcategory']]));
+            $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)@$request->get('product')['subcategory']]));
 
             $entityManager->persist($data['product']);
 
