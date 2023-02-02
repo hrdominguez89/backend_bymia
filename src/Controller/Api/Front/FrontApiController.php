@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
 use App\Helpers\SendCustomerToCrm;
+use App\Repository\CategoryRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
@@ -98,6 +99,37 @@ class FrontApiController extends AbstractController
         $countries = $countriesRepository->getCountries();
         return $this->json(
             $countries,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/categoriesList", name="api_categories_list",methods={"GET"})
+     */
+    public function categoriesList(CategoryRepository $categoryRepository): Response
+    {
+
+        $categories = $categoryRepository->getVisibleCategories();
+
+        $categoryObject = [];
+
+        foreach ($categories as $category) {
+            array_push(
+                $categoryObject,
+                [
+                    "id" => $category->getId(),
+                    "name" => $category->getName(),
+                    "description_es" => $category->getDescriptionEs(),
+                    "description_en" => $category->getDescriptionEs(),
+                    "principal" => $category->getPrincipal(),
+                    "image" => $category->getImage(),
+                    "slug" => $category->getSlug(),
+                ]
+            );
+        }
+        return $this->json(
+            $categoryObject,
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );

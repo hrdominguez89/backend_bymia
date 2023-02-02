@@ -107,4 +107,16 @@ class CategoryRepository extends ServiceEntityRepository
         return $categories->getQuery()
             ->getResult();
     }
+
+    public function getVisibleCategories()
+    {
+        return  $this->createQueryBuilder('c')
+            ->where('c.id3pl IS NOT NULL')
+            ->where('c.visible = :visible')
+            ->setParameter('visible', true)
+            ->orderBy('c.principal', 'DESC')
+            ->addOrderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }
