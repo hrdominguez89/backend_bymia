@@ -13,6 +13,9 @@ use App\Service\FileUploader;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Constants\Constants;
 use App\Helpers\SendCategoryTo3pl;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+
 
 /**
  * @Route("/category")
@@ -105,5 +108,33 @@ class CrudCategoryController extends AbstractController
         $data['form'] = $form;
 
         return $this->renderForm('secure/crud_category/form_categories.html.twig', $data);
+    }
+
+    /**
+     * @Route("/updateVisible/category", name="secure_category_update_visible", methods={"post"})
+     */
+    public function updateVisible(Request $request, CategoryRepository $categoryRepository): Response
+    {
+        $id = (int)$request->get('id');
+        $visible = $request->get('visible');
+
+
+        $entity_object = $categoryRepository->find($id);
+
+        if ($visible == 'on') {
+            $entity_object->setVisible(false);
+            $data['visible'] = false;
+        } else {
+            $entity_object->setVisible(true);
+            $data['visible'] = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
+        return new JsonResponse($data);
     }
 }
