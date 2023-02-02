@@ -121,7 +121,7 @@ class FrontApiController extends AbstractController
                     "id" => $category->getId(),
                     "name" => $category->getName(),
                     "description_es" => $category->getDescriptionEs(),
-                    "description_en" => $category->getDescriptionEs(),
+                    "description_en" => $category->getDescriptionEn(),
                     "principal" => $category->getPrincipal(),
                     "image" => $category->getImage(),
                     "slug" => $category->getSlug(),
