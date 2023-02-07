@@ -1,9 +1,11 @@
 "use strict";
 
 let selectCategory;
+let selectTag;
 let productId;
 let categoryId;
 let subcategoryId;
+let cboxTagExpires;
 
 let subcategories;
 
@@ -34,8 +36,95 @@ $(document).ready(() => {
   listenVp2();
   listenVp3();
   loadGalery();
+  listenTagSelect();
+  listenCboxTagExpires();
+  listenInputDate();
 });
 
+const listenTagSelect = () => {
+  selectTag = $('#product_tag');
+  if (selectTag.val()) {
+    $('#product_tag_expires').attr('disabled', false);
+  }else{
+    $('#message_expiration_time').attr('class', 'text-muted');
+    $('#message_expiration_time').html('Sin etiqueta.');
+  }
+  selectTag.on("change", async () => {
+    let tag = selectTag.val() ? true : false;
+    if (tag) {
+      $('#product_tag_expires').attr('disabled', false);
+      if (!cboxTagExpires.is(":checked")) {
+        $('#message_expiration_time').attr('class', 'text-success');
+        $('#message_expiration_time').html('La etiqueta no tiene vencimiento.');
+      }
+    } else {
+      $('#product_tag_expires').attr('disabled', true);
+      $('#product_tag_expires').prop('checked', false);
+      $('#product_tag_expiration_date').attr('disabled', true);
+      $('#product_tag_expiration_date').val('');
+      $('#product_tag_expiration_date').attr('required', false);
+      $('#message_expiration_time').attr('class', 'text-muted');
+      $('#message_expiration_time').html('Sin etiqueta.');
+    }
+  });
+}
+
+const listenInputDate = () => {
+  let inputDate = new Date($("#product_tag_expiration_date").val());
+  let today = new Date();
+  if ($("#product_tag_expiration_date").val()) {
+    if (inputDate <= today) {
+      $('#message_expiration_time').attr('class', 'text-danger');
+      $('#message_expiration_time').html('La etiqueta expiró.');
+    } else {
+      $('#message_expiration_time').attr('class', 'text-success');
+      $('#message_expiration_time').html('La etiqueta esta en fecha.');
+    }
+  }
+  $("#product_tag_expiration_date").change(function () {
+    inputDate = new Date($(this).val());
+    if (inputDate <= today) {
+      $('#message_expiration_time').attr('class', 'text-danger');
+      $('#message_expiration_time').html('La etiqueta expiró.');
+    } else {
+      $('#message_expiration_time').attr('class', 'text-success');
+      $('#message_expiration_time').html('La etiqueta esta en fecha.');
+    }
+  });
+}
+
+const listenCboxTagExpires = () => {
+  cboxTagExpires = $('#product_tag_expires');
+  if(selectTag.val()){
+    if (cboxTagExpires.is(":checked")) {
+      $('#product_tag_expiration_date').attr('disabled', false);
+      $('#product_tag_expiration_date').attr('required', true);
+      if (!$('#product_tag_expiration_date').val()) {
+        $('#message_expiration_time').attr('class', 'text-warning');
+        $('#message_expiration_time').html('Elija la fecha de vencimiento.');
+      }
+    } else {
+      $('#message_expiration_time').attr('class', 'text-success');
+      $('#message_expiration_time').html('La etiqueta no tiene vencimiento.');
+    }
+  }
+  cboxTagExpires.change(async () => {
+    if (cboxTagExpires.is(":checked")) {
+      $('#product_tag_expiration_date').attr('disabled', false);
+      $('#product_tag_expiration_date').attr('required', true);
+      if (!$('#product_tag_expiration_date').val()) {
+        $('#message_expiration_time').attr('class', 'text-warning');
+        $('#message_expiration_time').html('Elija la fecha de vencimiento.');
+      }
+    } else {
+      $('#product_tag_expiration_date').attr('disabled', true);
+      $('#product_tag_expiration_date').attr('required', false);
+      $('#product_tag_expiration_date').val('');
+      $('#message_expiration_time').attr('class', 'text-success');
+      $('#message_expiration_time').html('La etiqueta no tiene vencimiento.');
+    }
+  });
+}
 
 const initSelect2 = () => {
   $('select').select2({
@@ -139,7 +228,7 @@ const initInputs = () => {
 const initSku = async () => {
   categoryNomenclature = $("#product_category option:selected").text().split(" - ")[1] ? $("#product_category option:selected").text().split(" - ")[1] : '';
   brandNomenclature = $("#product_brand option:selected").text().split(" - ")[1] ? '-' + $("#product_brand option:selected").text().split(" - ")[1] : '';
-  modelNomenclature = $("#product_model option:selected").val() ? '-' + addZeros($("#product_model option:selected").text().substring($("#product_model option:selected").text().length - 6), 6) : '';
+  modelNomenclature = $("#product_model option:selected").val() ? '-' + addZeros($("#product_model option:selected").text().substring($("#product_model option:selected").text().length - 12), 12) : '';
   colorNomenclature = $("#product_color option:selected").val() ? '-' + addZeros($("#product_color option:selected").text().substring(0, 3), 3) : '';
   vp1 = $('#product_vp1').val() ? '-' + $('#product_vp1').val() : '';
   vp2 = $('#product_vp2').val() ? '-' + $('#product_vp2').val() : '';
@@ -208,8 +297,8 @@ function addZeros(text, zerosQuantity) {
 const listenSelectModel = () => {
   $("#product_model").change(function () {
     if (parseInt($("#product_model").val())) {
-      modelNomenclature = $("#product_model option:selected").text().substring($("#product_model option:selected").text().length - 6);
-      modelNomenclature = addZeros(modelNomenclature, 6);
+      modelNomenclature = $("#product_model option:selected").text().substring($("#product_model option:selected").text().length - 12);
+      modelNomenclature = addZeros(modelNomenclature, 12);
       modelNomenclature = '-' + modelNomenclature;
       if (modelNomenclature == '-') {
         modelNomenclature = '';

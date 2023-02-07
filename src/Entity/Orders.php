@@ -106,7 +106,7 @@ class Orders
      * @ORM\ManyToOne(targetEntity=CustomerAddresses::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $bill_address_id;
+    private $bill_address;
 
     /**
      * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="orders")
@@ -127,7 +127,7 @@ class Orders
     /**
      * @ORM\Column(type="text")
      */
-    private $bill_address;
+    private $bill_address_order;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -147,7 +147,7 @@ class Orders
     /**
      * @ORM\Column(type="float")
      */
-    private $product_discount;
+    private $total_product_discount;
 
     /**
      * @ORM\Column(type="float")
@@ -199,6 +199,73 @@ class Orders
      * @ORM\Column(type="datetime")
      */
     private $created_at;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $receiver_name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $receiver_document_type;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $receiver_document;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $receiver_phone_cell;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $receiver_phone_home;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $receiver_email;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="receiver_orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $receiver_country;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=States::class, inversedBy="receiver_orders")
+     */
+    private $receiver_state;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Cities::class, inversedBy="receiver_orders")
+     */
+    private $receiver_city;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $receiver_address;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $receiver_cod_zip;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $receiver_additional_info;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Warehouses::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $warehouse;
 
     public function __construct()
     {
@@ -403,14 +470,14 @@ class Orders
         return $this;
     }
 
-    public function getBillAddressId(): ?CustomerAddresses
+    public function getBillAddress(): ?CustomerAddresses
     {
-        return $this->bill_address_id;
+        return $this->bill_address;
     }
 
-    public function setBillAddressId(?CustomerAddresses $bill_address_id): self
+    public function setBillAddress(?CustomerAddresses $bill_address): self
     {
-        $this->bill_address_id = $bill_address_id;
+        $this->bill_address = $bill_address;
 
         return $this;
     }
@@ -451,14 +518,14 @@ class Orders
         return $this;
     }
 
-    public function getBillAddress(): ?string
+    public function getBillAddressOrder(): ?string
     {
-        return $this->bill_address;
+        return $this->bill_address_order;
     }
 
-    public function setBillAddress(string $bill_address): self
+    public function setBillAddressOrder(string $bill_address_order): self
     {
-        $this->bill_address = $bill_address;
+        $this->bill_address_order = $bill_address_order;
 
         return $this;
     }
@@ -499,14 +566,14 @@ class Orders
         return $this;
     }
 
-    public function getProductDiscount(): ?float
+    public function getTotalProductDiscount(): ?float
     {
-        return $this->product_discount;
+        return $this->total_product_discount;
     }
 
-    public function setProductDiscount(float $product_discount): self
+    public function setTotalProductDiscount(float $total_product_discount): self
     {
-        $this->product_discount = $product_discount;
+        $this->total_product_discount = $total_product_discount;
 
         return $this;
     }
@@ -663,6 +730,256 @@ class Orders
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getReceiverName(): ?string
+    {
+        return $this->receiver_name;
+    }
+
+    public function setReceiverName(string $receiver_name): self
+    {
+        $this->receiver_name = $receiver_name;
+
+        return $this;
+    }
+
+    public function getReceiverDocumentType(): ?string
+    {
+        return $this->receiver_document_type;
+    }
+
+    public function setReceiverDocumentType(string $receiver_document_type): self
+    {
+        $this->receiver_document_type = $receiver_document_type;
+
+        return $this;
+    }
+
+    public function getReceiverDocument(): ?string
+    {
+        return $this->receiver_document;
+    }
+
+    public function setReceiverDocument(string $receiver_document): self
+    {
+        $this->receiver_document = $receiver_document;
+
+        return $this;
+    }
+
+    public function getReceiverPhoneCell(): ?string
+    {
+        return $this->receiver_phone_cell;
+    }
+
+    public function setReceiverPhoneCell(string $receiver_phone_cell): self
+    {
+        $this->receiver_phone_cell = $receiver_phone_cell;
+
+        return $this;
+    }
+
+    public function getReceiverPhoneHome(): ?string
+    {
+        return $this->receiver_phone_home;
+    }
+
+    public function setReceiverPhoneHome(?string $receiver_phone_home): self
+    {
+        $this->receiver_phone_home = $receiver_phone_home;
+
+        return $this;
+    }
+
+    public function getReceiverEmail(): ?string
+    {
+        return $this->receiver_email;
+    }
+
+    public function setReceiverEmail(string $receiver_email): self
+    {
+        $this->receiver_email = $receiver_email;
+
+        return $this;
+    }
+
+    public function getReceiverCountry(): ?Countries
+    {
+        return $this->receiver_country;
+    }
+
+    public function setReceiverCountry(?Countries $receiver_country): self
+    {
+        $this->receiver_country = $receiver_country;
+
+        return $this;
+    }
+
+    public function getReceiverState(): ?States
+    {
+        return $this->receiver_state;
+    }
+
+    public function setReceiverState(?States $receiver_state): self
+    {
+        $this->receiver_state = $receiver_state;
+
+        return $this;
+    }
+
+    public function getReceiverCity(): ?Cities
+    {
+        return $this->receiver_city;
+    }
+
+    public function setReceiverCity(?Cities $receiver_city): self
+    {
+        $this->receiver_city = $receiver_city;
+
+        return $this;
+    }
+
+    public function getReceiverAddress(): ?string
+    {
+        return $this->receiver_address;
+    }
+
+    public function setReceiverAddress(string $receiver_address): self
+    {
+        $this->receiver_address = $receiver_address;
+
+        return $this;
+    }
+
+    public function getReceiverCodZip(): ?string
+    {
+        return $this->receiver_cod_zip;
+    }
+
+    public function setReceiverCodZip(string $receiver_cod_zip): self
+    {
+        $this->receiver_cod_zip = $receiver_cod_zip;
+
+        return $this;
+    }
+
+    public function getReceiverAdditionalInfo(): ?string
+    {
+        return $this->receiver_additional_info;
+    }
+
+    public function setReceiverAdditionalInfo(string $receiver_additional_info): self
+    {
+        $this->receiver_additional_info = $receiver_additional_info;
+
+        return $this;
+    }
+
+    public function generateOrderToCRM()
+    {
+        $guide_numbers_array = $this->guideNumbers;
+        $guide_numbers_result = [];
+
+        foreach ($guide_numbers_array as $guideNumber) {
+            $items = [];
+            foreach ($guideNumber->getItemsGuideNumbers() as $item) {
+                $items[] = [
+                    'product_id' => $item->getProduct()->getId3pl(),
+                    'quantity' => $item->getQuantity(),
+                ];
+            }
+            $guide_numbers_result[] = [
+                'number' => $guideNumber->getNumber(),
+                'courier' => $guideNumber->getCourier(),
+                'items' => $items,
+            ];
+        }
+
+        $orders_products_array = $this->ordersProducts;
+        $orders_products_result = [];
+
+        foreach ($orders_products_array as $order_product) {
+            $orders_products_result[] = [
+                'product_id' => $order_product->getProduct()->getId3pl(),
+                'qty' => $order_product->getQuantity(),
+                'weight' => $order_product->getWeight(),
+                'price' => $order_product->getPrice(),
+                'discount' => $order_product->getDiscount()
+            ];
+        }
+
+
+
+        return [
+            "order_id" => $this->getId(),
+            "created_at" => $this->getCreatedAt(),
+            "status_order" => [
+                "status" => $this->getStatus()->getId(),
+                "guide_numbers" => $guide_numbers_result,
+            ],
+            "warehouse_id" => $this->getWarehouse()->getId3pl(),
+            "items" => $orders_products_result,
+            "customer" => [
+                "id" => $this->getCustomer()->getId(),
+                "customer_type" => $this->getCustomerType()->getId(),
+                "name" => $this->getCustomerName(),
+                "email" => $this->getCustomerEmail(),
+                "phone_code" => $this->getCustomerPhoneCode()->getId(),
+                "cel_phone_customer" => $this->getCelPhoneCustomer(),
+                "phone_customer" => $this->getPhoneCustomer(),
+                "customer_identity_type" => $this->getCustomerIdentityType(),
+                "customer_identity_number" => $this->getCustomerIdentityNumber()
+            ],
+            "international_shipping" => $this->getInternationalShipping() ? 1 : 0,
+            "shipping" => $this->getShipping() ? 1 : 0,
+            "bill_file" => $this->getBillFile(),
+            "payment_file" => $this->getPaymentFile(),
+            "payment_trasaction_code" => $this->getPaypalTransactionCode(),
+            "payment_received_file" => $this->getPaymentReceivedFile(),
+            "debit_credit_note_file" => $this->getDebitCreditNoteFile(),
+            "receiver" => [
+                "name" => $this->getReceiverName(),
+                "document_type" => $this->getReceiverDocumentType(),
+                "document" => $this->getReceiverDocument(),
+                "phone_cell" => $this->getReceiverPhoneCell(),
+                "phone_home" => $this->getReceiverPhoneHome(),
+                "email" => $this->getReceiverEmail(),
+                "country_id" => $this->getReceiverCountry()->getId(),
+                "state_id" => $this->getReceiverState() ? $this->getReceiverState()->getId() : null,
+                "city_id" => $this->getReceiverCity() ? $this->getReceiverCity()->getId() : null,
+                "address" => $this->getReceiverAddress(),
+                "cod_zip" => $this->getReceiverCodZip(),
+                "additional_info" => $this->getReceiverAdditionalInfo()
+            ],
+            "bill_address" => [
+                "bill_address_id" => $this->getBillAddress()->getId(),
+                "country_id" => $this->getBillCountry()->getId(),
+                "state_id" => $this->getBillState() ? $this->getBillState()->getId() : null,
+                "city_id" => $this->getBillCity() ? $this->getBillCity()->getId() : null,
+                "address" => $this->getBillAddressOrder(),
+                "cod_zip" => $this->getBillPostalCode()
+            ],
+            "subtotal" => $this->getSubtotal(),
+            "total_product_discount" => $this->getTotalProductDiscount(),
+            "promotional_code_discount" => $this->getPromotionalCodeDiscount(),
+            "tax" => $this->getTax(),
+            "shipping_cost" => $this->getShippingCost(),
+            "shipping_discount" => $this->getShippingDiscount(),
+            "total_order" => $this->getTotalOrder()
+        ];
+    }
+
+    public function getWarehouse(): ?Warehouses
+    {
+        return $this->warehouse;
+    }
+
+    public function setWarehouse(?Warehouses $warehouse): self
+    {
+        $this->warehouse = $warehouse;
 
         return $this;
     }

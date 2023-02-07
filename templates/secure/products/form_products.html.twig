@@ -1,253 +1,387 @@
-{% block content %}
+{% extends 'home/index.html.twig' %}
 
-    <div id="form_data" style="display: none;">
-        <div class="card-footer text-end">
-            <button type="button" id="btn-cancel" class="btn btn-outline-secondary waves-effect" onclick="toggleForm()"
-                    data-key="t-cancel">{{ 'Cancel' | trans }}</button>
-            <button type="button" id="btn-submit" class="btn btn-primary" onclick="UpdateProduct()"
-                    data-key="t-update">{{ 'Update' | trans }}</button>
-        </div>
-        <div class="row">
-            {# Main Form #}
-            <div class="col-md-9">
-                <input type="hidden" disabled readonly name="id_producto" id="id_producto">
-                <label for="large_desc">{{ " LargeDescription" | trans }}</label>
-                <textarea  id="large_description" class="mt-1" name="htmlDescription"></textarea>
-                <label for="short_desc" class="mt-3">{{ "ShortDescription" | trans }}</label>
-                <textarea  id="short_description" class="mt-1" name="short_description"></textarea>
-                <div class="card w-100 mt-4">
-                    <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-12">
-                                <h4 class="card-title mt-2">Datos del Producto</h4>
-
-                            </div>
-                            <div class="col-md-9 col-sm-12">
-                                <select name="tipo_producto" id="tipo_producto" class="form-select">
-                                    <option value="0" disabled>--Tipo de producto--</option>
-                                    <option value="1" id="option-1" selected>Producto Simple</option>
-                                    <option value="2" id="option-2">Producto Variable</option>
-                                </select>
-
-                            </div>
-                        </div>
-                    </div><!-- end card header -->
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
-                                     aria-orientation="vertical">
-                                    <a class="nav-link mb-2 active" id="v-products-general-tab" data-bs-toggle="pill"
-                                       href="#v-products-general" role="tab" aria-controls="v-products-general"
-                                       aria-selected="true">General</a>
-                                    <a class="nav-link mb-2" id="v-products-inventario-tab" data-bs-toggle="pill"
-                                       href="#v-products-inventario" role="tab" aria-controls="v-products-inventario"
-                                       aria-selected="false">Inventario</a>
-                                    <a class="nav-link mb-2" id="v-products-atributos-tab" data-bs-toggle="pill"
-                                       href="#v-products-atributos" role="tab" aria-controls="v-products-atributos"
-                                       aria-selected="false">Especificaciones</a>
-                                    <a class="nav-link" id="v-products-variaciones-tab" data-bs-toggle="pill"
-                                       href="#v-products-variaciones" role="tab" aria-controls="v-products-variaciones"
-                                       aria-selected="false" style="display: none">Variaciones</a>
-                                </div>
-                            </div><!-- end col -->
-                            <div class="col-md-9">
-                                <div class="tab-content text-muted mt-4 mt-md-0" id="v-pills-tabContent">
-                                    <div class="tab-pane fade active show" id="v-products-general" role="tabpanel"
-                                         aria-labelledby="v-products-general-tab">
-                                        <div class="row">
-                                            <div class="col-md-6 col-lg-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label"
-                                                           data-key="t-price">{{ 'Price' | trans }}</label>
-                                                    <input class="form-control" type="number" id="price" name="price"
-                                                           required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-lg-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label"
-                                                           data-key="t-ofert-price">{{ 'Ofert Price' | trans }}</label>
-                                                    <input class="form-control" type="number" id="ofert_price"
-                                                           name="ofert_price">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6 col-lg-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label"
-                                                           data-key="t-start-ofert-day">{{ 'Start Ofert Day' | trans }}</label>
-                                                    <input class="form-control" type="datetime-local"
-                                                           id="start_ofert_day"
-                                                           name="start_ofert_day" disabled>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-lg-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label"
-                                                           data-key="t-end-ofert-day">{{ 'End Ofert Day' | trans }}</label>
-                                                    <input class="form-control" type="datetime-local"
-                                                           id="end_ofert_day"
-                                                           name="end_ofert_day" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="v-products-inventario" role="tabpanel"
-                                         aria-labelledby="v-products-inventario-tab">
-                                        <label class="form-label" data-key="t-sku">{{ 'SKU' | trans }}</label>
-                                        <input class="form-control" type="text" id="sku_product" name="sku_product" disabled>
-                                        <p class="mt-3"><strong>Vendido individualmente</strong>
-                                            <input type="checkbox" class="form-check" id="vendido_individualmente"
-                                                   name="vendido_individualmente">
-                                            <i>"Activa esto para permitir que solo se pueda comprar uno de estos
-                                                artículos en cada pedido"</i>
-                                        </p>
-                                    </div>
-                                    <div class="tab-pane fade" id="v-products-atributos" role="tabpanel"
-                                         aria-labelledby="v-products-atributos-tab">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label"
-                                                           data-key="t-type-especifications">{{ 'Type Especifications' | trans }}</label>
-                                                    <select class="form-select" id="type_especifications"
-                                                            name="type_especifications">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label"
-                                                           data-key="t-especifications">{{ 'Especifications' | trans }}</label>
-                                                    <select class="form-select" id="especifications"
-                                                            name="especifications">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-7 col-sm-7 col-sm-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label"
-                                                           data-key="t-value">{{ 'Value' | trans }}</label>
-                                                    <textarea class="form-control" id="value" name="value" required
-                                                              disabled
-                                                              placeholder="Escriba los valores para la especificacion separando cada uno con <<,>>"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-5 col-sm-5 col-sm-12">
-{#                                                <div class="mt-2" id="uso_variaciones">#}
-{#                                                    <input type="checkbox" id="uso_variaciones_check">#}
-{#                                                    <label for="uso_variaciones"> Usado para variaciones</label>#}
-{#                                                </div>#}
-                                                <div class="mb-3 mt-4">
-                                                    <button type="button" id="btn-cancel"
-                                                            class="btn btn-secondary waves-effect w-100"
-                                                            onclick="insertSpecifications()"
-                                                            data-key="t-apply">{{ 'Apply' | trans }}</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {#       --table--         #}
-                                        <table class="table table-sm m-0">
-                                            <thead class="table-light">
-                                            <tr>
-                                                <th data-key="t-type-especifications">{{ 'Type Especifications' | trans }}</th>
-                                                <th data-key="t-especifications">{{ 'Especifications' | trans }}</th>
-                                                <th data-key="t-value">{{ 'Value' | trans }}</th>
-                                                <th data-key="t-variacion">{{ 'Variación' | trans }}</th>
-                                                <th><i class="fa fa-trash text-danger"></i></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="rows">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="tab-pane fade" id="v-products-variaciones" role="tabpanel"
-                                         aria-labelledby="v-products-variaciones-tab">
-                                        <div class="accordion accordion-flush mt-3" id="accordionFlushExample">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div><!--  end col -->
-                        </div><!-- end row -->
-                    </div><!-- end card-body -->
-                </div>
-            </div>
-            {# Layout rigth#}
-            <div class="col-md-3">
-                <div class="card w-100">
-                    <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
-                        <h5 class="modal-title" data-key="t-category">{{ 'Category' | trans }}</h5>
-                    </div>
-                    <div class="card-body p-1">
-                        <div id="datatable-category">
-                        </div>
-                    </div>
-                </div>
-                <div class="card w-100 mt-4">
-                    <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
-                        <h5 class="modal-title" data-key="t-tag">{{ 'Tag' | trans }}</h5>
-                    </div>
-                    <div class="card-body p-1">
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12">
-                                <select class="form-select w-100 mt-2" id="tags">
-                                </select>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <button type="button" id="btn-add-tag" onclick="addTag()"
-                                        class="btn btn-primary waves-effect btn-primary text-white w-100 mt-2 fa fa-plus"></button>
-                            </div>
-                        </div>
-                        <div class="mt-3 flex flex-wrap" id="container_tag">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card w-100 mt-4">
-                    <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
-                        <h5 class="modal-title" data-key="t-brand">{{ 'Brand' | trans }}</h5>
-                    </div>
-                    <div class="card-body p-1">
-                        <div class="row">
-                            <div class="col-md-8 col-sm-12">
-                                <select class="form-select w-100 mt-2" id="brand_select">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
-                        <h5 class="modal-title" data-key="t-main-image">{{ 'Main Image' | trans }}</h5>
-                    </div>
-                    <div class="card-body p-1">
-                        <div id="uploadMain" class="form-group">                    
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header pt-1 pl-2 pb-1 pr-0" style="background-color: rgba(242,242,242,0.32)">
-                <h5 class="modal-title" data-key="t-all-image">{{ 'All Image' | trans }}</h5>
-            </div>
-            <div class="card-body p-4">
-                <div id="uploadAll" class="form-group">                    
-                </div>
-            </div>
-        </div>
-        <div class="card-footer text-end">
-            <button type="button" id="btn-cancel" class="btn btn-outline-secondary waves-effect" onclick="toggleForm()"
-                    data-key="t-cancel">{{ 'Cancel' | trans }}</button>
-            <button type="button" id="btn-submit" class="btn btn-primary" onclick="UpdateProduct()"
-                    data-key="t-update">{{ 'Update' | trans }}</button>
-        </div>
-    </div>
+{% block title %}
+	{{ title }}
 {% endblock %}
 
+{% block content %}
+	{{parent()}}
+	<!-- Modal -->
+	<div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="modalDeleteLabel">Eliminar imagen</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					¿Está seguro que desea eliminar esta imagen? una vez eliminada no se podrá recuperar.
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+					<button id="deleteImage" href="javascript:void(0);" type="button" class="btn btn-danger">Eliminar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-12">
+			<h1 class="mr-auto mb-0 title-table">{{ title }}</h1>
+		</div>
+	</div>
+
+	{{ form_start (form) }}
+
+	{% if form_errors (form) %}
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					{{ form_errors (form) }}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+	{# DATOS PRODUCTO #}
+
+	<div class="row my-2">
+		<div class="col-12">
+			{{ form_label (form.inventory) }}
+			{{ form_widget (form.inventory) }}
+			{{ form_errors (form.inventory)}}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col-12">
+			{{ form_label (form.name) }}
+			{{ form_widget (form.name) }}
+			{{ form_errors (form.name)}}
+		</div>
+	</div>
+
+	<div class="row my-2">
+		<div class="col-6">
+			{{ form_label (form.descriptionEs) }}
+			{{ form_widget (form.descriptionEs) }}
+			{{ form_errors (form.descriptionEs)}}
+		</div>
 
 
+		<div class="col-6">
+			{{ form_label (form.long_description_es) }}
+			{{ form_widget (form.long_description_es) }}
+			{{ form_errors (form.long_description_es)}}
+		</div>
+	</div>
+
+
+	<div class="row my-2">
+		<div class="col-6">
+			{{ form_label (form.descriptionEn) }}
+			{{ form_widget (form.descriptionEn) }}
+			{{ form_errors (form.descriptionEn)}}
+		</div>
+
+
+		<div class="col-6">
+			{{ form_label (form.long_description_en) }}
+			{{ form_widget (form.long_description_en) }}
+			{{ form_errors (form.long_description_en)}}
+		</div>
+	</div>
+
+	{# FIN DATOS PRODUCTO #}
+
+	<hr>
+
+	{# SKU #}
+
+	<div class="row my-2">
+		<div class="col-12">
+			<h3>SKU</h3>
+			<small>Se conforma automaticamente de la siguiente manera:
+			</small>
+			<small>CAT-MAR-MOD310-COL-VP1[-VP2-VP3] | (VP2 y VP3 son opcionales)</small>
+		</div>
+	</div>
+	<div class="row my-3">
+
+		<div class="col-3">
+			{{ form_label (
+				form.subcategory,
+				'Categoría *',
+				{'label_attr': {'class': 'form-label','id':'label-category','data-category-id':product.category ? product.category.id:'0'}}
+			)}}
+			{{ form_widget (form.category) }}
+			{{ form_errors (form.category)}}
+		</div>
+
+		<div class="col-3">
+			{{ form_label (
+				form.subcategory,
+				'Subcategoría',
+				{'label_attr': {'class': 'form-label','id':'label-subcategory','data-subcategory-id':product.subcategory ? product.subcategory.id:'0'}}
+			)}}
+			{{ form_widget (form.subcategory) }}
+			{{ form_errors (form.subcategory)}}
+		</div>
+
+		<div class="col-3">
+			{{ form_label (form.brand) }}
+			{{ form_widget (form.brand) }}
+			{{ form_errors (form.brand)}}
+		</div>
+
+		<div class="col-3">
+			{{ form_label (form.model) }}
+			{{ form_widget (form.model) }}
+			{{ form_errors (form.model)}}
+		</div>
+	</div>
+	<div class="row my-3">
+
+		<div class="col-3">
+			{{ form_label (form.color) }}
+			{{ form_widget (form.color) }}
+			{{ form_errors (form.color)}}
+		</div>
+
+		<div class="col-3">
+			{{ form_label (form.vp1) }}
+			{{ form_widget (form.vp1) }}
+			{{ form_errors (form.vp1)}}
+		</div>
+
+		<div class="col-3">
+			{{ form_label (form.vp2) }}
+			{{ form_widget (form.vp2) }}
+			{{ form_errors (form.vp2)}}
+		</div>
+
+		<div class="col-3">
+			{{ form_label (form.vp3) }}
+			{{ form_widget (form.vp3) }}
+			{{ form_errors (form.vp3)}}
+		</div>
+		<div class="row my-3">
+
+			<div class="col-12 text-center">
+				<div class="row">
+					<div class="col-4"></div>
+
+					<div class="col-4">
+						{{ form_label (
+							form.sku,
+							'SKU',
+							{'label_attr': {'class': 'form-label','id':'label-sku','data-product-id':product.id ? product.id:'0'}}
+						)}}
+						{{ form_widget (form.sku) }}
+						{% if form_errors (form.sku) %}
+							<div class="row">
+								<div class="col-12">
+									<div class="alert alert-danger">
+										<span>{{ form_errors (form.sku) }}.</span>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+						<span id="message_sku">Complete todos los campos para verificar la disponibilidad del SKU.</span>
+					</div>
+
+					<div class="col-4"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	{# FIN SKU #}
+
+	<hr>
+
+	{# CARACTERISTICAS #}
+
+	<div class="row my-3">
+
+		<div class="row my-2">
+			<div class="col-12">
+				<h3>Caracteristicas</h3>
+			</div>
+			<div class="col-3">
+				{{ form_label (form.cost) }}
+				{{ form_widget (form.cost) }}
+				{{ form_errors (form.cost)}}
+			</div>
+
+			<div class="col-3">
+				{{ form_label (form.price) }}
+				{{ form_widget (form.price) }}
+				{{ form_errors (form.price)}}
+			</div>
+
+			<div class="col-3">
+				{{ form_label (form.cod) }}
+				{{ form_widget (form.cod) }}
+				{{ form_errors (form.cod)}}
+			</div>
+			<div class="col-3">
+				{{ form_label (form.part_number) }}
+				{{ form_widget (form.part_number) }}
+				{{ form_errors (form.part_number)}}
+			</div>
+		</div>
+
+		<div class="row my-2">
+			<div class="col-4">
+				{{ form_label (form.weight) }}
+				{{ form_widget (form.weight) }}
+				{{ form_errors (form.weight)}}
+			</div>
+
+			<div class="col-4">
+				{{ form_label (form.screen_resolution) }}
+				{{ form_widget (form.screen_resolution) }}
+				{{ form_errors (form.screen_resolution)}}
+			</div>
+
+			<div class="col-4">
+				{{ form_label (form.screen_size) }}
+				{{ form_widget (form.screen_size) }}
+				{{ form_errors (form.screen_size)}}
+			</div>
+		</div>
+		<div class="row my-2">
+			<div class="col-4">
+				{{ form_label (form.cpu) }}
+				{{ form_widget (form.cpu) }}
+				{{ form_errors (form.cpu)}}
+			</div>
+			<div class="col-4">
+				{{ form_label (form.gpu) }}
+				{{ form_widget (form.gpu) }}
+				{{ form_errors (form.gpu)}}
+			</div>
+
+			<div class="col-4">
+				{{ form_label (form.memory) }}
+				{{ form_widget (form.memory) }}
+				{{ form_errors (form.memory)}}
+			</div>
+		</div>
+
+		<div class="row mt-2 mb-4">
+
+			<div class="col-4">
+				{{ form_label (form.storage) }}
+				{{ form_widget (form.storage) }}
+				{{ form_errors (form.storage)}}
+			</div>
+			<div class="col-4">
+				{{ form_label (form.op_sys) }}
+				{{ form_widget (form.op_sys) }}
+				{{ form_errors (form.op_sys)}}
+			</div>
+
+			<div class="col-4">
+				{{ form_label (form.conditium) }}
+				{{ form_widget (form.conditium) }}
+				{{ form_errors (form.conditium)}}
+			</div>
+		</div>
+	</div>
+	{# FIN CARACTERISTICAS ETIQUETAS #}
+	<hr>
+	{# ETIQUETAS #}
+	<div class="row my-3">
+
+		<div class="row my-2">
+			<div class="col-12">
+				<h3>Etiqueta <small id="message_expiration_time"></small></h3>
+			</div>
+		</div>
+		
+		<div class="row my-2">
+			<div class="col-4">
+				{{ form_label (form.tag) }}
+				{{ form_widget (form.tag) }}
+				{{ form_errors (form.tag)}}
+			</div>
+		</div>
+		<div class="row my-2">
+
+			<div class="col-4">
+				{{ form_label (form.tag_expires) }}
+				{{ form_widget (form.tag_expires) }}
+				{{ form_errors (form.tag_expires)}}
+			</div>
+		</div>
+		<div class="row my-2">
+
+			<div class="col-4">
+				{{ form_label (form.tag_expiration_date) }}
+				{{ form_widget (form.tag_expiration_date) }}
+				{{ form_errors (form.tag_expiration_date)}}
+			</div>
+		</div>
+
+		{% if (product.getImage|length > 0) %}
+			<div id="images_galery_div my-2">
+				<hr>
+
+				<div class="row my-2">
+					<h3>Imágenes cargadas</h3>
+					<div class="col-12 my-2">
+						<ul class="pgwSlideshow">
+							{% for image in product.getImage %}
+								<li id="img-{{image.id}}" data-id="{{image.id}}" data-principal-image="{{image.principal}}">
+									<img src="{{ image.image }}" id="imagen-{{image.id}}">
+
+									{% if (image.principal) %}
+										<p id="p-portada" data-image-id="{{image.id}}" class="text-center text-black bg-white m-0 p-0 b-0">Portada</p>
+									{% endif %}
+
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+
+				<div class="col-12 text-center my-2">
+					<a class="text-danger" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modalDelete">
+						<spam class="fas fa-trash"></spam>
+						Eliminar imagen
+					</a>
+					|
+					<a class="text-primary" id="principalImageButton" href="javascript:void(0);">
+						<spam class="fas fa-images"></spam>
+						Establecer como imagen de portada
+					</a>
+				</div>
+			</div>
+
+		{% endif %}
+
+
+		<hr>
+		<div class="row my-2">
+			<div class="col-12">
+				<h3>Cargar imágenes</h3>
+				{% if not product.getImage|length > 0 %}
+					<small>(La primer imagen será considerada la imagen de portada)</small>
+				{% endif %}
+				{{ form_widget (form.images) }}
+				{{ form_errors (form.images)}}
+				<div id="drag-drop-area"></div>
+			</div>
+		</div>
+		<div>
+			<div class="row my-2">
+				<div class="col-12 text-end">
+					<a class="btn btn-secondary" href="{{ path('secure_product_index') }}">Regresar</a>
+
+					<button class="btn btn-primary">Guardar</button>
+				</div>
+			</div>
+		</div>
+		{{ form_end (form) }}
+	{% endblock %}

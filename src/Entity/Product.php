@@ -31,9 +31,9 @@ class Product
      * @var string
      *
      * @ORM\Column(name="sku", type="string", length=255, nullable=false, unique=true)
-     * @Assert\Length(min=22, max=30)
+     * @Assert\Length(min=28, max=36)
      * @Assert\Regex(
-     *     pattern="/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
+     *     pattern="/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{12}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
      *     message="El sku no cumple con el formato requerido"
      * )
      */
@@ -52,13 +52,6 @@ class Product
      * @ORM\Column(name="slug", type="string", nullable=false, length=255)
      */
     protected $slug;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="cost", type="float", nullable=false)
-     */
-    protected $cost;
 
     /**
      * @var string
@@ -129,11 +122,6 @@ class Product
     private $visible;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="products")
-     */
-    private $tag;
-
-    /**
      * @ORM\OneToMany(targetEntity=ProductImages::class, mappedBy="product", orphanRemoval=true)
      */
     private $image;
@@ -143,11 +131,6 @@ class Product
      * 
      */
     private $descriptionEn;
-
-    /**
-     * @ORM\Column(type="float",nullable=false)
-     */
-    private $price;
 
     /**
      * @ORM\ManyToOne(targetEntity=Inventory::class, inversedBy="products")
@@ -262,11 +245,33 @@ class Product
      */
     private $conditium;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $tag_expires;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Tag::class, inversedBy="products")
+     */
+    private $tag;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $tag_expiration_date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=HistoricalPriceCost::class, mappedBy="product")
+     */
+    private $historicalPriceCosts;
+
+    private $price;
+
+    private $cost;
 
     public function __construct()
     {
         $this->created_at = new \DateTime();
-        $this->tag = new ArrayCollection();
         $this->visible = false;
         $this->image = new ArrayCollection();
         $this->onhand = 0;
@@ -277,6 +282,7 @@ class Product
         $this->historyProductStockUpdateds = new ArrayCollection();
         $this->itemsGuideNumbers = new ArrayCollection();
         $this->ordersProducts = new ArrayCollection();
+        $this->historicalPriceCosts = new ArrayCollection();
     }
 
     /**
@@ -336,25 +342,6 @@ class Product
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    /**
-     * @return float
-     */
-    public function getCost(): ?float
-    {
-        return $this->cost;
-    }
-
-    /**
-     * @param float $cost
-     * @return $this
-     */
-    public function setCost(?float $cost): self
-    {
-        $this->cost = $cost;
-
-        return $this;
     }
 
     /**
@@ -524,29 +511,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, tag>
-     */
-    public function getTag(): Collection
-    {
-        return $this->tag;
-    }
-
-    public function addTag(Tag $tag): self
-    {
-        if (!$this->tag->contains($tag)) {
-            $this->tag[] = $tag;
-        }
-
-        return $this;
-    }
-
-    public function removeTag(Tag $tag): self
-    {
-        $this->tag->removeElement($tag);
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, ProductImages>
@@ -590,18 +554,6 @@ class Product
     public function setDescriptionEn(?string $descriptionEn): self
     {
         $this->descriptionEn = $descriptionEn;
-
-        return $this;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): self
-    {
-        $this->price = $price;
 
         return $this;
     }
@@ -962,6 +914,92 @@ class Product
     {
         $this->conditium = $conditium;
 
+        return $this;
+    }
+
+    public function getTagExpires(): ?bool
+    {
+        return $this->tag_expires;
+    }
+
+    public function setTagExpires(?bool $tag_expires): self
+    {
+        $this->tag_expires = $tag_expires;
+
+        return $this;
+    }
+
+    public function getTag(): ?Tag
+    {
+        return $this->tag;
+    }
+
+    public function setTag(?Tag $tag): self
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
+
+    public function getTagExpirationDate(): ?\DateTimeInterface
+    {
+        return $this->tag_expiration_date;
+    }
+
+    public function setTagExpirationDate(?\DateTimeInterface $tag_expiration_date): self
+    {
+        $this->tag_expiration_date = $tag_expiration_date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HistoricalPriceCost>
+     */
+    public function getHistoricalPriceCosts(): Collection
+    {
+        return $this->historicalPriceCosts;
+    }
+
+    public function addHistoricalPriceCost(HistoricalPriceCost $historicalPriceCost): self
+    {
+        if (!$this->historicalPriceCosts->contains($historicalPriceCost)) {
+            $this->historicalPriceCosts[] = $historicalPriceCost;
+            $historicalPriceCost->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoricalPriceCost(HistoricalPriceCost $historicalPriceCost): self
+    {
+        if ($this->historicalPriceCosts->removeElement($historicalPriceCost)) {
+            // set the owning side to null (unless already changed)
+            if ($historicalPriceCost->getProduct() === $this) {
+                $historicalPriceCost->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->historicalPriceCosts->last()->getPrice();
+    }
+
+    public function setPrice(float $price): self
+    {
+        return $this;
+    }
+
+    public function getCost(): ?float
+    {
+        return $this->historicalPriceCosts->last()->getCost();
+    }
+
+    public function setCost(float $cost): self
+    {
         return $this;
     }
 }

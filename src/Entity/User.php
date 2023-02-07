@@ -45,11 +45,17 @@ class User extends BaseUser
      */
     private $customerAddresses;
 
+    /**
+     * @ORM\OneToMany(targetEntity=HistoricalPriceCost::class, mappedBy="created_by_user")
+     */
+    private $historicalPriceCosts;
+
     public function __construct()
     {
         parent::__construct();
         $this->customers = new ArrayCollection();
         $this->customerAddresses = new ArrayCollection();
+        $this->historicalPriceCosts = new ArrayCollection();
     }
 
     /**
@@ -162,6 +168,36 @@ class User extends BaseUser
             // set the owning side to null (unless already changed)
             if ($customerAddress->getRegistrationUser() === $this) {
                 $customerAddress->setRegistrationUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, HistoricalPriceCost>
+     */
+    public function getHistoricalPriceCosts(): Collection
+    {
+        return $this->historicalPriceCosts;
+    }
+
+    public function addHistoricalPriceCost(HistoricalPriceCost $historicalPriceCost): self
+    {
+        if (!$this->historicalPriceCosts->contains($historicalPriceCost)) {
+            $this->historicalPriceCosts[] = $historicalPriceCost;
+            $historicalPriceCost->setCreatedByUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHistoricalPriceCost(HistoricalPriceCost $historicalPriceCost): self
+    {
+        if ($this->historicalPriceCosts->removeElement($historicalPriceCost)) {
+            // set the owning side to null (unless already changed)
+            if ($historicalPriceCost->getCreatedByUser() === $this) {
+                $historicalPriceCost->setCreatedByUser(null);
             }
         }
 

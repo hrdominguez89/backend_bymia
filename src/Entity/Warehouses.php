@@ -36,11 +36,17 @@ class Warehouses
      */
     private $inventories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="warehouse")
+     */
+    private $orders;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
         $this->products = new ArrayCollection();
         $this->inventories = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,6 +102,36 @@ class Warehouses
             // set the owning side to null (unless already changed)
             if ($inventory->getWarehouse() === $this) {
                 $inventory->setWarehouse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setWarehouse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getWarehouse() === $this) {
+                $order->setWarehouse(null);
             }
         }
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Secure;
 
 use App\Constants\Constants;
+use App\Entity\HistoricalPriceCost;
 use App\Entity\Product;
 use App\Entity\ProductImages;
 use App\Form\ProductType;
@@ -63,7 +64,7 @@ class ProductsController extends AbstractController
     }
 
     /**
-     * @Route("/", name="secure_crud_product_index", methods={"GET"})
+     * @Route("/", name="secure_product_index", methods={"GET"})
      */
     public function index(ProductRepository $productRepository, Request $request, PaginatorInterface $pagination): Response
     {
@@ -78,13 +79,13 @@ class ProductsController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="secure_crud_product_new", methods={"GET","POST"})
+     * @Route("/new", name="secure_product_new", methods={"GET","POST"})
      */
     public function new(Request $request, SluggerInterface $slugger, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
     {
         $data['title'] = 'Nuevo producto';
         $data['breadcrumbs'] = array(
-            array('path' => 'secure_crud_product_index', 'title' => 'Productos'),
+            array('path' => 'secure_product_index', 'title' => 'Productos'),
             array('active' => true, 'title' => $data['title'])
         );
         $data['files_js'] = array('../uppy.min.js', '../select2.min.js', 'product/upload_files.js?v=' . rand(), 'product/product.js?v=' . rand());
@@ -104,6 +105,13 @@ class ProductsController extends AbstractController
             $productNameSlug = $slugger->slug($form->get('name')->getData());
             $imagesFilesBase64 = $form->get('images')->getData();
             $imagesFiles = explode('*,*', $imagesFilesBase64);
+
+            $historicalPriceCost = new HistoricalPriceCost;
+            $historicalPriceCost->setProduct($data['product']);
+            $historicalPriceCost->setPrice($form->get('price')->getData());
+            $historicalPriceCost->setCost($form->get('cost')->getData());
+            $historicalPriceCost->setCreatedByUser($this->getUser());
+            $entityManager->persist($historicalPriceCost);
 
             if ($imagesFiles[0]) {
                 try {
@@ -144,21 +152,21 @@ class ProductsController extends AbstractController
             $entityManager->flush();
             $sendProductTo3pl->send($data['product']);
 
-            return $this->redirectToRoute('secure_crud_product_index');
+            return $this->redirectToRoute('secure_product_index');
         }
 
         $data['form'] = $form;
-        return $this->renderForm('secure/crud_product/form_products.html.twig', $data);
+        return $this->renderForm('secure/products/form_products.html.twig', $data);
     }
 
     /**
-     * @Route("/{id}/edit", name="secure_crud_product_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="secure_product_edit", methods={"GET","POST"})
      */
     public function edit($id, Request $request, SluggerInterface $slugger, ProductRepository $productRepository, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
     {
         $data['title'] = 'Editar producto';
         $data['breadcrumbs'] = array(
-            array('path' => 'secure_crud_product_index', 'title' => 'Productos'),
+            array('path' => 'secure_product_index', 'title' => 'Productos'),
             array('active' => true, 'title' => $data['title'])
         );
         $data['files_js'] = array('../uppy.min.js', '../pgwslideshow.min.js', '../select2.min.js', 'product/upload_files.js?v=' . rand(), 'product/product.js?v=' . rand());
@@ -175,12 +183,24 @@ class ProductsController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$form->get('tag_expires')->getData()) {
+                $data['product']->setTagExpires(false);
+                $data['product']->setTagExpirationDate(null);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)@$request->get('product')['subcategory']]));
+            //si precio o costo no son iguales a los ultimos valores registrados, guardo los nuevos valores de costo y precio,
+            if ($form->get('price')->getData() !== $data['product']->getPrice() || $form->get('cost')->getData() !== $data['product']->getCost()) {
+                $historicalPriceCost = new HistoricalPriceCost;
+                $historicalPriceCost->setProduct($data['product']);
+                $historicalPriceCost->setPrice($form->get('price')->getData());
+                $historicalPriceCost->setCost($form->get('cost')->getData());
+                $historicalPriceCost->setCreatedByUser($this->getUser());
+                $entityManager->persist($historicalPriceCost);
+            }
 
             $entityManager->persist($data['product']);
-
 
             $productNameSlug = $slugger->slug($form->get('name')->getData());
             $imagesFilesBase64 = $form->get('images')->getData();
@@ -226,11 +246,11 @@ class ProductsController extends AbstractController
             $entityManager->flush();
             $sendProductTo3pl->send($data['product'], 'PUT', 'update');
 
-            return $this->redirectToRoute('secure_crud_product_index');
+            return $this->redirectToRoute('secure_product_index');
         }
 
         $data['form'] = $form;
-        return $this->renderForm('secure/crud_product/form_products.html.twig', $data);
+        return $this->renderForm('secure/products/form_products.html.twig', $data);
     }
 
     /**
@@ -323,6 +343,35 @@ class ProductsController extends AbstractController
             $data['status'] = false;
             $data['message'] = 'No se encontro la imagen.';
         }
+        return new JsonResponse($data);
+    }
+
+
+    /**
+     * @Route("/updateVisible/product", name="secure_product_update_visible", methods={"post"})
+     */
+    public function updateVisible(Request $request, ProductRepository $ProductRepository): Response
+    {
+        $id = (int)$request->get('id');
+        $visible = $request->get('visible');
+
+
+        $entity_object = $ProductRepository->find($id);
+
+        if ($visible == 'on') {
+            $entity_object->setVisible(false);
+            $data['visible'] = false;
+        } else {
+            $entity_object->setVisible(true);
+            $data['visible'] = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
         return new JsonResponse($data);
     }
 }

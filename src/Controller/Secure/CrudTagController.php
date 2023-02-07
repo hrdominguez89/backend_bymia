@@ -6,6 +6,7 @@ use App\Entity\Tag;
 use App\Form\TagType;
 use App\Repository\TagRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -79,5 +80,33 @@ class CrudTagController extends AbstractController
 
         $data['form'] = $form;
         return $this->renderForm('secure/crud_tag/form_tag.html.twig', $data);
+    }
+
+    /**
+     * @Route("/updateVisible/tag", name="secure_tag_update_visible", methods={"post"})
+     */
+    public function updateVisible(Request $request, TagRepository $TagRepository): Response
+    {
+        $id = (int)$request->get('id');
+        $visible = $request->get('visible');
+
+
+        $entity_object = $TagRepository->find($id);
+
+        if ($visible == 'on') {
+            $entity_object->setVisible(false);
+            $data['visible'] = false;
+        } else {
+            $entity_object->setVisible(true);
+            $data['visible'] = true;
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
+        return new JsonResponse($data);
     }
 }

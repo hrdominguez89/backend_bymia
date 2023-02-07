@@ -64,6 +64,11 @@ class OrdersProducts
      */
     private $quantity;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $discount;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -173,6 +178,18 @@ class OrdersProducts
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getDiscount(): ?float
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(float $discount): self
+    {
+        $this->discount = $discount;
 
         return $this;
     }

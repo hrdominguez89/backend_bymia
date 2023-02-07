@@ -102,7 +102,7 @@ class CustomerAddresses
     private $active;
 
     /**
-     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="bill_address_id")
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="bill_address")
      */
     private $orders;
 
@@ -346,7 +346,7 @@ class CustomerAddresses
     {
         if (!$this->orders->contains($order)) {
             $this->orders[] = $order;
-            $order->setBillAddressId($this);
+            $order->setBillAddress($this);
         }
 
         return $this;
@@ -356,8 +356,8 @@ class CustomerAddresses
     {
         if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
-            if ($order->getBillAddressId() === $this) {
-                $order->setBillAddressId(null);
+            if ($order->getBillAddress() === $this) {
+                $order->setBillAddress(null);
             }
         }
 

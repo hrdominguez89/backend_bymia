@@ -45,6 +45,11 @@
 							<th data-orderable="false">
 								Imagen &nbsp;
 							</th>
+
+							<th class="text-center">
+								Principal &nbsp;
+							</th>
+
 							<th class="text-center">
 								Visible &nbsp;
 							</th>
@@ -80,6 +85,7 @@
 								<td>
 									{{brand.slug}}
 								</td>
+
 								<td>
 									{% if brand.image %}
 										<img class="img-fluid" style="width:100px" alt="Imagen" src="{{ asset(brand.image) }}"/>
@@ -87,6 +93,11 @@
 										<img class="img-fluid" style="width:100px" alt="Imagen" src="{{ asset('uploads/images/default.jpg') }}"/>
 									{% endif %}
 								</td>
+
+								<td class="text-center">
+									{{brand.principal ? 'Si':'No'}}
+								</td>
+								
 
 								<td class="text-center">
 									<a style="font-size:16px" data-status="{{brand.visible ? 'on':'off'}}" data-slug="/secure/brand/updateVisible/brand" data-id="{{brand.id}}" class="text-{{brand.visible ? 'success':'secondary'}} m-2 toggle-on-off" href="javascript:void(0);">

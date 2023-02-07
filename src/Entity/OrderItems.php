@@ -81,16 +81,15 @@ class OrderItems
      * @param Product $product
      * @param Shopping $shopping
      */
-    public function __construct(Order $orderId, Product $product, Shopping $shopping)
+    public function __construct(Order $orderId, Product $product)
     {
         $this->setOrderId($orderId);
 
         $this->setPId($product->getId());
         $this->setName($product->getName());
         $this->setSlug($product->getSlug());
-        $this->setImage($product->getImage());
-        $this->setPrice($product->calcPrice());
-        $this->setQuantity($shopping->getQuantity());
+        // $this->setImage($product->getImage());
+        // $this->setPrice($product->calcPrice());
         $this->setTotal($this->price * $this->quantity);
     }
 

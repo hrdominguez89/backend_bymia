@@ -39,11 +39,6 @@ class Tag
     private $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Product::class, mappedBy="tag")
-     */
-    private $products;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $visible;
@@ -54,15 +49,21 @@ class Tag
     private $created_at;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="tag")
      */
-    private $id3pl;
+    private $products;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default":false})
+     */
+    private $principal;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
         $this->visible = false;
         $this->created_at = new \DateTime();
+        $this->products = new ArrayCollection();
+        $this->principal = false;
     }
 
     /**
@@ -111,33 +112,6 @@ class Tag
         return $this;
     }
 
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->addTag($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            $product->removeTag($this);
-        }
-
-        return $this;
-    }
-
     public function getVisible(): ?bool
     {
         return $this->visible;
@@ -162,14 +136,44 @@ class Tag
         return $this;
     }
 
-    public function getId3pl(): ?int
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
     {
-        return $this->id3pl;
+        return $this->products;
     }
 
-    public function setId3pl(?int $id3pl): self
+    public function addProduct(Product $product): self
     {
-        $this->id3pl = $id3pl;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getTag() === $this) {
+                $product->setTag(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPrincipal(): ?bool
+    {
+        return $this->principal;
+    }
+
+    public function setPrincipal(bool $principal): self
+    {
+        $this->principal = $principal;
 
         return $this;
     }

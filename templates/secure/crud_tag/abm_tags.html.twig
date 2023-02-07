@@ -26,16 +26,16 @@
 								Id. &nbsp;
 							</th>
 
-							<th data-type="num" class="text-center">
-								Id 3PL &nbsp;
-							</th>
-
 							<th>
 								Nombre &nbsp;
 							</th>
 
 							<th>
 								Slug &nbsp;
+							</th>
+
+							<th class="text-center">
+								Principal &nbsp;
 							</th>
 
 							<th class="text-center">
@@ -57,17 +57,16 @@
 									{{tag.id}}
 								</td>
 
-
-								<td class="text-center">
-									{{tag.id3pl}}
-								</td>
-
 								<td>
 									{{tag.name}}
 								</td>
 
 								<td>
 									{{tag.slug}}
+								</td>
+
+								<td class="text-center">
+									{{tag.principal? 'Si':'No'}}
 								</td>
 
 								<td class="text-center">

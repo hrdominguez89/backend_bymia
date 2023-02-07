@@ -8,12 +8,16 @@ use App\Entity\Category;
 use App\Entity\Inventory;
 use App\Entity\Product;
 use App\Entity\Specification;
+use App\Entity\Tag;
 use App\Repository\BrandRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\SpecificationRepository;
+use App\Repository\TagRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -150,17 +154,17 @@ class ProductType extends AbstractType
             ])
             ->add('sku', TextType::class, [
                 'label' => 'SKU',
-                'attr' => ['readonly' => 'readonly', "minlength" => 22, "maxlength" => 30, 'class' => 'text-center', 'style' => 'text-transform:uppercase'],
+                'attr' => ['readonly' => 'readonly', "minlength" => 28, "maxlength" => 36, 'class' => 'text-center', 'style' => 'text-transform:uppercase'],
                 'constraints' => [
                     new Length([
-                        'min' => 22,
-                        'max' => 30,
+                        'min' => 28,
+                        'max' => 36,
                         'minMessage' => 'El campo debe tener al menos {{ limit }} caracteres',
                         'maxMessage' => 'El campo no debe tener más de {{ limit }} caracteres',
                     ]),
                     new Regex([
-                        'pattern' => "/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{6}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
-                        'message' => 'El valor debe cumplir con el formato "CAT-MAR-MOD31O-COL-VP1[-VP2-VP3] (VP2 y VP3 son opcionales."',
+                        'pattern' => "/^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{12}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3}(?:-[A-Za-z0-9]{3})?)?$/",
+                        'message' => 'El valor debe cumplir con el formato "CAT-MAR-000000MOD31O-COL-VP1[-VP2-VP3] (VP2 y VP3 son opcionales."',
                     ]),
                 ]
             ])
@@ -206,8 +210,8 @@ class ProductType extends AbstractType
             ->add('part_number', TextType::class, ['label' => 'Part number', 'required' => false, 'attr' => ['style' => 'text-transform: uppercase']])
             ->add('screen_resolution', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $sr) {
+                    return $sr->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_SCREEN_RESOLUTION)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -220,8 +224,8 @@ class ProductType extends AbstractType
             ])
             ->add('cpu', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $cpu) {
+                    return $cpu->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_CPU)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -234,8 +238,8 @@ class ProductType extends AbstractType
             ])
             ->add('gpu', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $gpu) {
+                    return $gpu->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_GPU)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -248,8 +252,8 @@ class ProductType extends AbstractType
             ])
             ->add('memory', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $mem) {
+                    return $mem->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_MEMORY)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -262,8 +266,8 @@ class ProductType extends AbstractType
             ])
             ->add('storage', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $sto) {
+                    return $sto->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_STORAGE)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -276,8 +280,8 @@ class ProductType extends AbstractType
             ])
             ->add('screen_size', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $ss) {
+                    return $ss->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_SCREEN_SIZE)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -290,8 +294,8 @@ class ProductType extends AbstractType
             ])
             ->add('op_sys', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $os) {
+                    return $os->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_SO)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -304,8 +308,8 @@ class ProductType extends AbstractType
             ])
             ->add('conditium', EntityType::class, [
                 'class'  => Specification::class,
-                'query_builder' => function (SpecificationRepository $br) {
-                    return $br->createQueryBuilder('s')
+                'query_builder' => function (SpecificationRepository $con) {
+                    return $con->createQueryBuilder('s')
                         ->where('st.id = :id')
                         ->setParameter('id', Constants::SPECIFICATION_CONDITUM)
                         ->leftJoin('App:SpecificationTypes', 'st', 'WITH', 's.specification_type = st.id')
@@ -315,6 +319,31 @@ class ProductType extends AbstractType
                 'label' => 'Condición *',
                 'required' => true,
                 'choice_label' => 'name',
+            ])
+
+            ->add('tag', EntityType::class, [
+                'class'  => Tag::class,
+                'query_builder' => function (TagRepository $tag) {
+                    return $tag->createQueryBuilder('t')
+                        ->orderBy('t.name');
+                },
+                'placeholder' => 'Seleccione una etiqueta.',
+                'label' => 'Etiqueta',
+                'required' => false,
+                'choice_label' => 'name',
+            ])
+
+            ->add('tag_expires', CheckboxType::class, [
+                'label'    => '¿La etiqueta expira?',
+                'required' => false,
+                'attr' => ['disabled' => true]
+            ])
+
+            ->add('tag_expiration_date', DateType::class, [
+                'label'    => 'Fecha de expiración',
+                'required' => false,
+                'widget' => 'single_text',
+                'attr' => ['disabled' => true]
             ])
 
             ->add('images', HiddenType::class, [
