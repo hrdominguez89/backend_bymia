@@ -289,45 +289,13 @@
 			</div>
 		</div>
 	</div>
-	{# FIN CARACTERISTICAS ETIQUETAS #}
-	<hr>
-	{# ETIQUETAS #}
-	<div class="row my-3">
+	{# FIN CARACTERISTICAS #}
 
-		<div class="row my-2">
-			<div class="col-12">
-				<h3>Etiqueta <small id="message_expiration_time"></small></h3>
-			</div>
-		</div>
-		
-		<div class="row my-2">
-			<div class="col-4">
-				{{ form_label (form.tag) }}
-				{{ form_widget (form.tag) }}
-				{{ form_errors (form.tag)}}
-			</div>
-		</div>
-		<div class="row my-2">
-
-			<div class="col-4">
-				{{ form_label (form.tag_expires) }}
-				{{ form_widget (form.tag_expires) }}
-				{{ form_errors (form.tag_expires)}}
-			</div>
-		</div>
-		<div class="row my-2">
-
-			<div class="col-4">
-				{{ form_label (form.tag_expiration_date) }}
-				{{ form_widget (form.tag_expiration_date) }}
-				{{ form_errors (form.tag_expiration_date)}}
-			</div>
-		</div>
-
-		{% if (product.getImage|length > 0) %}
-			<div id="images_galery_div my-2">
-				<hr>
-
+	{# GALERIA #}
+	{% if (product.getImage|length > 0) %}
+		<div id="images_galery_div my-2">
+			<hr>
+			<div class="row my-3">
 				<div class="row my-2">
 					<h3>Imágenes cargadas</h3>
 					<div class="col-12 my-2">
@@ -358,30 +326,32 @@
 					</a>
 				</div>
 			</div>
+		</div>
 
-		{% endif %}
+
+	{% endif %}
 
 
-		<hr>
+	<hr>
+	<div class="row my-2">
+		<div class="col-12">
+			<h3>Cargar imágenes</h3>
+			{% if not product.getImage|length > 0 %}
+				<small>(La primer imagen será considerada la imagen de portada)</small>
+			{% endif %}
+			{{ form_widget (form.images) }}
+			{{ form_errors (form.images)}}
+			<div id="drag-drop-area"></div>
+		</div>
+	</div>
+	<div>
 		<div class="row my-2">
-			<div class="col-12">
-				<h3>Cargar imágenes</h3>
-				{% if not product.getImage|length > 0 %}
-					<small>(La primer imagen será considerada la imagen de portada)</small>
-				{% endif %}
-				{{ form_widget (form.images) }}
-				{{ form_errors (form.images)}}
-				<div id="drag-drop-area"></div>
-			</div>
-		</div>
-		<div>
-			<div class="row my-2">
-				<div class="col-12 text-end">
-					<a class="btn btn-secondary" href="{{ path('secure_product_index') }}">Regresar</a>
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_product_index') }}">Regresar</a>
 
-					<button class="btn btn-primary">Guardar</button>
-				</div>
+				<button class="btn btn-primary">Guardar</button>
 			</div>
 		</div>
-		{{ form_end (form) }}
-	{% endblock %}
+	</div>
+	{{ form_end (form) }}
+{% endblock %}

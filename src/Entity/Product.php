@@ -269,6 +269,21 @@ class Product
 
     private $cost;
 
+    /**
+     * @ORM\Column(type="smallint", options={"default":5})
+     */
+    private $rating;
+
+    /**
+     * @ORM\Column(type="bigint", options={"default": "floor(random() * 100 + 1)"})
+     */
+    private $reviews;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ProductDiscount::class, mappedBy="product")
+     */
+    private $productDiscounts;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -283,6 +298,9 @@ class Product
         $this->itemsGuideNumbers = new ArrayCollection();
         $this->ordersProducts = new ArrayCollection();
         $this->historicalPriceCosts = new ArrayCollection();
+        $this->rating = 5;
+        $this->reviews = rand(0, 100);
+        $this->productDiscounts = new ArrayCollection();
     }
 
     /**
@@ -985,7 +1003,7 @@ class Product
 
     public function getPrice(): ?float
     {
-        return $this->historicalPriceCosts->last()->getPrice();
+        return $this->historicalPriceCosts->last() ? $this->historicalPriceCosts->last()->getPrice() : null;
     }
 
     public function setPrice(float $price): self
@@ -995,11 +1013,65 @@ class Product
 
     public function getCost(): ?float
     {
-        return $this->historicalPriceCosts->last()->getCost();
+        return $this->historicalPriceCosts->last() ? $this->historicalPriceCosts->last()->getCost() : null;
     }
 
     public function setCost(float $cost): self
     {
+        return $this;
+    }
+
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    public function setRating(int $rating): self
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getReviews(): ?string
+    {
+        return $this->reviews;
+    }
+
+    public function setReviews(string $reviews): self
+    {
+        $this->reviews = $reviews;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductDiscount>
+     */
+    public function getProductDiscounts(): Collection
+    {
+        return $this->productDiscounts;
+    }
+
+    public function addProductDiscount(ProductDiscount $productDiscount): self
+    {
+        if (!$this->productDiscounts->contains($productDiscount)) {
+            $this->productDiscounts[] = $productDiscount;
+            $productDiscount->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductDiscount(ProductDiscount $productDiscount): self
+    {
+        if ($this->productDiscounts->removeElement($productDiscount)) {
+            // set the owning side to null (unless already changed)
+            if ($productDiscount->getProduct() === $this) {
+                $productDiscount->setProduct(null);
+            }
+        }
+
         return $this;
     }
 }

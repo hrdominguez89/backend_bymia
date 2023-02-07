@@ -5,11 +5,15 @@ namespace App\Controller\Secure;
 use App\Constants\Constants;
 use App\Entity\HistoricalPriceCost;
 use App\Entity\Product;
+use App\Entity\ProductDiscount;
 use App\Entity\ProductImages;
+use App\Form\ProductDiscountType;
+use App\Form\ProductTagType;
 use App\Form\ProductType;
 use App\Helpers\SendProductTo3pl;
 use App\Repository\BrandRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
+use App\Repository\ProductDiscountRepository;
 use App\Repository\ProductImagesRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProductSubcategoryRepository;
@@ -183,11 +187,6 @@ class ProductsController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$form->get('tag_expires')->getData()) {
-                $data['product']->setTagExpires(false);
-                $data['product']->setTagExpirationDate(null);
-            }
-
             $entityManager = $this->getDoctrine()->getManager();
             $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)@$request->get('product')['subcategory']]));
             //si precio o costo no son iguales a los ultimos valores registrados, guardo los nuevos valores de costo y precio,
@@ -251,6 +250,105 @@ class ProductsController extends AbstractController
 
         $data['form'] = $form;
         return $this->renderForm('secure/products/form_products.html.twig', $data);
+    }
+
+    /**
+     * @Route("/{product_id}/discount", name="secure_product_discount", methods={"GET","POST"})
+     */
+    public function discount($product_id, Request $request, ProductRepository $productRepository, ProductDiscountRepository $productDiscountRepository): Response
+    {
+        $data['title'] = 'Descuento de producto';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_product_index', 'title' => 'Productos'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array('table_full_buttons.js?v=' . rand());
+        $data['product'] = $productRepository->find($product_id);
+        $data['products_discount'] = $productDiscountRepository->findBy(['product' => $product_id]);
+        $data['new_product_discount'] = new ProductDiscount;
+        $form = $this->createForm(ProductDiscountType::class, $data['new_product_discount']);
+
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $data['new_product_discount']->setProduct($data['product']);
+            $data['new_product_discount']->setCreatedByUser($this->getUser());
+            $entityManager->persist($data['new_product_discount']);
+
+            $productDiscountRepository->disableAllDiscountProduct($product_id);
+
+            $entityManager->flush();
+            $this->addFlash(
+                'message',
+                [
+                    "alert-color" => "success",
+                    "title" => 'Nuevo descuento generado.',
+                    "message" => 'Se generó un nuevo descuento correctamente.'
+                ]
+            );
+             return $this->redirectToRoute('secure_product_discount', ['product_id' => $product_id]);
+        }
+
+        $data['form'] = $form;
+        return $this->renderForm('secure/products/form_discount.html.twig', $data);
+    }
+
+    /**
+     * @Route("/discount/{discount_id}/disable", name="secure_product_discount_disable", methods={"GET"})
+     */
+    public function disableDiscount($discount_id, ProductDiscountRepository $productDiscountRepository): Response
+    {
+        $data['products_discount'] = $productDiscountRepository->find($discount_id);
+        $entityManager = $this->getDoctrine()->getManager();
+        $data['products_discount']->setActive(false);
+        $entityManager->persist($data['products_discount']);
+        $entityManager->flush();
+        $this->addFlash(
+            'message',
+            [
+                "alert-color" => "success",
+                "title" => 'Descuento desactivado.',
+                "message" => 'Se desactivó el descuento correctamente.'
+            ]
+        );
+        return $this->redirectToRoute('secure_product_discount', ['product_id' => $data['products_discount']->getProduct()->getId()]);
+    }
+
+    /**
+     * @Route("/{product_id}/tag", name="secure_product_tag", methods={"GET","POST"})
+     */
+    public function tag($product_id, Request $request, ProductRepository $productRepository): Response
+    {
+        $data['title'] = 'Etiqueta';
+        $data['breadcrumbs'] = array(
+            array('path' => 'secure_product_index', 'title' => 'Productos'),
+            array('active' => true, 'title' => $data['title'])
+        );
+        $data['files_js'] = array('../select2.min.js', 'product/tag.js?v=' . rand());
+        $data['files_css'] = array('select2.min.css', 'select2-bootstrap4.min.css');
+        $data['product'] = $productRepository->find($product_id);
+        $form = $this->createForm(ProductTagType::class, $data['product']);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$form->get('tag_expires')->getData()) {
+                $data['product']->setTagExpires(false);
+                $data['product']->setTagExpirationDate(null);
+            }
+
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $entityManager->persist($data['product']);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('secure_product_index');
+        }
+
+        $data['form'] = $form;
+        return $this->renderForm('secure/products/form_tag.html.twig', $data);
     }
 
     /**

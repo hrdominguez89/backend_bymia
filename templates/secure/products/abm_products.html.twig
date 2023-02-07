@@ -122,6 +122,12 @@
 								</td>
 
 								<td class="text-center">
+									<a style="font-size:16px" class="text-danger m-2" href="{{ path('secure_product_discount',{"product_id":product.id}) }}" title="Descuento de producto.">
+										<i class="fas fa-percent"></i>
+									</a>
+									<a style="font-size:16px" class="text-primary m-2" href="{{ path('secure_product_tag',{"product_id":product.id}) }}" title="Etiqueta de producto.">
+										<i class="fas fa-tag"></i>
+									</a>
 									<a style="font-size:16px" class="text-warning m-2" href="{{ path('secure_product_edit',{"id":product.id}) }}" title="Editar producto.">
 										<i class="fas fa-edit"></i>
 									</a>

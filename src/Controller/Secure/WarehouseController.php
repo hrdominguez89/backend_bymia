@@ -156,8 +156,6 @@ class WarehouseController extends AbstractController
                     "alert-color" => "danger",
                     "message" => "Fallo la comunicación con el 3pl."
                 ];
-                // $brand->setStatusSent3pl($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
-                // $brand->setErrorMessage3pl('code: ' . $response_login['code'] . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $response_login['message']);
             }
 
             if ($this->unauthorized && $this->attempts < 2) {

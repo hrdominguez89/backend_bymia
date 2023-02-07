@@ -69,6 +69,11 @@ class OrdersProducts
      */
     private $discount;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=ProductDiscount::class, inversedBy="ordersProducts")
+     */
+    private $product_discount;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,6 +195,18 @@ class OrdersProducts
     public function setDiscount(float $discount): self
     {
         $this->discount = $discount;
+
+        return $this;
+    }
+
+    public function getProductDiscount(): ?ProductDiscount
+    {
+        return $this->product_discount;
+    }
+
+    public function setProductDiscount(?ProductDiscount $product_discount): self
+    {
+        $this->product_discount = $product_discount;
 
         return $this;
     }

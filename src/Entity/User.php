@@ -50,12 +50,18 @@ class User extends BaseUser
      */
     private $historicalPriceCosts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ProductDiscount::class, mappedBy="created_by_user")
+     */
+    private $productDiscounts;
+
     public function __construct()
     {
         parent::__construct();
         $this->customers = new ArrayCollection();
         $this->customerAddresses = new ArrayCollection();
         $this->historicalPriceCosts = new ArrayCollection();
+        $this->productDiscounts = new ArrayCollection();
     }
 
     /**
@@ -198,6 +204,36 @@ class User extends BaseUser
             // set the owning side to null (unless already changed)
             if ($historicalPriceCost->getCreatedByUser() === $this) {
                 $historicalPriceCost->setCreatedByUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductDiscount>
+     */
+    public function getProductDiscounts(): Collection
+    {
+        return $this->productDiscounts;
+    }
+
+    public function addProductDiscount(ProductDiscount $productDiscount): self
+    {
+        if (!$this->productDiscounts->contains($productDiscount)) {
+            $this->productDiscounts[] = $productDiscount;
+            $productDiscount->setCreatedByUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductDiscount(ProductDiscount $productDiscount): self
+    {
+        if ($this->productDiscounts->removeElement($productDiscount)) {
+            // set the owning side to null (unless already changed)
+            if ($productDiscount->getCreatedByUser() === $this) {
+                $productDiscount->setCreatedByUser(null);
             }
         }
 

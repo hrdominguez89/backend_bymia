@@ -321,31 +321,6 @@ class ProductType extends AbstractType
                 'choice_label' => 'name',
             ])
 
-            ->add('tag', EntityType::class, [
-                'class'  => Tag::class,
-                'query_builder' => function (TagRepository $tag) {
-                    return $tag->createQueryBuilder('t')
-                        ->orderBy('t.name');
-                },
-                'placeholder' => 'Seleccione una etiqueta.',
-                'label' => 'Etiqueta',
-                'required' => false,
-                'choice_label' => 'name',
-            ])
-
-            ->add('tag_expires', CheckboxType::class, [
-                'label'    => '¿La etiqueta expira?',
-                'required' => false,
-                'attr' => ['disabled' => true]
-            ])
-
-            ->add('tag_expiration_date', DateType::class, [
-                'label'    => 'Fecha de expiración',
-                'required' => false,
-                'widget' => 'single_text',
-                'attr' => ['disabled' => true]
-            ])
-
             ->add('images', HiddenType::class, [
                 'mapped' => false,
                 'data' => [],

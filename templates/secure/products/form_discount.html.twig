@@ -1,0 +1,162 @@
+{% extends 'home/index.html.twig' %}
+
+{% block title %}
+	{{ title }}
+{% endblock %}
+
+{% block content %}
+	{{parent()}}
+
+	<div class="row">
+		<div class="col-12">
+			<h1 class="mr-auto mb-0 title-table">
+				{{ title }}
+			</h1>
+		</div>
+	</div>
+
+
+	<div class="row my-3">
+		<div class="col-12">
+			<h4>
+				{{product.name}}
+			</h4>
+
+		</div>
+	</div>
+
+	{{ form_start (form) }}
+
+	{% if form_errors (form) %}
+		<div class="row">
+			<div class="col-12">
+				<div class="alert alert-danger">
+					{{ form_errors (form) }}
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+	<div class="row my-3">
+		<div class="col-12">
+			<div class="alert alert-warning">Al generar un nuevo descuento se deshabilitará el descuento que esté activo si tuviese.</div>
+		</div>
+		<div class="col-3">
+			{{ form_label (form.start_date) }}
+			{{ form_widget (form.start_date) }}
+			{{ form_errors (form.start_date)}}
+		</div>
+		<div class="col-3">
+			{{ form_label (form.end_date) }}
+			{{ form_widget (form.end_date) }}
+			{{ form_errors (form.end_date)}}
+		</div>
+		<div class="col-3">
+			{{ form_label (form.percentage_discount) }}
+			{{ form_widget (form.percentage_discount) }}
+			{{ form_errors (form.percentage_discount)}}
+		</div>
+		<div class="col-3">
+			{{ form_label (form.product_limit) }}
+			{{ form_widget (form.product_limit) }}
+			{{ form_errors (form.product_limit)}}
+		</div>
+	</div>
+	<div>
+		<div class="row my-2">
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_product_index') }}">Regresar</a>
+
+				<button class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
+
+	{{ form_end (form) }}
+
+	<hr>
+
+	<div class="row mt-5">
+		<div class="col-12 my-2">
+			<h4>Historial de descuentos para este producto.</h4>
+		</div>
+		<div class="col-12 my-2">
+			<div class="table-responsive">
+				<table id="table_full_buttons" class="table table-striped table-sm nowrap" data-order="[[0, &quot;desc&quot;]]">
+					<thead>
+						<tr>
+							<th data-type="num" class="text-center">
+								Id. &nbsp;
+							</th>
+
+							<th>Porcentaje de descuento &nbsp;</th>
+
+							<th>Precio actual &nbsp;</th>
+
+							<th>Precio con descuento &nbsp;</th>
+
+							<th>Fecha de inicio &nbsp;</th>
+
+							<th>Fecha de fin &nbsp;</th>
+
+							<th>Limite &nbsp;</th>
+
+							<th>Usados &nbsp;</th>
+
+							<th>Disponibles &nbsp;</th>
+
+							<th>Creado el &nbsp;</th>
+
+							<th class="text-center" data-orderable="false">
+								Acciones &nbsp;
+							</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						{% for product_discount in products_discount %}
+							<tr>
+								<td class="text-center">
+									{{product_discount.id}}
+								</td>
+
+								<td class="text-center">{{product_discount.getPercentageDiscount}}
+									%</td>
+
+								<td class="text-center">$
+									{{product_discount.product.getPrice}}</td>
+
+								<td class="text-center">$
+									{{product_discount.product.getPrice - ((product_discount.product.getPrice / 100)* product_discount.getPercentageDiscount)}}</td>
+
+								<td data-order="{{product_discount.getStartDate ? product_discount.getStartDate|date('U'):0}}" class="text-center">{{product_discount.getStartDate ? product_discount.getStartDate|date("d/m/Y"):'-'}}</td>
+
+								<td data-order="{{product_discount.getEndDate ? product_discount.getEndDate|date('U'):0}}" class="text-center">{{product_discount.getEndDate ? product_discount.getEndDate|date("d/m/Y"):'-'}}</td>
+
+								<td class="text-center">{{product_discount.getProductLimit}}</td>
+
+								<td class="text-center">{{product_discount.getUsed}}</td>
+
+								<td class="text-center">{{product_discount.getProductLimit - product_discount.getUsed}}</td>
+
+								<td data-order="{{product_discount.createdAt ? product_discount.createdAt|date('U'):0}}" class="text-center">{{product_discount.createdAt ? product_discount.createdAt|date("d/m/Y"):'-'}}</td>
+
+								<td class="text-center">
+									{% if (product_discount.active) %}
+										<a style="font-size:16px" class="btn-sm btn-danger m-2" href="{{ path('secure_product_discount_disable',{"discount_id":product_discount.id}) }}" title="Desactivar descuento.">
+											Desactivar descuento
+										</a>
+									{% else %}
+										Inactivo
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
