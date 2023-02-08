@@ -18,4 +18,14 @@ class TagRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Tag::class);
     }
+
+    public function findTagVisibleBySlug($slug_tag)
+    {
+        $tag = $this->createQueryBuilder('t')
+            ->where('t.slug = :slug_tag')
+            ->andWhere('t.visible = true')
+            ->setParameter('slug_tag', $slug_tag);
+        return $tag->getQuery()
+            ->getOneOrNullResult();
+    }
 }

@@ -39,7 +39,7 @@ class HistoricalPriceCost
     private $created_at;
 
     /**
-     * @ORM\ManyToOne(targetEntity=user::class, inversedBy="historicalPriceCosts")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="historicalPriceCosts")
      * @ORM\JoinColumn(nullable=false)
      */
     private $created_by_user;

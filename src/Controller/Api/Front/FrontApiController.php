@@ -23,7 +23,9 @@ use App\Repository\CategoryRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
+use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
+use App\Repository\TagRepository;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -31,6 +33,70 @@ use Symfony\Component\Uid\Uuid;
  */
 class FrontApiController extends AbstractController
 {
+
+    /**
+     * @Route("/products/tag/{slug_tag}", name="api_products_tag",methods={"GET"})
+     */
+    public function productsTag($slug_tag, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
+    {
+        $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
+        if ($tag) {
+
+            $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
+            $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
+            $categoryPlacasDeVideo = $categoryRepository->findOneBySlug('placas-de-video');
+
+            $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops);
+            $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares);
+            $productsPlacasDeVideo = $productRepository->findProductsVisibleByTag($tag, $categoryPlacasDeVideo);
+
+            $productsByCategory = [];
+
+            foreach ($productsLaptops as $productLaptop) {
+                $productsByCategory[] = $productLaptop->getBasicDataProduct();
+            }
+
+            $products[] = [
+                "category" => $categoryLaptops->getName(),
+                "products" => $productsByCategory
+            ];
+
+            $productsByCategory = [];
+
+            foreach ($productsCelulares as $productCelular) {
+                $productsByCategory[] = $productCelular->getBasicDataProduct();
+            }
+
+            $products[] = [
+                "category" => $categoryCelulares->getName(),
+                "products" => $productsByCategory
+            ];
+
+            $productsByCategory = [];
+
+            foreach ($productsPlacasDeVideo as $productPlacaDeVideo) {
+                $productsByCategory[] = $productPlacaDeVideo->getBasicDataProduct();
+            }
+
+            $products[] = [
+                "category" => $categoryPlacasDeVideo->getName(),
+                "products" => $productsByCategory
+            ];
+
+            return $this->json(
+                $products,
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/json']
+            );
+        } else {
+            return $this->json(
+                ['message' => 'Not found'],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+    }
+
     /**
      * @Route("/sliders", name="api_sliders",methods={"GET"})
      */

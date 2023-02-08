@@ -9,6 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use DateTime;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -392,18 +393,41 @@ class ProductRepository extends ServiceEntityRepository
 
     public function findProductsToSendTo3pl(array $statuses, array $orders = null, int $limit = null): array
     {
-        $brands = $this->createQueryBuilder('p')
+        $product = $this->createQueryBuilder('p')
             ->where('p.status_sent_3pl IN (:statuses)')
             ->setParameter('statuses', $statuses);
         if ($orders) {
             foreach ($orders as $orderKey => $orderValue) {
-                $brands->orderBy('p.' . $orderKey, $orderValue);
+                $product->orderBy('p.' . $orderKey, $orderValue);
             }
         }
         if ($limit) {
-            $brands->setMaxResults($limit);
+            $product->setMaxResults($limit);
         }
-        return $brands->getQuery()
+        return $product->getQuery()
+            ->getResult();
+    }
+
+    public function findProductsVisibleByTag($tag, $category)
+    {
+        
+        $today = new DateTime();
+
+        $products = $this->createQueryBuilder('p')
+            ->where('p.tag = :tag')
+            ->andWhere('p.category = :category')
+            ->andWhere('p.visible = :visible')
+            ->andWhere(
+                'p.tag_expires = :tag_expires or p.tag_expiration_date > :today'
+            )
+            ->setParameter('tag', $tag)
+            ->setParameter('category', $category)
+            ->setParameter('visible', true)
+            ->setParameter('tag_expires', false)
+            ->setParameter('today', $today)
+            ->setMaxResults(4);
+
+        return $products->getQuery()
             ->getResult();
     }
 }
