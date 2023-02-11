@@ -19,7 +19,7 @@ final class Version20230211164550 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql("INSERT INTO email_types (id,name,template_name) VALUES (6,'contact us','contact.us')");
+        $this->addSql("INSERT INTO email_types (id,name,template_name) VALUES (6,'Contact us','contact.us')");
         // this up() migration is auto-generated, please modify it to your needs
 
     }
