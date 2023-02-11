@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
+use App\Form\ContactType;
 use App\Helpers\SendCustomerToCrm;
 use App\Repository\CategoryRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
@@ -33,6 +34,73 @@ use Symfony\Component\Uid\Uuid;
  */
 class FrontApiController extends AbstractController
 {
+
+    /**
+     * @Route("/contact", name="api_contanct",methods={"POST"})
+     */
+    public function contact(EnqueueEmail $queue, Request $request, CountriesRepository $countriesRepository): Response
+    {
+        // nombre
+        // cod_pais
+        // telefono
+        // email
+        // message
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+
+        try {
+            $data['country'] = $countriesRepository->findOneBy(["id" => @$data['country_id']]);
+        } catch (\Exception $e) {
+            return $this->json(
+                [
+                    'message' => 'Error de validación',
+                    'validation' => ['country_id'=>'No fue posible encontrar un pais con el codigo indicado.']
+                ],
+                Response::HTTP_BAD_REQUEST,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+
+        $form = $this->createForm(ContactType::class);
+        $form->submit($data, false);
+
+        if (!$form->isValid()) {
+            $error_forms = $this->getErrorsFromForm($form);
+            return $this->json(
+                [
+                    'message' => 'Error de validación',
+                    'validation' => $error_forms
+                ],
+                Response::HTTP_BAD_REQUEST,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        //queue the email
+        $id_email = $queue->enqueue(
+            Constants::EMAIL_TYPE_CONTACT, //tipo de email
+            Constants::EMAIL_CONTACT, //email destinatario
+            [ //parametros
+                "name" => $data['name'],
+                "phone" => $data['country']->getPhonecode() . $data['phone'],
+                'email' => $data['email'],
+                "message" => $data['message'],
+            ]
+        );
+
+        //Intento enviar el correo encolado
+        $queue->sendEnqueue($id_email);
+
+
+        return $this->json(
+            ['message' => 'Formulario de contacto enviado correctamente.'],
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
 
     /**
      * @Route("/products/tag/{slug_tag}", name="api_products_tag",methods={"GET"})

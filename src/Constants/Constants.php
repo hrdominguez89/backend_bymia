@@ -4,6 +4,14 @@ namespace App\Constants;
 
 class Constants
 {
+
+    // EMAILS ADDRESS
+
+    const EMAIL_CONTACT = 'hrdominguez89@gmail.com';
+
+    // END EMAILS ADDRESS
+
+
     // EMAIL TYPES
 
     const EMAIL_TYPE_VALIDATION = 1;
@@ -11,6 +19,8 @@ class Constants
     const EMAIL_TYPE_FORGET_PASSWORD = 3;
     const EMAIL_TYPE_PASSWORD_CHANGE_REQUEST = 4;
     const EMAIL_TYPE_PASSWORD_CHANGE_SUCCESSFUL = 5;
+    const EMAIL_TYPE_CONTACT = 6;
+
 
     // END EMAIL TYPES
 
