@@ -97,7 +97,7 @@ class FrontApiController extends AbstractController
 
         return $this->json(
             ['message' => 'Formulario de contacto enviado correctamente.'],
-            Response::HTTP_OK,
+            Response::HTTP_CREATED,
             ['Content-Type' => 'application/json']
         );
     }

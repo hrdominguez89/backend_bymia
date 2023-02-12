@@ -1,74 +1,370 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="es-ES">
 
-<head>
+	<head>
+		<meta charset="utf-8"/>
+		<title>
+			{% block title %}
+                BYMIA
+            {% endblock %}
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="utf-8"/>
 
-    <title>{% block title %}{{ 'AppName' | trans }}{% endblock %}</title>
+		{# {% block stylesheets %} #}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="{{ 'AppDescription' | trans }}" name="description"/>
-    <meta content="{{ 'AppAuthor' | trans }}" name="author"/>
+		<!--[if mso]><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch><o:AllowPNG/></o:OfficeDocumentSettings></xml><![endif]-->
+		<!--[if !mso]><!-->
+		<link
+		href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css"> <!--<![endif]-->
+		<style>
+			* {
+				box-sizing: border-box;
+			}
 
-    {% block stylesheets %}
-        {#            <link  href = "{{ asset('assets/images/BymiaBrand/favicon.ico') }}bootstrap.css"  rel = "stylesheet">#}
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="{{ asset('assets/images/BymiaBrand/favicon.ico') }}">
+			body {
+				margin: 0;
+				padding: 0;
+			}
 
-        <!-- plugin css -->
-        <link href="{{ asset('assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}"
-              rel="stylesheet" type="text/css"/>
+			a[x-apple-data-detectors] {
+				color: inherit !important;
+				text-decoration: inherit !important;
+			}
 
-        <!-- preloader css -->
-        <link rel="stylesheet" href="{{ asset('assets/css/preloader.min.css') }}" type="text/css"/>
+			#MessageViewBody a {
+				color: inherit;
+				text-decoration: none;
+			}
 
-        <!-- Bootstrap Css -->
-        <link href="{{ asset('assets/css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css"/>
-        <!-- Icons Css -->
-        <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css"/>
-        <!-- App Css-->
-        <link href="{{ asset('assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css"/>
-    {% endblock %}
-</head>
+			p {
+				line-height: inherit
+			}
 
-<body>
-<div id="loading--component-id" class="loading-cmp">
-		{# <div class="spinner-grow text-primary m-1" role="status">
-			<span class="sr-only">Loading...</span>
-		</div>
-		<div class="spinner-grow text-secondary m-1" role="status">
-			<span class="sr-only">Loading...</span>
-		</div>
-		<div class="spinner-grow text-primary m-1" role="status">
-			<span class="sr-only">Loading...</span>
-		</div> #}
-	</div>
-{% block body %}{% endblock %}
+			.desktop_hide,
+			.desktop_hide table {
+				mso-hide: all;
+				display: none;
+				max-height: 0;
+				overflow: hidden;
+			}
 
-{% block javascripts %}
-    {#        <script  src = "jquery.js"> </script >#}
-    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
+			@media(max-width:768px) {
 
-    <!-- JAVASCRIPT -->
-    <script src="{{ asset('assets/js/bootstrap-treeview.js') }}"></script>
-    <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/simplebar/simplebar.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/feather-icons/feather.min.js') }}"></script>
-    <!-- pace js -->
-    <script src="{{ asset('assets/libs/pace-js/pace.min.js') }}"></script>
-    <!-- apexcharts -->
-    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+				.row-3 .column-1 .block-1.paragraph_block td.pad > div,
+				.row-5 .column-1 .block-1.paragraph_block td.pad>div,
+				.row-8 .column-1 .block-1.paragraph_block td.pad>div,
+				.row-9 .column-1 .block-1.paragraph_block td.pad > div {
+					font-size: 18px !important;
+				}
 
-    <!-- Plugins js-->
-    <script src="{{ asset('assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
+				.row-4 .column-1 .block-2.paragraph_block td.pad,
+				.row-5 .column-1 .block-1.paragraph_block td.pad,
+				.row-8 .column-1 .block-1.paragraph_block td.pad {
+					padding: 0 10px !important;
+				}
 
-{% endblock %}
+				.row-2 .column-1 .block-1.heading_block h1 {
+					font-size: 24px !important;
+				}
 
-</body>
+				.row-3 .column-1 .block-1.paragraph_block td.pad,
+				.row-4 .column-1 .block-1.paragraph_block td.pad {
+					padding: 0 25px !important;
+				}
+
+				.row-4 .column-1 .block-1.paragraph_block td.pad > div,
+				.row-4 .column-1 .block-2.paragraph_block td.pad>div,
+				.row-7 .column-1 .block-1.paragraph_block td.pad > div {
+					text-align: center !important;
+					font-size: 18px !important;
+				}
+
+				.row-6 .column-1 .block-1.image_block td.pad {
+					padding: 25px 5px 10px !important;
+				}
+
+				.row-7 .column-1 .block-1.paragraph_block td.pad {
+					padding: 0 10px 15px !important;
+				}
+
+				.row-10 .column-1 .block-1.social_block td.pad {
+					padding: 0 0 10px !important;
+				}
+
+				.row-9 .column-1 .block-1.paragraph_block td.pad {
+					padding: 0 0 20px !important;
+				}
+			}
+
+			@media(max-width:920px) {
+
+				.desktop_hide table.icons-inner,
+				.social_block.desktop_hide .social-table {
+					display: inline-block !important;
+				}
+
+				.icons-inner {
+					text-align: center;
+				}
+
+				.icons-inner td {
+					margin: 0 auto;
+				}
+
+				.image_block img.big,
+				.row-content {
+					width: 100% !important;
+				}
+
+				.mobile_hide {
+					display: none;
+				}
+
+				.stack .column {
+					width: 100%;
+					display: block;
+				}
+
+				.mobile_hide {
+					min-height: 0;
+					max-height: 0;
+					max-width: 0;
+					overflow: hidden;
+					font-size: 0;
+				}
+
+				.desktop_hide,
+				.desktop_hide table {
+					display: table !important;
+					max-height: none !important;
+				}
+
+				.row-2 .column-1 {
+					padding: 5px 0 10px !important;
+				}
+			}
+		</style>
+		{# {% endblock %} #}
+	</head>
+
+	<body style="background-color: transparent; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
+		<table class="nl-container" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: transparent;">
+			<tbody>
+				<tr>
+					<td>
+						<table class="row row-1" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+							<tbody>
+								<tr>
+									<td>
+										<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 900px;" width="900">
+											<tbody>
+												<tr>
+													<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 5px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+														<table class="image_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+															<tr>
+																<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
+																	<div class="alignment" align="center" style="line-height:10px"><img class="big" src="https://imagesbymiashop.s3.amazonaws.com/emails/img_header_mail.png" style="display: block; height: auto; border: 0; width: 900px; max-width: 100%;" width="900" alt="Bymia" title="Bymia"></div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+
+						{% block body %}{% endblock %}
+
+
+						<table class="row row-6" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+							<tbody>
+								<tr>
+									<td>
+										<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+											<tbody>
+												<tr>
+													<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 5px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+														<table class="image_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+															<tr>
+																<td class="pad" style="padding-bottom:10px;padding-top:25px;width:100%;padding-right:0px;padding-left:0px;">
+																	<div class="alignment" align="center" style="line-height:10px"><img class="big" src="https://imagesbymiashop.s3.amazonaws.com/emails/img_tenesdudas_mail.png" style="display: block; height: auto; border: 0; width: 810px; max-width: 100%;" width="810" alt="Tenes alguna duda" title="Tenes alguna duda"></div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="row row-7" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+							<tbody>
+								<tr>
+									<td>
+										<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+											<tbody>
+												<tr>
+													<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 5px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+														<table class="paragraph_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
+															<tr>
+																<td class="pad" style="padding-bottom:35px;">
+																	<div style="color:#101112;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:24px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+																		<p style="margin: 0;">
+																			<span style="color: #000000;">Comunicate con
+																																																																																                                                                            nosotros a través de nuestra web y redes
+																																																																																                                                                            sociales.</span>
+																		</p>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="row row-8" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+							<tbody>
+								<tr>
+									<td>
+										<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+											<tbody>
+												<tr>
+													<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 5px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+														<table class="paragraph_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
+															<tr>
+																<td class="pad">
+																	<div style="color:#000000;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:24px;font-weight:700;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+																		<p style="margin: 0;">Seguinos para ofertas,
+																																																																												                                                                        lanzamientos y flash sales.</p>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="row row-9" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+							<tbody>
+								<tr>
+									<td>
+										<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+											<tbody>
+												<tr>
+													<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 5px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+														<table class="paragraph_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
+															<tr>
+																<td class="pad" style="padding-bottom:15px;">
+																	<div style="color:#000000;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:24px;font-weight:700;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+																		<p style="margin: 0;">
+																			<strong>¡Más productos al
+																																																																																                                                                            precio más bajo!</strong>
+																		</p>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="row row-10" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+							<tbody>
+								<tr>
+									<td>
+										<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+											<tbody>
+												<tr>
+													<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 5px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+														<table class="social_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+															<tr>
+																<td class="pad" style="padding-bottom:15px;text-align:center;padding-right:0px;padding-left:0px;">
+																	<div class="alignment" align="center">
+																		<table class="social-table" width="275.30935251798564px" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; display: inline-block;">
+																			<tr>
+																				<td style="padding:0 7px 0 7px;">
+																					<a href target="_blank"><img src="https://imagesbymiashop.s3.amazonaws.com/emails/img_ico_whatsapp.png" width="32" height="32" alt="whatsapp" title="whatsapp" style="display: block; height: auto; border: 0;"></a>
+																				</td>
+																				<td style="padding:0 7px 0 7px;">
+																					<a href="https://www.instagram.com/bymia_shop/" target="_blank"><img src="https://imagesbymiashop.s3.amazonaws.com/emails/img_ico_instagram.png" width="32" height="32" alt="Instagram" title="Instagram" style="display: block; height: auto; border: 0;"></a>
+																				</td>
+																				<td style="padding:0 7px 0 7px;">
+																					<a href="https://www.facebook.com/profile.php?id=100089604138254" target="_blank"><img src="https://imagesbymiashop.s3.amazonaws.com/emails/img_ico_facebook.png" width="31.769784172661872" height="32" alt="facebook" title="facebook" style="display: block; height: auto; border: 0;"></a>
+																				</td>
+																				<td style="padding:0 7px 0 7px;">
+																					<a href="https://www.linkedin.com/company/bymia-shop/" target="_blank"><img src="https://imagesbymiashop.s3.amazonaws.com/emails/img_ico_linkeding.png" width="31.769784172661872" height="32" alt="Custom" title="linkeding" style="display: block; height: auto; border: 0;"></a>
+																				</td>
+																				<td style="padding:0 7px 0 7px;">
+																					<a href="mailto:info@bymiashop.com?subject=Tengo%20una%20duda" target="_blank"><img src="https://imagesbymiashop.s3.amazonaws.com/emails/img_ico_mail.png" width="32" height="32" alt="Mail" title="mail" style="display: block; height: auto; border: 0;"></a>
+																				</td>
+																				<td style="padding:0 7px 0 7px;">
+																					<a href="http://bymiashop.com/" target="_blank"><img src="https://imagesbymiashop.s3.amazonaws.com/emails/img_ico_web.png" width="31.769784172661872" height="32" alt="Web Bymia" title="Web Bymia" style="display: block; height: auto; border: 0;"></a>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="row row-11" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+							<tbody>
+								<tr>
+									<td>
+										<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; background-color: #000000; width: 900px;" width="900">
+											<tbody>
+												<tr>
+													<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 0px; padding-bottom: 0px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+														<table class="image_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+															<tr>
+																<td class="pad" style="width:100%;padding-right:0px;padding-left:0px;">
+																	<div class="alignment" align="center" style="line-height:10px"><img class="big" src="https://imagesbymiashop.s3.amazonaws.com/emails/img_footer_mail.jpg" style="display: block; height: auto; border: 0; width: 900px; max-width: 100%;" width="900" alt="Bymia" title="Bymia"></div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!-- End -->
+
+	</body>
 
 </html>
+<!--  -->
