@@ -288,7 +288,7 @@ class ProductsController extends AbstractController
                     "message" => 'Se generó un nuevo descuento correctamente.'
                 ]
             );
-             return $this->redirectToRoute('secure_product_discount', ['product_id' => $product_id]);
+            return $this->redirectToRoute('secure_product_discount', ['product_id' => $product_id]);
         }
 
         $data['form'] = $form;

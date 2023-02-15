@@ -27,7 +27,11 @@ use App\Repository\CustomerStatusTypeRepository;
 use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
 use App\Repository\TagRepository;
+use Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Uid\Uuid;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 /**
  * @Route("/api/front")
@@ -36,16 +40,65 @@ class FrontApiController extends AbstractController
 {
 
     /**
+     * @Route("/login", name="api_login",methods={"POST"})
+     */
+    public function login(Request $request, CustomerRepository $customerRepository, PasswordHasherFactoryInterface $passwordHasherFactoryInterface, JWTTokenManagerInterface $jwtManager): Response
+    {
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        if (!(@$data['email'] && @$data['password'])) {
+            $validation = [];
+            if (!@$data['email']) {
+                $validation["email"] =  "Debe ingresar una dirección de correo.";
+            }
+            if (!@$data['password']) {
+                $validation["password"] =  "El campo password es obligatorio.";
+            }
+            return $this->json(
+                [
+                    'message' => 'Error de validacion',
+                    'validation' => $validation
+                ],
+                Response::HTTP_BAD_REQUEST,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        try {
+            $customer = $customerRepository->findOneBy(["email" => @$data['email']]);
+            if (!$passwordHasherFactoryInterface->getPasswordHasher($customer)->verify($customer->getPassword(), $data['password'])) {
+                throw new Exception();
+            }
+        } catch (\Exception $e) {
+            return $this->json(
+                [
+                    'message' => 'Usuario y/o password incorrectos.',
+                ],
+                Response::HTTP_UNAUTHORIZED,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $jwt = $jwtManager->create($customer);
+
+        return new JsonResponse([
+            'token' => $jwt,
+            "token_type" => "Bearer",
+            "expires_in" => $_ENV['JWT_TOKEN_TTL'],
+            "user_data" => [
+                "name" => $customer->getName(),
+                "id" => $customer->getId(),
+                "image" => $customer->getImage()
+            ]
+        ]);
+    }
+
+    /**
      * @Route("/contact", name="api_contanct",methods={"POST"})
      */
     public function contact(EnqueueEmail $queue, Request $request, CountriesRepository $countriesRepository): Response
     {
-        // nombre
-        // cod_pais
-        // telefono
-        // email
-        // message
-
         $body = $request->getContent();
         $data = json_decode($body, true);
 
@@ -56,7 +109,7 @@ class FrontApiController extends AbstractController
             return $this->json(
                 [
                     'message' => 'Error de validación',
-                    'validation' => ['country_id'=>'No fue posible encontrar un pais con el codigo indicado.']
+                    'validation' => ['country_id' => 'No fue posible encontrar un pais con el codigo indicado.']
                 ],
                 Response::HTTP_BAD_REQUEST,
                 ['Content-Type' => 'application/json']

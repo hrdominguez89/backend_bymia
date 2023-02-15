@@ -265,10 +265,6 @@ class Product
      */
     private $historicalPriceCosts;
 
-    private $price;
-
-    private $cost;
-
     /**
      * @ORM\Column(type="smallint", options={"default":5})
      */
@@ -1009,24 +1005,20 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice()
     {
-        return $this->historicalPriceCosts->last() ? $this->historicalPriceCosts->last()->getPrice() : null;
+        $price = $this->getHistoricalPriceCosts()->filter(function (HistoricalPriceCost $historicalPriceCost) {
+            return $historicalPriceCost->getPrice();
+        });
+        return $price->last() ? $price->last()->getPrice() : null;
     }
 
-    public function setPrice(float $price): self
+    public function getCost()
     {
-        return $this;
-    }
-
-    public function getCost(): ?float
-    {
-        return $this->historicalPriceCosts->last() ? $this->historicalPriceCosts->last()->getCost() : null;
-    }
-
-    public function setCost(float $cost): self
-    {
-        return $this;
+        $cost = $this->getHistoricalPriceCosts()->filter(function (HistoricalPriceCost $historicalPriceCost) {
+            return $historicalPriceCost->getCost();
+        });
+        return $cost->last() ? $cost->last()->getCost() : null;
     }
 
     public function getRating(): ?int

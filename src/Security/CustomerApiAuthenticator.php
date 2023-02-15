@@ -2,56 +2,64 @@
 
 namespace App\Security;
 
-use App\Repository\ApiClientsRepository;
+use App\Repository\CustomerRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class ApiAuthenticator extends AbstractAuthenticator
+class CustomerApiAuthenticator extends AbstractAuthenticator
 {
-    private ApiClientsRepository $apiClientsRepository;
 
-    public function __construct(ApiClientsRepository $apiClientsRepository)
+    private CustomerRepository $customerRepository;
+    private $jwtEncoder;
+
+    public function __construct(JWTEncoderInterface $jwtEncoder, CustomerRepository $customerRepository)
     {
-        $this->apiClientsRepository = $apiClientsRepository;
+        $this->customerRepository = $customerRepository;
+        $this->jwtEncoder = $jwtEncoder;
     }
 
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has('Authorization') && (0 === strpos($request->headers->get('Authorization'), 'Bearer ') || 0 === strpos($request->headers->get('Authorization'), 'Basic '));
+        return (new AuthorizationHeaderTokenExtractor('Bearer', 'Authorization'))
+            ->extract($request) !== false;
     }
 
     public function authenticate(Request $request): PassportInterface
     {
         $token = explode(' ', $request->headers->get('Authorization'))[1];
         
-        [$apiClient, $password] = explode(':', base64_decode($token));
+        $username = @$this->jwtEncoder->decode($token)['username'] ?: '';
 
-        return new Passport(
-            new UserBadge($apiClient, function ($apiClientIdentifier) {
-                $userApiClient = $this->apiClientsRepository->findOneBy(['api_client_id' => $apiClientIdentifier]);
+        return new SelfValidatingPassport(
+            new UserBadge($username, function ($customerIdentifier) {
+                $userApiClient = $this->customerRepository->findOneBy(['email' => $customerIdentifier]);
 
-                if (!$userApiClient) {
+                if (!$customerIdentifier) {
                     throw new UserNotFoundException();
                 }
                 return $userApiClient;
-            }),
-            new PasswordCredentials($password)
+            })
         );
+
         // TODO: Implement authenticate() method.
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // TODO: Implement onAuthenticationSuccess() method.
         return null;
+        // TODO: Implement onAuthenticationSuccess() method.
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
