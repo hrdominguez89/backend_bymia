@@ -274,6 +274,10 @@ class ProductsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager = $this->getDoctrine()->getManager();
+            $now = new \DateTime();
+            if ($form->get('start_date')->getData() > $now) {
+                $data['new_product_discount']->setActive(false);
+            }
             $data['new_product_discount']->setProduct($data['product']);
             $data['new_product_discount']->setCreatedByUser($this->getUser());
             $entityManager->persist($data['new_product_discount']);

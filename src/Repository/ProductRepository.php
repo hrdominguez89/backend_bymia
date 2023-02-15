@@ -415,6 +415,7 @@ class ProductRepository extends ServiceEntityRepository
 
         $products = $this->createQueryBuilder('p')
             ->where('p.tag = :tag')
+            ->andWhere('p.id3pl IS NOT NULL')
             ->andWhere('p.category = :category')
             ->andWhere('p.visible = :visible')
             ->andWhere(
