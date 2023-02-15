@@ -261,7 +261,7 @@ class Product
     private $tag_expiration_date;
 
     /**
-     * @ORM\OneToMany(targetEntity=HistoricalPriceCost::class, mappedBy="product")
+     * @ORM\OneToMany(targetEntity=HistoricalPriceCost::class, mappedBy="product", cascade={"persist"})
      */
     private $historicalPriceCosts;
 
@@ -1019,7 +1019,7 @@ class Product
 
     public function setPrice(float $price): self
     {
-        // $this->price = $price;
+        $this->price = $price;
         return $this;
     }
 
@@ -1033,7 +1033,7 @@ class Product
 
     public function setCost(float $cost): self
     {
-        // $this->cost = $cost;
+        $this->cost = $cost;
         return $this;
     }
 

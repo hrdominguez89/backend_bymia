@@ -154,6 +154,7 @@ class ProductsController extends AbstractController
                 }
             }
             $entityManager->flush();
+            $entityManager->refresh($data['product']);
             $sendProductTo3pl->send($data['product']);
 
             return $this->redirectToRoute('secure_product_index');
