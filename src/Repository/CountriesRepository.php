@@ -43,12 +43,12 @@ class CountriesRepository extends ServiceEntityRepository
 
     public function getCountries(){
         return $this->getEntityManager()
-            ->createQuery('
+            ->createQuery("
             SELECT
             c.id,
             c.name,
             c.phonecode,
-            c.iso2
+            CONCAT('https://countryflagsapi.com/svg/',LOWER(c.iso3)) as flag
 
             FROM App:Countries c
 
@@ -56,7 +56,7 @@ class CountriesRepository extends ServiceEntityRepository
 
             ORDER BY c.name
 
-            ')
+            ")
             ->setParameter('visible', true)
             ->getResult();
     }
