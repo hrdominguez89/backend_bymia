@@ -14,7 +14,7 @@ class AdvertisementsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('src1',FileType::class, [
+            ->add('src1', FileType::class, [
                 'label' => 'Desktop',
 
                 // unmapped means that this field is not associated to any entity property
@@ -28,9 +28,10 @@ class AdvertisementsType extends AbstractType
                 // in the associated entity, so you can use the PHP constraint classes
                 'constraints' => [
                     new File([
-                        'maxSize' => '2048k',
+                        // 'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
+                            'image/jpg',
                             'image/png',
                             'image/svg',
                         ],
@@ -38,7 +39,7 @@ class AdvertisementsType extends AbstractType
                     ])
                 ],
             ])
-            ->add('srcSm1',FileType::class, [
+            ->add('srcSm1', FileType::class, [
                 'label' => 'Movile',
 
                 // unmapped means that this field is not associated to any entity property
@@ -55,6 +56,7 @@ class AdvertisementsType extends AbstractType
                         'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
+                            'image/jpg',
                             'image/png',
                             'image/svg',
                         ],
@@ -62,7 +64,7 @@ class AdvertisementsType extends AbstractType
                     ])
                 ],
             ])
-            ->add('src2',FileType::class, [
+            ->add('src2', FileType::class, [
                 'label' => 'Desktop ',
 
                 // unmapped means that this field is not associated to any entity property
@@ -79,6 +81,7 @@ class AdvertisementsType extends AbstractType
                         'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
+                            'image/jpg',
                             'image/png',
                             'image/svg',
                         ],
@@ -86,7 +89,7 @@ class AdvertisementsType extends AbstractType
                     ])
                 ],
             ])
-            ->add('srcSm2',FileType::class, [
+            ->add('srcSm2', FileType::class, [
                 'label' => 'Movile ',
 
                 // unmapped means that this field is not associated to any entity property
@@ -103,6 +106,7 @@ class AdvertisementsType extends AbstractType
                         'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
+                            'image/jpg',
                             'image/png',
                             'image/svg',
                         ],
@@ -110,7 +114,7 @@ class AdvertisementsType extends AbstractType
                     ])
                 ],
             ])
-            ->add('src3',FileType::class, [
+            ->add('src3', FileType::class, [
                 'label' => 'Desktop ',
 
                 // unmapped means that this field is not associated to any entity property
@@ -127,6 +131,7 @@ class AdvertisementsType extends AbstractType
                         'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
+                            'image/jpg',
                             'image/png',
                             'image/svg',
                         ],
@@ -134,7 +139,7 @@ class AdvertisementsType extends AbstractType
                     ])
                 ],
             ])
-            ->add('srcSm3',FileType::class, [
+            ->add('srcSm3', FileType::class, [
                 'label' => 'Movile ',
 
                 // unmapped means that this field is not associated to any entity property
@@ -151,14 +156,14 @@ class AdvertisementsType extends AbstractType
                         'maxSize' => '2048k',
                         'mimeTypes' => [
                             'image/jpeg',
+                            'image/jpg',
                             'image/png',
                             'image/svg',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid document',
                     ])
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

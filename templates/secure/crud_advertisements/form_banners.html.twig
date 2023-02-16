@@ -20,12 +20,14 @@
 						<div class="m-2"><img class="img-fluid" alt="Imagen" src="{{ data.src1 }}"/></div>
 					{% endif %}
 					{{ form_widget(form.src1) }}
+					{{ form_errors(form.src1) }}
 					<br>
 					{{ form_label(form.srcSm1) }}
 					{% if data.srcSm1 %}
 						<div class="m-2"><img class="img-fluid" alt="Imagen" src="{{ data.srcSm1 }}"/></div>
 					{% endif %}
 					{{ form_widget(form.srcSm1) }}
+					{{ form_errors(form.srcSm1) }}
 				</div>
 			</div>
 		</div>
@@ -40,12 +42,14 @@
 						<div class="m-2"><img class="img-fluid" alt="Imagen" src="{{ data.src2 }}"/></div>
 					{% endif %}
 					{{ form_widget(form.src2) }}
+					{{ form_errors(form.src2) }}
 					<br>
 					{{ form_label(form.srcSm2) }}
 					{% if data.srcSm1 %}
 						<div class="m-2"><img class="img-fluid" alt="Imagen" src="{{ data.srcSm2 }}"/></div>
 					{% endif %}
 					{{ form_widget(form.srcSm2) }}
+					{{ form_errors(form.srcSm2) }}
 				</div>
 			</div>
 		</div>
@@ -60,12 +64,14 @@
 						<div class="m-2"><img class="img-fluid" alt="Imagen" src="{{ data.src3 }}"/></div>
 					{% endif %}
 					{{ form_widget(form.src3) }}
+					{{ form_errors(form.src3) }}
 					<br>
 					{{ form_label(form.srcSm3) }}
 					{% if data.srcSm1 %}
 						<div class="m-2"><img class="img-fluid" alt="Imagen" src="{{ data.srcSm3 }}"/></div>
 					{% endif %}
 					{{ form_widget(form.srcSm3) }}
+					{{ form_errors(form.srcSm3) }}
 				</div>
 			</div>
 		</div>

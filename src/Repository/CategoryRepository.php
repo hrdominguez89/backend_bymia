@@ -112,11 +112,24 @@ class CategoryRepository extends ServiceEntityRepository
     {
         return  $this->createQueryBuilder('c')
             ->where('c.id3pl IS NOT NULL')
-            ->where('c.visible = :visible')
+            ->andWhere('c.visible = :visible')
             ->setParameter('visible', true)
             ->orderBy('c.principal', 'DESC')
             ->addOrderBy('c.name', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function getPrincipalCategories(){
+        return  $this->createQueryBuilder('c')
+            ->select('c.id,c.name')
+            ->where('c.id3pl IS NOT NULL')
+            ->andWhere('c.visible = :visible')
+            ->andWhere('c.principal = :principal')
+            ->setParameter('visible', true)
+            ->setParameter('principal', true)
+            ->addOrderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
     }
 }

@@ -181,4 +181,15 @@ class Advertisements
         return $this;
     }
 
+    public function getBanners()
+    {
+        return [
+            "banner1-desktop" => $this->getSrc1(),
+            "banner1-mobile" => $this->getSrcSm1(),
+            "banner2-desktop" => $this->getSrc2(),
+            "banner2-mobile" => $this->getSrcSm2(),
+            "banner3-desktop" => $this->getSrc3(),
+            "banner3-mobile" => $this->getSrcSm3()
+        ];
+    }
 }

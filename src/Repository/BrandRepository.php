@@ -61,4 +61,18 @@ class BrandRepository extends ServiceEntityRepository
         return $brands->getQuery()
             ->getResult();
     }
+
+
+    public function getPrincipalBrands(){
+        return  $this->createQueryBuilder('b')
+            ->select('b.id,b.name')
+            ->where('b.id3pl IS NOT NULL')
+            ->andWhere('b.visible = :visible')
+            ->andWhere('b.principal = :principal')
+            ->setParameter('visible', true)
+            ->setParameter('principal', true)
+            ->addOrderBy('b.name', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

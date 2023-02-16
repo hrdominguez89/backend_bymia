@@ -4,7 +4,7 @@ namespace App\Controller\Secure;
 
 use App\Entity\Advertisements;
 use App\Form\AdvertisementsType;
-use App\Helpers\FileUploader;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrudAdvertisementsController extends AbstractController
 {
+
+    private $pathImg = 'banners';
 
     /**
      * @Route("/", name="secure_crud_advertisements_new", methods={"GET","POST"})
@@ -29,7 +31,6 @@ class CrudAdvertisementsController extends AbstractController
             $advertisement = $arr_advertisement[0];
         $form = $this->createForm(AdvertisementsType::class, $advertisement);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $src1 = $form->get('src1')->getData();
             $srcSm1 = $form->get('srcSm1')->getData();
@@ -37,29 +38,31 @@ class CrudAdvertisementsController extends AbstractController
             $srcSm2 = $form->get('srcSm2')->getData();
             $src3 = $form->get('src3')->getData();
             $srcSm3 = $form->get('srcSm3')->getData();
+
+
             if (isset($src1)) {
-                $imageFileName = $fileUploader->upload($src1);
-                $advertisement->setSrc1($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($src1, $this->pathImg, 'banner-1-desktop');
+                $advertisement->setSrc1($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($srcSm1)) {
-                $imageFileName = $fileUploader->upload($srcSm1);
-                $advertisement->setSrcSm1($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($srcSm1, $this->pathImg, 'banner-1-desktop');
+                $advertisement->setSrcSm1($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($src2)) {
-                $imageFileName = $fileUploader->upload($src2);
-                $advertisement->setSrc2($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($src2, $this->pathImg, 'banner-1-desktop');
+                $advertisement->setSrc2($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($srcSm2)) {
-                $imageFileName = $fileUploader->upload($srcSm2);
-                $advertisement->setSrcSm2($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($srcSm2, $this->pathImg, 'banner-1-desktop');
+                $advertisement->setSrcSm2($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($src3)) {
-                $imageFileName = $fileUploader->upload($src3);
-                $advertisement->setSrc3($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($src3, $this->pathImg, 'banner-1-desktop');
+                $advertisement->setSrc3($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($srcSm3)) {
-                $imageFileName = $fileUploader->upload($srcSm3);
-                $advertisement->setSrcSm3($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
+                $imageFileName = $fileUploader->upload($srcSm3, $this->pathImg, 'banner-1-desktop');
+                $advertisement->setSrcSm3($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
 
             $entityManager = $this->getDoctrine()->getManager();

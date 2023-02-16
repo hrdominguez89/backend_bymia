@@ -20,6 +20,8 @@ use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
 use App\Form\ContactType;
 use App\Helpers\SendCustomerToCrm;
+use App\Repository\AdvertisementsRepository;
+use App\Repository\BrandRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
@@ -38,6 +40,48 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
  */
 class FrontApiController extends AbstractController
 {
+
+
+    /**
+     * @Route("/searchTypeList", name="api_search_type_list",methods={"GET"})
+     */
+    public function searchTypeList(CategoryRepository $categoryRepository, TagRepository $tagRepository, BrandRepository $brandRepository): Response
+    {
+
+        $principalCategories = $categoryRepository->getPrincipalCategories();
+        $principalBrands = $brandRepository->getPrincipalBrands();
+        $principalTags = $tagRepository->getPrincipalTags();
+
+        $searchList = [
+            [
+                "title" => 'Todos',
+                "slug" => '',
+                "items" => [],
+            ],
+            [
+                "title" => 'Categorías',
+                "slug" => "c=",
+                "items" => $principalCategories
+            ],
+            [
+                "title" => 'Marcas',
+                "slug" => "b=",
+                "items" => $principalBrands
+            ],
+            [
+                "title" => 'Otros',
+                "slug" => "t=",
+                "items" => $principalTags
+            ],
+        ];
+
+        return $this->json(
+            $searchList,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
 
     /**
      * @Route("/login", name="api_login",methods={"POST"})
@@ -156,6 +200,42 @@ class FrontApiController extends AbstractController
     }
 
     /**
+     * @Route("/products/search", name="api_products_search",methods={"GET"})
+     */
+    public function productsSearch(
+        CategoryRepository $categoryRepository,
+        TagRepository $tagRepository,
+        BrandRepository $brandRepository,
+        ProductRepository $productRepository,
+        Request $request
+    ): Response {
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+        // $category = $categoryRepository->find($categoryId); //reemplazar para qe busque categorias visibles con id3pl.
+        dd($data['c']);
+        // Definicion de filtros
+        // k=keyword
+        // c=categorias,
+        // b=marcas,
+        // t=etiquetas,
+        // i=indice,
+        // l=limit,
+
+
+        return $this->json(
+            ['a' => 'b'],
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+
+        return $this->json(
+            ['message' => 'Not found'],
+            Response::HTTP_NOT_FOUND,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
      * @Route("/products/tag/{slug_tag}", name="api_products_tag",methods={"GET"})
      */
     public function productsTag($slug_tag, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
@@ -228,6 +308,21 @@ class FrontApiController extends AbstractController
 
         return $this->json(
             $sliders,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/banners", name="api_banners",methods={"GET"})
+     */
+    public function banners(AdvertisementsRepository $advertisementsRepository): Response
+    {
+
+        $banners = $advertisementsRepository->find(1);
+
+        return $this->json(
+            $banners->getBanners(),
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
@@ -311,7 +406,7 @@ class FrontApiController extends AbstractController
                     "description_en" => $category->getDescriptionEn(),
                     "principal" => $category->getPrincipal(),
                     "image" => $category->getImage(),
-                    "slug" => $category->getSlug(),
+                    "slug" => 'c=' . $category->getId(),
                 ]
             );
         }
