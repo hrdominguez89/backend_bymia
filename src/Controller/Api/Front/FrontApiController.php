@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
 use App\Form\ContactType;
-use App\Form\PriceListType;
+use App\Form\ListPriceType;
 use App\Helpers\SendCustomerToCrm;
 use App\Repository\AdvertisementsRepository;
 use App\Repository\BrandRepository;
@@ -201,14 +201,14 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/priceList", name="api_price_list",methods={"POST"})
+     * @Route("/listPrice", name="api_list_price",methods={"POST"})
      */
-    public function priceList(EnqueueEmail $queue, Request $request): Response
+    public function listPrice(EnqueueEmail $queue, Request $request): Response
     {
         $body = $request->getContent();
         $data = json_decode($body, true);
 
-        $form = $this->createForm(PriceListType::class);
+        $form = $this->createForm(ListPriceType::class);
         $form->submit($data, false);
 
         if (!$form->isValid()) {

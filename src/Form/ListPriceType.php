@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-class PriceListType extends AbstractType
+class ListPriceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
