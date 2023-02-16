@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
 use App\Form\ContactType;
+use App\Form\PriceListType;
 use App\Helpers\SendCustomerToCrm;
 use App\Repository\AdvertisementsRepository;
 use App\Repository\BrandRepository;
@@ -194,6 +195,49 @@ class FrontApiController extends AbstractController
 
         return $this->json(
             ['message' => 'Formulario de contacto enviado correctamente.'],
+            Response::HTTP_CREATED,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/priceList", name="api_price_list",methods={"POST"})
+     */
+    public function priceList(EnqueueEmail $queue, Request $request): Response
+    {
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        $form = $this->createForm(PriceListType::class);
+        $form->submit($data, false);
+
+        if (!$form->isValid()) {
+            $error_forms = $this->getErrorsFromForm($form);
+            return $this->json(
+                [
+                    'message' => 'Error de validación',
+                    'validation' => $error_forms
+                ],
+                Response::HTTP_BAD_REQUEST,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        //queue the email
+        $id_email = $queue->enqueue(
+            Constants::EMAIL_TYPE_PRICE_LIST, //tipo de email
+            Constants::EMAIL_PRICE_LIST, //email destinatario
+            [ //parametros
+                'email' => $data['email'],
+            ]
+        );
+
+        //Intento enviar el correo encolado
+        $queue->sendEnqueue($id_email);
+
+
+        return $this->json(
+            ['message' => 'Solicitud enviada con exito.'],
             Response::HTTP_CREATED,
             ['Content-Type' => 'application/json']
         );

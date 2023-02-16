@@ -8,6 +8,8 @@ class Constants
     // EMAILS ADDRESS
 
     const EMAIL_CONTACT = 'hrdominguez89@gmail.com';
+    const EMAIL_PRICE_LIST = 'hrdominguez89@gmail.com';
+
 
     // END EMAILS ADDRESS
 
@@ -20,6 +22,8 @@ class Constants
     const EMAIL_TYPE_PASSWORD_CHANGE_REQUEST = 4;
     const EMAIL_TYPE_PASSWORD_CHANGE_SUCCESSFUL = 5;
     const EMAIL_TYPE_CONTACT = 6;
+    const EMAIL_TYPE_PRICE_LIST = 7;
+
 
 
     // END EMAIL TYPES
