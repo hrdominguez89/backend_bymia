@@ -408,7 +408,7 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findProductsVisibleByTag($tag, $category, $limit = 4, $index = null)
+    public function findProductsVisibleByTag($tag, $category, $limit = 4, $index = 0)
     {
 
         $today = new DateTime();
@@ -427,11 +427,41 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('tag_expires', false)
             ->setParameter('today', $today);
         if ($index) {
-            $products->setFirstResult($index*$limit);
+            $products->setFirstResult($index);
         }
         $products->setMaxResults($limit);
 
         return $products->getQuery()
             ->getResult();
+    }
+
+    public function findProductByFilters($filters, $limit = 4, $index = 0)
+    {
+        $today = new DateTime();
+
+        dd(count($filters));
+        $products = $this->createQueryBuilder('p')
+            ->where('p.tag = :tag')
+            ->andWhere('p.id3pl IS NOT NULL')
+            ->andWhere('p.category = :category')
+            ->andWhere('p.visible = :visible')
+            ->andWhere(
+                'p.tag_expires = :tag_expires or p.tag_expiration_date > :today'
+            )
+            // ->setParameter('tag', $tag)
+            // ->setParameter('category', $category)
+            ->setParameter('visible', true)
+            ->setParameter('tag_expires', false)
+            ->setParameter('today', $today);
+        if ($index) {
+            $products->setFirstResult($index);
+        }
+        $products->setMaxResults($limit);
+
+        return $products->getQuery()
+            ->getResult();
+
+
+        return $products;
     }
 }

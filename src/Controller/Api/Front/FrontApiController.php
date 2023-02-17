@@ -253,10 +253,7 @@ class FrontApiController extends AbstractController
         ProductRepository $productRepository,
         Request $request
     ): Response {
-        $body = $request->getContent();
-        $data = json_decode($body, true);
         // $category = $categoryRepository->find($categoryId); //reemplazar para qe busque categorias visibles con id3pl.
-        dd($data['c']);
         // Definicion de filtros
         // k=keyword
         // c=categorias,
@@ -264,6 +261,44 @@ class FrontApiController extends AbstractController
         // t=etiquetas,
         // i=indice,
         // l=limit,
+
+        $limit = $request->query->getInt('l', 4);
+        $index = $request->query->getInt('i', 0) * $limit;
+
+        $keyword = $request->query->get('k', null);
+        $category = $request->query->get('c', null) ? $categoryRepository->find($request->query->get('c')) : null;
+        $brand = $request->query->get('b', null) ? $brandRepository->find($request->query->get('b')) : null;
+        $tag = $request->query->get('t', null) ? $tagRepository->find($request->query->get('t')) : null;
+
+        $filters = [];
+        if ($keyword) {
+            $filters[] = [
+                "method" => 'LIKE',
+                "parameter" => $keyword,
+            ];
+        }
+        if ($category) {
+            $filters[] = [
+                "method" => '=',
+                "parameter" => $category,
+            ];
+        }
+        if ($brand) {
+            $filters[] = [
+                "method" => '=',
+                "parameter" => $brand,
+            ];
+        }
+        if ($tag) {
+            $filters[] = [
+                "method" => '=',
+                "parameter" => $tag,
+            ];
+        }
+
+        $products = $productRepository->findProductByFilters($filters, $limit, $index);
+        dd($products);
+
 
 
         return $this->json(
@@ -291,8 +326,8 @@ class FrontApiController extends AbstractController
             $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
             $categoryPlacasDeVideo = $categoryRepository->findOneBySlug('placas-de-video');
 
-            $index = $request->query->getInt('i', 0);
             $limit = $request->query->getInt('l', 4);
+            $index = $request->query->getInt('i', 0) * $limit;
 
             $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops, $limit, $index);
             $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
