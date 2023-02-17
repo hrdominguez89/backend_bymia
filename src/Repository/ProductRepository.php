@@ -427,7 +427,7 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('tag_expires', false)
             ->setParameter('today', $today);
         if ($index) {
-            $products->setFirstResult($index);
+            $products->setFirstResult($index*$limit);
         }
         $products->setMaxResults($limit);
 
