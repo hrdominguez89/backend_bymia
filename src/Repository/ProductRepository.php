@@ -440,6 +440,8 @@ class ProductRepository extends ServiceEntityRepository
         $today = new DateTime();
 
         dd(count($filters));
+
+        
         $products = $this->createQueryBuilder('p')
             ->where('p.tag = :tag')
             ->andWhere('p.id3pl IS NOT NULL')
