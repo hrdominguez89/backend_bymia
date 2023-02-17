@@ -282,19 +282,23 @@ class FrontApiController extends AbstractController
     /**
      * @Route("/products/tag/{slug_tag}", name="api_products_tag",methods={"GET"})
      */
-    public function productsTag($slug_tag, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
+    public function productsTag($slug_tag, Request $request, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
     {
         $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
         if ($tag) {
 
-            $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
-            $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
-            $categoryPlacasDeVideo = $categoryRepository->findOneBySlug('placas-de-video');
+            $categoryLaptops = $categoryRepository->findOneBySlug('test-laptops');
+            $categoryCelulares = $categoryRepository->findOneBySlug('test-celulares');
+            $categoryPlacasDeVideo = $categoryRepository->findOneBySlug('test-placas-de-video');
 
-            $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops);
-            $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares);
-            $productsPlacasDeVideo = $productRepository->findProductsVisibleByTag($tag, $categoryPlacasDeVideo);
+            $index = $request->query->getInt('i', 0);
+            $limit = $request->query->getInt('l', 4);
 
+            $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops, $limit, $index);
+            $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
+            $productsPlacasDeVideo = $productRepository->findProductsVisibleByTag($tag, $categoryPlacasDeVideo, $limit, $index);
+
+            // productos por categoria laptops
             $productsByCategory = [];
 
             foreach ($productsLaptops as $productLaptop) {
@@ -305,6 +309,8 @@ class FrontApiController extends AbstractController
                 "category" => $categoryLaptops->getName(),
                 "products" => $productsByCategory
             ];
+
+            // productos por categoria celulares
 
             $productsByCategory = [];
 
@@ -317,6 +323,7 @@ class FrontApiController extends AbstractController
                 "products" => $productsByCategory
             ];
 
+            //productos por placas de video
             $productsByCategory = [];
 
             foreach ($productsPlacasDeVideo as $productPlacaDeVideo) {

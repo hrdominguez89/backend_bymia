@@ -408,9 +408,9 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findProductsVisibleByTag($tag, $category)
+    public function findProductsVisibleByTag($tag, $category, $limit = 4, $index = null)
     {
-        
+
         $today = new DateTime();
 
         $products = $this->createQueryBuilder('p')
@@ -425,8 +425,11 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('category', $category)
             ->setParameter('visible', true)
             ->setParameter('tag_expires', false)
-            ->setParameter('today', $today)
-            ->setMaxResults(4);
+            ->setParameter('today', $today);
+        if ($index) {
+            $products->setFirstResult($index);
+        }
+        $products->setMaxResults($limit);
 
         return $products->getQuery()
             ->getResult();
