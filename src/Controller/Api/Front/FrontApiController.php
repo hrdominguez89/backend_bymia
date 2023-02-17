@@ -287,9 +287,9 @@ class FrontApiController extends AbstractController
         $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
         if ($tag) {
 
-            $categoryLaptops = $categoryRepository->findOneBySlug('test-laptops');
-            $categoryCelulares = $categoryRepository->findOneBySlug('test-celulares');
-            $categoryPlacasDeVideo = $categoryRepository->findOneBySlug('test-placas-de-video');
+            $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
+            $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
+            $categoryPlacasDeVideo = $categoryRepository->findOneBySlug('placas-de-video');
 
             $index = $request->query->getInt('i', 0);
             $limit = $request->query->getInt('l', 4);
