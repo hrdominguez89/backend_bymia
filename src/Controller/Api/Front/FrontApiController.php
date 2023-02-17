@@ -306,7 +306,7 @@ class FrontApiController extends AbstractController
             }
 
             $products[] = [
-                "category" => $categoryLaptops->getName(),
+                "category" => @$categoryLaptops->getName(),
                 "products" => $productsByCategory
             ];
 
@@ -319,7 +319,7 @@ class FrontApiController extends AbstractController
             }
 
             $products[] = [
-                "category" => $categoryCelulares->getName(),
+                "category" => @$categoryCelulares->getName(),
                 "products" => $productsByCategory
             ];
 
@@ -331,7 +331,7 @@ class FrontApiController extends AbstractController
             }
 
             $products[] = [
-                "category" => $categoryPlacasDeVideo->getName(),
+                "category" => @$categoryPlacasDeVideo->getName(),
                 "products" => $productsByCategory
             ];
 
