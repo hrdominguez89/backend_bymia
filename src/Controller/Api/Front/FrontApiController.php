@@ -553,7 +553,7 @@ class FrontApiController extends AbstractController
 
 
         $form = $this->createForm(RegisterCustomerApiType::class, $customer);
-        $form->submit($data);
+        $form->submit($data, false);
 
         if (!$form->isValid()) {
             $error_forms = $this->getErrorsFromForm($form);

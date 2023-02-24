@@ -29,9 +29,6 @@ class RegisterCustomerApiType extends AbstractType
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
-                    new Type([
-                        'type' => 'integer',
-                    ])
                 ]
             ])
             ->add('status', EntityType::class, [
@@ -63,9 +60,6 @@ class RegisterCustomerApiType extends AbstractType
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
-                    new Type([
-                        'type' => 'integer',
-                    ])
                 ]
             ])
             ->add('cel_phone', TextType::class, [
