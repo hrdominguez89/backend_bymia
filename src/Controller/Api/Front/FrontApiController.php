@@ -244,7 +244,7 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/products/search", name="api_products_search",methods={"GET"})
+     * @Route("/products/search?c=celulares&b=samsung&k=celular&l=4&i= samsung a20", name="api_products_search",methods={"GET"})
      */
     public function productsSearch(
         CategoryRepository $categoryRepository,
@@ -261,6 +261,16 @@ class FrontApiController extends AbstractController
         // t=etiquetas,
         // i=indice,
         // l=limit,
+        // [
+        //     id,
+        //     name,
+        //     brand,
+        //     price,
+        //     old_price,
+        //     reviews,
+        //     rating,
+        //     image
+        // ]
 
         $limit = $request->query->getInt('l', 4);
         $index = $request->query->getInt('i', 0) * $limit;

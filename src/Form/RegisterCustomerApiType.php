@@ -76,14 +76,14 @@ class RegisterCustomerApiType extends AbstractType
             ])
             ->add('identity_type', TextType::class, [
                 'constraints' => [
-                    new NotNull(),
-                    new NotBlank(),
+                    // new NotNull(),
+                    // new NotBlank(),
                 ]
             ])
             ->add('identity_number', TextType::class, [
                 'constraints' => [
-                    new NotNull(),
-                    new NotBlank(),
+                    // new NotNull(),
+                    // new NotBlank(),
                 ]
             ])
             ->add('date_of_birth', DateType::class);
