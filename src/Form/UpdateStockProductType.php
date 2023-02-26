@@ -10,7 +10,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Type;
 
 class UpdateStockProductType extends AbstractType
 {
@@ -21,40 +20,28 @@ class UpdateStockProductType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotNull(),
-                    new NotBlank(),
-                    new Type([
-                        'type' => 'integer',
-                    ])
+                    new NotBlank()
                 ]
             ])
             ->add('commited', IntegerType::class, [
                 'required' => true,
                 'constraints' => [
                     new NotNull(),
-                    new NotBlank(),
-                    new Type([
-                        'type' => 'integer',
-                    ])
+                    new NotBlank()
                 ]
             ])
             ->add('incomming', IntegerType::class, [
                 'required' => true,
                 'constraints' => [
                     new NotNull(),
-                    new NotBlank(),
-                    new Type([
-                        'type' => 'integer',
-                    ])
+                    new NotBlank()
                 ]
             ])
             ->add('available', IntegerType::class, [
                 'required' => true,
                 'constraints' => [
                     new NotNull(),
-                    new NotBlank(),
-                    new Type([
-                        'type' => 'integer',
-                    ])
+                    new NotBlank()
                 ]
             ])
             ->add('action', TextType::class, [

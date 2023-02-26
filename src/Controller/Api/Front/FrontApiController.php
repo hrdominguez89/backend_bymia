@@ -343,6 +343,19 @@ class FrontApiController extends AbstractController
             $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
             $productsPlacasDeVideo = $productRepository->findProductsVisibleByTag($tag, $categoryPlacasDeVideo, $limit, $index);
 
+
+            //productos por placas de video
+            $productsByCategory = [];
+
+            foreach ($productsPlacasDeVideo as $productPlacaDeVideo) {
+                $productsByCategory[] = $productPlacaDeVideo->getBasicDataProduct();
+            }
+
+            $products[] = [
+                "category" => "Audios",
+                "products" => $productsByCategory
+            ];
+
             // productos por categoria laptops
             $productsByCategory = [];
 
@@ -368,17 +381,7 @@ class FrontApiController extends AbstractController
                 "products" => $productsByCategory
             ];
 
-            //productos por placas de video
-            $productsByCategory = [];
-
-            foreach ($productsPlacasDeVideo as $productPlacaDeVideo) {
-                $productsByCategory[] = $productPlacaDeVideo->getBasicDataProduct();
-            }
-
-            $products[] = [
-                "category" => "Placas de video",
-                "products" => $productsByCategory
-            ];
+            
 
             return $this->json(
                 $products,

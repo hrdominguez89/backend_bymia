@@ -15,7 +15,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Type;
 
 
 class CustomerAddressApiType extends AbstractType
@@ -28,10 +27,7 @@ class CustomerAddressApiType extends AbstractType
                 'class'  => Countries::class,
                 'constraints' => [
                     new NotNull(),
-                    new NotBlank(),
-                    new Type([
-                        'type' => 'integer',
-                    ])
+                    new NotBlank()
                 ]
             ])
             ->add('state', EntityType::class, [
