@@ -160,7 +160,7 @@ body {
   --mia-red-color: #080814;
 }
 
-.red-background {
+.water-green-background {
   background-color: var(--mia-red-color) !important;
   color: #15fed4;
 }

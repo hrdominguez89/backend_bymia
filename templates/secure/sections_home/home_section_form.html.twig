@@ -1,0 +1,149 @@
+{% extends 'home/index.html.twig' %}
+{% block title %}
+	{{title}}
+{% endblock %}
+
+{% block content %}
+	{{ parent() }}
+	<h1>{{title}}</h1>
+	{{ form_start(form) }}
+	<div class="row my-2">
+		<div class="col-6">
+			{{ form_label(form.titleSection1) }}
+			{{ form_widget(form.titleSection1) }}
+			{{ form_errors(form.titleSection1) }}
+		</div>
+		<div class="col-6">
+			{{ form_label(form.tagSection1) }}
+			{{ form_widget(form.tagSection1) }}
+			{{ form_errors(form.tagSection1) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col-4">
+			{{ form_label(form.category1Section1) }}
+			{{ form_widget(form.category1Section1) }}
+			{{ form_errors(form.category1Section1) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category2Section1) }}
+			{{ form_widget(form.category2Section1) }}
+			{{ form_errors(form.category2Section1) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category3Section1) }}
+			{{ form_widget(form.category3Section1) }}
+			{{ form_errors(form.category3Section1) }}
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="row my-2">
+		<div class="col-6">
+			{{ form_label(form.titleSection2) }}
+			{{ form_widget(form.titleSection2) }}
+			{{ form_errors(form.titleSection2) }}
+		</div>
+		<div class="col-6">
+			{{ form_label(form.tagSection2) }}
+			{{ form_widget(form.tagSection2) }}
+			{{ form_errors(form.tagSection2) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col-4">
+			{{ form_label(form.category1Section2) }}
+			{{ form_widget(form.category1Section2) }}
+			{{ form_errors(form.category1Section2) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category2Section2) }}
+			{{ form_widget(form.category2Section2) }}
+			{{ form_errors(form.category2Section2) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category3Section2) }}
+			{{ form_widget(form.category3Section2) }}
+			{{ form_errors(form.category3Section2) }}
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="row my-2">
+		<div class="col-6">
+			{{ form_label(form.titleSection3) }}
+			{{ form_widget(form.titleSection3) }}
+			{{ form_errors(form.titleSection3) }}
+		</div>
+		<div class="col-6">
+			{{ form_label(form.tagSection3) }}
+			{{ form_widget(form.tagSection3) }}
+			{{ form_errors(form.tagSection3) }}
+		</div>
+	</div>
+	<div class="row my-2">
+		<div class="col-4">
+			{{ form_label(form.category1Section3) }}
+			{{ form_widget(form.category1Section3) }}
+			{{ form_errors(form.category1Section3) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category2Section3) }}
+			{{ form_widget(form.category2Section3) }}
+			{{ form_errors(form.category2Section3) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category3Section3) }}
+			{{ form_widget(form.category3Section3) }}
+			{{ form_errors(form.category3Section3) }}
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="row my-2">
+		<div class="col-6">
+			{{ form_label(form.titleSection4) }}
+			{{ form_widget(form.titleSection4) }}
+			{{ form_errors(form.titleSection4) }}
+		</div>
+		<div class="col-6">
+			{{ form_label(form.tagSection4) }}
+			{{ form_widget(form.tagSection4) }}
+			{{ form_errors(form.tagSection4) }}
+		</div>
+	</div>
+
+	<div class="row my-2">
+		<div class="col-4">
+			{{ form_label(form.category1Section4) }}
+			{{ form_widget(form.category1Section4) }}
+			{{ form_errors(form.category1Section4) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category2Section4) }}
+			{{ form_widget(form.category2Section4) }}
+			{{ form_errors(form.category2Section4) }}
+		</div>
+		<div class="col-4">
+			{{ form_label(form.category3Section4) }}
+			{{ form_widget(form.category3Section4) }}
+			{{ form_errors(form.category3Section4) }}
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="row my-2">
+
+		<div class="col-12 text-end">
+			<a class="btn btn-secondary" href="{{ path('app_homepage') }}">Regresar</a>
+
+			<button class="btn btn-primary">Guardar</button>
+		</div>
+
+	</div>
+	{{ form_end(form) }}
+{% endblock %}

@@ -111,6 +111,11 @@ class Category
      */
     private $subcategories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category1Section1")
+     */
+    private $sectionsHomes;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -119,6 +124,7 @@ class Category
         $this->principal = false;
         $this->attempts_send_3pl = 0;
         $this->subcategories = new ArrayCollection();
+        $this->sectionsHomes = new ArrayCollection();
 
     }
 
@@ -422,6 +428,36 @@ class Category
             // set the owning side to null (unless already changed)
             if ($subcategory->getCategory() === $this) {
                 $subcategory->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes(): Collection
+    {
+        return $this->sectionsHomes;
+    }
+
+    public function addSectionsHome(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes->contains($sectionsHome)) {
+            $this->sectionsHomes[] = $sectionsHome;
+            $sectionsHome->setCategory1Section1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory1Section1() === $this) {
+                $sectionsHome->setCategory1Section1(null);
             }
         }
 

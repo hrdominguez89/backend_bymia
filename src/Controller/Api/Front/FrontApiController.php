@@ -29,6 +29,7 @@ use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
 use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
+use App\Repository\SectionsHomeRepository;
 use App\Repository\TagRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -334,25 +335,25 @@ class FrontApiController extends AbstractController
 
             $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
             $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
-            $categoryPlacasDeVideo = $categoryRepository->findOneBySlug('placas-de-video');
+            $categoryAudio = $categoryRepository->findOneBySlug('audio');
 
             $limit = $request->query->getInt('l', 4);
             $index = $request->query->getInt('i', 0) * $limit;
 
             $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops, $limit, $index);
             $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
-            $productsPlacasDeVideo = $productRepository->findProductsVisibleByTag($tag, $categoryPlacasDeVideo, $limit, $index);
+            $productsAudio = $productRepository->findProductsVisibleByTag($tag, $categoryAudio, $limit, $index);
 
 
             //productos por placas de video
             $productsByCategory = [];
 
-            foreach ($productsPlacasDeVideo as $productPlacaDeVideo) {
-                $productsByCategory[] = $productPlacaDeVideo->getBasicDataProduct();
+            foreach ($productsAudio as $productAudio) {
+                $productsByCategory[] = $productAudio->getBasicDataProduct();
             }
 
             $products[] = [
-                "category" => "Audios",
+                "category" => "Audio",
                 "products" => $productsByCategory
             ];
 
@@ -381,10 +382,72 @@ class FrontApiController extends AbstractController
                 "products" => $productsByCategory
             ];
 
-            
+
 
             return $this->json(
                 $products,
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/json']
+            );
+        } else {
+            return $this->json(
+                ['message' => 'Not found'],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+    }
+
+
+    /**
+     * @Route("/products/sections", name="api_products_sections",methods={"GET"})
+     */
+    public function sections(Request $request, ProductRepository $productRepository, SectionsHomeRepository $sectionsHomeRepository): Response
+    {
+        //traigo la linea 1 de secciones.
+        $sections = $sectionsHomeRepository->findAll()[0];
+
+        if ($sections) {
+
+            $products_by_sections = [];
+
+            $limit = $request->query->getInt('l', 4);
+            $index = $request->query->getInt('i', 0) * $limit;
+
+            for ($i = 1; $i <= 4; $i++) {
+                //creo variables para luego utilizarlas como funciones para poder traerme los datos de cada seccion
+                $getTitleSectionN = "getTitleSection" . $i;
+                $getTagSectionN = "getTagSection" . $i;
+
+                //genero un array con cada seccion con las categorias de cada seccion
+                $products_by_sections[] =
+                    [
+                        "title" => $sections->$getTitleSectionN(),
+                        "categories" => []
+                    ];
+
+                for ($j = 1; $j <= 3; $j++) {
+                    //genero variable para utilizarla luego como funcion
+                    $getCategoryNSectionN = "getCategory" . $j . "Section" . $i;
+
+                    $products = $productRepository->findProductsVisibleByTag($sections->$getTagSectionN(), $sections->$getCategoryNSectionN(), $limit, $index);
+
+                    $productsByCategory = [];
+
+                    foreach ($products as $product) {
+                        $productsByCategory[] = $product->getBasicDataProduct();
+                    }
+
+                    $products_by_sections[$i - 1]['categories'][] =
+                        [
+                            "category" => $sections->$getCategoryNSectionN()->getName(),
+                            "products" => $productsByCategory
+                        ];
+                }
+            }
+
+            return $this->json(
+                $products_by_sections,
                 Response::HTTP_OK,
                 ['Content-Type' => 'application/json']
             );

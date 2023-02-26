@@ -58,12 +58,18 @@ class Tag
      */
     private $principal;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="tagSection1")
+     */
+    private $sectionsHomes;
+
     public function __construct()
     {
         $this->visible = false;
         $this->created_at = new \DateTime();
         $this->products = new ArrayCollection();
         $this->principal = false;
+        $this->sectionsHomes = new ArrayCollection();
     }
 
     /**
@@ -174,6 +180,36 @@ class Tag
     public function setPrincipal(bool $principal): self
     {
         $this->principal = $principal;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes(): Collection
+    {
+        return $this->sectionsHomes;
+    }
+
+    public function addSectionsHome(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes->contains($sectionsHome)) {
+            $this->sectionsHomes[] = $sectionsHome;
+            $sectionsHome->setTagSection1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getTagSection1() === $this) {
+                $sectionsHome->setTagSection1(null);
+            }
+        }
 
         return $this;
     }
