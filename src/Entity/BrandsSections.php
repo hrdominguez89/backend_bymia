@@ -225,4 +225,40 @@ class BrandsSections
 
         return $this;
     }
+
+    public function getBrands()
+    {
+        return [
+            [
+                "id" => 1,
+                "name" => $this->getBrandName1(),
+                "image" => $this->getBrandImage1()
+            ],
+            [
+                "id" => 2,
+                "name" => $this->getBrandName2(),
+                "image" => $this->getBrandImage2()
+            ],
+            [
+                "id" => 3,
+                "name" => $this->getBrandName3(),
+                "image" => $this->getBrandImage3()
+            ],
+            [
+                "id" => 4,
+                "name" => $this->getBrandName4(),
+                "image" => $this->getBrandImage4()
+            ],
+            [
+                "id" => 5,
+                "name" => $this->getBrandName5(),
+                "image" => $this->getBrandImage5()
+            ],
+            [
+                "id" => 6,
+                "name" => $this->getBrandName6(),
+                "image" => $this->getBrandImage6()
+            ]
+        ];
+    }
 }

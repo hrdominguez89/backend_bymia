@@ -18,11 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
+use App\Entity\BrandsSections;
 use App\Form\ContactType;
 use App\Form\ListPriceType;
 use App\Helpers\SendCustomerToCrm;
 use App\Repository\AdvertisementsRepository;
 use App\Repository\BrandRepository;
+use App\Repository\BrandsSectionsRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
@@ -485,6 +487,21 @@ class FrontApiController extends AbstractController
 
         return $this->json(
             $banners->getBanners(),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/brands", name="api_brands",methods={"GET"})
+     */
+    public function brands(BrandsSectionsRepository $brandsSectionsRepository): Response
+    {
+
+        $brands = $brandsSectionsRepository->find(1);
+
+        return $this->json(
+            $brands->getBrands(),
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
