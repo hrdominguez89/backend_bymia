@@ -24,12 +24,12 @@ class HistoricalPriceCost
     private $product;
 
     /**
-     * @ORM\Column(type="float", scale=2)
+     * @ORM\Column(type="float")
      */
     private $cost;
 
     /**
-     * @ORM\Column(type="float", scale=2)
+     * @ORM\Column(type="float")
      */
     private $price;
 
@@ -69,7 +69,7 @@ class HistoricalPriceCost
 
     public function getCost(): ?float
     {
-        return $this->cost;
+        return number_format($this->cost, 2, ',', '.');
     }
 
     public function setCost(float $cost): self
@@ -81,7 +81,7 @@ class HistoricalPriceCost
 
     public function getPrice(): ?float
     {
-        return $this->price;
+        return number_format($this->price, 2, ',', '.');
     }
 
     public function setPrice(float $price): self

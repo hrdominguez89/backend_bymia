@@ -99,9 +99,9 @@
 
 								<td>{{product.subcategory ? product.subcategory.name:''}}</td>
 
-								<td class="text-center">{{product.cost}}</td>
+								<td class="text-center">$ {{product.cost|number_format(2, ',','.')}}</td>
 
-								<td class="text-center">{{product.price}}</td>
+								<td class="text-center">$ {{product.price|number_format(2, ',','.')}}</td>
 
 								<td class="text-center">{{product.onhand}}</td>
 
