@@ -49,6 +49,12 @@
 
 							<th>Precio &nbsp;</th>
 
+							<th>Descuento activo &nbsp;</th>
+
+							<th>Etiqueta &nbsp;</th>
+
+							<th>Etiqueta activa &nbsp;</th>
+
 							<th>Cant. en Warehouse &nbsp;</th>
 
 							<th>Cant. Reservado en Warehouse &nbsp;</th>
@@ -99,9 +105,17 @@
 
 								<td>{{product.subcategory ? product.subcategory.name:''}}</td>
 
-								<td class="text-center">$ {{product.cost|number_format(2, ',','.')}}</td>
+								<td class="text-center">$
+									{{product.cost|number_format(2, ',','.')}}</td>
 
-								<td class="text-center">$ {{product.price|number_format(2, ',','.')}}</td>
+								<td class="text-center">$
+									{{product.price|number_format(2, ',','.')}}</td>
+
+								<td class="text-center">{{product.getDiscountActive ? '% ' ~ product.getDiscountActive :''}}</td>
+
+								<td class="text-center">Etiqueta &nbsp;</td>
+
+								<td class="text-center">Etiqueta activo &nbsp;</td>
 
 								<td class="text-center">{{product.onhand}}</td>
 

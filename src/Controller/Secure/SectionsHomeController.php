@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SectionsHomeController extends AbstractController
 {
     /**
-     * @Route("/", name="secure_sections_home_index")
+     * @Route("/", name="secure_sections_home_index" methods={"POST","GET"})
      */
     public function index(SectionsHomeRepository $sectionsHomeRepository, Request $request): Response
     {
@@ -38,6 +38,15 @@ class SectionsHomeController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($data['sections_home']);
             $entityManager->flush();
+            
+            $message['type'] = 'modal';
+            $message['alert'] = 'success';
+            $message['title'] = 'Éxito';
+            $message['message'] = '
+                Cambios guardados con éxito
+                ';
+            $this->addFlash('message', $message);
+            return $this->redirectToRoute('secure_sections_home_index');
         }
         $data['form'] = $form;
         return $this->renderForm('secure/sections_home/home_section_form.html.twig', $data);

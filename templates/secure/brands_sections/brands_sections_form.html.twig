@@ -1,0 +1,185 @@
+{% extends 'home/index.html.twig' %}
+{% block title %}
+	{{title}}
+{% endblock %}
+
+{% block content %}
+	{{ parent() }}
+	<h1>{{title}}</h1>
+	{{ form_start(form) }}
+	<div class="row">
+		<div class="col-4">
+			<div class="card">
+				<div class="card-header">
+					<h5>Marca 1</h5>
+				</div>
+				<div class="card-body">
+
+					<div class="row">
+						<div class="col-12">
+							{{ form_label(form.brandName1) }}
+							{{ form_widget(form.brandName1) }}
+							{{ form_errors(form.brandName1) }}
+						</div>
+						<div class="col-12">
+							{{ form_label(form.brandImage1) }}
+							{% if data_img.brandImage1 %}
+								<div><img class="imagen-grid" alt="Imagen" src="{{ data.brandImage1 }}"/></div>
+							{% endif %}
+							{{ form_widget(form.brandImage1) }}
+							{{ form_errors(form.brandImage1)}}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="card">
+				<div class="card-header">
+					<h5>Marca 2</h5>
+				</div>
+				<div class="card-body">
+
+					<div class="row">
+						<div class="col-12">
+							{{ form_label(form.brandName2) }}
+							{{ form_widget(form.brandName2) }}
+							{{ form_errors(form.brandName2) }}
+						</div>
+						<div class="col-12">
+							{{ form_label(form.brandImage2) }}
+							{% if data_img.brandImage2 %}
+								<div><img class="imagen-grid" alt="Imagen" src="{{ data.brandImage2 }}"/></div>
+							{% endif %}
+							{{ form_widget(form.brandImage2) }}
+							{{ form_errors(form.brandImage2)}}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="card">
+				<div class="card-header">
+					<h5>Marca 3</h5>
+				</div>
+				<div class="card-body">
+
+					<div class="row">
+						<div class="col-12">
+							{{ form_label(form.brandName3) }}
+							{{ form_widget(form.brandName3) }}
+							{{ form_errors(form.brandName3) }}
+						</div>
+						<div class="col-12">
+							{{ form_label(form.brandImage3) }}
+							{% if data_img.brandImage3 %}
+								<div><img class="imagen-grid" alt="Imagen" src="{{ data.brandImage3 }}"/></div>
+							{% endif %}
+							{{ form_widget(form.brandImage3) }}
+							{{ form_errors(form.brandImage3)}}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="card">
+				<div class="card-header">
+					<h5>Marca 4</h5>
+				</div>
+				<div class="card-body">
+
+					<div class="row">
+						<div class="col-12">
+							{{ form_label(form.brandName4) }}
+							{{ form_widget(form.brandName4) }}
+							{{ form_errors(form.brandName4) }}
+						</div>
+						<div class="col-12">
+							{{ form_label(form.brandImage4) }}
+							{% if data_img.brandImage4 %}
+								<div><img class="imagen-grid" alt="Imagen" src="{{ data.brandImage4 }}"/></div>
+							{% endif %}
+							{{ form_widget(form.brandImage4) }}
+							{{ form_errors(form.brandImage4)}}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="card">
+				<div class="card-header">
+					<h5>Marca 5</h5>
+				</div>
+				<div class="card-body">
+
+					<div class="row">
+						<div class="col-12">
+							{{ form_label(form.brandName5) }}
+							{{ form_widget(form.brandName5) }}
+							{{ form_errors(form.brandName5) }}
+						</div>
+						<div class="col-12">
+							{{ form_label(form.brandImage5) }}
+							{% if data_img.brandImage5 %}
+								<div><img class="imagen-grid" alt="Imagen" src="{{ data.brandImage5 }}"/></div>
+							{% endif %}
+							{{ form_widget(form.brandImage5) }}
+							{{ form_errors(form.brandImage5)}}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="card">
+				<div class="card-header">
+					<h5>Marca 6</h5>
+				</div>
+				<div class="card-body">
+
+					<div class="row">
+						<div class="col-12">
+							{{ form_label(form.brandName6) }}
+							{{ form_widget(form.brandName6) }}
+							{{ form_errors(form.brandName6) }}
+						</div>
+						<div class="col-12">
+							{{ form_label(form.brandImage6) }}
+							{% if data_img.brandImage6 %}
+								<div><img class="imagen-grid" alt="Imagen" src="{{ data.brandImage6 }}"/></div>
+							{% endif %}
+							{{ form_widget(form.brandImage6) }}
+							{{ form_errors(form.brandImage6)}}
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div class="row my-2">
+
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('app_homepage') }}">Regresar</a>
+
+				<button class="btn btn-primary">Guardar</button>
+			</div>
+		</div>
+	</div>
+	{{ form_end(form) }}
+
+{% endblock %}
