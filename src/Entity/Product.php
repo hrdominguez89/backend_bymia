@@ -1107,8 +1107,8 @@ class Product
             "image" => $this->getPrincipalImage(),
             "rating" => $this->getRating(),
             "reviews" => $this->getReviews(),
-            "old_price" => $this->getDiscountActive() ? $this->getPrice() : null,
-            "price" => $this->getDiscountActive() ?  ($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())) : $this->getPrice()
+            "old_price" => $this->getDiscountActive() ? number_format($this->getPrice(), 2, ',', '.') : null,
+            "price" => $this->getDiscountActive() ?  number_format(($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())), 2, ',', '.') : $this->getPrice()
         ];
     }
 }

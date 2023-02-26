@@ -69,7 +69,7 @@ class HistoricalPriceCost
 
     public function getCost(): ?float
     {
-        return number_format($this->cost, 2, ',', '.');
+        return $this->cost;
     }
 
     public function setCost(float $cost): self
@@ -81,7 +81,7 @@ class HistoricalPriceCost
 
     public function getPrice(): ?float
     {
-        return number_format($this->price, 2, ',', '.');
+        return $this->price;
     }
 
     public function setPrice(float $price): self
