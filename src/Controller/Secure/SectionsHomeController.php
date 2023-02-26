@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SectionsHomeController extends AbstractController
 {
     /**
-     * @Route("/", name="secure_sections_home_index", methods={"POST","GET"})
+     * @Route("/", name="secure_sections_home_index", methods={"GET","POST"})
      */
     public function index(SectionsHomeRepository $sectionsHomeRepository, Request $request): Response
     {

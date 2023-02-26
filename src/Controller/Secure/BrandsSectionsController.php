@@ -92,7 +92,7 @@ class BrandsSectionsController extends AbstractController
                 Cambios guardados con éxito
                 ';
             $this->addFlash('message', $message);
-            return $this->redirectToRoute('secure_crud_advertisements_new');
+            return $this->redirectToRoute('secure_brands_sections_index');
         }
 
         $data['data_img'] = [
