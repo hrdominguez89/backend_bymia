@@ -1108,7 +1108,7 @@ class Product
             "rating" => $this->getRating(),
             "reviews" => $this->getReviews(),
             "old_price" => $this->getDiscountActive() ? strval(number_format($this->getPrice(), 2, ',', '.')) : null,
-            "price" => $this->getDiscountActive() ?  strval(number_format(($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())), 2, ',', '.')) : $this->getPrice()
+            "price" => $this->getDiscountActive() ?  strval(number_format(($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())), 2, ',', '.')) : number_format($this->getPrice(), 2, ',', '.')
         ];
     }
 }
