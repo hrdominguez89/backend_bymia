@@ -188,7 +188,7 @@ class Product
     private $long_description_en;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", scale=2)
      */
     private $weight;
 

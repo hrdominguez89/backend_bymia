@@ -24,12 +24,12 @@ class HistoricalPriceCost
     private $product;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", scale=2)
      */
     private $cost;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", scale=2)
      */
     private $price;
 
