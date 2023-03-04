@@ -149,7 +149,7 @@ class FrontApiController extends AbstractController
                 "wish_list" => [],
                 "shop_cart" => [],
                 "cel_phone" => $customer->getCelPhone(),
-                "date_of_birth" => $customer->getDateOfBirth()->format('Y-m-d'),
+                "date_of_birth" => $customer->getDateOfBirth() ? $customer->getDateOfBirth()->format('Y-m-d') : null,
             ]
         ]);
     }
