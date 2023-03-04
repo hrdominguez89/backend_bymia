@@ -53,7 +53,9 @@
 
 							<th>Etiqueta &nbsp;</th>
 
-							<th>Etiqueta activa &nbsp;</th>
+							<th>Estado etiqueta &nbsp;</th>
+
+							<th>Etiqueta expira en &nbsp;</th>
 
 							<th>Cant. en Warehouse &nbsp;</th>
 
@@ -113,9 +115,47 @@
 
 								<td class="text-center">{{product.getDiscountActive ? '% ' ~ product.getDiscountActive :''}}</td>
 
-								<td class="text-center">Etiqueta &nbsp;</td>
+								<td class="text-center">{{ product.tag ? product.tag.name:'' }}</td>
 
-								<td class="text-center">Etiqueta activo &nbsp;</td>
+								{# creo mensajes de fecha y mensaje de activo. #}
+
+								{% set mensaje_etiqueta_activo = '' %}
+								{% set mensaje_etiqueta_fecha = '' %}
+
+
+								{% if product.tag %}
+
+									{% set mensaje_etiqueta_activo = 'Activo' %}
+									{% set mensaje_etiqueta_fecha = 'No expira' %}
+
+									{% if product.getTagExpires %}
+
+										{% set mensaje_etiqueta_fecha = 'Expira el ' ~ product.getTagExpirationDate|date('d/m/Y') %}
+
+
+										{% set fecha_entidad = date(product.getTagExpirationDate) %}
+										{# Suponiendo que la fecha está almacenada en el campo 'fecha' de la entidad #}
+
+										{% set fecha_actual = date() %}
+										{# Obteniendo la fecha actual #}
+
+										{% if fecha_entidad < fecha_actual %}
+											{% set mensaje_etiqueta_activo = 'Inactivo' %}
+											{% set mensaje_etiqueta_fecha = 'Expiró el ' ~ fecha_entidad|date('d/m/Y') %}
+										{% endif %}
+										{# fin comparacion de fechas #}
+
+									{% endif %}
+									{# fin product.tag_expires #}
+
+								{% endif %}
+								{# fin product.tag #}
+
+
+								<td class="text-center">{{ mensaje_etiqueta_activo }}</td>
+
+
+								<td class="text-center">{{ mensaje_etiqueta_fecha }}</td>
 
 								<td class="text-center">{{product.onhand}}</td>
 

@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
-use App\Entity\BrandsSections;
 use App\Form\ContactType;
 use App\Form\ListPriceType;
 use App\Helpers\SendCustomerToCrm;
@@ -105,6 +104,7 @@ class FrontApiController extends AbstractController
             }
             return $this->json(
                 [
+                    "status" => false,
                     'message' => 'Error de validacion',
                     'validation' => $validation
                 ],
@@ -121,6 +121,7 @@ class FrontApiController extends AbstractController
         } catch (\Exception $e) {
             return $this->json(
                 [
+                    "status" => false,
                     'message' => 'Usuario y/o password incorrectos.',
                 ],
                 Response::HTTP_UNAUTHORIZED,
@@ -130,14 +131,25 @@ class FrontApiController extends AbstractController
 
         $jwt = $jwtManager->create($customer);
 
+
+
         return new JsonResponse([
-            'token' => $jwt,
+            "status" => true,
+            "token" => $jwt,
             "token_type" => "Bearer",
-            "expires_in" => $_ENV['JWT_TOKEN_TTL'],
+            "expires_in" => (int)$_ENV['JWT_TOKEN_TTL'],
             "user_data" => [
+                "id" => (int)$customer->getId(),
                 "name" => $customer->getName(),
-                "id" => $customer->getId(),
-                "image" => $customer->getImage()
+                "image" => $customer->getImage(),
+                "email" => $customer->getEmail(),
+                "customer_type_role" => $customer->getCustomerTypeRole() ? (int)$customer->getCustomerTypeRole()->getId() : null,
+                "country_phone_code" =>  $customer->getCountryPhoneCode() ? (int)$customer->getCountryPhoneCode()->getId() : null,
+                "gender_type" => $customer->getGenderType() ? (int)$customer->getGenderType()->getId() : null,
+                "wish_list" => [],
+                "shop_cart" => [],
+                "cel_phone" => $customer->getCelPhone(),
+                "date_of_birth" => $customer->getDateOfBirth()->format('Y-m-d'),
             ]
         ]);
     }
@@ -332,71 +344,74 @@ class FrontApiController extends AbstractController
      */
     public function productsTag($slug_tag, Request $request, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
     {
-        $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
-        if ($tag) {
-
-            $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
-            $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
-            $categoryAudio = $categoryRepository->findOneBySlug('audio');
-
-            $limit = $request->query->getInt('l', 4);
-            $index = $request->query->getInt('i', 0) * $limit;
-
-            $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops, $limit, $index);
-            $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
-            $productsAudio = $productRepository->findProductsVisibleByTag($tag, $categoryAudio, $limit, $index);
-
-
-            //productos por placas de video
-            $productsByCategory = [];
-
-            foreach ($productsAudio as $productAudio) {
-                $productsByCategory[] = $productAudio->getBasicDataProduct();
-            }
-
-            $products[] = [
-                "category" => "Audio",
-                "products" => $productsByCategory
-            ];
-
-            // productos por categoria laptops
-            $productsByCategory = [];
-
-            foreach ($productsLaptops as $productLaptop) {
-                $productsByCategory[] = $productLaptop->getBasicDataProduct();
-            }
-
-            $products[] = [
-                "category" => 'Laptops',
-                "products" => $productsByCategory
-            ];
-
-            // productos por categoria celulares
-
-            $productsByCategory = [];
-
-            foreach ($productsCelulares as $productCelular) {
-                $productsByCategory[] = $productCelular->getBasicDataProduct();
-            }
-
-            $products[] = [
-                "category" => "Celulares",
-                "products" => $productsByCategory
-            ];
-
-
-
-            return $this->json(
-                $products,
-                Response::HTTP_OK,
-                ['Content-Type' => 'application/json']
-            );
+        if ($slug_tag == 'random') {
         } else {
-            return $this->json(
-                ['message' => 'Not found'],
-                Response::HTTP_NOT_FOUND,
-                ['Content-Type' => 'application/json']
-            );
+            $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
+            if ($tag) {
+
+                $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
+                $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
+                $categoryAudio = $categoryRepository->findOneBySlug('audio');
+
+                $limit = $request->query->getInt('l', 4);
+                $index = $request->query->getInt('i', 0) * $limit;
+
+                $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops, $limit, $index);
+                $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
+                $productsAudio = $productRepository->findProductsVisibleByTag($tag, $categoryAudio, $limit, $index);
+
+
+                //productos por placas de video
+                $productsByCategory = [];
+
+                foreach ($productsAudio as $productAudio) {
+                    $productsByCategory[] = $productAudio->getBasicDataProduct();
+                }
+
+                $products[] = [
+                    "category" => "Audio",
+                    "products" => $productsByCategory
+                ];
+
+                // productos por categoria laptops
+                $productsByCategory = [];
+
+                foreach ($productsLaptops as $productLaptop) {
+                    $productsByCategory[] = $productLaptop->getBasicDataProduct();
+                }
+
+                $products[] = [
+                    "category" => 'Laptops',
+                    "products" => $productsByCategory
+                ];
+
+                // productos por categoria celulares
+
+                $productsByCategory = [];
+
+                foreach ($productsCelulares as $productCelular) {
+                    $productsByCategory[] = $productCelular->getBasicDataProduct();
+                }
+
+                $products[] = [
+                    "category" => "Celulares",
+                    "products" => $productsByCategory
+                ];
+
+
+
+                return $this->json(
+                    $products,
+                    Response::HTTP_OK,
+                    ['Content-Type' => 'application/json']
+                );
+            } else {
+                return $this->json(
+                    ['message' => 'Not found'],
+                    Response::HTTP_NOT_FOUND,
+                    ['Content-Type' => 'application/json']
+                );
+            }
         }
     }
 
