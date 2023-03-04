@@ -30,9 +30,6 @@ class RegisterCustomerApiType extends AbstractType
                     new NotBlank(),
                 ]
             ])
-            ->add('status', EntityType::class, [
-                'class'  => CustomerStatusType::class
-            ])
             ->add('gender_type', EntityType::class, [
                 'class' => GenderType::class,
             ])
@@ -67,19 +64,9 @@ class RegisterCustomerApiType extends AbstractType
                     new NotBlank(),
                 ]
             ])
-            ->add('identity_type', TextType::class, [
-                'constraints' => [
-                    // new NotNull(),
-                    // new NotBlank(),
-                ]
-            ])
-            ->add('identity_number', TextType::class, [
-                'constraints' => [
-                    // new NotNull(),
-                    // new NotBlank(),
-                ]
-            ])
-            ->add('date_of_birth', DateType::class);
+            ->add('date_of_birth', DateType::class, [
+                'widget' => 'single_text',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

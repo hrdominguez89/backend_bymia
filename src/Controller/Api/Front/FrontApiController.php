@@ -657,6 +657,7 @@ class FrontApiController extends AbstractController
             $error_forms = $this->getErrorsFromForm($form);
             return $this->json(
                 [
+                    'status' => false,
                     'message' => 'Error de validación',
                     'validation' => $error_forms
                 ],
@@ -683,7 +684,10 @@ class FrontApiController extends AbstractController
         $sendCustomerToCrm->SendCustomerToCrm($customer);
 
         return $this->json(
-            ['message' => 'Usuario creado'],
+            [
+                'status' => false,
+                'message' => 'Usuario creado'
+            ],
             Response::HTTP_CREATED,
             ['Content-Type' => 'application/json']
         );
