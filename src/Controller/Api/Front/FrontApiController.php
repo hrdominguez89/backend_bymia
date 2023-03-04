@@ -715,7 +715,10 @@ class FrontApiController extends AbstractController
 
         if (!$customer || (!$customer->getVerificationCode() || !$customer->getVerificationCode()->equals(Uuid::fromString($data['code'])))) {
             return $this->json(
-                ['message' => 'No fue posible encontrar el usuario o el enlace expiró.'],
+                [
+                    'status' => false,
+                    'message' => 'No fue posible encontrar el usuario o el enlace expiró.'
+                ],
                 Response::HTTP_NOT_FOUND,
                 ['Content-Type' => 'application/json']
             );
@@ -723,7 +726,10 @@ class FrontApiController extends AbstractController
 
         if ($customer->getStatus()->getId() !== Constants::CUSTOMER_STATUS_PENDING) {
             return $this->json(
-                ['message' => 'Su cuenta ya se encuentra validada.'],
+                [
+                    'status' => true,
+                    'message' => 'Su cuenta ya se encuentra validada.'
+                ],
                 Response::HTTP_OK,
                 ['Content-Type' => 'application/json']
             );
@@ -754,7 +760,10 @@ class FrontApiController extends AbstractController
         $queue->sendEnqueue($id_email);
 
         return $this->json(
-            ['message' => 'Cuenta de correo verificada con éxito.'],
+            [
+                'status' => true,
+                'message' => 'Cuenta de correo verificada con éxito.'
+            ],
             Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );
