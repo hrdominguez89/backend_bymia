@@ -685,7 +685,7 @@ class FrontApiController extends AbstractController
 
         return $this->json(
             [
-                'status' => false,
+                'status' => true,
                 'message' => 'Usuario creado'
             ],
             Response::HTTP_CREATED,

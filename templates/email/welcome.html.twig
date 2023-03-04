@@ -1,53 +1,174 @@
-{# {% extends 'email/base.email.html.twig' %}
+{% extends 'email/base.email.html.twig' %}
 
 {% block title %}
-	{{ title }}
+	Validación de cuenta
 {% endblock %}
 
-{% block content %}
-	{{parent()}}
-	<div class="row">
-		<div class="col-12">
-			<h1 class="mr-auto mb-0 title-table">{{ title }}</h1>
-		</div>
-	</div>
+{% block body %}
 
-	{{ form_start(form) }}
-	{% if form_errors(form) %}
-		<div class="row">
-			<div class="col-12">
-				<div class="alert alert-danger">
-					{{ form_errors(form) }}
-				</div>
-			</div>
-		</div>
-	{% endif %}
-	<div class="row my-2">
-		<div class="col-12" id="DivTextEditor" data-id-text-area="about_us_description">
-			{{ form_row(form.description) }}
-		</div>
-	</div>
+	<table class="row row-2" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+		<tbody>
+			<tr>
+				<td>
+					<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+						<tbody>
+							<tr>
+								<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 50px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+									<table class="heading_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+										<tr>
+											<td class="pad" style="text-align:center;width:100%;">
+												<h1 style="margin: 0; color: #000000; direction: ltr; font-family: 'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif; font-size: 50px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;">
+													<span class="tinyMce-placeholder">
+														<strong>TE DAMOS LA BIENVENIDA</strong>
+													</span>
+												</h1>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="row row-3" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+		<tbody>
+			<tr>
+				<td>
+					<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+						<tbody>
+							<tr>
+								<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 25px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+									<table class="paragraph_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
+										<tr>
+											<td class="pad">
+												<div style="color:#000000;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:24px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+													<p style="margin: 0; margin-bottom: 1px;">
+														<u>Hola,
+															{{parameters.name}}!</u>
+													</p>
+													<p style="margin: 0;">
+														<u>Recibimos la
+																														                                                                            confirmación&nbsp;</u>
+														<u>
+															de la validación
+																														                                                                            de tu cuenta.</u>
+													</p>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="row row-4" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+		<tbody>
+			<tr>
+				<td>
+					<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+						<tbody>
+							<tr>
+								<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 25px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+									<table class="paragraph_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
+										<tr>
+											<td class="pad">
+												<div style="color:#000000;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:24px;font-weight:400;letter-spacing:1px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+													<p style="margin: 0;">
+														<strong>Ya estás en
+																														                                                                            condiciones de iniciar tus compras.</strong>
+													</p>
+												</div>
+											</td>
+										</tr>
+									</table>
+									<table class="paragraph_block block-2" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
+										<tr>
+											<td class="pad">
+												<div style="color:#101112;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:24px;font-weight:400;letter-spacing:1px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+													<p style="margin: 0;">Te acompañaremos en todo este
+																												                                                                        proceso a través de tu panel y los mails. Revisá
+																												                                                                        siempre la bandeja de entrada de tu mail y, si
+																												                                                                        no aparecen nuestras comunicaciones, la sección
+																												                                                                        Spam.</p>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="row row-5" align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+		<tbody>
+			<tr>
+				<td>
+					<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-radius: 0; color: #000000; width: 900px;" width="900">
+						<tbody>
+							<tr>
+								<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 5px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+									<table class="paragraph_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;">
+										<tr>
+											<td class="pad">
+												<div style="color:#000000;direction:ltr;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:24px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:center;mso-line-height-alt:28.799999999999997px;">
+													<p style="margin: 0;">Comprar en Bymia es sencillo e
+																												                                                                        intuitivo.&nbsp;Y&nbsp;<strong>Contás con los
+																												                                                                            mejores precios.</strong>
+													</p>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<table class="row-content stack" align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; border-radius: 0; width: 900px;" width="900">
+										<tbody>
+											<tr>
+												<td class="column column-1" width="100%" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; padding-top: 5px; padding-bottom: 25px; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;">
+													<table class="button_block block-1" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
+														<tr>
+															<td class="pad" style="text-align:center;">
+																<a href="{{parameters.url_front_login}}" title="Validar mi cuenta">
+																	<div
+																		class="alignment" align="center">
+																		<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:46px;width:143px;v-text-anchor:middle;" arcsize="27%" stroke="false" fillcolor="#15fed4"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#080814; font-family:'Trebuchet MS', Tahoma, sans-serif; font-size:16px"><![endif]-->
+																		<div style="text-decoration:none;display:inline-block;color:#080814;background-color:#15fed4;border-radius:12px;width:auto;border-top:0px solid transparent;font-weight:700;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:'Montserrat', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;">
+																			<span style="padding-left:40px;padding-right:40px;font-size:16px;display:inline-block;letter-spacing:normal;">
+																				<span dir="ltr" style="word-break: break-word; line-height: 32px;">Ingresá</span>
+																			</span>
+																		</div>
+																		<!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
+																	</div>
+																</a>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
 
 
-	<div>
-		<div class="row my-2">
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
-			<div class="col-12 text-end">
-				<a class="btn btn-secondary" href="{{ path('app_homepage')}}">Regresar</a>
-
-				<button class="btn btn-primary">Guardar</button>
-			</div>
-		</div>
-	</div>
-	{{ form_end(form) }}
-
-{% endblock %} #}
-
-<h1>Validación de correo</h1>
-
-
-<p>Felicidades
-	{{parameters.name}}, su cuenta ha sido verificada correctamente, para continuar inicie sesión con su cuenta de correo a traves del siguiente enlace.</p>
-<p>Login:
-	<a href="{{parameters.url_front_login}}" title="Enlace de login">Acceder a mi cuenta</a>
-</p>
+{% endblock %}
