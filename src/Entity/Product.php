@@ -284,6 +284,11 @@ class Product
      */
     private $productDiscounts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FavoriteProduct::class, mappedBy="product")
+     */
+    private $favoriteProducts;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -301,6 +306,7 @@ class Product
         $this->rating = 5;
         $this->reviews = rand(0, 100);
         $this->productDiscounts = new ArrayCollection();
+        $this->favoriteProducts = new ArrayCollection();
     }
 
     /**
@@ -1110,5 +1116,35 @@ class Product
             "old_price" => $this->getDiscountActive() ? number_format($this->getPrice(), 2, ',', '.') : null,
             "price" => $this->getDiscountActive() ?  number_format(($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())), 2, ',', '.') : number_format($this->getPrice(), 2, ',', '.')
         ];
+    }
+
+    /**
+     * @return Collection<int, FavoriteProduct>
+     */
+    public function getFavoriteProducts(): Collection
+    {
+        return $this->favoriteProducts;
+    }
+
+    public function addFavoriteProduct(FavoriteProduct $favoriteProduct): self
+    {
+        if (!$this->favoriteProducts->contains($favoriteProduct)) {
+            $this->favoriteProducts[] = $favoriteProduct;
+            $favoriteProduct->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteProduct(FavoriteProduct $favoriteProduct): self
+    {
+        if ($this->favoriteProducts->removeElement($favoriteProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriteProduct->getProduct() === $this) {
+                $favoriteProduct->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

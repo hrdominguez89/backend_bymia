@@ -441,7 +441,7 @@ class ProductRepository extends ServiceEntityRepository
 
         dd(count($filters));
 
-        
+
         $products = $this->createQueryBuilder('p')
             ->where('p.tag = :tag')
             ->andWhere('p.id3pl IS NOT NULL')
@@ -465,5 +465,17 @@ class ProductRepository extends ServiceEntityRepository
 
 
         return $products;
+    }
+
+    public function findActiveProductById($product_id)
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.visible = :visible')
+            ->andWhere('p.id3pl IS NOT NULL')
+            ->andWhere('p.id =:product_id')
+            ->setParameter('visible', true)
+            ->setParameter('product_id', $product_id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

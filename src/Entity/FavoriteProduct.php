@@ -3,16 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FavoriteProductRepository")
  * @ORM\Table("mia_favorite_product")
- * @UniqueEntity(
- *     fields={"customerId", "productId"},
- *     errorPath="productId",
- *     message="The entity already exists."
- * )
  */
 class FavoriteProduct
 {
@@ -24,33 +18,36 @@ class FavoriteProduct
     private $id;
 
     /**
-     * @var Customer
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="favoriteProducts")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="customer_id", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\ManyToOne(targetEntity=StatusTypeFavorite::class, inversedBy="favoriteProducts")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $customerId;
+    private $status;
 
     /**
-     * @var Product
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\Column(type="datetime",nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
-    private $productId;
+    private $created_at;
 
     /**
-     * @param Customer $customerId
-     * @param Product $product
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    public function __construct(Customer $customerId, Product $product)
+    private $updated_at;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="favoriteProducts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $product;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="favoriteProducts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $customer;
+
+    public function __construct()
     {
-        $this->customerId = $customerId;
-        $this->productId = $product;
+        $this->created_at = new \DateTime();
     }
 
     /**
@@ -61,45 +58,63 @@ class FavoriteProduct
         return $this->id;
     }
 
-    /**
-     * @return Customer
-     */
-    public function getCustomerId(): Customer
+    public function getStatus(): ?StatusTypeFavorite
     {
-        return $this->customerId;
+        return $this->status;
     }
 
-    /**
-     * @param Customer $customerId
-     * @return $this
-     */
-    public function setCustomerId(Customer $customerId): FavoriteProduct
+    public function setStatus(?StatusTypeFavorite $status): self
     {
-        $this->customerId = $customerId;
-
-        $customerId->addFavoriteProduct($this);
+        $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * @return Product
-     */
-    public function getProductId(): Product
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->productId;
+        return $this->created_at;
     }
 
-    /**
-     * @param Product $productId
-     * @return $this
-     */
-    public function setProductId(Product $productId): FavoriteProduct
+    public function setCreatedAt(\DateTimeInterface $created_at): self
     {
-        $this->productId = $productId;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
 
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
 }

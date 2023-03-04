@@ -64,4 +64,18 @@ class FavoriteProductRepository extends ServiceEntityRepository
 
         return $ids;
     }
+
+
+    public function findFavoriteProductByStatus($product_id, $customer_id, $status_id)
+    {
+        return $this->createQueryBuilder('f')
+            ->where('f.product =:product_id')
+            ->andWhere('f.customer =:customer_id')
+            ->andWhere('f.status =:status_id')
+            ->setParameter('product_id', $product_id)
+            ->setParameter('customer_id', $customer_id)
+            ->setParameter('status_id', $status_id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

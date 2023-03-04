@@ -21,13 +21,6 @@ class Customer extends BaseUser
     const ROLE_DEFAULT = 'ROLE_CUSTOMER';
 
     /**
-     * @var FavoriteProduct[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\FavoriteProduct", mappedBy="customerId")
-     */
-    private $favoriteProducts;
-
-    /**
      * @var CustomerCouponDiscount[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\CustomerCouponDiscount", mappedBy="customerId", cascade={"remove"})
@@ -202,12 +195,16 @@ class Customer extends BaseUser
      */
     private $orders;
 
+    /**
+     * @ORM\OneToMany(targetEntity=FavoriteProduct::class, mappedBy="customer")
+     */
+    private $favoriteProducts;
+
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->favoriteProducts = new ArrayCollection();
         $this->couponDiscounts = new ArrayCollection();
         $this->shoppingOrders = new ArrayCollection();
         $this->customerAddresses = new ArrayCollection();
@@ -216,41 +213,9 @@ class Customer extends BaseUser
         $this->attempts_send_crm = 0;
         $this->change_password = false;
         $this->orders = new ArrayCollection();
+        $this->favoriteProducts = new ArrayCollection();
     }
 
-    /**
-     * @return FavoriteProduct[]|ArrayCollection
-     */
-    public function getFavoriteProducts()
-    {
-        return $this->favoriteProducts;
-    }
-
-    /**
-     * @param FavoriteProduct $favoriteProduct
-     * @return $this
-     */
-    public function addFavoriteProduct(FavoriteProduct $favoriteProduct): Customer
-    {
-        if (!$this->favoriteProducts->contains($favoriteProduct)) {
-            $this->favoriteProducts[] = $favoriteProduct;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param FavoriteProduct $favoriteProduct
-     * @return $this
-     */
-    public function removeSubcategory(FavoriteProduct $favoriteProduct): Customer
-    {
-        if ($this->favoriteProducts->contains($favoriteProduct)) {
-            $this->favoriteProducts->removeElement($favoriteProduct);
-        }
-
-        return $this;
-    }
 
     /**
      * @param string|null $password
@@ -431,17 +396,6 @@ class Customer extends BaseUser
             'home_address' => @$home ? $home : '',
             'bill_address' => @$bill ? $bill : '',
         ];
-    }
-
-    public function removeFavoriteProduct(FavoriteProduct $favoriteProduct): self
-    {
-        if ($this->favoriteProducts->removeElement($favoriteProduct)) {
-            // set the owning side to null (unless already changed)
-            if ($favoriteProduct->getCustomerId() === $this) {
-            }
-        }
-
-        return $this;
     }
 
     public function addCouponDiscount(CustomerCouponDiscount $couponDiscount): self
@@ -807,6 +761,36 @@ class Customer extends BaseUser
             // set the owning side to null (unless already changed)
             if ($order->getCustomer() === $this) {
                 $order->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FavoriteProduct>
+     */
+    public function getFavoriteProducts(): Collection
+    {
+        return $this->favoriteProducts;
+    }
+
+    public function addFavoriteProduct(FavoriteProduct $favoriteProduct): self
+    {
+        if (!$this->favoriteProducts->contains($favoriteProduct)) {
+            $this->favoriteProducts[] = $favoriteProduct;
+            $favoriteProduct->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteProduct(FavoriteProduct $favoriteProduct): self
+    {
+        if ($this->favoriteProducts->removeElement($favoriteProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriteProduct->getCustomer() === $this) {
+                $favoriteProduct->setCustomer(null);
             }
         }
 
