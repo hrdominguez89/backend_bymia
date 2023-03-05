@@ -1108,11 +1108,11 @@ class Product
     public function getBasicDataProduct()
     {
         return [
-            "id" => $this->getId(),
+            "id" => (int)$this->getId(),
             "name" => $this->getName(),
             "image" => $this->getPrincipalImage(),
-            "rating" => $this->getRating(),
-            "reviews" => $this->getReviews(),
+            "rating" => (int)$this->getRating(),
+            "reviews" => (int)$this->getReviews(),
             "old_price" => $this->getDiscountActive() ? number_format($this->getPrice(), 2, ',', '.') : null,
             "price" => $this->getDiscountActive() ?  number_format(($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())), 2, ',', '.') : number_format($this->getPrice(), 2, ',', '.')
         ];

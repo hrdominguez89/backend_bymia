@@ -28,6 +28,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
+use App\Repository\FavoriteProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
 use App\Repository\SectionsHomeRepository;
@@ -89,7 +90,7 @@ class FrontApiController extends AbstractController
     /**
      * @Route("/login", name="api_login",methods={"POST"})
      */
-    public function login(Request $request, CustomerRepository $customerRepository, PasswordHasherFactoryInterface $passwordHasherFactoryInterface, JWTTokenManagerInterface $jwtManager): Response
+    public function login(Request $request, FavoriteProductRepository $favoriteProductRepository, CustomerRepository $customerRepository, PasswordHasherFactoryInterface $passwordHasherFactoryInterface, JWTTokenManagerInterface $jwtManager): Response
     {
         $body = $request->getContent();
         $data = json_decode($body, true);
@@ -131,7 +132,13 @@ class FrontApiController extends AbstractController
 
         $jwt = $jwtManager->create($customer);
 
-
+        $favorite_products = $favoriteProductRepository->findAllFavoriteProductsByStatus($customer->getId(), 1);
+        $favorite_products_list = [];
+        if ($favorite_products) {
+            foreach ($favorite_products as $favorite_product) {
+                $favorite_products_list[] = (int)$favorite_product->getProduct()->getId();
+            }
+        }
 
         return new JsonResponse([
             "status" => true,
@@ -146,7 +153,7 @@ class FrontApiController extends AbstractController
                 "customer_type_role" => $customer->getCustomerTypeRole() ? (int)$customer->getCustomerTypeRole()->getId() : null,
                 "country_phone_code" =>  $customer->getCountryPhoneCode() ? (int)$customer->getCountryPhoneCode()->getId() : null,
                 "gender_type" => $customer->getGenderType() ? (int)$customer->getGenderType()->getId() : null,
-                "wish_list" => [],
+                "wish_list" => $favorite_products_list,
                 "shop_cart" => [],
                 "cel_phone" => $customer->getCelPhone(),
                 "date_of_birth" => $customer->getDateOfBirth() ? $customer->getDateOfBirth()->format('Y-m-d') : null,
