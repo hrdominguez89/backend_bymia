@@ -31,6 +31,7 @@ class CustomerApiController extends AbstractController
     public function __construct(JWTEncoderInterface $jwtEncoder, CustomerRepository $customerRepository, RequestStack $requestStack)
     {
         $request = $requestStack->getCurrentRequest();
+        dd($request, $request->headers);
         $token = explode(' ', $request->headers->get('Authorization'))[1];
 
         $username = @$jwtEncoder->decode($token)['username'] ?: '';
