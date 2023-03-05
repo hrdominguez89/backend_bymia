@@ -200,6 +200,11 @@ class Customer extends BaseUser
      */
     private $favoriteProducts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ShoppingCart::class, mappedBy="customer")
+     */
+    private $shoppingCarts;
+
 
     public function __construct()
     {
@@ -214,6 +219,7 @@ class Customer extends BaseUser
         $this->change_password = false;
         $this->orders = new ArrayCollection();
         $this->favoriteProducts = new ArrayCollection();
+        $this->shoppingCarts = new ArrayCollection();
     }
 
 
@@ -791,6 +797,36 @@ class Customer extends BaseUser
             // set the owning side to null (unless already changed)
             if ($favoriteProduct->getCustomer() === $this) {
                 $favoriteProduct->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ShoppingCart>
+     */
+    public function getShoppingCarts(): Collection
+    {
+        return $this->shoppingCarts;
+    }
+
+    public function addShoppingCart(ShoppingCart $shoppingCart): self
+    {
+        if (!$this->shoppingCarts->contains($shoppingCart)) {
+            $this->shoppingCarts[] = $shoppingCart;
+            $shoppingCart->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShoppingCart(ShoppingCart $shoppingCart): self
+    {
+        if ($this->shoppingCarts->removeElement($shoppingCart)) {
+            // set the owning side to null (unless already changed)
+            if ($shoppingCart->getCustomer() === $this) {
+                $shoppingCart->setCustomer(null);
             }
         }
 

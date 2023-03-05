@@ -289,6 +289,11 @@ class Product
      */
     private $favoriteProducts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ShoppingCart::class, mappedBy="product")
+     */
+    private $shoppingCarts;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -307,6 +312,7 @@ class Product
         $this->reviews = rand(0, 100);
         $this->productDiscounts = new ArrayCollection();
         $this->favoriteProducts = new ArrayCollection();
+        $this->shoppingCarts = new ArrayCollection();
     }
 
     /**
@@ -1142,6 +1148,36 @@ class Product
             // set the owning side to null (unless already changed)
             if ($favoriteProduct->getProduct() === $this) {
                 $favoriteProduct->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ShoppingCart>
+     */
+    public function getShoppingCarts(): Collection
+    {
+        return $this->shoppingCarts;
+    }
+
+    public function addShoppingCart(ShoppingCart $shoppingCart): self
+    {
+        if (!$this->shoppingCarts->contains($shoppingCart)) {
+            $this->shoppingCarts[] = $shoppingCart;
+            $shoppingCart->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShoppingCart(ShoppingCart $shoppingCart): self
+    {
+        if ($this->shoppingCarts->removeElement($shoppingCart)) {
+            // set the owning side to null (unless already changed)
+            if ($shoppingCart->getProduct() === $this) {
+                $shoppingCart->setProduct(null);
             }
         }
 

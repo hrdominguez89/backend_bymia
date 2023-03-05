@@ -32,6 +32,7 @@ use App\Repository\FavoriteProductRepository;
 use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
 use App\Repository\SectionsHomeRepository;
+use App\Repository\ShoppingCartRepository;
 use App\Repository\TagRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -90,7 +91,7 @@ class FrontApiController extends AbstractController
     /**
      * @Route("/login", name="api_login",methods={"POST"})
      */
-    public function login(Request $request, FavoriteProductRepository $favoriteProductRepository, CustomerRepository $customerRepository, PasswordHasherFactoryInterface $passwordHasherFactoryInterface, JWTTokenManagerInterface $jwtManager): Response
+    public function login(Request $request, FavoriteProductRepository $favoriteProductRepository,ShoppingCartRepository $shoppingCartRepository, CustomerRepository $customerRepository, PasswordHasherFactoryInterface $passwordHasherFactoryInterface, JWTTokenManagerInterface $jwtManager): Response
     {
         $body = $request->getContent();
         $data = json_decode($body, true);
@@ -140,6 +141,14 @@ class FrontApiController extends AbstractController
             }
         }
 
+        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($customer->getId(), 1);
+        $shopping_cart_products_list = [];
+        if ($shopping_cart_products) {
+            foreach ($shopping_cart_products as $favorite_product) {
+                $shopping_cart_products_list[] = (int)$favorite_product->getProduct()->getId();
+            }
+        }
+
         return new JsonResponse([
             "status" => true,
             "token" => $jwt,
@@ -154,7 +163,7 @@ class FrontApiController extends AbstractController
                 "country_phone_code" =>  $customer->getCountryPhoneCode() ? (int)$customer->getCountryPhoneCode()->getId() : null,
                 "gender_type" => $customer->getGenderType() ? (int)$customer->getGenderType()->getId() : null,
                 "wish_list" => $favorite_products_list,
-                "shop_cart" => [],
+                "shop_cart" => $shopping_cart_products_list,
                 "cel_phone" => $customer->getCelPhone(),
                 "date_of_birth" => $customer->getDateOfBirth() ? $customer->getDateOfBirth()->format('Y-m-d') : null,
             ]
