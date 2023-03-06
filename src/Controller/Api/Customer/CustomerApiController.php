@@ -133,7 +133,7 @@ class CustomerApiController extends AbstractController
     /**
      * @Route("/cart/add", name="api_cart_add",methods={"POST"})
      */
-    public function cartAdd(Request $request, FavoriteProductRepository $favoriteProductRepository,StatusTypeFavoriteRepository $statusTypeFavoriteRepository, StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository, ProductRepository $productRepository, ShoppingCartRepository $shoppingCartRepository, EntityManagerInterface $em): Response
+    public function cartAdd(Request $request, FavoriteProductRepository $favoriteProductRepository, StatusTypeFavoriteRepository $statusTypeFavoriteRepository, StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository, ProductRepository $productRepository, ShoppingCartRepository $shoppingCartRepository, EntityManagerInterface $em): Response
     {
 
         $body = $request->getContent();
@@ -194,7 +194,7 @@ class CustomerApiController extends AbstractController
     }
 
     /**
-     * @Route("/cart/remove", name="api_cart_remove",methods={"DELETE"})
+     * @Route("/cart/remove", name="api_cart_remove",methods={"POST"})
      */
     public function cartRemove(Request $request, StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository, ProductRepository $productRepository, ShoppingCartRepository $shoppingCartRepository, EntityManagerInterface $em): Response
     {
@@ -220,7 +220,7 @@ class CustomerApiController extends AbstractController
                 [
                     'message' => 'El producto indicado no se encuentra su lista de carrito.'
                 ],
-                Response::HTTP_NOT_FOUND,
+                Response::HTTP_CONFLICT,
                 ['Content-Type' => 'application/json']
             );
         }
@@ -242,7 +242,7 @@ class CustomerApiController extends AbstractController
     }
 
     /**
-     * @Route("/cart/removeAll", name="api_cart_removeAll",methods={"DELETE"})
+     * @Route("/cart/removeAll", name="api_cart_removeAll",methods={"POST"})
      */
     public function cartRemoveAll(StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository, ShoppingCartRepository $shoppingCartRepository, EntityManagerInterface $em): Response
     {
@@ -317,7 +317,7 @@ class CustomerApiController extends AbstractController
     /**
      * @Route("/favorite/add", name="api_favorite_add",methods={"POST"})
      */
-    public function favoriteAdd(Request $request, StatusTypeFavoriteRepository $statusTypeFavoriteRepository, ProductRepository $productRepository, FavoriteProductRepository $favoriteProductRepository, EntityManagerInterface $em): Response
+    public function favoriteAdd(Request $request, StatusTypeFavoriteRepository $statusTypeFavoriteRepository, ProductRepository $productRepository, ShoppingCartRepository $shoppingCartRepository, FavoriteProductRepository $favoriteProductRepository, EntityManagerInterface $em): Response
     {
 
         $body = $request->getContent();
@@ -346,6 +346,18 @@ class CustomerApiController extends AbstractController
             );
         }
 
+        $cart_product = $shoppingCartRepository->findShoppingCartProductByStatus((int)$product->getId(), (int)$this->customer->getId(), 1);
+
+        if ($cart_product) { //retorno si el producto ya fue activado como favorito..
+            return $this->json(
+                [
+                    'message' => 'El producto ya se encuentra añadido al carrito.'
+                ],
+                Response::HTTP_CONFLICT,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
         $favorite_product = new FavoriteProduct;
 
         $favorite_product
@@ -366,7 +378,7 @@ class CustomerApiController extends AbstractController
     }
 
     /**
-     * @Route("/favorite/remove", name="api_favorite_remove",methods={"DELETE"})
+     * @Route("/favorite/remove", name="api_favorite_remove",methods={"POST"})
      */
     public function favoriteRemove(Request $request, StatusTypeFavoriteRepository $statusTypeFavoriteRepository, ProductRepository $productRepository, FavoriteProductRepository $favoriteProductRepository, EntityManagerInterface $em): Response
     {
@@ -414,7 +426,7 @@ class CustomerApiController extends AbstractController
     }
 
     /**
-     * @Route("/favorite/removeAll", name="api_favorite_removeAll",methods={"DELETE"})
+     * @Route("/favorite/removeAll", name="api_favorite_removeAll",methods={"POST"})
      */
     public function favoriteRemoveAll(StatusTypeFavoriteRepository $statusTypeFavoriteRepository, FavoriteProductRepository $favoriteProductRepository, EntityManagerInterface $em): Response
     {
