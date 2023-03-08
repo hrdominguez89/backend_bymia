@@ -49,9 +49,10 @@ class CustomerApiController extends AbstractController
         if (!$shopping_cart_products) { //retorno si el producto ya fue activado al carrito..
             return $this->json(
                 [
+                    "shop_cart_list" => [],
                     'message' => 'No tiene productos en su lista de carrito.'
                 ],
-                Response::HTTP_CONFLICT,
+                Response::HTTP_ACCEPTED,
                 ['Content-Type' => 'application/json']
             );
         }
@@ -293,9 +294,10 @@ class CustomerApiController extends AbstractController
         if (!$favorite_products) { //retorno si el producto ya fue activado como favorito..
             return $this->json(
                 [
+                    "wish_list" => [],
                     'message' => 'No tiene productos en su lista de favoritos.'
                 ],
-                Response::HTTP_CONFLICT,
+                Response::HTTP_ACCEPTED,
                 ['Content-Type' => 'application/json']
             );
         }

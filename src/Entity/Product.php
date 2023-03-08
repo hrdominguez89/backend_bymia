@@ -1120,7 +1120,8 @@ class Product
             "rating" => (int)$this->getRating(),
             "reviews" => (int)$this->getReviews(),
             "old_price" => $this->getDiscountActive() ? number_format($this->getPrice(), 2, ',', '.') : null,
-            "price" => $this->getDiscountActive() ?  number_format(($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())), 2, ',', '.') : number_format($this->getPrice(), 2, ',', '.')
+            "price" => $this->getDiscountActive() ?  number_format(($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())), 2, ',', '.') : number_format($this->getPrice(), 2, ',', '.'),
+            "available" => $this->getAvailable(),
         ];
     }
 

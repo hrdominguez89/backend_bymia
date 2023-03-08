@@ -439,7 +439,7 @@ class ProductRepository extends ServiceEntityRepository
     {
         $today = new DateTime();
 
-        dd(count($filters));
+        dd($filters);
 
 
         $products = $this->createQueryBuilder('p')
