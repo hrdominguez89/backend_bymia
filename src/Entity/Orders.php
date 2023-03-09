@@ -893,7 +893,7 @@ class Orders
             }
             $guide_numbers_result[] = [
                 'number' => $guideNumber->getNumber(),
-                'courier' => $guideNumber->getCourier(),
+                'courier' => $guideNumber->getCourierName(),
                 'items' => $items,
             ];
         }

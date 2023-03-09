@@ -27,7 +27,7 @@ class GuideNumbers
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $courier;
+    private $courier_name;
 
     /**
      * @ORM\OneToMany(targetEntity=ItemsGuideNumber::class, mappedBy="guide_number")
@@ -62,14 +62,14 @@ class GuideNumbers
         return $this;
     }
 
-    public function getCourier(): ?string
+    public function getCourierName(): ?string
     {
-        return $this->courier;
+        return $this->courier_name;
     }
 
-    public function setCourier(string $courier): self
+    public function setCourierName(string $courier_name): self
     {
-        $this->courier = $courier;
+        $this->courier_name = $courier_name;
 
         return $this;
     }
