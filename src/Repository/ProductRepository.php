@@ -430,6 +430,7 @@ class ProductRepository extends ServiceEntityRepository
             $products->setFirstResult($index);
         }
         $products->setMaxResults($limit);
+        $products->orderBy('RANDOM()');
 
         return $products->getQuery()
             ->getResult();

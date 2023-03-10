@@ -74,9 +74,7 @@ class CustomerType extends AbstractType
                 },
                 'required' => true
             ])
-            ->add('state_code_cel_phone', TextType::class, ['label' => 'Cod. Área', 'required' => true])
             ->add('cel_phone', TextType::class, ['label' => 'Nro.', 'required' => true])
-            ->add('state_code_phone', TextType::class, ['label' => 'Cod. Área', 'required' => false])
             ->add('phone', TextType::class, ['label' => 'Nro.', 'required' => false]);
     }
 

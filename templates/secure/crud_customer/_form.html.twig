@@ -71,48 +71,42 @@
 		</div>
 		<div class="row my-2">
 
-		<div class="col-12">
-			{{ form_row(form.country_phone_code) }}
+			<div class="col-12">
+				{{ form_row(form.country_phone_code) }}
+			</div>
+		</div>
+		<div class="row my-2">
+			<div class="col-12">
+				<h5 class="mr-auto mb-0 title-table">Teléfono celular</h5>
+			</div>
+		</div>
+		<div class="row my-2">
+			<div class="col-6">
+				{{ form_row(form.cel_phone) }}
+			</div>
+		</div>
+		<hr>
+		<div class="row my-2">
+			<div class="col-12">
+				<h5 class="mr-auto mb-0 title-table">Teléfono fijo</h5>
+			</div>
+		</div>
+		<div class="row my-2">
+
+			<div class="col-6">
+				{{ form_row(form.phone) }}
+			</div>
+		</div>
+		<hr>
+		<div class="row my-2">
+
+			<div class="col-12 text-end">
+				<a class="btn btn-secondary" href="{{ path('secure_crud_customer_index') }}">Regresar</a>
+
+				<button class="btn btn-primary">Guardar</button>
+			</div>
 		</div>
 	</div>
-	<div class="row my-2">
-		<div class="col-12">
-			<h5 class="mr-auto mb-0 title-table">Teléfono celular</h5>
-		</div>
-	</div>
-	<div class="row my-2">
-
-		<div class="col-6">
-			{{ form_row(form.state_code_cel_phone) }}
-		</div>
-		<div class="col-6">
-			{{ form_row(form.cel_phone) }}
-		</div>
-	</div>
-	<hr>
-	<div class="row my-2">
-		<div class="col-12">
-			<h5 class="mr-auto mb-0 title-table">Teléfono fijo</h5>
-		</div>
-	</div>
-	<div class="row my-2">
-
-		<div class="col-6">
-			{{ form_row(form.state_code_phone) }}
-		</div>
-		<div class="col-6">
-			{{ form_row(form.phone) }}
-		</div>
-	</div>
-	<div class="row my-2">
-
-		<div class="col-12 text-end">
-			<a class="btn btn-secondary" href="{{ path('secure_crud_customer_index') }}">Regresar</a>
-
-			<button class="btn btn-primary">Guardar</button>
-		</div>
-	</div>
-</div>
 
 
-{{ form_end(form) }}
+	{{ form_end(form) }}
