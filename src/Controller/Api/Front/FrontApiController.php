@@ -790,6 +790,8 @@ class FrontApiController extends AbstractController
         $body = $request->getContent();
         $data = json_decode($body, true);
 
+        dd($data['country_id']);
+
         //find relational objects
         $country = $countriesRepository->find($data['country_id']);
         $customer_type_role = $customersTypesRolesRepository->find($data['customer_type_role']);
