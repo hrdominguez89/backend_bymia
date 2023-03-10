@@ -276,7 +276,7 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/products/search", name="api_products_tag",methods={"GET"})
+     * @Route("/products/search", name="api_products_search",methods={"GET"})
      */
     public function search(Request $request, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
     {
@@ -350,7 +350,7 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/products/searchaa", name="api_products_search",methods={"GET"})
+     * @Route("/products/searchaa", name="api_products_search3",methods={"GET"})
      */
     public function productsSearch3(
         // CategoryRepository $categoryRepository,
