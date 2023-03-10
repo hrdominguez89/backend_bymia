@@ -892,8 +892,15 @@ class Orders
                 ];
             }
             $guide_numbers_result[] = [
-                'number' => $guideNumber->getNumber(),
-                'courier' => $guideNumber->getCourierName(),
+                "lb" => $guideNumber->getLb(),
+                "height" => $guideNumber->getHeight(),
+                "width" => $guideNumber->getWidth(),
+                "depth" => $guideNumber->getDepth(),
+                "courier_id" => $guideNumber->getCourierId(),
+                'courier_name' => $guideNumber->getCourierName(),
+                "service_id" => $guideNumber->getServiceId(),
+                "service_name" => $guideNumber->getServiceName(),
+                'guide_number' => $guideNumber->getNumber(),
                 'items' => $items,
             ];
         }
@@ -903,7 +910,8 @@ class Orders
 
         foreach ($orders_products_array as $order_product) {
             $orders_products_result[] = [
-                'product_id' => $order_product->getProduct()->getId3pl(),
+                'product_id' => $order_product->getProduct()->getName(),
+                'product_name' => $order_product->getProduct()->getName(),
                 'qty' => $order_product->getQuantity(),
                 'weight' => $order_product->getWeight(),
                 'price' => $order_product->getPrice(),
@@ -916,8 +924,8 @@ class Orders
         return [
             "order_id" => $this->getId(),
             "created_at" => $this->getCreatedAt(),
-            "status_order" => [
-                "status" => $this->getStatus()->getId(),
+            "status_order" => $this->getStatus()->getId(),
+            "packages" => [
                 "guide_numbers" => $guide_numbers_result,
             ],
             "warehouse_id" => $this->getWarehouse()->getId3pl(),

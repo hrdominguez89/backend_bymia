@@ -40,6 +40,41 @@ class GuideNumbers
      */
     private $number_order;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $courier_id;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $lb;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $height;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $width;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $depth;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $service_id;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $service_name;
+
     public function __construct()
     {
         $this->itemsGuideNumbers = new ArrayCollection();
@@ -112,6 +147,90 @@ class GuideNumbers
     public function setNumberOrder(?Orders $number_order): self
     {
         $this->number_order = $number_order;
+
+        return $this;
+    }
+
+    public function getCourierId(): ?int
+    {
+        return $this->courier_id;
+    }
+
+    public function setCourierId(int $courier_id): self
+    {
+        $this->courier_id = $courier_id;
+
+        return $this;
+    }
+
+    public function getLb(): ?float
+    {
+        return $this->lb;
+    }
+
+    public function setLb(?float $lb): self
+    {
+        $this->lb = $lb;
+
+        return $this;
+    }
+
+    public function getHeight(): ?float
+    {
+        return $this->height;
+    }
+
+    public function setHeight(?float $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getWidth(): ?float
+    {
+        return $this->width;
+    }
+
+    public function setWidth(?float $width): self
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function getDepth(): ?float
+    {
+        return $this->depth;
+    }
+
+    public function setDepth(?float $depth): self
+    {
+        $this->depth = $depth;
+
+        return $this;
+    }
+
+    public function getServiceId(): ?int
+    {
+        return $this->service_id;
+    }
+
+    public function setServiceId(?int $service_id): self
+    {
+        $this->service_id = $service_id;
+
+        return $this;
+    }
+
+    public function getServiceName(): ?string
+    {
+        return $this->service_name;
+    }
+
+    public function setServiceName(?string $service_name): self
+    {
+        $this->service_name = $service_name;
 
         return $this;
     }

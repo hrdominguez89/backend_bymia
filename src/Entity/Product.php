@@ -1119,8 +1119,8 @@ class Product
             "image" => $this->getPrincipalImage(),
             "rating" => (int)$this->getRating(),
             "reviews" => (int)$this->getReviews(),
-            "old_price" => $this->getDiscountActive() ? (double)$this->getPrice() : null,
-            "price" => $this->getDiscountActive() ?  (double)($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())) : (double)$this->getPrice(),
+            "old_price" => $this->getDiscountActive() ? $this->getPrice() : null,
+            "price" => $this->getDiscountActive() ?  ($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())) : $this->getPrice(),
             "available" => $this->getAvailable(),
         ];
     }
