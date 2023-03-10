@@ -276,9 +276,83 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/products/search", name="api_products_search",methods={"GET"})
+     * @Route("/products/search", name="api_products_tag",methods={"GET"})
      */
-    public function productsSearch(
+    public function search(Request $request, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
+    {
+
+        $tag = $tagRepository->findTagVisibleBySlug('destacados');
+        if ($tag) {
+
+            $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
+            $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
+            $categoryAudio = $categoryRepository->findOneBySlug('audio');
+
+            $limit = $request->query->getInt('l', 4);
+            $index = $request->query->getInt('i', 0) * $limit;
+
+            $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops, $limit, $index);
+            $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
+            $productsAudio = $productRepository->findProductsVisibleByTag($tag, $categoryAudio, $limit, $index);
+
+
+            //productos por placas de video
+            $productsByCategory = [];
+
+            foreach ($productsAudio as $productAudio) {
+                $productsByCategory[] = $productAudio->getBasicDataProduct();
+            }
+
+            $products[] = [
+                "category" => "Audio",
+                "products" => $productsByCategory
+            ];
+
+            // productos por categoria laptops
+            $productsByCategory = [];
+
+            foreach ($productsLaptops as $productLaptop) {
+                $productsByCategory[] = $productLaptop->getBasicDataProduct();
+            }
+
+            $products[] = [
+                "category" => 'Laptops',
+                "products" => $productsByCategory
+            ];
+
+            // productos por categoria celulares
+
+            $productsByCategory = [];
+
+            foreach ($productsCelulares as $productCelular) {
+                $productsByCategory[] = $productCelular->getBasicDataProduct();
+            }
+
+            $products[] = [
+                "category" => "Celulares",
+                "products" => $productsByCategory
+            ];
+
+
+
+            return $this->json(
+                $products,
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/json']
+            );
+        } else {
+            return $this->json(
+                ['message' => 'Not found'],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+    }
+
+    /**
+     * @Route("/products/searchaa", name="api_products_search",methods={"GET"})
+     */
+    public function productsSearch3(
         // CategoryRepository $categoryRepository,
         // TagRepository $tagRepository,
         // BrandRepository $brandRepository,
@@ -368,17 +442,17 @@ class FrontApiController extends AbstractController
 
         // FINALIZA LA PRUEBA
 
-// esta query funciona excelente
+        // esta query funciona excelente
 
-//         SELECT p.*
-//         FROM mia_product p
-//         WHERE 
-//               p.name LIKE '%Samsung%' and
-//               p.name LIKE '%Galaxy%' and
-//               similarity(p.name, 'Galaxy Samsung') > 0
-//         ORDER BY similarity(p.name, 'Galaxy Samsung') DESC;
+        //         SELECT p.*
+        //         FROM mia_product p
+        //         WHERE 
+        //               p.name LIKE '%Samsung%' and
+        //               p.name LIKE '%Galaxy%' and
+        //               similarity(p.name, 'Galaxy Samsung') > 0
+        //         ORDER BY similarity(p.name, 'Galaxy Samsung') DESC;
 
-//         fin query
+        //         fin query
 
         // $filters = [];
         // if ($keyword) {
