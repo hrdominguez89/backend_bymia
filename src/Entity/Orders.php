@@ -910,7 +910,7 @@ class Orders
 
         foreach ($orders_products_array as $order_product) {
             $orders_products_result[] = [
-                'product_id' => $order_product->getProduct()->getName(),
+                'product_id' => $order_product->getProduct()->getId3pl(),
                 'product_name' => $order_product->getProduct()->getName(),
                 'qty' => $order_product->getQuantity(),
                 'weight' => $order_product->getWeight(),

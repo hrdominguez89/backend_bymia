@@ -39,6 +39,39 @@ class CustomerApiController extends AbstractController
     }
 
     /**
+     * @Route("/order", name="api_cart_list",methods={"POST"})
+     */
+    public function newOrder(ShoppingCartRepository $shoppingCartRepository): Response
+    {
+
+        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
+
+        if (!$shopping_cart_products) { //retorno si el producto ya fue activado al carrito..
+            return $this->json(
+                [
+                    "shop_cart_list" => [],
+                    'message' => 'No tiene productos en su lista de carrito.'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $shopping_cart_products_list = [];
+        foreach ($shopping_cart_products as $shopping_cart_product) {
+            $shopping_cart_products_list[] = $shopping_cart_product->getProduct()->getBasicDataProduct();
+        }
+
+        return $this->json(
+            [
+                "shop_cart_list" => $shopping_cart_products_list,
+            ],
+            Response::HTTP_ACCEPTED,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
      * @Route("/cart/list", name="api_cart_list",methods={"GET"})
      */
     public function cartList(ShoppingCartRepository $shoppingCartRepository): Response
