@@ -925,9 +925,7 @@ class Orders
             "order_id" => $this->getId(),
             "created_at" => $this->getCreatedAt(),
             "status_order" => $this->getStatus()->getId(),
-            "packages" => [
-                "guide_numbers" => $guide_numbers_result,
-            ],
+            "packages" => $guide_numbers_result,
             "warehouse_id" => $this->getWarehouse()->getId3pl(),
             "items" => $orders_products_result,
             "customer" => [
