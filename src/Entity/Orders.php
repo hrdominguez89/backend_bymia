@@ -267,6 +267,11 @@ class Orders
      */
     private $paymentsTransactionsCodes;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $inventory_id;
+
     public function __construct()
     {
         $this->guideNumbers = new ArrayCollection();
@@ -916,6 +921,7 @@ class Orders
 
         return [
             "order_id" => $this->getId(),
+            "inventory_id" => $this->getInventoryId(),
             "created_at" => $this->getCreatedAt(),
             "status_order" => $this->getStatus()->getId(),
             "packages" => $guide_numbers_result,
@@ -1099,6 +1105,18 @@ class Orders
                 $paymentsTransactionsCode->setOrderNumber(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInventoryId(): ?int
+    {
+        return $this->inventory_id;
+    }
+
+    public function setInventoryId(?int $inventory_id): self
+    {
+        $this->inventory_id = $inventory_id;
 
         return $this;
     }
