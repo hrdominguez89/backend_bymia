@@ -83,26 +83,6 @@ class Orders
     private $bill_file;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $payment_file;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $payment_received_file;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $debit_credit_note_file;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $paypal_transaction_code;
-
-    /**
      * @ORM\ManyToOne(targetEntity=CustomerAddresses::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -196,7 +176,7 @@ class Orders
     private $ordersProducts;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
      */
     private $created_at;
 
@@ -267,10 +247,35 @@ class Orders
      */
     private $warehouse;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PaymentsFiles::class, mappedBy="order_number")
+     */
+    private $paymentsFiles;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PaymentsReceivedFiles::class, mappedBy="order_number")
+     */
+    private $paymentsReceivedFiles;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DebitCreditNotesFiles::class, mappedBy="number_order")
+     */
+    private $debitCreditNotesFiles;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PaymentsTransactionsCodes::class, mappedBy="order_number")
+     */
+    private $paymentsTransactionsCodes;
+
     public function __construct()
     {
         $this->guideNumbers = new ArrayCollection();
         $this->ordersProducts = new ArrayCollection();
+        $this->paymentsFiles = new ArrayCollection();
+        $this->paymentsReceivedFiles = new ArrayCollection();
+        $this->debitCreditNotesFiles = new ArrayCollection();
+        $this->paymentsTransactionsCodes = new ArrayCollection();
+        $this->created_at = new \DateTime();
     }
 
     public function getId(): ?int
@@ -418,54 +423,6 @@ class Orders
     public function setBillFile(?string $bill_file): self
     {
         $this->bill_file = $bill_file;
-
-        return $this;
-    }
-
-    public function getPaymentFile(): ?string
-    {
-        return $this->payment_file;
-    }
-
-    public function setPaymentFile(?string $payment_file): self
-    {
-        $this->payment_file = $payment_file;
-
-        return $this;
-    }
-
-    public function getPaymentReceivedFile(): ?string
-    {
-        return $this->payment_received_file;
-    }
-
-    public function setPaymentReceivedFile(?string $payment_received_file): self
-    {
-        $this->payment_received_file = $payment_received_file;
-
-        return $this;
-    }
-
-    public function getDebitCreditNoteFile(): ?string
-    {
-        return $this->debit_credit_note_file;
-    }
-
-    public function setDebitCreditNoteFile(?string $debit_credit_note_file): self
-    {
-        $this->debit_credit_note_file = $debit_credit_note_file;
-
-        return $this;
-    }
-
-    public function getPaypalTransactionCode(): ?string
-    {
-        return $this->paypal_transaction_code;
-    }
-
-    public function setPaypalTransactionCode(?string $paypal_transaction_code): self
-    {
-        $this->paypal_transaction_code = $paypal_transaction_code;
 
         return $this;
     }
@@ -920,6 +877,42 @@ class Orders
         }
 
 
+        $payments_files_array = $this->paymentsFiles;
+        $payments_files_result = [];
+
+        foreach ($payments_files_array as $paymentFile) {
+            $payments_files_result[] = [
+                "payment_file" => $paymentFile->getPaymentFile(),
+            ];
+        }
+
+        $payments_received_files_array = $this->paymentsReceivedFiles;
+        $payments_received_files_result = [];
+
+        foreach ($payments_received_files_array as $paymentReceivedFile) {
+            $payments_received_files_result[] = [
+                "payment_received_file" => $paymentReceivedFile->getPaymentReceivedFile(),
+            ];
+        }
+
+        $payments_transactions_codes_array = $this->paymentsTransactionsCodes;
+        $payments_transactions_codes_result = [];
+
+        foreach ($payments_transactions_codes_array as $paymentTransactionCode) {
+            $payments_transactions_codes_result[] = [
+                "payment_transaction_code" => $paymentTransactionCode->getPaymentTransactionCode(),
+            ];
+        }
+
+        $debit_credite_notes_files_array = $this->debitCreditNotesFiles;
+        $debit_credite_notes_files_result = [];
+
+        foreach ($debit_credite_notes_files_array as $debitCreditNoteFile) {
+            $debit_credite_notes_files_result[] = [
+                "debit_credit_note_file" => $debitCreditNoteFile->getDebitCreditNoteFile(),
+            ];
+        }
+
 
         return [
             "order_id" => $this->getId(),
@@ -942,10 +935,10 @@ class Orders
             "international_shipping" => $this->getInternationalShipping() ? 1 : 0,
             "shipping" => $this->getShipping() ? 1 : 0,
             "bill_file" => $this->getBillFile(),
-            "payment_file" => $this->getPaymentFile(),
-            "payment_trasaction_code" => $this->getPaypalTransactionCode(),
-            "payment_received_file" => $this->getPaymentReceivedFile(),
-            "debit_credit_note_file" => $this->getDebitCreditNoteFile(),
+            "payments_files" => $payments_files_result,
+            "payments_received_files" => $payments_received_files_result,
+            "payments_transactions_codes" => $payments_transactions_codes_result,
+            "debit_credit_notes_files" => $debit_credite_notes_files_result,
             "receiver" => [
                 "name" => $this->getReceiverName(),
                 "document_type" => $this->getReceiverDocumentType(),
@@ -986,6 +979,126 @@ class Orders
     public function setWarehouse(?Warehouses $warehouse): self
     {
         $this->warehouse = $warehouse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaymentsFiles>
+     */
+    public function getPaymentsFiles(): Collection
+    {
+        return $this->paymentsFiles;
+    }
+
+    public function addPaymentsFile(PaymentsFiles $paymentsFile): self
+    {
+        if (!$this->paymentsFiles->contains($paymentsFile)) {
+            $this->paymentsFiles[] = $paymentsFile;
+            $paymentsFile->setOrderNumber($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentsFile(PaymentsFiles $paymentsFile): self
+    {
+        if ($this->paymentsFiles->removeElement($paymentsFile)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentsFile->getOrderNumber() === $this) {
+                $paymentsFile->setOrderNumber(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaymentsReceivedFiles>
+     */
+    public function getPaymentsReceivedFiles(): Collection
+    {
+        return $this->paymentsReceivedFiles;
+    }
+
+    public function addPaymentsReceivedFile(PaymentsReceivedFiles $paymentsReceivedFile): self
+    {
+        if (!$this->paymentsReceivedFiles->contains($paymentsReceivedFile)) {
+            $this->paymentsReceivedFiles[] = $paymentsReceivedFile;
+            $paymentsReceivedFile->setOrderNumber($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentsReceivedFile(PaymentsReceivedFiles $paymentsReceivedFile): self
+    {
+        if ($this->paymentsReceivedFiles->removeElement($paymentsReceivedFile)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentsReceivedFile->getOrderNumber() === $this) {
+                $paymentsReceivedFile->setOrderNumber(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DebitCreditNotesFiles>
+     */
+    public function getDebitCreditNotesFiles(): Collection
+    {
+        return $this->debitCreditNotesFiles;
+    }
+
+    public function addDebitCreditNotesFile(DebitCreditNotesFiles $debitCreditNotesFile): self
+    {
+        if (!$this->debitCreditNotesFiles->contains($debitCreditNotesFile)) {
+            $this->debitCreditNotesFiles[] = $debitCreditNotesFile;
+            $debitCreditNotesFile->setNumberOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDebitCreditNotesFile(DebitCreditNotesFiles $debitCreditNotesFile): self
+    {
+        if ($this->debitCreditNotesFiles->removeElement($debitCreditNotesFile)) {
+            // set the owning side to null (unless already changed)
+            if ($debitCreditNotesFile->getNumberOrder() === $this) {
+                $debitCreditNotesFile->setNumberOrder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PaymentsTransactionsCodes>
+     */
+    public function getPaymentsTransactionsCodes(): Collection
+    {
+        return $this->paymentsTransactionsCodes;
+    }
+
+    public function addPaymentsTransactionsCode(PaymentsTransactionsCodes $paymentsTransactionsCode): self
+    {
+        if (!$this->paymentsTransactionsCodes->contains($paymentsTransactionsCode)) {
+            $this->paymentsTransactionsCodes[] = $paymentsTransactionsCode;
+            $paymentsTransactionsCode->setOrderNumber($this);
+        }
+
+        return $this;
+    }
+
+    public function removePaymentsTransactionsCode(PaymentsTransactionsCodes $paymentsTransactionsCode): self
+    {
+        if ($this->paymentsTransactionsCodes->removeElement($paymentsTransactionsCode)) {
+            // set the owning side to null (unless already changed)
+            if ($paymentsTransactionsCode->getOrderNumber() === $this) {
+                $paymentsTransactionsCode->setOrderNumber(null);
+            }
+        }
 
         return $this;
     }

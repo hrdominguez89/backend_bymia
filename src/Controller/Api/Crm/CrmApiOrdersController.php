@@ -108,8 +108,6 @@ class CrmApiOrdersController extends AbstractController
 
                     $order->setStatus($status_obj);
                     $order->setBillFile($data['bill_file']);
-                    $order->setPaymentReceivedFile($data['payment_received_file']);
-                    $order->setDebitCreditNoteFile($data['debit_credit_note_file']);
 
 
 

@@ -75,9 +75,15 @@ class GuideNumbers
      */
     private $service_name;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=false, options={"default":"CURRENT_TIMESTAMP"})
+     */
+    private $created_at;
+
     public function __construct()
     {
         $this->itemsGuideNumbers = new ArrayCollection();
+        $this->created_at = new \DateTime();
     }
 
     public function getId(): ?int
@@ -231,6 +237,18 @@ class GuideNumbers
     public function setServiceName(?string $service_name): self
     {
         $this->service_name = $service_name;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }
