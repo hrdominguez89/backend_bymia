@@ -45,7 +45,7 @@ class CustomerApiController extends AbstractController
     }
 
     /**
-     * @Route("/order", name="api_order",methods={"POST"})
+     * @Route("/order", name="api_customer_order",methods={"POST"})
      */
     public function newOrder(
         Request $request,
