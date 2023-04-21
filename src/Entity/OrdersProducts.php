@@ -74,6 +74,12 @@ class OrdersProducts
      */
     private $product_discount;
 
+    /**
+     * @ORM\OneToOne(targetEntity=ShoppingCart::class, inversedBy="ordersProducts", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $shopping_cart;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -207,6 +213,18 @@ class OrdersProducts
     public function setProductDiscount(?ProductDiscount $product_discount): self
     {
         $this->product_discount = $product_discount;
+
+        return $this;
+    }
+
+    public function getShoppingCart(): ?ShoppingCart
+    {
+        return $this->shopping_cart;
+    }
+
+    public function setShoppingCart(ShoppingCart $shopping_cart): self
+    {
+        $this->shopping_cart = $shopping_cart;
 
         return $this;
     }

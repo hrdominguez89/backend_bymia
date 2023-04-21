@@ -2,14 +2,20 @@
 
 namespace App\Controller\Api\Customer;
 
+use App\Constants\Constants;
 use App\Entity\FavoriteProduct;
+use App\Entity\Orders;
+use App\Entity\OrdersProducts;
 use App\Entity\ShoppingCart;
 use App\Repository\CustomerRepository;
 use App\Repository\FavoriteProductRepository;
+use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ShoppingCartRepository;
+use App\Repository\StatusOrderTypeRepository;
 use App\Repository\StatusTypeFavoriteRepository;
 use App\Repository\StatusTypeShoppingCartRepository;
+use App\Repository\WarehousesRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -39,14 +45,23 @@ class CustomerApiController extends AbstractController
     }
 
     /**
-     * @Route("/order", name="api_cart_list",methods={"POST"})
+     * @Route("/order", name="api_order",methods={"POST"})
      */
-    public function newOrder(ShoppingCartRepository $shoppingCartRepository): Response
-    {
+    public function newOrder(
+        Request $request,
+        OrderRepository $orderRepository,
+        StatusOrderTypeRepository $statusOrderTypeRepository,
+        WarehousesRepository $warehousesRepository,
+        ShoppingCartRepository $shoppingCartRepository,
+        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
+        EntityManagerInterface $em
+    ): Response {
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
 
         $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
-
-        if (!$shopping_cart_products) { //retorno si el producto ya fue activado al carrito..
+        if (!$shopping_cart_products) {
             return $this->json(
                 [
                     "shop_cart_list" => [],
@@ -57,15 +72,84 @@ class CustomerApiController extends AbstractController
             );
         }
 
-        $shopping_cart_products_list = [];
-        foreach ($shopping_cart_products as $shopping_cart_product) {
-            $shopping_cart_products_list[] = $shopping_cart_product->getProduct()->getBasicDataProduct();
+
+
+        $new_order = new Orders();
+
+        $new_order
+            ->setCustomer($this->customer)
+            ->setCustomerType($this->customer->getCustomerTypeRole())
+            ->setCustomerName($this->customer->getName())
+            ->setCustomerEmail($this->customer->getEmail())
+            ->setCustomerPhoneCode($this->customer->getCountryPhoneCode())
+            ->setCelPhoneCustomer($this->customer->getCelPhone())
+            ->setPhoneCustomer($this->customer->getPhone())
+            ->setCustomerIdentityType('DNI')
+            ->setCustomerIdentityNumber('34987273')
+            ->setInternationalShipping(TRUE)
+            ->setShipping(TRUE)
+            ->setBillFile(null);
+
+        foreach ($this->customer->getCustomerAddresses() as $address) {
+            if ($address->getBillingAddress() && $address->getActive()) {
+                $new_order->setBillAddress($address);
+                $new_order->setBillCountry($address->getCountry());
+            }
         }
 
+        $new_order->setBillState(null)
+            ->setBillCity(null)
+            ->setBillAddressOrder('address')
+            ->setBillPostalCode('postal code')
+            ->setBillAdditionalInfo('additional_info')
+            ->setSubtotal(10.20)
+            ->setTotalProductDiscount(20.30)
+            ->setPromotionalCodeDiscount(0)
+            ->setTax(0)
+            ->setShippingCost(0)
+            ->setShippingDiscount(0)
+            ->setPaypalServiceCost(0)
+            ->setTotalOrder(200.50)
+            ->setStatus($statusOrderTypeRepository->findOneBy(["id" => Constants::STATUS_ORDER_PENDING]))
+            ->setCreatedAt(new \DateTime())
+            ->setReceiverName('nombre receptor')
+            ->setReceiverDocumentType('documento receptor typo')
+            ->setReceiverDocument('numero documento')
+            ->setReceiverPhoneCell('')
+            ->setReceiverPhoneHome(null)
+            ->setReceiverEmail('email@email.com')
+            ->setReceiverCountry($new_order->getBillCountry())
+            ->setReceiverState(null)
+            ->setReceiverCity(null)
+            ->setReceiverAddress('addreess receiver')
+            ->setReceiverCodZip('cod_zip')
+            ->setReceiverAdditionalInfo('additional_info')
+            ->setWarehouse($shopping_cart_products[0]->getProduct()->getInventory()->getWarehouse())
+            ->setInventoryId($shopping_cart_products[0]->getProduct()->getInventory()->getId());
+        $em->persist($new_order);
+
+        foreach ($shopping_cart_products as $shopping_cart_product) {
+            $shopping_cart_product->setStatus($statusTypeShoppingCartRepository->findOneBy(["id" => Constants::STATUS_SHOPPING_CART_EN_ORDEN]));
+            $order_product = new OrdersProducts();
+            $order_product
+                ->setNumberOrder($new_order)
+                ->setProduct($shopping_cart_product->getProduct())
+                ->setName($shopping_cart_product->getProduct()->getName())
+                ->setSku($shopping_cart_product->getProduct()->getSku())
+                ->setPartNumber($shopping_cart_product->getProduct()->getPartNumber())
+                ->setCod($shopping_cart_product->getProduct()->getCod())
+                ->setWeight($shopping_cart_product->getProduct()->getWeight())
+                ->setPrice($shopping_cart_product->getProduct()->getPrice())
+                ->setQuantity($shopping_cart_product->getQuantity())
+                ->setDiscount(0);
+            $em->persist($order_product);
+            $em->persist($shopping_cart_product);
+        }
+        $em->flush();
+
+
         return $this->json(
-            [
-                "shop_cart_list" => $shopping_cart_products_list,
-            ],
+            $data,
             Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );

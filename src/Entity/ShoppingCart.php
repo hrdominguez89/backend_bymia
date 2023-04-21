@@ -55,6 +55,11 @@ class ShoppingCart
      */
     private $favorite;
 
+    /**
+     * @ORM\OneToOne(targetEntity=OrdersProducts::class, mappedBy="shopping_cart", cascade={"persist", "remove"})
+     */
+    private $ordersProducts;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -146,6 +151,23 @@ class ShoppingCart
     public function setFavorite(?FavoriteProduct $favorite): self
     {
         $this->favorite = $favorite;
+
+        return $this;
+    }
+
+    public function getOrdersProducts(): ?OrdersProducts
+    {
+        return $this->ordersProducts;
+    }
+
+    public function setOrdersProducts(OrdersProducts $ordersProducts): self
+    {
+        // set the owning side of the relation if necessary
+        if ($ordersProducts->getShoppingCart() !== $this) {
+            $ordersProducts->setShoppingCart($this);
+        }
+
+        $this->ordersProducts = $ordersProducts;
 
         return $this;
     }
