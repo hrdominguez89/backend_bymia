@@ -26,7 +26,6 @@
         "oneup/flysystem-bundle": "*",
         "opensearch/opensearch-sdk-php": "^3.3",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "sensio/framework-extra-bundle": "^6.1",
         "symfony/amazon-mailer": "5.4.*",
         "symfony/asset": "5.4.*",
         "symfony/console": "5.4.*",
