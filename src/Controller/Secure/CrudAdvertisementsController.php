@@ -41,27 +41,27 @@ class CrudAdvertisementsController extends AbstractController
 
 
             if (isset($src1)) {
-                $imageFileName = $fileUploader->upload($src1, $this->pathImg, 'banner-1-desktop');
+                $imageFileName = $fileUploader->upload($src1, 'banner-1-desktop', $this->pathImg);
                 $advertisement->setSrc1($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($srcSm1)) {
-                $imageFileName = $fileUploader->upload($srcSm1, $this->pathImg, 'banner-1-desktop');
+                $imageFileName = $fileUploader->upload($srcSm1, 'banner-1-desktop', $this->pathImg);
                 $advertisement->setSrcSm1($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($src2)) {
-                $imageFileName = $fileUploader->upload($src2, $this->pathImg, 'banner-1-desktop');
+                $imageFileName = $fileUploader->upload($src2, 'banner-1-desktop', $this->pathImg);
                 $advertisement->setSrc2($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($srcSm2)) {
-                $imageFileName = $fileUploader->upload($srcSm2, $this->pathImg, 'banner-1-desktop');
+                $imageFileName = $fileUploader->upload($srcSm2, 'banner-1-desktop', $this->pathImg);
                 $advertisement->setSrcSm2($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($src3)) {
-                $imageFileName = $fileUploader->upload($src3, $this->pathImg, 'banner-1-desktop');
+                $imageFileName = $fileUploader->upload($src3, 'banner-1-desktop', $this->pathImg);
                 $advertisement->setSrc3($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($srcSm3)) {
-                $imageFileName = $fileUploader->upload($srcSm3, $this->pathImg, 'banner-1-desktop');
+                $imageFileName = $fileUploader->upload($srcSm3, 'banner-1-desktop', $this->pathImg);
                 $advertisement->setSrcSm3($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
 

@@ -57,27 +57,27 @@ class BrandsSectionsController extends AbstractController
 
 
             if (isset($brandImage1)) {
-                $imageFileName = $fileUploader->upload($brandImage1, $this->pathImg, $brandName1);
+                $imageFileName = $fileUploader->upload($brandImage1, $brandName1, $this->pathImg);
                 $data['brands']->setBrandImage1($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($brandImage2)) {
-                $imageFileName = $fileUploader->upload($brandImage2, $this->pathImg, $brandName2);
+                $imageFileName = $fileUploader->upload($brandImage2, $brandName2, $this->pathImg);
                 $data['brands']->setBrandImage2($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($brandImage3)) {
-                $imageFileName = $fileUploader->upload($brandImage3, $this->pathImg, $brandName3);
+                $imageFileName = $fileUploader->upload($brandImage3, $brandName3, $this->pathImg);
                 $data['brands']->setBrandImage3($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($brandImage4)) {
-                $imageFileName = $fileUploader->upload($brandImage4, $this->pathImg, $brandName4);
+                $imageFileName = $fileUploader->upload($brandImage4, $brandName4, $this->pathImg);
                 $data['brands']->setBrandImage4($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($brandImage5)) {
-                $imageFileName = $fileUploader->upload($brandImage5, $this->pathImg, $brandName5);
+                $imageFileName = $fileUploader->upload($brandImage5, $brandName5, $this->pathImg);
                 $data['brands']->setBrandImage5($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
             if (isset($brandImage6)) {
-                $imageFileName = $fileUploader->upload($brandImage6, $this->pathImg, $brandName6);
+                $imageFileName = $fileUploader->upload($brandImage6, $brandName6, $this->pathImg);
                 $data['brands']->setBrandImage6($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
 

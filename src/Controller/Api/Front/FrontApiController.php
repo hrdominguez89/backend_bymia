@@ -276,7 +276,7 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/products/search", name="api_products_search",methods={"GET"})
+     * @Route("/products/searchaaaa", name="api_products_searchaaaa",methods={"GET"})
      */
     public function search(Request $request, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
     {
@@ -350,18 +350,32 @@ class FrontApiController extends AbstractController
     }
 
     /**
-     * @Route("/products/searchaa", name="api_products_search3",methods={"GET"})
+     * @Route("/products/search", name="api_products_search",methods={"GET"})
      */
-    public function productsSearch3(
-        // CategoryRepository $categoryRepository,
-        // TagRepository $tagRepository,
-        // BrandRepository $brandRepository,
-        // ProductRepository $productRepository,
+    public function productsSearch(
+        CategoryRepository $categoryRepository,
+        TagRepository $tagRepository,
+        BrandRepository $brandRepository,
+        ProductRepository $productRepository,
         Request $request,
         EntityManagerInterface $entityManager
     ): Response {
 
-        // $category = $categoryRepository->find($categoryId); //reemplazar para qe busque categorias visibles con id3pl.
+        $keyword = $request->query->get('k', null);
+
+        $array_categories = json_decode($request->query->get('c', null), true);
+        $categories = $categoryRepository->findBy(['slug' => $array_categories]);
+
+        $array_brands = json_decode($request->query->get('b', null), true);
+        $brands = $brandRepository->findBy(['slug' => $array_brands]);
+
+        $array_tags = json_decode($request->query->get('b', null), true);
+        $tags = $tagRepository->findBy(['slug' => $array_tags]);
+
+
+
+        // reemplazar para qe busque categorias visibles con id3pl.
+        // $category = $categoryRepository->find($categoryId); 
         // Definicion de filtros
         // k=keyword
         // c=categorias,
@@ -380,8 +394,8 @@ class FrontApiController extends AbstractController
         //     image
         // ]
 
-        // $limit = $request->query->getInt('l', 4);
-        // $index = $request->query->getInt('i', 0) * $limit;
+        $limit = $request->query->getInt('l', 4);
+        $index = $request->query->getInt('i', 0) * $limit;
 
         // $keyword = $request->query->get('k', null);
         // $category = $request->query->get('c', null) ? $categoryRepository->find($request->query->get('c')) : null;
