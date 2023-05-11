@@ -29,6 +29,22 @@ class TagRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param $tagsSlugs
+     */
+    public function findTagsBySlug($tagsSlugs)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('t')
+            ->from(Tag::class, 't')
+            ->where($queryBuilder->expr()->in('t.slug', $tagsSlugs));
+
+        $tags = $queryBuilder->getQuery()->getResult();
+        return $tags;
+    }
+
     public function getPrincipalTags(){
         return  $this->createQueryBuilder('t')
             ->select('t.id,t.name')

@@ -33,6 +33,22 @@ class BrandRepository extends ServiceEntityRepository
         )->getArrayResult();
     }
 
+    /**
+     * @param $brandsSlugs
+     */
+    public function findBrandsBySlug($brandsSlugs)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('b')
+            ->from(Brand::class, 'b')
+            ->where($queryBuilder->expr()->in('b.slug', $brandsSlugs));
+
+        $brands = $queryBuilder->getQuery()->getResult();
+        return $brands;
+    }
+
     public function getCantProductByBrand($brandId)
     {
         $entityManager = $this->getEntityManager();

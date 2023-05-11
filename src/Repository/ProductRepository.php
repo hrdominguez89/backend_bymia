@@ -436,36 +436,64 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findProductByFilters($filters, $limit = 4, $index = 0)
+    public function findProductByFilters($filters, $limit = 4, $index = 0, $keywords)
     {
+
         $today = new DateTime();
 
-        dd($filters);
+        $products = $this->createQueryBuilder('p');
 
+        $products->where('p.visible = true');
+        $products->andWhere('p.id3pl IS NOT NULL');
+        if ($keywords) {
+            $orX = $products->expr()->orX();
+            foreach ($keywords as $keyword) {
+                $orX->add(
+                    $products->expr()->orX(
+                        $products->expr()->like('p.name', "'%" . $keyword . "%'"),
+                        $products->expr()->like('p.descriptionEs', "'%" . $keyword . "%'")
+                    )
+                );
+            }
+            $products->andWhere($orX);
+        }
 
-        $products = $this->createQueryBuilder('p')
-            ->where('p.tag = :tag')
-            ->andWhere('p.id3pl IS NOT NULL')
-            ->andWhere('p.category = :category')
-            ->andWhere('p.visible = :visible')
-            ->andWhere(
-                'p.tag_expires = :tag_expires or p.tag_expiration_date > :today'
-            )
-            // ->setParameter('tag', $tag)
-            // ->setParameter('category', $category)
-            ->setParameter('visible', true)
-            ->setParameter('tag_expires', false)
-            ->setParameter('today', $today);
+        $orX = $products->expr()->orX();
+        foreach ($filters as $key => $filter) {
+            if ($filter['method'] == 'LIKE') {
+                foreach ($filter['parameters'] as $parametro) {
+                    $orX->add(
+                        $products->expr()->orX(
+                            $products->expr()->like('p.' . $filter['column'], "'" . $parametro . "'")
+                        )
+                    );
+                }
+            } else if ($filter['method'] == 'IN') {
+                foreach ($filter['parameters'] as $parametro) {
+                    $orX->add(
+                        $products->expr()->orX(
+                            $products->expr()->eq('p.' . $filter['column'], $parametro->getId())
+                        )
+                    );
+                }
+            } else {
+                foreach ($filter['parameters'] as $parametro) {
+                    $orX->add(
+                        $products->expr()->orX(
+                            $products->expr()->eq('p.' . $filter['column'], $parametro)
+                        )
+                    );
+                }
+            }
+        }
+
+        $products->andWhere($orX);
+
         if ($index) {
             $products->setFirstResult($index);
         }
         $products->setMaxResults($limit);
-
-        return $products->getQuery()
-            ->getResult();
-
-
-        return $products;
+        return $products->getQuery()->getResult();
     }
 
     public function findActiveProductById($product_id)

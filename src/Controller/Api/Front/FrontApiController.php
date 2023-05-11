@@ -361,21 +361,23 @@ class FrontApiController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
 
-        $keyword = $request->query->get('k', null);
+        $keywords = $request->query->get('k', null);
 
         $array_categories = json_decode($request->query->get('c', null), true);
-        $categories = $categoryRepository->findBy(['slug' => $array_categories]);
+        if ($array_categories) {
+            $categories = $categoryRepository->findCategoriesBySlug($array_categories);
+        }
 
         $array_brands = json_decode($request->query->get('b', null), true);
-        $brands = $brandRepository->findBy(['slug' => $array_brands]);
+        if ($array_brands) {
+            $brands = $brandRepository->findBrandsBySlug($array_brands);
+        }
 
-        $array_tags = json_decode($request->query->get('b', null), true);
-        $tags = $tagRepository->findBy(['slug' => $array_tags]);
+        $array_tags = json_decode($request->query->get('t', null), true);
+        if ($array_tags) {
+            $tags = $tagRepository->findTagsBySlug($array_tags);
+        }
 
-
-
-        // reemplazar para qe busque categorias visibles con id3pl.
-        // $category = $categoryRepository->find($categoryId); 
         // Definicion de filtros
         // k=keyword
         // c=categorias,
@@ -397,113 +399,52 @@ class FrontApiController extends AbstractController
         $limit = $request->query->getInt('l', 4);
         $index = $request->query->getInt('i', 0) * $limit;
 
-        // $keyword = $request->query->get('k', null);
-        // $category = $request->query->get('c', null) ? $categoryRepository->find($request->query->get('c')) : null;
-        // $brand = $request->query->get('b', null) ? $brandRepository->find($request->query->get('b')) : null;
-        // $tag = $request->query->get('t', null) ? $tagRepository->find($request->query->get('t')) : null;
-
-
-
-
-
-
-        // comienza la prueba
-
-        $palabras = explode(' ', $request->query->get('k', null));
-
-
-        $queryBuilder = $entityManager->createQueryBuilder()
-            ->select('p')
-            ->from(Product::class, 'p');
-
-        $expresiones = [];
-        foreach ($palabras as $indice => $palabra) {
-            $alias = 'p';
-            $expresiones[] = $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->like("LOWER(" . $alias . ".name)", "LOWER(:palabra_" . $indice . ")"),
-                $queryBuilder->expr()->like("LOWER(" . $alias . ".descriptionEs)", "LOWER(:palabra_" . $indice . ")")
-            );
-            $queryBuilder->setParameter("palabra_" . $indice, "%" . $palabra . "%");
+        if ($keywords) {
+            $array_keywords = explode(' ', $keywords);
+            array_push($array_keywords, $keywords);
         }
 
-        $queryBuilder->andWhere(call_user_func_array([$queryBuilder->expr(), 'andX'], $expresiones));
 
-        $queryBuilder->addSelect("
-            (
-                CASE WHEN (
-                    (LOWER(p.name) LIKE LOWER(:palabras) AND LOWER(p.descriptionEs) LIKE LOWER(:palabras)) OR 
-                    (LOWER(p.name) LIKE LOWER(:palabras) AND LOWER(p.descriptionEs) NOT LIKE LOWER(:palabras)) OR 
-                    (LOWER(p.name) NOT LIKE LOWER(:palabras) AND LOWER(p.descriptionEs) LIKE LOWER(:palabras))
-                )
-                THEN 3
-                WHEN (
-                    (LOWER(p.name) LIKE LOWER(:palabras) OR LOWER(p.descriptionEs) LIKE LOWER(:palabras)) AND 
-                    (LOWER(p.name) LIKE LOWER(:palabras) OR LOWER(p.descriptionEs) NOT LIKE LOWER(:palabras)) AND 
-                    (LOWER(p.name) NOT LIKE LOWER(:palabras) OR LOWER(p.descriptionEs) LIKE LOWER(:palabras))
-                )
-                THEN 2
-                ELSE 1
-                END
-            ) AS HIDDEN relevancia
-        ");
-        $queryBuilder->setParameter('palabras', '%' . implode('%', $palabras) . '%');
-        $queryBuilder->orderBy('relevancia', 'DESC');
+        $filters = [];
 
-        $productos = $queryBuilder->getQuery()->getResult();
-
-        dd($productos);
+        if (isset($categories)) {
+            $filters[] = [
+                "column" => 'category',
+                "method" => 'IN',
+                "parameters" => $categories,
+            ];
+        }
+        if (isset($brands)) {
+            $filters[] = [
+                "column" => 'brand',
+                "method" => 'IN',
+                "parameters" => $brands,
+            ];
+        }
+        if (isset($tags)) {
+            $filters[] = [
+                "column" => 'tag',
+                "method" => 'IN',
+                "parameters" => $tags,
+            ];
+        }
 
 
-        // FINALIZA LA PRUEBA
-
-        // esta query funciona excelente
-
-        //         SELECT p.*
-        //         FROM mia_product p
-        //         WHERE 
-        //               p.name LIKE '%Samsung%' and
-        //               p.name LIKE '%Galaxy%' and
-        //               similarity(p.name, 'Galaxy Samsung') > 0
-        //         ORDER BY similarity(p.name, 'Galaxy Samsung') DESC;
-
-        //         fin query
-
-        // $filters = [];
-        // if ($keyword) {
-        //     $filters[] = [
-        //         "method" => 'LIKE',
-        //         "parameter" => $keyword,
-        //     ];
-        // }
-        // if ($category) {
-        //     $filters[] = [
-        //         "method" => '=',
-        //         "parameter" => $request->query->get('c'),
-        //     ];
-        // }
-        // if ($brand) {
-        //     $filters[] = [
-        //         "method" => '=',
-        //         "parameter" => $request->query->get('b'),
-        //     ];
-        // }
-        // if ($tag) {
-        //     $filters[] = [
-        //         "method" => '=',
-        //         "parameter" => $request->query->get('t'),
-        //     ];
-        // }
-
-        // $products = $productRepository->findProductByFilters($filters, $limit, $index);
-        // dd($products);
+        $products = $productRepository->findProductByFilters($filters, $limit, $index, isset($array_keywords) ? $array_keywords : null);
 
 
+        if($products){
+            $products_founded = [];
+            foreach($products as $product){
+                $products_founded[]=$product->getBasicDataProduct();
+            }
 
-        return $this->json(
-            ['a' => 'b'],
-            Response::HTTP_OK,
-            ['Content-Type' => 'application/json']
-        );
+            return $this->json(
+                $products_founded,
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/json']
+            );
+        }
 
         return $this->json(
             ['message' => 'Not found'],

@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CrmApiOrdersController extends AbstractController
 {
     /**
-     * @Route("/order/{order_id}", name="api_order",methods={"GET","PATCH"})
+     * @Route("/order/{order_id}", name="api_crm_order",methods={"GET","PATCH"})
      * 
      */
     public function order(

@@ -115,7 +115,7 @@ class CustomerApiController extends AbstractController
             ->setReceiverName('nombre receptor')
             ->setReceiverDocumentType('documento receptor typo')
             ->setReceiverDocument('numero documento')
-            ->setReceiverPhoneCell('')
+            ->setReceiverPhoneCell('1122334455')
             ->setReceiverPhoneHome(null)
             ->setReceiverEmail('email@email.com')
             ->setReceiverCountry($new_order->getBillCountry())
@@ -147,6 +147,8 @@ class CustomerApiController extends AbstractController
         }
         $em->flush();
 
+
+        
 
         return $this->json(
             $data,

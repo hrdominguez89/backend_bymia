@@ -48,6 +48,22 @@ class CategoryRepository extends ServiceEntityRepository
         return $entity;
     }
 
+    /**
+     * @param $categoriesSlugs
+     */
+    public function findCategoriesBySlug($categoriesSlugs)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('c')
+            ->from(Category::class, 'c')
+            ->where($queryBuilder->expr()->in('c.slug', $categoriesSlugs));
+
+        $categories = $queryBuilder->getQuery()->getResult();
+        return $categories;
+    }
+
 
     /**
      * @param string $filter
@@ -120,7 +136,8 @@ class CategoryRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getPrincipalCategories(){
+    public function getPrincipalCategories()
+    {
         return  $this->createQueryBuilder('c')
             ->select('c.id,c.name')
             ->where('c.id3pl IS NOT NULL')
