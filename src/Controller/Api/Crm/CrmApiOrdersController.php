@@ -2,11 +2,14 @@
 
 namespace App\Controller\Api\Crm;
 
+use App\Entity\DebitCreditNotesFiles;
 use App\Entity\GuideNumbers;
 use App\Entity\ItemsGuideNumber;
+use App\Entity\PaymentsReceivedFiles;
 use App\Repository\GuideNumbersRepository;
 use App\Repository\ItemsGuideNumberRepository;
 use App\Repository\OrdersRepository;
+use App\Repository\PaymentsReceivedFilesRepository;
 use App\Repository\ProductRepository;
 use App\Repository\StatusOrderTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +38,8 @@ class CrmApiOrdersController extends AbstractController
         StatusOrderTypeRepository $statusOrderTypeRepository,
         GuideNumbersRepository $guideNumbersRepository,
         ItemsGuideNumberRepository $itemsGuideNumberRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        PaymentsReceivedFilesRepository $paymentsReceivedFilesRepository
     ): Response {
         $order = $ordersRepository->find($order_id);
         if ($order) {
@@ -48,10 +52,11 @@ class CrmApiOrdersController extends AbstractController
                         ['Content-Type' => 'application/json']
                     );
                 case 'PATCH':
+
                     $body = $request->getContent();
                     $data = json_decode($body, true);
-                    $status_obj = $statusOrderTypeRepository->find($data['status_order']);
 
+                    $status_obj = $statusOrderTypeRepository->find($data['status_order']);
 
                     foreach ($data['packages'] as $package) {
                         //busco si ya fue creado el paquete
@@ -72,15 +77,8 @@ class CrmApiOrdersController extends AbstractController
                         $package_obj->setServiceId($package['service_id']);
                         $package_obj->setServiceName($package['service_name']);
 
-                        try {
-                            $em->persist($package_obj);
-                        } catch (Exception $e) {
-                            return $this->json(
-                                ['message' => $e->getMessage()],
-                                Response::HTTP_INTERNAL_SERVER_ERROR,
-                                ['Content-Type' => 'application/json']
-                            );
-                        }
+                        $em->persist($package_obj);
+
 
                         foreach ($package['items'] as $item) {
                             $product_obj = $productRepository->findOneBy(['id3pl' => $item['product_id']]);
@@ -92,15 +90,8 @@ class CrmApiOrdersController extends AbstractController
                                     $items_obj->setGuideNumber($package_obj);
                                     $items_obj->setProduct($product_obj);
                                     $items_obj->setQuantity($item['quantity']);
-                                    try {
-                                        $em->persist($items_obj);
-                                    } catch (Exception $e) {
-                                        return $this->json(
-                                            ['message' => $e->getMessage()],
-                                            Response::HTTP_INTERNAL_SERVER_ERROR,
-                                            ['Content-Type' => 'application/json']
-                                        );
-                                    }
+
+                                    $em->persist($items_obj);
                                 }
                             }
                         }
@@ -109,10 +100,31 @@ class CrmApiOrdersController extends AbstractController
                     $order->setStatus($status_obj);
                     $order->setBillFile($data['bill_file']);
 
+                    foreach ($data['payments_received_files'] as $payment_received_file) {
+                        $payment_received_file_obj = $paymentsReceivedFilesRepository->findOneBy(['payment_received_file' => $payment_received_file]);
+                        if (!$payment_received_file_obj) {
+                            $payment_received_file_obj = new PaymentsReceivedFiles;
+                            $payment_received_file_obj->setOrderNumber($order);
+                            $payment_received_file_obj->setPaymentReceivedFile($payment_received_file);
 
+                            $em->persist($payment_received_file_obj);
+                        }
+                    }
+
+                    foreach ($data['debit_credit_notes_files'] as $debit_credit_note_file) {
+                        $debit_credit_note_file_obj = $paymentsReceivedFilesRepository->findOneBy(['debit_credit_note_file' => $debit_credit_note_file]);
+                        if (!$debit_credit_note_file_obj) {
+                            $debit_credit_note_file_obj = new DebitCreditNotesFiles;
+                            $debit_credit_note_file_obj->setNumberOrder($order);
+                            $debit_credit_note_file_obj->setDebitCreditNoteFile($debit_credit_note_file);
+
+                            $em->persist($debit_credit_note_file_obj);
+                        }
+                    }
+
+                    $em->persist($order);
 
                     try {
-                        $em->persist($order);
                         $em->flush();
                     } catch (Exception $e) {
                         return $this->json(
@@ -131,7 +143,7 @@ class CrmApiOrdersController extends AbstractController
                     break;
             }
         }
-        //si no encontro ni customer en methodo get o customer en post retorno not found 
+        //si no encontro ni order en methodo get o order en patch retorno not found 
         return $this->json(
             ['message' => 'Not found.'],
             Response::HTTP_NOT_FOUND,
