@@ -16,11 +16,6 @@ framework:
     #fragments: true
     php_errors:
         log: true
-    
-    cors:
-        allow_origin: ['*']
-        allow_methods: ['GET', 'POST']
-        allow_headers: ['Content-Type']
 
 when@test:
     framework:

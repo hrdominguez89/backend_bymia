@@ -400,8 +400,13 @@ class FrontApiController extends AbstractController
         $index = $request->query->getInt('i', 0) * $limit;
 
         if ($keywords) {
-            $array_keywords = explode(' ', $keywords);
-            array_push($array_keywords, $keywords);
+            $array_keywords_minus = explode(' ', strtolower($keywords));
+            array_push($array_keywords_minus, strtolower($keywords));
+
+            $array_keywords_mayus = explode(' ', strtoupper($keywords));
+            array_push($array_keywords_mayus, strtoupper($keywords));
+
+            $array_keywords = array_merge($array_keywords_minus, $array_keywords_mayus);
         }
 
 
@@ -433,10 +438,10 @@ class FrontApiController extends AbstractController
         $products = $productRepository->findProductByFilters($filters, $limit, $index, isset($array_keywords) ? $array_keywords : null);
 
 
-        if($products){
+        if ($products) {
             $products_founded = [];
-            foreach($products as $product){
-                $products_founded[]=$product->getBasicDataProduct();
+            foreach ($products as $product) {
+                $products_founded[] = $product->getBasicDataProduct();
             }
 
             return $this->json(
