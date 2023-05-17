@@ -59,6 +59,7 @@ class CustomerApiController extends AbstractController
 
         $body = $request->getContent();
         $data = json_decode($body, true);
+        dd($data['bill_data']['country_id']);
 
         $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
         if (!$shopping_cart_products) {
@@ -90,18 +91,26 @@ class CustomerApiController extends AbstractController
             ->setShipping(TRUE)
             ->setBillFile(null);
 
-        foreach ($this->customer->getCustomerAddresses() as $address) {
-            if ($address->getBillingAddress() && $address->getActive()) {
-                $new_order->setBillAddress($address);
-                $new_order->setBillCountry($address->getCountry());
+        if($data['bill_data']){
+            //tengo que guardar los datos en la base y dsp usarlo en la orden.
+            $data['bill_data']['country_id'];
+        }else{
+            foreach ($this->customer->getCustomerAddresses() as $address) {
+                if ($address->getBillingAddress() && $address->getActive()) {
+                    $new_order
+                        ->setBillAddress($address)
+                        ->setBillCountry($address->getCountry())
+                        ->setBillState($address->getState() ?: null)
+                        ->setBillCity($address->getCity() ?: null)
+                        ->setBillAddressOrder($address->getStreet() ?: '' . ' ' . $address->getNumberStreet() ?: '' . ', ' . $address->getFloor() ?: '' . ' ' . $address->getDepartment() ?: '',)
+                        ->setBillPostalCode($address->getPostalCode() ?: '')
+                        ->setBillAdditionalInfo($address->getAdditionalInfo() ?: '');
+                }
             }
         }
 
-        $new_order->setBillState(null)
-            ->setBillCity(null)
-            ->setBillAddressOrder('address')
-            ->setBillPostalCode('postal code')
-            ->setBillAdditionalInfo('additional_info')
+
+        $new_order
             ->setSubtotal(10.20)
             ->setTotalProductDiscount(20.30)
             ->setPromotionalCodeDiscount(0)
@@ -148,10 +157,10 @@ class CustomerApiController extends AbstractController
         $em->flush();
 
 
-        
+
 
         return $this->json(
-            $data,
+            $new_order->generateOrderToCRM(),
             Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );
