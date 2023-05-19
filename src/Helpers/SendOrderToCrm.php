@@ -39,7 +39,8 @@ class SendOrderToCrm
             $communication_status = [
                 'status' => false,
                 'status_code' => '',
-                'message' => ''
+                'message' => '',
+                'order' => $order->generateOrderToCRM()
             ];
             try {
                 $response_crm = $this->client->request(
@@ -51,7 +52,7 @@ class SendOrderToCrm
                             'Content-Type'  => $_ENV['CRM_CONTENT_TYPE'],
                             'Cookie'        => $_ENV['CRM_COOKIE'],
                         ],
-                        'json'  => [$order->generateOrderToCRM()],
+                        'json'  => $order->generateOrderToCRM(),
                     ]
                 );
                 $body_crm = $response_crm->getContent(false);
