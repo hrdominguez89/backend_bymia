@@ -154,13 +154,12 @@ class CustomerApiController extends AbstractController
                 ->setDiscount(0); //harcode
             $em->persist($order_product);
             $em->persist($shopping_cart_product);
+
+            $new_order->addOrdersProduct($order_product);
         }
 
         $em->persist($new_order);
         $em->flush();
-
-
-        $new_order = $ordersRepository->findOneBy(['id'=>$new_order->getId()]);
 
         $response_send_to_crm = $sendOrderToCrm->SendOrderToCrm($new_order);
 
