@@ -38,6 +38,7 @@ class SendOrderToCrm
             $order->incrementAttemptsToSendOrderToCrm();
             $communication_status = [
                 'status' => false,
+                'order_json' => $order->generateOrderToCRM(),
                 'status_code' => '',
                 'message' => ''
             ];

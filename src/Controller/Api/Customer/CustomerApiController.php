@@ -163,8 +163,12 @@ class CustomerApiController extends AbstractController
 
         $response_send_to_crm = $sendOrderToCrm->SendOrderToCrm($new_order);
 
+        return $this->json(
+            $response_send_to_crm,
+            Response::HTTP_CREATED,
+            ['Content-Type' => 'application/json']
+        );
 
-        dd($response_send_to_crm);
         if ($response_send_to_crm['status']) {
             return $this->json(
                 $new_order->generateOrderToCRM(),
