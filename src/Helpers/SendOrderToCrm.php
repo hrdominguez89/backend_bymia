@@ -52,7 +52,7 @@ class SendOrderToCrm
                             'Content-Type'  => $_ENV['CRM_CONTENT_TYPE'],
                             'Cookie'        => $_ENV['CRM_COOKIE'],
                         ],
-                        'json'  => $order->generateOrderToCRM(),
+                        'json'  => json_encode($order->generateOrderToCRM()),
                     ]
                 );
                 $body_crm = $response_crm->getContent(false);
