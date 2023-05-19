@@ -89,7 +89,7 @@ class SendOrderToCrm
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
                 $communication_status['status_code'] = $response->getStatusCode();
-                $communication_status['message'] = $order->getErrorMessageCrm();
+                $communication_status['message'] = $e->getMessage();
             }
 
             //grabo en base
