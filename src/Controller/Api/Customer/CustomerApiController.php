@@ -12,6 +12,7 @@ use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\FavoriteProductRepository;
 use App\Repository\OrderRepository;
+use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ShoppingCartRepository;
 use App\Repository\StatusOrderTypeRepository;
@@ -56,7 +57,8 @@ class CustomerApiController extends AbstractController
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
         SendOrderToCrm $sendOrderToCrm,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        OrdersRepository $ordersRepository
     ): Response {
 
         $body = $request->getContent();
@@ -158,11 +160,7 @@ class CustomerApiController extends AbstractController
         $em->flush();
 
 
-        return $this->json(
-            $new_order->generateOrderToCRM(),
-            Response::HTTP_CREATED,
-            ['Content-Type' => 'application/json']
-        );
+        $new_order = $ordersRepository->findOneBy(['id'=>$new_order->getId()]);
 
         $response_send_to_crm = $sendOrderToCrm->SendOrderToCrm($new_order);
 
