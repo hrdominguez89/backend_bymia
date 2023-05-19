@@ -123,8 +123,8 @@ class CustomerApiController extends AbstractController
             ->setReceiverPhoneHome(null) //hardcode
             ->setReceiverEmail('email@email.com') //hardcode
             ->setReceiverCountry($new_order->getBillCountry()) //hardcode
-            ->setReceiverState($new_order->getBillCountry()) //hardcode
-            ->setReceiverCity($new_order->getBillCountry()) //hardcode
+            ->setReceiverState($new_order->getBillState()) //hardcode
+            ->setReceiverCity($new_order->getBillCity()) //hardcode
             ->setReceiverAddress('addreess receiver') //hardcode
             ->setReceiverCodZip('cod_zip') //hardcode
             ->setReceiverAdditionalInfo('additional_info') //hardcode

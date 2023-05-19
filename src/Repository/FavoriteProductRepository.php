@@ -82,8 +82,10 @@ class FavoriteProductRepository extends ServiceEntityRepository
     public function findAllFavoriteProductsByStatus($customer_id, $status_id)
     {
         return $this->createQueryBuilder('f')
+            ->leftJoin('f.product', 'p')
             ->where('f.customer =:customer_id')
             ->andWhere('f.status =:status_id')
+            ->andWhere('p.visible = true')
             ->setParameter('customer_id', $customer_id)
             ->setParameter('status_id', $status_id)
             ->getQuery()
