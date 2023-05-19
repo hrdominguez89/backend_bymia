@@ -39,10 +39,10 @@ class SendOrderToCrm
             $communication_status = [
                 'status' => false,
                 'status_code' => '',
-                'message' => '',
+                'message' => ''
             ];
             try {
-                $response = $this->client->request(
+                $response_crm = $this->client->request(
                     'POST',
                     $_ENV['CRM_API'] . '/aorder/',
                     [
@@ -54,41 +54,41 @@ class SendOrderToCrm
                         'json'  => $order->generateOrderToCRM(),
                     ]
                 );
-                $body = $response->getContent(false);
-                $data_response = json_decode($body, true);
-                switch ($response->getStatusCode()) {
+                $body_crm = $response_crm->getContent(false);
+                $data_response_crm = json_decode($body_crm, true);
+                switch ($response_crm->getStatusCode()) {
                     case Response::HTTP_CREATED:
                     case Response::HTTP_OK:
 
                         //leer status
-                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response['status']);
+                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response_crm['status']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_SENT));
                         $communication_status['status'] = true;
                         break;
 
                     case Response::HTTP_UNPROCESSABLE_ENTITY:
                         //Leer msg y p
-                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response['msg'] . ' - ' . @$data_response['p']);
+                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response_crm['msg'] . ' - ' . @$data_response_crm['p']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
 
                     case Response::HTTP_UNAUTHORIZED:
-                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Usuario no autorizado, verifique las credenciales');
+                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: Usuario no autorizado, verifique las credenciales');
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         //nada para leer, (inventar error)
                         break;
                     default:
                         //leer error
-                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response['error']);
+                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response_crm['error']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
                 }
                 $communication_status['message'] = $order->getErrorMessageCrm();
-                $communication_status['status_code'] = $response->getStatusCode();
+                $communication_status['status_code'] = $response_crm->getStatusCode();
             } catch (TransportExceptionInterface $e) {
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
-                $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
-                $communication_status['status_code'] = $response->getStatusCode();
+                $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
+                $communication_status['status_code'] = $response_crm->getStatusCode();
                 $communication_status['message'] = $e->getMessage();
             }
 

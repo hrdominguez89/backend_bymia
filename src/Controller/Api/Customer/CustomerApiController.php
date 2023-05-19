@@ -155,7 +155,11 @@ class CustomerApiController extends AbstractController
             $em->persist($shopping_cart_product);
         }
         $em->flush();
+
         $response_send_to_crm = $sendOrderToCrm->SendOrderToCrm($new_order);
+
+        dd($response_send_to_crm);
+
         if ($response_send_to_crm['status']) {
             return $this->json(
                 $new_order->generateOrderToCRM(),
