@@ -8,6 +8,7 @@ use App\Entity\Orders;
 use App\Entity\OrdersProducts;
 use App\Entity\ShoppingCart;
 use App\Helpers\SendOrderToCrm;
+use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\FavoriteProductRepository;
 use App\Repository\OrderRepository;
@@ -54,11 +55,13 @@ class CustomerApiController extends AbstractController
         ShoppingCartRepository $shoppingCartRepository,
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
-        SendOrderToCrm $sendOrderToCrm
+        SendOrderToCrm $sendOrderToCrm,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository
     ): Response {
 
         $body = $request->getContent();
         $data = json_decode($body, true);
+        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
 
         $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
         if (!$shopping_cart_products) {
@@ -106,6 +109,8 @@ class CustomerApiController extends AbstractController
 
 
         $new_order
+            ->setStatusSentCrm($status_sent_crm)
+            ->setAttemptsSendCrm(0)
             ->setSubtotal(10.20) //hardcode
             ->setTotalProductDiscount(20.30) //hardcode
             ->setPromotionalCodeDiscount(0) //hardcode
