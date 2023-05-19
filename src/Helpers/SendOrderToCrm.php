@@ -61,14 +61,14 @@ class SendOrderToCrm
                     case Response::HTTP_OK:
 
                         //leer status
-                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $data_response['status']);
+                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response['status']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_SENT));
                         $communication_status['status'] = true;
                         break;
 
                     case Response::HTTP_UNPROCESSABLE_ENTITY:
                         //Leer msg y p
-                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $data_response['msg'] . ' - ' . $data_response['p']);
+                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response['msg'] . ' - ' . @$data_response['p']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
 
@@ -79,11 +79,11 @@ class SendOrderToCrm
                         break;
                     default:
                         //leer error
-                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $data_response['error']);
+                        $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response['error']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
-                        $communication_status['message'] = $order->getErrorMessageCrm();
                 }
+                $communication_status['message'] = $order->getErrorMessageCrm();
                 $communication_status['status_code'] = $response->getStatusCode();
             } catch (TransportExceptionInterface $e) {
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
