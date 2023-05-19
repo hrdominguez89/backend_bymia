@@ -135,7 +135,6 @@ class CustomerApiController extends AbstractController
             ->setReceiverAdditionalInfo('additional_info') //hardcode
             ->setWarehouse($shopping_cart_products[0]->getProduct()->getInventory()->getWarehouse()) //revisar porque estoy forzando a un warehouse
             ->setInventoryId($shopping_cart_products[0]->getProduct()->getInventory()->getId()); //revisar porque estoy forzando a un inventario
-        $em->persist($new_order);
 
         foreach ($shopping_cart_products as $shopping_cart_product) {
             $shopping_cart_product->setStatus($statusTypeShoppingCartRepository->findOneBy(["id" => Constants::STATUS_SHOPPING_CART_EN_ORDEN]));
@@ -154,14 +153,9 @@ class CustomerApiController extends AbstractController
             $em->persist($order_product);
             $em->persist($shopping_cart_product);
         }
+
+        $em->persist($new_order);
         $em->flush();
-
-        return $this->json(
-            $new_order->generateOrderToCRM(),
-            Response::HTTP_CREATED,
-            ['Content-Type' => 'application/json']
-        );
-
 
         $response_send_to_crm = $sendOrderToCrm->SendOrderToCrm($new_order);
 
