@@ -33,6 +33,7 @@ class SendOrderToCrm
 
     public function SendOrderToCrm($order)
     {
+        dd($order);
         $this->date = new DateTime;
         if ($order) {
             $order->incrementAttemptsToSendOrderToCrm();
