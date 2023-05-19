@@ -7,6 +7,7 @@ use App\Entity\FavoriteProduct;
 use App\Entity\Orders;
 use App\Entity\OrdersProducts;
 use App\Entity\ShoppingCart;
+use App\Helpers\SendOrderToCrm;
 use App\Repository\CustomerRepository;
 use App\Repository\FavoriteProductRepository;
 use App\Repository\OrderRepository;
@@ -49,17 +50,15 @@ class CustomerApiController extends AbstractController
      */
     public function newOrder(
         Request $request,
-        OrderRepository $orderRepository,
         StatusOrderTypeRepository $statusOrderTypeRepository,
-        WarehousesRepository $warehousesRepository,
         ShoppingCartRepository $shoppingCartRepository,
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        SendOrderToCrm $sendOrderToCrm
     ): Response {
 
         $body = $request->getContent();
         $data = json_decode($body, true);
-        dd($data['bill_data']['country_id']);
 
         $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
         if (!$shopping_cart_products) {
@@ -85,56 +84,52 @@ class CustomerApiController extends AbstractController
             ->setCustomerPhoneCode($this->customer->getCountryPhoneCode())
             ->setCelPhoneCustomer($this->customer->getCelPhone())
             ->setPhoneCustomer($this->customer->getPhone())
-            ->setCustomerIdentityType('DNI')
-            ->setCustomerIdentityNumber('34987273')
-            ->setInternationalShipping(TRUE)
-            ->setShipping(TRUE)
-            ->setBillFile(null);
+            ->setCustomerIdentityType('DNI') //hardcode
+            ->setCustomerIdentityNumber('34987273') //hardcode
+            ->setInternationalShipping(TRUE) //hardcode
+            ->setShipping(TRUE) //hardcode
+            ->setBillFile(null); //hardcode
 
-        if($data['bill_data']){
-            //tengo que guardar los datos en la base y dsp usarlo en la orden.
-            $data['bill_data']['country_id'];
-        }else{
-            foreach ($this->customer->getCustomerAddresses() as $address) {
-                if ($address->getBillingAddress() && $address->getActive()) {
-                    $new_order
-                        ->setBillAddress($address)
-                        ->setBillCountry($address->getCountry())
-                        ->setBillState($address->getState() ?: null)
-                        ->setBillCity($address->getCity() ?: null)
-                        ->setBillAddressOrder($address->getStreet() ?: '' . ' ' . $address->getNumberStreet() ?: '' . ', ' . $address->getFloor() ?: '' . ' ' . $address->getDepartment() ?: '',)
-                        ->setBillPostalCode($address->getPostalCode() ?: '')
-                        ->setBillAdditionalInfo($address->getAdditionalInfo() ?: '');
-                }
+
+        foreach ($this->customer->getCustomerAddresses() as $address) {
+            if ($address->getBillingAddress() && $address->getActive()) {
+                $new_order
+                    ->setBillAddress($address)
+                    ->setBillCountry($address->getCountry())
+                    ->setBillState($address->getState() ?: null)
+                    ->setBillCity($address->getCity() ?: null)
+                    ->setBillAddressOrder($address->getStreet() ?: '' . ' ' . $address->getNumberStreet() ?: '' . ', ' . $address->getFloor() ?: '' . ' ' . $address->getDepartment() ?: '',)
+                    ->setBillPostalCode($address->getPostalCode() ?: '')
+                    ->setBillAdditionalInfo($address->getAdditionalInfo() ?: '');
             }
         }
 
 
         $new_order
-            ->setSubtotal(10.20)
-            ->setTotalProductDiscount(20.30)
-            ->setPromotionalCodeDiscount(0)
-            ->setTax(0)
-            ->setShippingCost(0)
-            ->setShippingDiscount(0)
-            ->setPaypalServiceCost(0)
-            ->setTotalOrder(200.50)
-            ->setStatus($statusOrderTypeRepository->findOneBy(["id" => Constants::STATUS_ORDER_PENDING]))
+            ->setSubtotal(10.20) //hardcode
+            ->setTotalProductDiscount(20.30) //hardcode
+            ->setPromotionalCodeDiscount(0) //hardcode
+            ->setTax(0) //hardcode
+            ->setShippingCost(0) //hardcode
+            ->setShippingDiscount(0) //hardcode
+            ->setPaypalServiceCost(0) //hardcode
+            ->setTotalOrder(200.50) //hardcode
+            ->setStatus($statusOrderTypeRepository->findOneBy(["id" => Constants::STATUS_ORDER_OPEN]))
             ->setCreatedAt(new \DateTime())
-            ->setReceiverName('nombre receptor')
-            ->setReceiverDocumentType('documento receptor typo')
-            ->setReceiverDocument('numero documento')
-            ->setReceiverPhoneCell('1122334455')
-            ->setReceiverPhoneHome(null)
-            ->setReceiverEmail('email@email.com')
-            ->setReceiverCountry($new_order->getBillCountry())
-            ->setReceiverState(null)
-            ->setReceiverCity(null)
-            ->setReceiverAddress('addreess receiver')
-            ->setReceiverCodZip('cod_zip')
-            ->setReceiverAdditionalInfo('additional_info')
-            ->setWarehouse($shopping_cart_products[0]->getProduct()->getInventory()->getWarehouse())
-            ->setInventoryId($shopping_cart_products[0]->getProduct()->getInventory()->getId());
+            ->setReceiverName('nombre receptor') //hardcode
+            ->setReceiverDocumentType('documento receptor typo') //hardcode
+            ->setReceiverDocument('numero documento') //hardcode
+            ->setReceiverPhoneCell('1122334455') //hardcode
+            ->setReceiverPhoneHome(null) //hardcode
+            ->setReceiverEmail('email@email.com') //hardcode
+            ->setReceiverCountry($new_order->getBillCountry()) //hardcode
+            ->setReceiverState($new_order->getBillCountry()) //hardcode
+            ->setReceiverCity($new_order->getBillCountry()) //hardcode
+            ->setReceiverAddress('addreess receiver') //hardcode
+            ->setReceiverCodZip('cod_zip') //hardcode
+            ->setReceiverAdditionalInfo('additional_info') //hardcode
+            ->setWarehouse($shopping_cart_products[0]->getProduct()->getInventory()->getWarehouse()) //revisar porque estoy forzando a un warehouse
+            ->setInventoryId($shopping_cart_products[0]->getProduct()->getInventory()->getId()); //revisar porque estoy forzando a un inventario
         $em->persist($new_order);
 
         foreach ($shopping_cart_products as $shopping_cart_product) {
@@ -150,20 +145,28 @@ class CustomerApiController extends AbstractController
                 ->setWeight($shopping_cart_product->getProduct()->getWeight())
                 ->setPrice($shopping_cart_product->getProduct()->getPrice())
                 ->setQuantity($shopping_cart_product->getQuantity())
-                ->setDiscount(0);
+                ->setDiscount(0); //harcode
             $em->persist($order_product);
             $em->persist($shopping_cart_product);
         }
         $em->flush();
-
-
-
-
-        return $this->json(
-            $new_order->generateOrderToCRM(),
-            Response::HTTP_ACCEPTED,
-            ['Content-Type' => 'application/json']
-        );
+        $response_send_to_crm = $sendOrderToCrm->SendOrderToCrm($new_order);
+        if ($response_send_to_crm['status']) {
+            return $this->json(
+                $new_order->generateOrderToCRM(),
+                $response_send_to_crm['status_code'],
+                ['Content-Type' => 'application/json']
+            );
+        } else {
+            $em->remove($new_order);
+            return $this->json(
+                [
+                    'message' => $response_send_to_crm['message']
+                ],
+                $response_send_to_crm['status_code'],
+                ['Content-Type' => 'application/json']
+            );
+        }
     }
 
     /**

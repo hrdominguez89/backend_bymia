@@ -166,12 +166,12 @@ class Orders
     private $status;
 
     /**
-     * @ORM\OneToMany(targetEntity=GuideNumbers::class, mappedBy="number_order")
+     * @ORM\OneToMany(targetEntity=GuideNumbers::class, mappedBy="number_order", cascade={"remove"})
      */
     private $guideNumbers;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrdersProducts::class, mappedBy="number_order")
+     * @ORM\OneToMany(targetEntity=OrdersProducts::class, mappedBy="number_order", cascade={"remove"})
      */
     private $ordersProducts;
 
@@ -248,22 +248,22 @@ class Orders
     private $warehouse;
 
     /**
-     * @ORM\OneToMany(targetEntity=PaymentsFiles::class, mappedBy="order_number")
+     * @ORM\OneToMany(targetEntity=PaymentsFiles::class, mappedBy="order_number", cascade={"remove"})
      */
     private $paymentsFiles;
 
     /**
-     * @ORM\OneToMany(targetEntity=PaymentsReceivedFiles::class, mappedBy="order_number")
+     * @ORM\OneToMany(targetEntity=PaymentsReceivedFiles::class, mappedBy="order_number", cascade={"remove"})
      */
     private $paymentsReceivedFiles;
 
     /**
-     * @ORM\OneToMany(targetEntity=DebitCreditNotesFiles::class, mappedBy="number_order")
+     * @ORM\OneToMany(targetEntity=DebitCreditNotesFiles::class, mappedBy="number_order", cascade={"remove"})
      */
     private $debitCreditNotesFiles;
 
     /**
-     * @ORM\OneToMany(targetEntity=PaymentsTransactionsCodes::class, mappedBy="order_number")
+     * @ORM\OneToMany(targetEntity=PaymentsTransactionsCodes::class, mappedBy="order_number", cascade={"remove"})
      */
     private $paymentsTransactionsCodes;
 
@@ -271,6 +271,22 @@ class Orders
      * @ORM\Column(type="integer", nullable=true)
      */
     private $inventory_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CommunicationStatesBetweenPlatforms::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $status_sent_crm;
+
+    /**
+     * @ORM\Column(type="smallint", options={"default":0})
+     */
+    private $attempts_send_crm;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $error_message_crm;
 
     public function __construct()
     {
@@ -280,6 +296,7 @@ class Orders
         $this->paymentsReceivedFiles = new ArrayCollection();
         $this->debitCreditNotesFiles = new ArrayCollection();
         $this->paymentsTransactionsCodes = new ArrayCollection();
+        $this->attempts_send_crm = 0;
         $this->created_at = new \DateTime();
     }
 
@@ -1117,6 +1134,47 @@ class Orders
     public function setInventoryId(?int $inventory_id): self
     {
         $this->inventory_id = $inventory_id;
+
+        return $this;
+    }
+
+    public function getStatusSentCrm(): ?CommunicationStatesBetweenPlatforms
+    {
+        return $this->status_sent_crm;
+    }
+
+    public function setStatusSentCrm(?CommunicationStatesBetweenPlatforms $status_sent_crm): self
+    {
+        $this->status_sent_crm = $status_sent_crm;
+
+        return $this;
+    }
+
+    public function getAttemptsSendCrm(): ?int
+    {
+        return $this->attempts_send_crm;
+    }
+
+    public function setAttemptsSendCrm(int $attempts_send_crm): self
+    {
+        $this->attempts_send_crm = $attempts_send_crm;
+
+        return $this;
+    }
+
+    public function incrementAttemptsToSendCustomerToCrm()
+    {
+        $this->setAttemptsSendCrm($this->attempts_send_crm + 1); //you can access your entity values directly
+    }
+
+    public function getErrorMessageCrm(): ?string
+    {
+        return $this->error_message_crm;
+    }
+
+    public function setErrorMessageCrm(?string $error_message_crm): self
+    {
+        $this->error_message_crm = $error_message_crm;
 
         return $this;
     }

@@ -36,6 +36,11 @@ class SendOrderToCrm
         $this->date = new DateTime;
         if ($order) {
             $order->incrementAttemptsToSendOrderToCrm();
+            $communication_status = [
+                'status' => false,
+                'status_code' => '',
+                'message' => '',
+            ];
             try {
                 $response = $this->client->request(
                     'POST',
@@ -58,6 +63,7 @@ class SendOrderToCrm
                         //leer status
                         $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $data_response['status']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_SENT));
+                        $communication_status['status'] = true;
                         break;
 
                     case Response::HTTP_UNPROCESSABLE_ENTITY:
@@ -76,20 +82,26 @@ class SendOrderToCrm
                         $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $data_response['error']);
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
+                        $communication_status['message'] = $order->getErrorMessageCrm();
                 }
+                $communication_status['status_code'] = $response->getStatusCode();
             } catch (TransportExceptionInterface $e) {
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $order->setErrorMessageCrm('code: ' . $response->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
+                $communication_status['status_code'] = $response->getStatusCode();
+                $communication_status['message'] = $order->getErrorMessageCrm();
             }
+
             //grabo en base
             $this->em->persist($order);
             $this->em->flush();
+            return $communication_status;
         }
     }
 
     public function SendOrderPendingToCrm()
     {
-        $customers = $this->customerRepository->findCustomersToSendToCrm([Constants::CBP_STATUS_PENDING, Constants::CBP_STATUS_ERROR], ['registration_date' => 'ASC'], $_ENV['MAX_LIMIT_CUSTOMER_TO_SYNC']);
+        $customers = $this->customerRepository->findCustomersToSendToCrm([Constants::CBP_STATUS_PENDING, Constants::CBP_STATUS_ERROR], ['registration_date' => 'ASC'], $_ENV['MAX_LIMIT_ORDER_TO_SYNC']);
         foreach ($customers as $customer) {
             $this->SendOrderToCrm($customer);
         }

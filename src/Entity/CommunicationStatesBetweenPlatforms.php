@@ -49,6 +49,11 @@ class CommunicationStatesBetweenPlatforms
      */
     private $products;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="status_sent_crm")
+     */
+    private $orders;
+
     public function __construct()
     {
         $this->customers = new ArrayCollection();
@@ -56,6 +61,7 @@ class CommunicationStatesBetweenPlatforms
         $this->categories = new ArrayCollection();
         $this->subcategories = new ArrayCollection();
         $this->products = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -219,6 +225,36 @@ class CommunicationStatesBetweenPlatforms
             // set the owning side to null (unless already changed)
             if ($product->getStatusSent3pl() === $this) {
                 $product->setStatusSent3pl(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Orders $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setStatusSentCrm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Orders $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getStatusSentCrm() === $this) {
+                $order->setStatusSentCrm(null);
             }
         }
 
