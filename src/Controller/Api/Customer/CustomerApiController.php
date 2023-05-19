@@ -162,7 +162,7 @@ class CustomerApiController extends AbstractController
         $em->flush();
 
         return $this->json(
-            $new_order->generateOrderToCRM,
+            $new_order->generateOrderToCRM(),
             Response::HTTP_CREATED,
             ['Content-Type' => 'application/json']
         );
