@@ -170,7 +170,7 @@ class CustomerApiController extends AbstractController
             $em->remove($new_order);
             return $this->json(
                 [
-                    'message' => $response_send_to_crm['message']
+                    'message' => $response_send_to_crm['message'],
                 ],
                 $response_send_to_crm['status_code'],
                 ['Content-Type' => 'application/json']

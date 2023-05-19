@@ -51,7 +51,7 @@ class SendOrderToCrm
                             'Content-Type'  => $_ENV['CRM_CONTENT_TYPE'],
                             'Cookie'        => $_ENV['CRM_COOKIE'],
                         ],
-                        'json'  => $order->generateOrderToCRM(),
+                        'json'  => [$order->generateOrderToCRM()],
                     ]
                 );
                 $body_crm = $response_crm->getContent(false);
@@ -84,7 +84,7 @@ class SendOrderToCrm
                         break;
                 }
                 $communication_status['message'] = $order->getErrorMessageCrm();
-                $communication_status['status_code'] = $response_crm->getStatusCode();
+                $communication_status['status_code'] = $response_crm;
             } catch (TransportExceptionInterface $e) {
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
