@@ -61,6 +61,77 @@ class CustomerApiController extends AbstractController
         OrdersRepository $ordersRepository
     ): Response {
 
+        // $pre_order = [
+        //     'items' => [
+        //         [
+        //             'id' => 10,
+        //             'name' => 'Prueba producto 1',
+        //             'quantity' => 5,
+        //             'price' => 10,25,
+        //         ],
+        //         [
+        //             'id' => 11,
+        //             'name' => 'Prueba producto 2',
+        //             'quantity' => 4,
+        //             'price' => 20,25,
+        //         ],
+        //         [
+        //             'id' => 13,
+        //             'name' => 'Prueba producto 3',
+        //             'quantity' => 1,
+        //             'price' => 300,25,
+        //         ],
+        //     ],
+        //     'bill_data' => [
+        //         'identity_type' => 'DNI',
+        //         'identity_number' => '34987273',
+        //         'country_id' => 11,
+        //         'country_name' => 'Argentina',
+        //         'state_id' => 4545,
+        //         'state_name' => 'Buenos Aires',
+        //         'city_id' => 42022,
+        //         'city_name' => 'Ciudad Autonoma de Buenos Aires',
+        //     ],
+        //     'recipients' => [
+        //         [
+        //             'recipient_id' => 1,
+        //             'country_name' => 'Argentina',
+        //             'state_name' => 'Córdoba',
+        //             'city_name' => 'Cosquin',
+        //             'recipient_name' => 'Destinatario prueba 1',
+        //             'address' => 'Direccion destinatario 1 23233',
+        //             'recipient_phone' => '1163549766'
+
+        //         ],
+        //         [
+        //             'recipient_id' => 2,
+        //             'country_name' => 'Argentina',
+        //             'state_name' => 'Córdoba',
+        //             'city_name' => 'La falda',
+        //             'recipient_name' => 'Destinatario prueba 2',
+        //             'address' => 'Direccion destinatario 2 23233',
+        //             'recipient_phone' => '1163549766'
+
+        //         ],
+        //         [
+        //             'recipient_id' => 3,
+        //             'country_name' => 'Argentina',
+        //             'state_name' => 'Córdoba',
+        //             'city_name' => 'Córdoba Capital',
+        //             'recipient_name' => 'Destinatario prueba 3',
+        //             'address' => 'Direccion destinatario 3 23233',
+        //             'recipient_phone' => '1163549766'
+
+        //         ],
+        //     ]
+        // ];
+
+        // return $this->json(
+        //     $pre_order,
+        //     Response::HTTP_ACCEPTED,
+        //     ['Content-Type' => 'application/json']
+        // );
+
         $body = $request->getContent();
         $data = json_decode($body, true);
         $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
@@ -161,11 +232,11 @@ class CustomerApiController extends AbstractController
         $em->persist($new_order);
         $em->flush();
 
-        return $this->json(
-            $new_order->generateOrderToCRM(),
-            Response::HTTP_CREATED,
-            ['Content-Type' => 'application/json']
-        );
+        // return $this->json(
+        //     $new_order->generateOrderToCRM(),
+        //     Response::HTTP_CREATED,
+        //     ['Content-Type' => 'application/json']
+        // );
 
         $response_send_to_crm = $sendOrderToCrm->SendOrderToCrm($new_order);
 
