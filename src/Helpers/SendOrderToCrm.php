@@ -42,6 +42,10 @@ class SendOrderToCrm
                 'status_code' => '',
                 'message' => ''
             ];
+            echo 'json Orden <br>';
+            dump($order->generateOrderToCRM());
+            echo '<br>';
+
             try {
                 $response_crm = $this->client->request(
                     'POST',
@@ -57,6 +61,8 @@ class SendOrderToCrm
                 );
                 $body_crm = $response_crm->getContent(false);
                 $data_response_crm = json_decode($body_crm, true);
+                echo 'Respuesta <br>';
+                dd($data_response_crm);
                 switch ($response_crm->getStatusCode()) {
                     case Response::HTTP_CREATED:
                     case Response::HTTP_OK:
