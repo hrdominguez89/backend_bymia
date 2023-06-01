@@ -939,7 +939,7 @@ class Orders
         return [
             "order_id" => $this->getId(),
             "inventory_id" => $this->getInventoryId(),
-            "created_at" => $this->getCreatedAt(),
+            "created_at" => $this->getCreatedAt()->format('Y-m-d H:i:s'),
             "status_order" => $this->getStatus()->getId(),
             "packages" => $guide_numbers_result,
             "warehouse_id" => $this->getWarehouse()->getId3pl(),

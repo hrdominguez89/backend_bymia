@@ -398,7 +398,7 @@ class Customer extends BaseUser
             'gender_type_id' => $this->getGenderType() ? $this->getGenderType()->getId() : '',
             'gender_type_name' => $this->getGenderType() ? $this->getGenderType()->getInitials() : '',
             'birth_day' => $this->getDateOfBirth() ? $this->getDateOfBirth()->format('Y-m-d') : '',
-            'created_at' => $this->getRegistrationDate()->format('Y-m-d H:m:s'),
+            'created_at' => $this->getRegistrationDate()->format('Y-m-d H:i:s'),
             'home_address' => @$home ? $home : '',
             'bill_address' => @$bill ? $bill : '',
         ];
