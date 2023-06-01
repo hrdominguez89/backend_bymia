@@ -43,7 +43,7 @@ class SendOrderToCrm
                 'message' => ''
             ];
             dump('json Orden <br>');
-            dump($order->generateOrderToCRM());
+            dump(json_encode($order->generateOrderToCRM()));
 
             try {
                 $response_crm = $this->client->request(
