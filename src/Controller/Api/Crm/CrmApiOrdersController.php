@@ -56,6 +56,12 @@ class CrmApiOrdersController extends AbstractController
                     $body = $request->getContent();
                     $data = json_decode($body, true);
 
+                    return $this->json(
+                        $data,
+                        Response::HTTP_ACCEPTED,
+                        ['Content-Type' => 'application/json']
+                    );
+
                     $status_obj = $statusOrderTypeRepository->find($data['status_order']);
 
                     foreach ($data['packages'] as $package) {
