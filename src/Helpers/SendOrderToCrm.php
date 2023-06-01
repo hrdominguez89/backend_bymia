@@ -60,8 +60,8 @@ class SendOrderToCrm
                 );
                 $body_crm = $response_crm->getContent(false);
                 $data_response_crm = json_decode($body_crm, true);
-                dd('Respuesta');
-                dd($body_crm);
+                dump('Respuesta');
+                dump($body_crm);
                 dd($data_response_crm);
                 switch ($response_crm->getStatusCode()) {
                     case Response::HTTP_CREATED:
