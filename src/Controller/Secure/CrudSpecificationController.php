@@ -18,6 +18,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrudSpecificationController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_crud_specification_type_index", methods={"GET"})
      */
@@ -58,7 +67,7 @@ class CrudSpecificationController extends AbstractController
             if ($data['specification_type']->getName() == 'Color') {
                 $data['specification']->setColorHexadecimal($request->get('specification')['color']);
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['specification']);
             $entityManager->flush();
 
@@ -90,7 +99,7 @@ class CrudSpecificationController extends AbstractController
             if ($data['specification_type']->getName() == 'Color') {
                 $data['specification']->setColorHexadecimal($request->get('specification')['color']);
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['specification']);
             $entityManager->flush();
 

@@ -7,6 +7,7 @@ use App\Form\Model\OrderSearchDto;
 use App\Form\OrderSearchType;
 use App\Helpers\SendMail;
 use App\Repository\OrderRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +24,15 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
  */
 class OrderController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/index", name="order")
      */
@@ -60,8 +70,8 @@ class OrderController extends AbstractController
     {
         if ($order) {
             $order->setCheckoutStatus($status);
-            $this->getDoctrine()->getManager()->persist($order);
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->persist($order);
+            $this->em->flush();
 
             $email = (new TemplatedEmail())
                 ->from(new Address('noreply@bymia.do', 'MIACARGO'))

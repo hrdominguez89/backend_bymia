@@ -5,6 +5,7 @@ namespace App\Controller\Secure;
 use App\Entity\SectionsHome;
 use App\Form\SectionsHomeType;
 use App\Repository\SectionsHomeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SectionsHomeController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_sections_home_index", methods={"GET","POST"})
      */
@@ -35,7 +45,7 @@ class SectionsHomeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['sections_home']);
             $entityManager->flush();
             

@@ -10,6 +10,7 @@ use App\Repository\CitiesRepository;
 use App\Repository\CustomerAddressesRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\StatesRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,15 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 class CustomerAddressesController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/{customer_id}/addresses", name="secure_customer_addresses", methods={"GET"})
      */
@@ -74,7 +84,7 @@ class CustomerAddressesController extends AbstractController
                 $customerAddressesRepository->updateBillingAddress($customer_id);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['customer_addresses']);
             $entityManager->flush();
 
@@ -149,15 +159,15 @@ class CustomerAddressesController extends AbstractController
                 $data['customer_addresses']->setCity(null);
             }
 
-            if($data['old_home_value'] != (bool)@$request->get('customer_addresses')['home_address']){
+            if ($data['old_home_value'] != (bool)@$request->get('customer_addresses')['home_address']) {
                 $customerAddressesRepository->updateHomeAddress($customer_id);
             }
 
-            if($data['old_billing_value'] != (bool)@$request->get('customer_addresses')['billing_address']){
+            if ($data['old_billing_value'] != (bool)@$request->get('customer_addresses')['billing_address']) {
                 $customerAddressesRepository->updateBillingAddress($customer_id);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['customer_addresses']);
             $entityManager->flush();
 

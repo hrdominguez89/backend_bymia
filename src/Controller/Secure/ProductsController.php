@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\FileUploader;
 use Aws\S3\S3Client;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
@@ -39,6 +40,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ProductsController extends AbstractController
 {
 
+    private $em;
+
     private $pathImg = 'products';
 
     /**
@@ -46,6 +49,7 @@ class ProductsController extends AbstractController
      * @param ProductRepository $productRepository
      */
     public function __construct(
+        EntityManagerInterface $em,
         ProductRepository $productRepository,
         ParameterBagInterface $parameterBag,
         BrandRepository $brandRepository,
@@ -65,6 +69,7 @@ class ProductsController extends AbstractController
         $this->productTagRepository = $productTagRepository;
         $this->parameterBag = $parameterBag;
         $this->productImagesRepository = $productImagesRepository;
+        $this->em = $em;
     }
 
     /**
@@ -102,7 +107,7 @@ class ProductsController extends AbstractController
             $data['product']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)$request->get('product')['subcategory']]));
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['product']);
 
 
@@ -188,7 +193,7 @@ class ProductsController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)@$request->get('product')['subcategory']]));
             //si precio o costo no son iguales a los ultimos valores registrados, guardo los nuevos valores de costo y precio,
             if ($form->get('price')->getData() !== $data['product']->getPrice() || $form->get('cost')->getData() !== $data['product']->getCost()) {
@@ -273,7 +278,7 @@ class ProductsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $now = new \DateTime();
             if ($form->get('start_date')->getData() > $now) {
                 $data['new_product_discount']->setActive(false);
@@ -306,7 +311,7 @@ class ProductsController extends AbstractController
     public function disableDiscount($discount_id, ProductDiscountRepository $productDiscountRepository): Response
     {
         $data['products_discount'] = $productDiscountRepository->find($discount_id);
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         $data['products_discount']->setActive(false);
         $entityManager->persist($data['products_discount']);
         $entityManager->flush();
@@ -343,7 +348,7 @@ class ProductsController extends AbstractController
                 $data['product']->setTagExpirationDate(null);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
 
             $entityManager->persist($data['product']);
 
@@ -376,7 +381,7 @@ class ProductsController extends AbstractController
      */
     public function deleteImageProduct(ProductImagesRepository $productImagesRepository, Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->em;
         $image_id = $request->get('image_id');
         $principal_image = (bool)$request->get('principal_image');
         $imageObject = $productImagesRepository->find($image_id);
@@ -424,7 +429,7 @@ class ProductsController extends AbstractController
      */
     public function newPrincipalImage(ProductImagesRepository $productImagesRepository, Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->em;
 
         $old_principal_image_id = $request->get('old_principal_image_id');
         $new_principal_image_id = $request->get('new_principal_image_id');
@@ -469,7 +474,7 @@ class ProductsController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

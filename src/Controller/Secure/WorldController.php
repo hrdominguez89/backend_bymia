@@ -15,6 +15,7 @@ use App\Repository\CitiesRepository;
 use App\Repository\CountriesRepository;
 use App\Repository\StatesRepository;
 use App\Repository\SubregionTypeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,6 +24,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class WorldController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_crud_world_index")
      */
@@ -56,7 +66,7 @@ class WorldController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data['country']->setSubregionType($subregionTypeRepository->find($request->get('countries')['subregion']));
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['country']);
             $entityManager->flush();
 
@@ -86,7 +96,7 @@ class WorldController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data['country']->setSubregionType($subregionTypeRepository->find($request->get('countries')['subregion']));
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['country']);
             $entityManager->flush();
 
@@ -132,7 +142,7 @@ class WorldController extends AbstractController
 
             $data['state']->setCountry($data['country']);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['state']);
             $entityManager->flush();
 
@@ -159,7 +169,7 @@ class WorldController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['state']);
             $entityManager->flush();
 
@@ -210,7 +220,7 @@ class WorldController extends AbstractController
             $data['city']->setState($data['state']);
 
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['city']);
             $entityManager->flush();
 
@@ -239,7 +249,7 @@ class WorldController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['city']);
             $entityManager->flush();
 
@@ -293,7 +303,7 @@ class WorldController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

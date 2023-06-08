@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Helpers\FileUploader;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -18,6 +19,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ConfigurationController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_configuration_index", methods={"GET"})
      */
@@ -48,7 +58,7 @@ class ConfigurationController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $configuration->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($configuration);
             $entityManager->flush();
 
@@ -68,8 +78,9 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/{id}/show", name="secure_configuration_show", methods={"GET"})
      */
-    public function show(Configuration $configuration): Response
+    public function show(): Response
     {
+        $configuration = new Configuration();
         $data['configuration'] = $configuration;
         $data['title'] = 'Icono de inicio';
         $data['breadcrumbs'] = array(
@@ -82,8 +93,9 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_configuration_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Configuration $configuration, FileUploader $fileUploader): Response
+    public function edit(Request $request, FileUploader $fileUploader, $id, ConfigurationRepository $configurationRepository): Response
     {
+        $configuration = $configurationRepository->find($id);
         $form = $this->createForm(ConfigurationType::class, $configuration);
         $form->handleRequest($request);
 
@@ -94,7 +106,7 @@ class ConfigurationController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $configuration->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('secure_configuration_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -113,10 +125,11 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/{id}", name="secure_configuration_delete", methods={"POST"})
      */
-    public function delete(Request $request, Configuration $configuration): Response
+    public function delete(Request $request): Response
     {
+        $configuration = new Configuration();
         if ($this->isCsrfTokenValid('delete' . $configuration->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->remove($configuration);
             $entityManager->flush();
         }

@@ -6,6 +6,7 @@ use App\Entity\CoverImage;
 use App\Form\CoverImageType;
 use App\Helpers\FileUploader;
 use App\Repository\CoverImageRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,6 +20,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class CoverImageController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_cover_image_index", methods={"GET"})
      */
@@ -43,7 +53,7 @@ class CoverImageController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['slider']);
             $entityManager->flush();
 
@@ -64,8 +74,9 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/{id}/show", name="secure_cover_image_show", methods={"GET"})
      */
-    public function show(CoverImage $coverImage): Response
+    public function show(): Response
     {
+        $coverImage = new CoverImage();
         return $this->render('secure/cover_image/show.html.twig', [
             'cover_image' => $coverImage,
         ]);
@@ -74,14 +85,14 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_cover_image_edit", methods={"GET","POST"})
      */
-    public function edit($id, CoverImageRepository $coverImageRepository, Request $request, CoverImage $coverImage): Response
+    public function edit($id, CoverImageRepository $coverImageRepository, Request $request): Response
     {
         $data['slider'] = $coverImageRepository->find($id);
-        $form = $this->createForm(CoverImageType::class, $coverImage);
+        $form = $this->createForm(CoverImageType::class, $data['slider']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($coverImage);
+            $entityManager = $this->em;
+            $entityManager->persist($data['slider']);
             $entityManager->flush();
 
             return $this->redirectToRoute('secure_cover_image_index', [], Response::HTTP_SEE_OTHER);
@@ -101,10 +112,11 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/{id}/delete", name="secure_cover_image_delete", methods={"POST"})
      */
-    public function delete(Request $request, CoverImage $coverImage): Response
+    public function delete(Request $request, $id, CoverImageRepository $coverImageRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $coverImage->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+        $coverImage = new CoverImage();
+        if ($this->isCsrfTokenValid('delete' . $coverImageRepository->find($id), $request->request->get('_token'))) {
+            $entityManager = $this->em;
             $entityManager->remove($coverImage);
             $entityManager->flush();
         }
@@ -131,7 +143,7 @@ class CoverImageController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 
@@ -152,7 +164,7 @@ class CoverImageController extends AbstractController
             $obj->setNumberOrder($orders[array_search($obj->getId(), $ids)]);
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         // $entityManager->persist($entity_object);
         $entityManager->flush();
 

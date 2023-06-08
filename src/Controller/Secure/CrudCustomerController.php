@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\SendCustomerToCrm;
 use App\Form\CustomerSearchType;
 use App\Form\Model\CustomerSearchDto;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
 /**
@@ -22,6 +23,15 @@ use Knp\Component\Pager\PaginatorInterface;
  */
 class CrudCustomerController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_crud_customer_index")
      */
@@ -61,7 +71,7 @@ class CrudCustomerController extends AbstractController
             $data['customer']->setStatusSentCrm($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['customer']->setAttemptsSendCrm(0);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['customer']);
             $entityManager->flush();
 
@@ -99,7 +109,7 @@ class CrudCustomerController extends AbstractController
             }
             $data['customer']->setStatusSentCrm($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['customer']->setAttemptsSendCrm(0);
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             //envio por helper los datos del cliente al crm
             $sendCustomerToCrm->SendCustomerToCrm($data['customer']);

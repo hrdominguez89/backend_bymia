@@ -22,6 +22,8 @@ use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
  */
 class CRUDUserController extends AbstractController
 {
+
+
     /**
      * @Route("/", name="secure_crud_user_index", methods={"GET"})
      */
@@ -67,7 +69,7 @@ class CRUDUserController extends AbstractController
             }
             $user->setPassword($_ENV['PWD_NEW_USER']);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -93,8 +95,10 @@ class CRUDUserController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_user_show", methods={"GET"})
      */
-    public function show(User $user): Response
+    public function show($id, UserRepository $userRepository): Response
     {
+        $user = $userRepository->find($id);
+
         return $this->render('secure/crud_user/show.html.twig', [
             'user' => $user,
         ]);
@@ -103,8 +107,10 @@ class CRUDUserController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_user_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, User $user, FileUploader $fileUploader): Response
+    public function edit(Request $request, FileUploader $fileUploader, $id, UserRepository $userRepository): Response
     {
+        $user = $userRepository->find($id);
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -115,7 +121,7 @@ class CRUDUserController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $user->setImage('uploads/images/' . $imageFileName);
             }
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('secure_crud_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -134,10 +140,13 @@ class CRUDUserController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_user_delete", methods={"POST"})
      */
-    public function delete(Request $request, User $user): Response
+    public function delete(Request $request, $id, UserRepository $userRepository): Response
     {
+        $user = $userRepository->find($id);
+
+
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->remove($user);
             $entityManager->flush();
         }

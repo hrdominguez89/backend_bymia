@@ -23,6 +23,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrudSubcategoryController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_crud_subcategory_index", methods={"GET"})
      */
@@ -54,7 +63,7 @@ class CrudSubcategoryController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data['subcategory']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['subcategory']);
             $entityManager->flush();
             $sendSubCategoryTo3pl->send($data['subcategory']);
@@ -86,11 +95,11 @@ class CrudSubcategoryController extends AbstractController
             $data['subcategory']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['subcategory']->setAttemptsSend3pl(0);
             $data['subcategory']->setCategory($data['subcategory']->getCategory());
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['subcategory']);
             $entityManager->flush();
             $sendSubCategoryTo3pl->send($data['subcategory'], 'PUT', 'update');
-            
+
 
             return $this->redirectToRoute('secure_crud_subcategory_index');
         }

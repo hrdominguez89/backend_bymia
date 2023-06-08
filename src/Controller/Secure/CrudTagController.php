@@ -5,6 +5,7 @@ namespace App\Controller\Secure;
 use App\Entity\Tag;
 use App\Form\TagType;
 use App\Repository\TagRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,15 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrudTagController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_crud_tag_index", methods={"GET"})
      */
@@ -45,7 +55,7 @@ class CrudTagController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['tag']);
             $entityManager->flush();
 
@@ -71,7 +81,7 @@ class CrudTagController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['tag']);
             $entityManager->flush();
 
@@ -101,7 +111,7 @@ class CrudTagController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

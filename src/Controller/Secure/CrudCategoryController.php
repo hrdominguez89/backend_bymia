@@ -13,6 +13,7 @@ use App\Service\FileUploader;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Constants\Constants;
 use App\Helpers\SendCategoryTo3pl;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 
@@ -22,7 +23,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class CrudCategoryController extends AbstractController
 {
+    private $em;
 
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
     private $pathImg = 'categories';
     /**
      * @Route("/", name="secure_crud_category_index", methods={"GET"})
@@ -60,7 +67,7 @@ class CrudCategoryController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile, $form->get('name')->getData(), $this->pathImg);
                 $data['category']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['category']);
             $entityManager->flush();
             $sendCategoryTo3pl->send($data['category']);
@@ -97,10 +104,10 @@ class CrudCategoryController extends AbstractController
             if ($data['old_name'] !== $data['category']->getName()) {
                 $data['category']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
                 $data['category']->setAttemptsSend3pl(0);
-                $this->getDoctrine()->getManager()->flush();
+                $this->em->flush();
                 $sendCategoryTo3pl->send($data['category'], 'PUT', 'update');
             } else {
-                $this->getDoctrine()->getManager()->flush();
+                $this->em->flush();
             }
 
             return $this->redirectToRoute('secure_crud_category_index');
@@ -129,7 +136,7 @@ class CrudCategoryController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

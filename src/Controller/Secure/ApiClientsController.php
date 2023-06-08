@@ -7,6 +7,7 @@ use App\Entity\ApiClients;
 use App\Form\ApiClientsType;
 use Symfony\Component\Uid\Uuid;
 use App\Repository\ApiClientsRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,6 +18,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class ApiClientsController extends AbstractController
 {
+
+
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="api_clients")
      */
@@ -49,7 +59,7 @@ class ApiClientsController extends AbstractController
             $data['api_client']->setCreatedAt(new \DateTime());
 
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['api_client']);
             $entityManager->flush();
 
@@ -127,7 +137,7 @@ class ApiClientsController extends AbstractController
                     ';
                 $this->addFlash('message', $message);
             }
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['api_client']);
             $entityManager->flush();
 

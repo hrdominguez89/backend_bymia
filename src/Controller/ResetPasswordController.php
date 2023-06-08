@@ -6,6 +6,7 @@ use App\Entity\ResetPasswordRequest;
 use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,9 +30,13 @@ class ResetPasswordController extends AbstractController
 
     private $resetPasswordHelper;
 
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper)
+    private $em;
+
+
+    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, EntityManagerInterface $em)
     {
         $this->resetPasswordHelper = $resetPasswordHelper;
+        $this->em = $em;
     }
 
     /**
@@ -86,10 +91,10 @@ class ResetPasswordController extends AbstractController
         }
 
         // If exist a password reset token, remove it.
-        $resetPasswordRequest = $this->getDoctrine()->getManager()->getRepository(ResetPasswordRequest::class)->findOneBy(['user' => $this->getUser()]);
+        $resetPasswordRequest = $this->em->getRepository(ResetPasswordRequest::class)->findOneBy(['user' => $this->getUser()]);
         if ($resetPasswordRequest) {
-            $this->getDoctrine()->getManager()->remove($resetPasswordRequest);
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->remove($resetPasswordRequest);
+            $this->em->flush();
         }
 
         // The session is cleaned up before generate token
@@ -146,7 +151,7 @@ class ResetPasswordController extends AbstractController
             );
 
             $user->setPassword($encodedPassword);
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
@@ -161,7 +166,7 @@ class ResetPasswordController extends AbstractController
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer): RedirectResponse
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
+        $user = $this->em->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
         ]);
 

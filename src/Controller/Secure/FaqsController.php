@@ -9,6 +9,7 @@ use App\Form\TopicType;
 use App\Helpers\FileUploader;
 use App\Repository\FaqsRepository;
 use App\Repository\TopicsRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,6 +22,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class FaqsController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/topics", name="abm_topics_faqs")
      */
@@ -58,7 +68,7 @@ class FaqsController extends AbstractController
                 $data['topic']->setIcon('uploads/images/' . $imageFileName);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['topic']);
             $entityManager->flush();
 
@@ -95,7 +105,7 @@ class FaqsController extends AbstractController
                 }
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['topic']);
             $entityManager->flush();
 
@@ -152,7 +162,7 @@ class FaqsController extends AbstractController
                 $data['faq']->setIcon('uploads/images/' . $imageFileName);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['faq']);
             $entityManager->flush();
 
@@ -195,7 +205,7 @@ class FaqsController extends AbstractController
                 }
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['faq']);
             $entityManager->flush();
 
@@ -230,7 +240,7 @@ class FaqsController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 
@@ -260,7 +270,7 @@ class FaqsController extends AbstractController
                 break;
         }
 
-        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->em;
         // $entityManager->persist($entity_object);
         $entityManager->flush();
 

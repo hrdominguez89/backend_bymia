@@ -18,6 +18,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class BrandsSectionsController extends AbstractController
 {
 
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     private $pathImg = 'brands';
 
     /**
@@ -81,7 +90,7 @@ class BrandsSectionsController extends AbstractController
                 $data['brands']->setBrandImage6($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $entityManager->persist($data['brands']);
             $entityManager->flush();
 

@@ -5,6 +5,7 @@ namespace App\Controller\Secure;
 use App\Entity\CouponDiscount;
 use App\Form\CouponDiscountType;
 use App\Repository\CouponDiscountRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +17,19 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrudCouponDiscountController extends AbstractController
 {
+
+    private $em;
+
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="secure_crud_coupon_discount_index", methods={"GET"})
      */
-    public function index(CouponDiscountRepository $couponDiscountRepository, Request $request,PaginatorInterface $pagination): Response
+    public function index(CouponDiscountRepository $couponDiscountRepository, Request $request, PaginatorInterface $pagination): Response
     {
         $data = $couponDiscountRepository->findAll();
         $paginator = $pagination->paginate(
@@ -44,7 +54,7 @@ class CrudCouponDiscountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $cant = $request->get('cantidad');
-            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager = $this->em;
             $Strings = '0123456789abcdefghijklmnopqrstuvwxyz';
             if ($cant > 1) {
                 for ($i = 0; $i < $cant; $i++) {
@@ -77,8 +87,9 @@ class CrudCouponDiscountController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_coupon_discount_show", methods={"GET"})
      */
-    public function show(CouponDiscount $couponDiscount): Response
+    public function show($id, CouponDiscountRepository $couponDiscountRepository): Response
     {
+        $couponDiscount = $couponDiscountRepository->find($id);
         return $this->render('secure/crud_coupon_discount/show.html.twig', [
             'coupon_discount' => $couponDiscount,
         ]);
@@ -87,13 +98,14 @@ class CrudCouponDiscountController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_coupon_discount_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, CouponDiscount $couponDiscount): Response
+    public function edit(Request $request, $id, CouponDiscountRepository $couponDiscountRepository): Response
     {
+        $couponDiscount = $couponDiscountRepository->find($id);
         $form = $this->createForm(CouponDiscountType::class, $couponDiscount);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('secure_crud_coupon_discount_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -107,10 +119,11 @@ class CrudCouponDiscountController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_coupon_discount_delete", methods={"POST"})
      */
-    public function delete(Request $request, CouponDiscount $couponDiscount): Response
+    public function delete(Request $request, $id, CouponDiscountRepository $couponDiscountRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$couponDiscount->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+        $couponDiscount = $couponDiscountRepository->find($id);
+        if ($this->isCsrfTokenValid('delete' . $couponDiscount->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->em;
             $entityManager->remove($couponDiscount);
             $entityManager->flush();
         }
