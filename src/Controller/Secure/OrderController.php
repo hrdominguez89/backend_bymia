@@ -24,15 +24,6 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
  */
 class OrderController extends AbstractController
 {
-
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/index", name="order")
      */
@@ -66,12 +57,12 @@ class OrderController extends AbstractController
     /**
      * @Route("/{id}/{status}/change-status", name="secure_order_change_status", methods={"GET"})
      */
-    public function updateOrder(Order $order, $status, MailerInterface $mailer)
+    public function updateOrder(EntityManagerInterface $em, Order $order, $status, MailerInterface $mailer)
     {
         if ($order) {
             $order->setCheckoutStatus($status);
-            $this->em->persist($order);
-            $this->em->flush();
+            $em->persist($order);
+            $em->flush();
 
             $email = (new TemplatedEmail())
                 ->from(new Address('noreply@bymia.do', 'MIACARGO'))

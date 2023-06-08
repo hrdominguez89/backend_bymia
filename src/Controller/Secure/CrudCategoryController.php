@@ -23,13 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class CrudCategoryController extends AbstractController
 {
-    private $em;
 
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
     private $pathImg = 'categories';
     /**
      * @Route("/", name="secure_crud_category_index", methods={"GET"})
@@ -49,7 +43,7 @@ class CrudCategoryController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_category_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCategoryTo3pl $sendCategoryTo3pl): Response
+    public function new(EntityManagerInterface $em, Request $request, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCategoryTo3pl $sendCategoryTo3pl): Response
     {
         $data['title'] = 'Nueva categoría';
         $data['breadcrumbs'] = array(
@@ -67,7 +61,7 @@ class CrudCategoryController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile, $form->get('name')->getData(), $this->pathImg);
                 $data['category']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['category']);
             $entityManager->flush();
             $sendCategoryTo3pl->send($data['category']);
@@ -83,7 +77,7 @@ class CrudCategoryController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_category_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, CategoryRepository $categoryRepository, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCategoryTo3pl $sendCategoryTo3pl): Response
+    public function edit($id, EntityManagerInterface $em, Request $request, CategoryRepository $categoryRepository, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCategoryTo3pl $sendCategoryTo3pl): Response
     {
         $data['title'] = 'Editar categoría';
         $data['breadcrumbs'] = array(
@@ -104,10 +98,10 @@ class CrudCategoryController extends AbstractController
             if ($data['old_name'] !== $data['category']->getName()) {
                 $data['category']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
                 $data['category']->setAttemptsSend3pl(0);
-                $this->em->flush();
+                $em->flush();
                 $sendCategoryTo3pl->send($data['category'], 'PUT', 'update');
             } else {
-                $this->em->flush();
+                $em->flush();
             }
 
             return $this->redirectToRoute('secure_crud_category_index');
@@ -120,7 +114,7 @@ class CrudCategoryController extends AbstractController
     /**
      * @Route("/updateVisible/category", name="secure_category_update_visible", methods={"post"})
      */
-    public function updateVisible(Request $request, CategoryRepository $categoryRepository): Response
+    public function updateVisible(EntityManagerInterface $em, Request $request, CategoryRepository $categoryRepository): Response
     {
         $id = (int)$request->get('id');
         $visible = $request->get('visible');
@@ -136,7 +130,7 @@ class CrudCategoryController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

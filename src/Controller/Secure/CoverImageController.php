@@ -21,14 +21,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CoverImageController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="secure_cover_image_index", methods={"GET"})
      */
@@ -46,14 +38,14 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/new", name="secure_cover_image_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request,EntityManagerInterface $em): Response
     {
         $data['slider'] = new CoverImage();
         $form = $this->createForm(CoverImageType::class, $data['slider']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['slider']);
             $entityManager->flush();
 
@@ -85,13 +77,13 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_cover_image_edit", methods={"GET","POST"})
      */
-    public function edit($id, CoverImageRepository $coverImageRepository, Request $request): Response
+    public function edit($id, CoverImageRepository $coverImageRepository, Request $request,EntityManagerInterface $em): Response
     {
         $data['slider'] = $coverImageRepository->find($id);
         $form = $this->createForm(CoverImageType::class, $data['slider']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['slider']);
             $entityManager->flush();
 
@@ -112,11 +104,11 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/{id}/delete", name="secure_cover_image_delete", methods={"POST"})
      */
-    public function delete(Request $request, $id, CoverImageRepository $coverImageRepository): Response
+    public function delete(Request $request, $id, CoverImageRepository $coverImageRepository,EntityManagerInterface $em): Response
     {
         $coverImage = new CoverImage();
         if ($this->isCsrfTokenValid('delete' . $coverImageRepository->find($id), $request->request->get('_token'))) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->remove($coverImage);
             $entityManager->flush();
         }
@@ -128,7 +120,7 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/updateVisible", name="secure_cover_image_update_visible", methods={"POST"})
      */
-    public function updateVisible(Request $request, CoverImageRepository $coverImageRepository): Response
+    public function updateVisible(Request $request, CoverImageRepository $coverImageRepository,EntityManagerInterface $em): Response
     {
         $id = (int)$request->get('id');
         $visible = $request->get('visible');
@@ -143,7 +135,7 @@ class CoverImageController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 
@@ -155,7 +147,7 @@ class CoverImageController extends AbstractController
     /**
      * @Route("/updateOrder", name="secure_cover_image_update_order", methods={"POST"})
      */
-    public function updateOrder(Request $request, CoverImageRepository $coverImageRepository): Response
+    public function updateOrder(Request $request, CoverImageRepository $coverImageRepository,EntityManagerInterface $em): Response
     {
         $ids = $request->get('orderData')['ids'];
         $orders = $request->get('orderData')['orders'];
@@ -164,7 +156,7 @@ class CoverImageController extends AbstractController
             $obj->setNumberOrder($orders[array_search($obj->getId(), $ids)]);
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         // $entityManager->persist($entity_object);
         $entityManager->flush();
 

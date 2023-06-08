@@ -23,14 +23,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class FaqsController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/topics", name="abm_topics_faqs")
      */
@@ -49,7 +41,7 @@ class FaqsController extends AbstractController
     /**
      * @Route("/topics/new", name="new_topic")
      */
-    public function new_topic(Request $request, FileUploader $fileUploader): Response
+    public function new_topic(EntityManagerInterface $em, Request $request, FileUploader $fileUploader): Response
     {
         $data['title'] = 'Nuevo tema';
         $data['breadcrumbs'] = array(
@@ -68,7 +60,7 @@ class FaqsController extends AbstractController
                 $data['topic']->setIcon('uploads/images/' . $imageFileName);
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['topic']);
             $entityManager->flush();
 
@@ -81,7 +73,7 @@ class FaqsController extends AbstractController
     /**
      * @Route("/topics/{topic_id}/edit", name="edit_topic")
      */
-    public function edit_topic($topic_id, TopicsRepository $topicsRepository, Request $request, FileUploader $fileUploader): Response
+    public function edit_topic(EntityManagerInterface $em, $topic_id, TopicsRepository $topicsRepository, Request $request, FileUploader $fileUploader): Response
     {
         $data['title'] = 'Editar tema';
         $data['delete_icon'] = true;
@@ -105,7 +97,7 @@ class FaqsController extends AbstractController
                 }
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['topic']);
             $entityManager->flush();
 
@@ -134,7 +126,7 @@ class FaqsController extends AbstractController
     /**
      * @Route("/topics/{topic_id}/faq/new", name="new_faq")
      */
-    public function new_faq($topic_id, Request $request, FileUploader $fileUploader, TopicsRepository $topicsRepository): Response
+    public function new_faq(EntityManagerInterface $em, $topic_id, Request $request, FileUploader $fileUploader, TopicsRepository $topicsRepository): Response
     {
         $data['topic'] = $topicsRepository->findOneBy(array('id' => $topic_id));
         $data['title'] = 'Nueva pregunta de ' . $data['topic']->getName();
@@ -162,7 +154,7 @@ class FaqsController extends AbstractController
                 $data['faq']->setIcon('uploads/images/' . $imageFileName);
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['faq']);
             $entityManager->flush();
 
@@ -176,7 +168,7 @@ class FaqsController extends AbstractController
     /**
      * @Route("/topics/{topic_id}/faq/edit/{faq_id}", name="edit_faq")
      */
-    public function edit_faq($topic_id, $faq_id, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository, Request $request, FileUploader $fileUploader): Response
+    public function edit_faq(EntityManagerInterface $em, $topic_id, $faq_id, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository, Request $request, FileUploader $fileUploader): Response
     {
         $data['topic'] = $topicsRepository->find($topic_id);
         $data['title'] = 'Editar pregunta de ' . $data['topic']->getName();
@@ -205,7 +197,7 @@ class FaqsController extends AbstractController
                 }
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['faq']);
             $entityManager->flush();
 
@@ -218,7 +210,7 @@ class FaqsController extends AbstractController
     /**
      * @Route("/updateVisible/{entity_name}", name="secure_faqs_update_visible", methods={"POST"})
      */
-    public function updateVisible($entity_name, Request $request, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository): Response
+    public function updateVisible(EntityManagerInterface $em, $entity_name, Request $request, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository): Response
     {
         $id = (int)$request->get('id');
         $visible = $request->get('visible');
@@ -240,7 +232,7 @@ class FaqsController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 
@@ -252,7 +244,7 @@ class FaqsController extends AbstractController
     /**
      * @Route("/updateOrder/{entity_name}", name="secure_faqs_update_order", methods={"POST"})
      */
-    public function updateOrder($entity_name, Request $request, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository): Response
+    public function updateOrder(EntityManagerInterface $em, $entity_name, Request $request, TopicsRepository $topicsRepository, FaqsRepository $faqsRepository): Response
     {
         $ids = $request->get('orderData')['ids'];
         $orders = $request->get('orderData')['orders'];
@@ -270,7 +262,7 @@ class FaqsController extends AbstractController
                 break;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         // $entityManager->persist($entity_object);
         $entityManager->flush();
 

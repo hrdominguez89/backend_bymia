@@ -30,13 +30,10 @@ class ResetPasswordController extends AbstractController
 
     private $resetPasswordHelper;
 
-    private $em;
 
-
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, EntityManagerInterface $em)
+    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper)
     {
         $this->resetPasswordHelper = $resetPasswordHelper;
-        $this->em = $em;
     }
 
     /**
@@ -44,7 +41,7 @@ class ResetPasswordController extends AbstractController
      *
      * @Route("", name="app_forgot_password_request")
      */
-    public function request(Request $request, MailerInterface $mailer): Response
+    public function request(Request $request, MailerInterface $mailer, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
@@ -52,7 +49,8 @@ class ResetPasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->processSendingPasswordResetEmail(
                 $form->get('email')->getData(),
-                $mailer
+                $mailer,
+                $em
             );
         }
 
@@ -84,17 +82,17 @@ class ResetPasswordController extends AbstractController
      *
      * @Route("/current", name="app_reset_password_current")
      */
-    public function change(): Response
+    public function change(EntityManagerInterface $em): Response
     {
         if (null === $this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
 
         // If exist a password reset token, remove it.
-        $resetPasswordRequest = $this->em->getRepository(ResetPasswordRequest::class)->findOneBy(['user' => $this->getUser()]);
+        $resetPasswordRequest = $em->getRepository(ResetPasswordRequest::class)->findOneBy(['user' => $this->getUser()]);
         if ($resetPasswordRequest) {
-            $this->em->remove($resetPasswordRequest);
-            $this->em->flush();
+            $em->remove($resetPasswordRequest);
+            $em->flush();
         }
 
         // The session is cleaned up before generate token
@@ -110,7 +108,7 @@ class ResetPasswordController extends AbstractController
      *
      * @Route("/reset/{token}", name="app_reset_password")
      */
-    public function reset(Request $request, UserPasswordHasherInterface $passwordEncoder, string $token = null): Response
+    public function reset(Request $request, UserPasswordHasherInterface $passwordEncoder, string $token = null, EntityManagerInterface $em): Response
     {
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
@@ -151,7 +149,7 @@ class ResetPasswordController extends AbstractController
             );
 
             $user->setPassword($encodedPassword);
-            $this->em->flush();
+            $em->flush();
 
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
@@ -164,9 +162,9 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer): RedirectResponse
+    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, EntityManagerInterface $em): RedirectResponse
     {
-        $user = $this->em->getRepository(User::class)->findOneBy([
+        $user = $em->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
         ]);
 

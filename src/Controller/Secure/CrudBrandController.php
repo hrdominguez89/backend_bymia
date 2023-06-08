@@ -22,14 +22,6 @@ use Doctrine\ORM\EntityManagerInterface;
 class CrudBrandController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     private $pathImg = 'brands';
 
 
@@ -50,7 +42,7 @@ class CrudBrandController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_brand_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendBrandTo3pl $sendBrandTo3pl): Response
+    public function new(EntityManagerInterface $em, Request $request, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendBrandTo3pl $sendBrandTo3pl): Response
     {
         $data['title'] = 'Nueva marca';
         $data['breadcrumbs'] = array(
@@ -69,7 +61,7 @@ class CrudBrandController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile, $form->get('name')->getData(), $this->pathImg);
                 $data['brand']->setImage($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['brand']);
             $entityManager->flush();
             $sendBrandTo3pl->send($data['brand']);
@@ -83,7 +75,7 @@ class CrudBrandController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_brand_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, BrandRepository $brandRepository, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendBrandTo3pl $sendBrandTo3pl): Response
+    public function edit(EntityManagerInterface $em,$id, Request $request, BrandRepository $brandRepository, FileUploader $fileUploader, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendBrandTo3pl $sendBrandTo3pl): Response
     {
         $data['title'] = 'Editar marca';
         $data['breadcrumbs'] = array(
@@ -104,7 +96,7 @@ class CrudBrandController extends AbstractController
 
             $data['brand']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['brand']->setAttemptsSend3pl(0);
-            $this->em->flush();
+            $em->flush();
             $sendBrandTo3pl->send($data['brand'], 'PUT', 'update');
 
             return $this->redirectToRoute('secure_crud_brand_index');
@@ -117,11 +109,11 @@ class CrudBrandController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_brand_delete", methods={"POST"})
      */
-    public function delete(Request $request, $id, BrandRepository $brandRepository): Response
+    public function delete(Request $request, $id, BrandRepository $brandRepository,EntityManagerInterface $em): Response
     {
         $brand = $brandRepository->find($id);
         if ($this->isCsrfTokenValid('delete' . $brand->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->remove($brand);
             $entityManager->flush();
         }
@@ -132,7 +124,7 @@ class CrudBrandController extends AbstractController
     /**
      * @Route("/updateVisible/brand", name="secure_brand_update_visible", methods={"post"})
      */
-    public function updateVisible(Request $request, BrandRepository $brandRepository): Response
+    public function updateVisible(Request $request, BrandRepository $brandRepository,EntityManagerInterface $em): Response
     {
         $id = (int)$request->get('id');
         $visible = $request->get('visible');
@@ -148,7 +140,7 @@ class CrudBrandController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

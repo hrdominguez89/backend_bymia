@@ -18,14 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class CrudTagController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="secure_crud_tag_index", methods={"GET"})
      */
@@ -43,7 +35,7 @@ class CrudTagController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_tag_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(EntityManagerInterface $em, Request $request): Response
     {
         $data['title'] = 'Nueva etiqueta';
         $data['breadcrumbs'] = array(
@@ -55,7 +47,7 @@ class CrudTagController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['tag']);
             $entityManager->flush();
 
@@ -69,7 +61,7 @@ class CrudTagController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_tag_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, TagRepository $tagRepository): Response
+    public function edit(EntityManagerInterface $em, $id, Request $request, TagRepository $tagRepository): Response
     {
         $data['title'] = 'Editar etiqueta';
         $data['breadcrumbs'] = array(
@@ -81,7 +73,7 @@ class CrudTagController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['tag']);
             $entityManager->flush();
 
@@ -95,7 +87,7 @@ class CrudTagController extends AbstractController
     /**
      * @Route("/updateVisible/tag", name="secure_tag_update_visible", methods={"post"})
      */
-    public function updateVisible(Request $request, TagRepository $TagRepository): Response
+    public function updateVisible(EntityManagerInterface $em, Request $request, TagRepository $TagRepository): Response
     {
         $id = (int)$request->get('id');
         $visible = $request->get('visible');
@@ -111,7 +103,7 @@ class CrudTagController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

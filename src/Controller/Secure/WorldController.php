@@ -24,15 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class WorldController extends AbstractController
 {
-
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="secure_crud_world_index")
      */
@@ -50,7 +41,7 @@ class WorldController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_world_new_country")
      */
-    public function newCountry(Request $request, SubregionTypeRepository $subregionTypeRepository): Response
+    public function newCountry(EntityManagerInterface $em, Request $request, SubregionTypeRepository $subregionTypeRepository): Response
     {
         $data['title'] = 'Nuevo país';
         $data['breadcrumbs'] = array(
@@ -66,7 +57,7 @@ class WorldController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data['country']->setSubregionType($subregionTypeRepository->find($request->get('countries')['subregion']));
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['country']);
             $entityManager->flush();
 
@@ -80,7 +71,7 @@ class WorldController extends AbstractController
     /**
      * @Route("/{country_id}/edit", name="secure_crud_world_edit_country")
      */
-    public function editCountry($country_id, Request $request, CountriesRepository $countriesRepository, SubregionTypeRepository $subregionTypeRepository): Response
+    public function editCountry(EntityManagerInterface $em, $country_id, Request $request, CountriesRepository $countriesRepository, SubregionTypeRepository $subregionTypeRepository): Response
     {
         $data['title'] = 'Editar País';
         $data['breadcrumbs'] = array(
@@ -96,7 +87,7 @@ class WorldController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data['country']->setSubregionType($subregionTypeRepository->find($request->get('countries')['subregion']));
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['country']);
             $entityManager->flush();
 
@@ -126,7 +117,7 @@ class WorldController extends AbstractController
     /**
      * @Route("/{country_id}/state/new", name="secure_crud_state_new")
      */
-    public function newState($country_id, CountriesRepository $countriesRepository, Request $request): Response
+    public function newState(EntityManagerInterface $em, $country_id, CountriesRepository $countriesRepository, Request $request): Response
     {
         $data['title'] = 'Nuevo Estado/Provincia';
         $data['country'] = $countriesRepository->find($country_id);
@@ -142,7 +133,7 @@ class WorldController extends AbstractController
 
             $data['state']->setCountry($data['country']);
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['state']);
             $entityManager->flush();
 
@@ -155,7 +146,7 @@ class WorldController extends AbstractController
     /**
      * @Route("/{country_id}/state/{state_id}/edit", name="secure_crud_state_edit")
      */
-    public function editState($country_id, $state_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository): Response
+    public function editState(EntityManagerInterface $em, $country_id, $state_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository): Response
     {
         $data['title'] = 'Editar Estado/Provincia';
         $data['country'] = $countriesRepository->find($country_id);
@@ -169,7 +160,7 @@ class WorldController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['state']);
             $entityManager->flush();
 
@@ -200,7 +191,7 @@ class WorldController extends AbstractController
     /**
      * @Route("/{country_id}/state/{state_id}/city/new", name="secure_crud_city_new")
      */
-    public function newCity($country_id, $state_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository): Response
+    public function newCity(EntityManagerInterface $em, $country_id, $state_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository): Response
     {
         $data['title'] = 'Nueva Ciudad';
         $data['country'] = $countriesRepository->find($country_id);
@@ -220,7 +211,7 @@ class WorldController extends AbstractController
             $data['city']->setState($data['state']);
 
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['city']);
             $entityManager->flush();
 
@@ -233,7 +224,7 @@ class WorldController extends AbstractController
     /**
      * @Route("/{country_id}/state/{state_id}/city/{city_id}/edit", name="secure_crud_city_edit")
      */
-    public function editCity($country_id, $state_id, $city_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository): Response
+    public function editCity(EntityManagerInterface $em, $country_id, $state_id, $city_id, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository): Response
     {
         $data['title'] = 'Editar Ciudad';
         $data['country'] = $countriesRepository->find($country_id);
@@ -249,7 +240,7 @@ class WorldController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['city']);
             $entityManager->flush();
 
@@ -278,7 +269,7 @@ class WorldController extends AbstractController
     /**
      * @Route("/updateVisible/{entity_name}", name="secure_world_update_visible", methods={"POST"})
      */
-    public function updateVisible($entity_name, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository): Response
+    public function updateVisible(EntityManagerInterface $em, $entity_name, Request $request, CountriesRepository $countriesRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository): Response
     {
         $id = (int)$request->get('id');
         $visible = $request->get('visible');
@@ -303,7 +294,7 @@ class WorldController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

@@ -27,9 +27,7 @@ class WarehouseController extends AbstractController
     private $message;
     private $warehousesRepository;
     private $inventoryRepository;
-    private $request;
     private $client;
-    private $em;
     private $login3pl;
     private $requestStack;
 
@@ -37,7 +35,6 @@ class WarehouseController extends AbstractController
         WarehousesRepository $warehousesRepository,
         InventoryRepository $inventoryRepository,
         HttpClientInterface $client,
-        EntityManagerInterface $em,
         Login3pl $login3pl,
         RequestStack $requestStack
     ) {
@@ -47,7 +44,6 @@ class WarehouseController extends AbstractController
         $this->warehousesRepository = $warehousesRepository;
         $this->inventoryRepository = $inventoryRepository;
         $this->client = $client;
-        $this->em = $em;
         $this->login3pl = $login3pl;
         $this->requestStack = $requestStack;
     }
@@ -56,7 +52,8 @@ class WarehouseController extends AbstractController
      * @Route("/", name="secure_crud_warehouse_index")
      */
     public function index(
-        Request $request
+        Request $request,
+        EntityManagerInterface $em
     ): Response {
         if ($request->getMethod() == 'POST') {
 
@@ -102,8 +99,8 @@ class WarehouseController extends AbstractController
                                     if (!$warehouse) {
                                         $warehouse = new Warehouses;
                                         $warehouse->setId3pl($inventory_response['warehouse_id']);
-                                        $this->em->persist($warehouse);
-                                        $this->em->flush();
+                                        $em->persist($warehouse);
+                                        $em->flush();
                                     }
                                     $inventory = new Inventory;
                                     $inventory->setWarehouse($warehouse);
@@ -115,8 +112,8 @@ class WarehouseController extends AbstractController
                                     $updated_at = \DateTime::createFromFormat('Y-m-d H:i:s', $inventory_response['updated_at']);
                                     $inventory->setCreatedAt($created_at);
                                     $inventory->setUpdatedAt($updated_at);
-                                    $this->em->persist($inventory);
-                                    $this->em->flush();
+                                    $em->persist($inventory);
+                                    $em->flush();
                                 }
                             }
                             $this->message = [
@@ -163,7 +160,7 @@ class WarehouseController extends AbstractController
                 if (isset($response_login['3pl_data'])) {
                     $session->set('3pl_data', $response_login['3pl_data']);
                     $session->save();
-                    $this->index($request);
+                    $this->index($request, $em);
                 }
             }
             $data['message'] = $this->message;

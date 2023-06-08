@@ -17,18 +17,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class SectionsHomeController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="secure_sections_home_index", methods={"GET","POST"})
      */
-    public function index(SectionsHomeRepository $sectionsHomeRepository, Request $request): Response
+    public function index(EntityManagerInterface $em,SectionsHomeRepository $sectionsHomeRepository, Request $request): Response
     {
         $data['title'] = 'Secciones de la home';
         $data['breadcrumbs'] = array(
@@ -45,7 +37,7 @@ class SectionsHomeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['sections_home']);
             $entityManager->flush();
             

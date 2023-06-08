@@ -40,8 +40,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ProductsController extends AbstractController
 {
 
-    private $em;
-
     private $pathImg = 'products';
 
     /**
@@ -49,7 +47,6 @@ class ProductsController extends AbstractController
      * @param ProductRepository $productRepository
      */
     public function __construct(
-        EntityManagerInterface $em,
         ProductRepository $productRepository,
         ParameterBagInterface $parameterBag,
         BrandRepository $brandRepository,
@@ -69,7 +66,6 @@ class ProductsController extends AbstractController
         $this->productTagRepository = $productTagRepository;
         $this->parameterBag = $parameterBag;
         $this->productImagesRepository = $productImagesRepository;
-        $this->em = $em;
     }
 
     /**
@@ -90,7 +86,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/new", name="secure_product_new", methods={"GET","POST"})
      */
-    public function new(Request $request, SluggerInterface $slugger, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
+    public function new(EntityManagerInterface $em, Request $request, SluggerInterface $slugger, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
     {
         $data['title'] = 'Nuevo producto';
         $data['breadcrumbs'] = array(
@@ -107,7 +103,7 @@ class ProductsController extends AbstractController
             $data['product']->setStatusSent3pl($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)$request->get('product')['subcategory']]));
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['product']);
 
 
@@ -172,7 +168,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_product_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, SluggerInterface $slugger, ProductRepository $productRepository, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
+    public function edit(EntityManagerInterface $em, $id, Request $request, SluggerInterface $slugger, ProductRepository $productRepository, SubcategoryRepository $subcategoryRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendProductTo3pl $sendProductTo3pl): Response
     {
         $data['title'] = 'Editar producto';
         $data['breadcrumbs'] = array(
@@ -193,7 +189,7 @@ class ProductsController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $data['product']->setSubcategory($subcategoryRepository->findOneBy(['id' => (int)@$request->get('product')['subcategory']]));
             //si precio o costo no son iguales a los ultimos valores registrados, guardo los nuevos valores de costo y precio,
             if ($form->get('price')->getData() !== $data['product']->getPrice() || $form->get('cost')->getData() !== $data['product']->getCost()) {
@@ -261,7 +257,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/{product_id}/discount", name="secure_product_discount", methods={"GET","POST"})
      */
-    public function discount($product_id, Request $request, ProductRepository $productRepository, ProductDiscountRepository $productDiscountRepository): Response
+    public function discount(EntityManagerInterface $em, $product_id, Request $request, ProductRepository $productRepository, ProductDiscountRepository $productDiscountRepository): Response
     {
         $data['title'] = 'Descuento de producto';
         $data['breadcrumbs'] = array(
@@ -278,7 +274,7 @@ class ProductsController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $now = new \DateTime();
             if ($form->get('start_date')->getData() > $now) {
                 $data['new_product_discount']->setActive(false);
@@ -308,10 +304,10 @@ class ProductsController extends AbstractController
     /**
      * @Route("/discount/{discount_id}/disable", name="secure_product_discount_disable", methods={"GET"})
      */
-    public function disableDiscount($discount_id, ProductDiscountRepository $productDiscountRepository): Response
+    public function disableDiscount(EntityManagerInterface $em, $discount_id, ProductDiscountRepository $productDiscountRepository): Response
     {
         $data['products_discount'] = $productDiscountRepository->find($discount_id);
-        $entityManager = $this->em;
+        $entityManager = $em;
         $data['products_discount']->setActive(false);
         $entityManager->persist($data['products_discount']);
         $entityManager->flush();
@@ -329,7 +325,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/{product_id}/tag", name="secure_product_tag", methods={"GET","POST"})
      */
-    public function tag($product_id, Request $request, ProductRepository $productRepository): Response
+    public function tag(EntityManagerInterface $em, $product_id, Request $request, ProductRepository $productRepository): Response
     {
         $data['title'] = 'Etiqueta';
         $data['breadcrumbs'] = array(
@@ -348,7 +344,7 @@ class ProductsController extends AbstractController
                 $data['product']->setTagExpirationDate(null);
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
 
             $entityManager->persist($data['product']);
 
@@ -379,9 +375,9 @@ class ProductsController extends AbstractController
     /**
      * @Route("/deleteImageProduct", name="secure_delete_image_product", methods={"POST"})
      */
-    public function deleteImageProduct(ProductImagesRepository $productImagesRepository, Request $request): Response
+    public function deleteImageProduct(EntityManagerInterface $em, ProductImagesRepository $productImagesRepository, Request $request): Response
     {
-        $em = $this->em;
+        $em = $em;
         $image_id = $request->get('image_id');
         $principal_image = (bool)$request->get('principal_image');
         $imageObject = $productImagesRepository->find($image_id);
@@ -427,9 +423,8 @@ class ProductsController extends AbstractController
     /**
      * @Route("/newPrincipalImage", name="secure_new_principal_image_product", methods={"POST"})
      */
-    public function newPrincipalImage(ProductImagesRepository $productImagesRepository, Request $request): Response
+    public function newPrincipalImage(EntityManagerInterface $em, ProductImagesRepository $productImagesRepository, Request $request): Response
     {
-        $em = $this->em;
 
         $old_principal_image_id = $request->get('old_principal_image_id');
         $new_principal_image_id = $request->get('new_principal_image_id');
@@ -458,7 +453,7 @@ class ProductsController extends AbstractController
     /**
      * @Route("/updateVisible/product", name="secure_product_update_visible", methods={"post"})
      */
-    public function updateVisible(Request $request, ProductRepository $ProductRepository): Response
+    public function updateVisible(EntityManagerInterface $em, Request $request, ProductRepository $ProductRepository): Response
     {
         $id = (int)$request->get('id');
         $visible = $request->get('visible');
@@ -474,7 +469,7 @@ class ProductsController extends AbstractController
             $data['visible'] = true;
         }
 
-        $entityManager = $this->em;
+        $entityManager = $em;
         $entityManager->persist($entity_object);
         $entityManager->flush();
 

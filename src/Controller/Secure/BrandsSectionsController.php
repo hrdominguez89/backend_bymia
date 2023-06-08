@@ -18,21 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class BrandsSectionsController extends AbstractController
 {
 
-
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     private $pathImg = 'brands';
 
     /**
      * @Route("/", name="secure_brands_sections_index", methods={"GET","POST"})
      */
-    public function new(BrandsSectionsRepository $brandsSections, Request $request, FileUploader $fileUploader): Response
+    public function new(BrandsSectionsRepository $brandsSections, Request $request, FileUploader $fileUploader, EntityManagerInterface $em): Response
     {
 
         $data['title'] = 'Marcas';
@@ -90,7 +81,7 @@ class BrandsSectionsController extends AbstractController
                 $data['brands']->setBrandImage6($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['brands']);
             $entityManager->flush();
 

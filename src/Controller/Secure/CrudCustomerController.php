@@ -24,14 +24,6 @@ use Knp\Component\Pager\PaginatorInterface;
 class CrudCustomerController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="secure_crud_customer_index")
      */
@@ -51,7 +43,7 @@ class CrudCustomerController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_customer_new", methods={"GET","POST"})
      */
-    public function new(Request $request, CustomerStatusTypeRepository $customerStatusTypeRepository, SendCustomerToCrm $sendCustomerToCrm, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository): Response
+    public function new(EntityManagerInterface $em, Request $request, CustomerStatusTypeRepository $customerStatusTypeRepository, SendCustomerToCrm $sendCustomerToCrm, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository): Response
     {
 
         $data['title'] = "Nuevo cliente";
@@ -71,7 +63,7 @@ class CrudCustomerController extends AbstractController
             $data['customer']->setStatusSentCrm($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['customer']->setAttemptsSendCrm(0);
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['customer']);
             $entityManager->flush();
 
@@ -95,7 +87,7 @@ class CrudCustomerController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_customer_edit", methods={"GET","POST"})
      */
-    public function edit($id, Request $request, CustomerRepository $customerRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCustomerToCrm $sendCustomerToCrm): Response
+    public function edit(EntityManagerInterface $em, $id, Request $request, CustomerRepository $customerRepository, CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository, SendCustomerToCrm $sendCustomerToCrm): Response
     {
         $data['title'] = "Editar cliente";
         $data['customer'] = $customerRepository->find($id);
@@ -109,7 +101,7 @@ class CrudCustomerController extends AbstractController
             }
             $data['customer']->setStatusSentCrm($communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING));
             $data['customer']->setAttemptsSendCrm(0);
-            $this->em->flush();
+            $em->flush();
 
             //envio por helper los datos del cliente al crm
             $sendCustomerToCrm->SendCustomerToCrm($data['customer']);

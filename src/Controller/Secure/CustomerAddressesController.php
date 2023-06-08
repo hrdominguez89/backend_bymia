@@ -26,14 +26,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class CustomerAddressesController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/{customer_id}/addresses", name="secure_customer_addresses", methods={"GET"})
      */
@@ -53,7 +45,7 @@ class CustomerAddressesController extends AbstractController
     /**
      * @Route("/{customer_id}/new", name="secure_customer_address_new", methods={"GET","POST"})
      */
-    public function new($customer_id, Request $request, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository, HttpClientInterface $client): Response
+    public function new(EntityManagerInterface $em, $customer_id, Request $request, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository, StatesRepository $statesRepository, CitiesRepository $citiesRepository, HttpClientInterface $client): Response
     {
         $data['customer'] = $customerRepository->find($customer_id);
         $data['customer_addresses'] = new CustomerAddresses();
@@ -84,7 +76,7 @@ class CustomerAddressesController extends AbstractController
                 $customerAddressesRepository->updateBillingAddress($customer_id);
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['customer_addresses']);
             $entityManager->flush();
 
@@ -133,7 +125,7 @@ class CustomerAddressesController extends AbstractController
     /**
      * @Route("/{customer_id}/edit/{customer_address_id}", name="secure_customer_address_edit", methods={"GET","POST"})
      */
-    public function edit($customer_id, Request $request, $customer_address_id, StatesRepository $statesRepository, CitiesRepository $citiesRepository, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository, HttpClientInterface $client)
+    public function edit(EntityManagerInterface $em, $customer_id, Request $request, $customer_address_id, StatesRepository $statesRepository, CitiesRepository $citiesRepository, CustomerAddressesRepository $customerAddressesRepository, CustomerRepository $customerRepository, HttpClientInterface $client)
     {
         $data['customer'] = $customerRepository->find($customer_id);
         $data['customer_addresses'] = $customerAddressesRepository->findBy(['id' => $customer_address_id])[0];
@@ -167,7 +159,7 @@ class CustomerAddressesController extends AbstractController
                 $customerAddressesRepository->updateBillingAddress($customer_id);
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['customer_addresses']);
             $entityManager->flush();
 

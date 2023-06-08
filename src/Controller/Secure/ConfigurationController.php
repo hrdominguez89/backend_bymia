@@ -20,14 +20,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class ConfigurationController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="secure_configuration_index", methods={"GET"})
      */
@@ -45,7 +37,7 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/new", name="secure_configuration_new", methods={"GET","POST"})
      */
-    public function new(Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request, FileUploader $fileUploader, EntityManagerInterface $em): Response
     {
         $configuration = new Configuration();
         $form = $this->createForm(ConfigurationType::class, $configuration);
@@ -58,7 +50,7 @@ class ConfigurationController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $configuration->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($configuration);
             $entityManager->flush();
 
@@ -93,7 +85,7 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_configuration_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, FileUploader $fileUploader, $id, ConfigurationRepository $configurationRepository): Response
+    public function edit(Request $request, FileUploader $fileUploader, $id, ConfigurationRepository $configurationRepository, EntityManagerInterface $em): Response
     {
         $configuration = $configurationRepository->find($id);
         $form = $this->createForm(ConfigurationType::class, $configuration);
@@ -106,7 +98,7 @@ class ConfigurationController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $configuration->setImage($_ENV['SITE_URL'] . '/uploads/images/' . $imageFileName);
             }
-            $this->em->flush();
+            $em->flush();
 
             return $this->redirectToRoute('secure_configuration_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -125,11 +117,11 @@ class ConfigurationController extends AbstractController
     /**
      * @Route("/{id}", name="secure_configuration_delete", methods={"POST"})
      */
-    public function delete(Request $request): Response
+    public function delete(Request $request, EntityManagerInterface $em, $id, ConfigurationRepository $configurationRepository): Response
     {
-        $configuration = new Configuration();
+        $configuration = $configurationRepository->find($id);
         if ($this->isCsrfTokenValid('delete' . $configuration->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->remove($configuration);
             $entityManager->flush();
         }

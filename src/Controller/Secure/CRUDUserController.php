@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use App\Helpers\FileUploader;
 use App\Helpers\SendMail;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -51,7 +52,8 @@ class CRUDUserController extends AbstractController
         ResetPasswordHelperInterface $resetPasswordHelper,
         UrlGeneratorInterface $router,
         TranslatorInterface $translator,
-        SendMail $sendMail
+        SendMail $sendMail,
+        EntityManagerInterface $em
     ): Response {
 
 
@@ -69,7 +71,7 @@ class CRUDUserController extends AbstractController
             }
             $user->setPassword($_ENV['PWD_NEW_USER']);
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -107,7 +109,7 @@ class CRUDUserController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_user_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, FileUploader $fileUploader, $id, UserRepository $userRepository): Response
+    public function edit(EntityManagerInterface $em, Request $request, FileUploader $fileUploader, $id, UserRepository $userRepository): Response
     {
         $user = $userRepository->find($id);
 
@@ -121,7 +123,7 @@ class CRUDUserController extends AbstractController
                 $imageFileName = $fileUploader->upload($imageFile);
                 $user->setImage('uploads/images/' . $imageFileName);
             }
-            $this->em->flush();
+            $em->flush();
 
             return $this->redirectToRoute('secure_crud_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -140,13 +142,13 @@ class CRUDUserController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_user_delete", methods={"POST"})
      */
-    public function delete(Request $request, $id, UserRepository $userRepository): Response
+    public function delete(EntityManagerInterface $em, Request $request, $id, UserRepository $userRepository): Response
     {
         $user = $userRepository->find($id);
 
 
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->remove($user);
             $entityManager->flush();
         }

@@ -20,13 +20,6 @@ class ApiClientsController extends AbstractController
 {
 
 
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="api_clients")
      */
@@ -44,7 +37,7 @@ class ApiClientsController extends AbstractController
     /**
      * @Route("/new", name="new_api_clients")
      */
-    public function new(Request $request): Response
+    public function new(Request $request,EntityManagerInterface $em): Response
     {
         $data['title'] = "Nuevo usuario API";
         $data['api_client'] = new ApiClients();
@@ -59,7 +52,7 @@ class ApiClientsController extends AbstractController
             $data['api_client']->setCreatedAt(new \DateTime());
 
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['api_client']);
             $entityManager->flush();
 
@@ -100,7 +93,7 @@ class ApiClientsController extends AbstractController
     /**
      * @Route("/{id}/edit", name="edit_api_clients")
      */
-    public function edit($id, Request $request, ApiClientsRepository $apiClientsRepository): Response
+    public function edit($id, Request $request, ApiClientsRepository $apiClientsRepository,EntityManagerInterface $em): Response
     {
         $data['reset_api_key'] = true;
         $data['title'] = "Editar usuario API";
@@ -137,7 +130,7 @@ class ApiClientsController extends AbstractController
                     ';
                 $this->addFlash('message', $message);
             }
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($data['api_client']);
             $entityManager->flush();
 

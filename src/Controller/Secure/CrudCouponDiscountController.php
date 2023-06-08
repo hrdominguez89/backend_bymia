@@ -18,14 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class CrudCouponDiscountController extends AbstractController
 {
 
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @Route("/", name="secure_crud_coupon_discount_index", methods={"GET"})
      */
@@ -46,7 +38,7 @@ class CrudCouponDiscountController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_coupon_discount_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $couponDiscount = new CouponDiscount();
         $form = $this->createForm(CouponDiscountType::class, $couponDiscount);
@@ -54,7 +46,7 @@ class CrudCouponDiscountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $cant = $request->get('cantidad');
-            $entityManager = $this->em;
+            $entityManager = $em;
             $Strings = '0123456789abcdefghijklmnopqrstuvwxyz';
             if ($cant > 1) {
                 for ($i = 0; $i < $cant; $i++) {
@@ -98,14 +90,14 @@ class CrudCouponDiscountController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_coupon_discount_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, $id, CouponDiscountRepository $couponDiscountRepository): Response
+    public function edit(EntityManagerInterface $em, Request $request, $id, CouponDiscountRepository $couponDiscountRepository): Response
     {
         $couponDiscount = $couponDiscountRepository->find($id);
         $form = $this->createForm(CouponDiscountType::class, $couponDiscount);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            $em->flush();
 
             return $this->redirectToRoute('secure_crud_coupon_discount_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -119,11 +111,11 @@ class CrudCouponDiscountController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_coupon_discount_delete", methods={"POST"})
      */
-    public function delete(Request $request, $id, CouponDiscountRepository $couponDiscountRepository): Response
+    public function delete(EntityManagerInterface $em, Request $request, $id, CouponDiscountRepository $couponDiscountRepository): Response
     {
         $couponDiscount = $couponDiscountRepository->find($id);
         if ($this->isCsrfTokenValid('delete' . $couponDiscount->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->remove($couponDiscount);
             $entityManager->flush();
         }

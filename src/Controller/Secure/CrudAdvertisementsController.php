@@ -16,13 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrudAdvertisementsController extends AbstractController
 {
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
 
     private $pathImg = 'banners';
 
@@ -72,7 +65,7 @@ class CrudAdvertisementsController extends AbstractController
                 $advertisement->setSrcSm3($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
 
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($advertisement);
             $entityManager->flush();
 

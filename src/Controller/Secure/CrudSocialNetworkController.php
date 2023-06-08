@@ -16,13 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrudSocialNetworkController extends AbstractController
 {
-    private $em;
-
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
     /**
      * @Route("/", name="secure_crud_social_network_index", methods={"GET"})
      */
@@ -40,14 +33,14 @@ class CrudSocialNetworkController extends AbstractController
     /**
      * @Route("/new", name="secure_crud_social_network_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $socialNetwork = new SocialNetwork();
         $form = $this->createForm(SocialNetworkType::class, $socialNetwork);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->persist($socialNetwork);
             $entityManager->flush();
             return $this->redirectToRoute('secure_crud_social_network_index', [], Response::HTTP_SEE_OTHER);
@@ -82,14 +75,14 @@ class CrudSocialNetworkController extends AbstractController
     /**
      * @Route("/{id}/edit", name="secure_crud_social_network_edit", methods={"GET","POST"})
      */
-    public function edit($id, SocialNetworkRepository $socialNetworkRepository, Request $request): Response
+    public function edit($id, EntityManagerInterface $em, SocialNetworkRepository $socialNetworkRepository, Request $request): Response
     {
         $socialNetwork = $socialNetworkRepository->find($id);
         $form = $this->createForm(SocialNetworkType::class, $socialNetwork);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            $em->flush();
 
             return $this->redirectToRoute('secure_crud_social_network_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -106,11 +99,11 @@ class CrudSocialNetworkController extends AbstractController
     /**
      * @Route("/{id}", name="secure_crud_social_network_delete", methods={"POST"})
      */
-    public function delete(Request $request, $id, SocialNetworkRepository $socialNetworkRepository): Response
+    public function delete(EntityManagerInterface $em, Request $request, $id, SocialNetworkRepository $socialNetworkRepository): Response
     {
         $socialNetwork = $socialNetworkRepository->find($id);
         if ($this->isCsrfTokenValid('delete' . $socialNetwork->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->em;
+            $entityManager = $em;
             $entityManager->remove($socialNetwork);
             $entityManager->flush();
         }
