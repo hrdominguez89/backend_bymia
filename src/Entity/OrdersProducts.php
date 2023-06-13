@@ -65,12 +65,13 @@ class OrdersProducts
     private $quantity;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float",nullable=true)
      */
     private $discount;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProductDiscount::class, inversedBy="ordersProducts")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $product_discount;
 
