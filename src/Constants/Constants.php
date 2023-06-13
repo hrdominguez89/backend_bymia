@@ -8,7 +8,7 @@ class Constants
     // EMAILS ADDRESS
 
     const EMAIL_CONTACT = 'hrdominguez89@gmail.com';
-    const EMAIL_PRICE_LIST = 'hrdominguez89@gmail.com';
+    // const EMAIL_PRICE_LIST = 'hrdominguez89@gmail.com';
 
 
     // END EMAILS ADDRESS

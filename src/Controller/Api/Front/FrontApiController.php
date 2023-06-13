@@ -212,7 +212,7 @@ class FrontApiController extends AbstractController
         //queue the email
         $id_email = $queue->enqueue(
             Constants::EMAIL_TYPE_CONTACT, //tipo de email
-            Constants::EMAIL_CONTACT, //email destinatario
+            $_ENV['EMAIL_FROM'],
             [ //parametros
                 "name" => $data['name'],
                 "phone" => $data['country']->getPhonecode() . $data['phone'],
@@ -258,7 +258,7 @@ class FrontApiController extends AbstractController
         //queue the email
         $id_email = $queue->enqueue(
             Constants::EMAIL_TYPE_PRICE_LIST, //tipo de email
-            Constants::EMAIL_PRICE_LIST, //email destinatario
+            $_ENV['EMAIL_FROM'],
             [ //parametros
                 'email' => $data['email'],
             ]

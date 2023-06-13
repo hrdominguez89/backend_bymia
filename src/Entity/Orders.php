@@ -58,22 +58,22 @@ class Orders
     private $phone_customer;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $customer_identity_type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $customer_identity_number;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $international_shipping;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $shipping;
 
@@ -90,27 +90,29 @@ class Orders
 
     /**
      * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $biil_country;
 
     /**
      * @ORM\ManyToOne(targetEntity=States::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $bill_state;
 
     /**
      * @ORM\ManyToOne(targetEntity=Cities::class, inversedBy="orders")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $bill_city;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $bill_address_order;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $bill_postal_code;
 
@@ -120,42 +122,42 @@ class Orders
     private $bill_additional_info;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $subtotal;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $total_product_discount;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $promotional_code_discount;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $tax;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $shipping_cost;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $shipping_discount;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $paypal_service_cost;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $total_order;
 
@@ -181,22 +183,22 @@ class Orders
     private $created_at;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $receiver_name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $receiver_document_type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $receiver_document;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $receiver_phone_cell;
 
@@ -206,38 +208,40 @@ class Orders
     private $receiver_phone_home;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $receiver_email;
 
     /**
      * @ORM\ManyToOne(targetEntity=Countries::class, inversedBy="receiver_orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $receiver_country;
 
     /**
      * @ORM\ManyToOne(targetEntity=States::class, inversedBy="receiver_orders")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $receiver_state;
 
     /**
      * @ORM\ManyToOne(targetEntity=Cities::class, inversedBy="receiver_orders")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $receiver_city;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $receiver_address;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $receiver_cod_zip;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, nullable=true)
      */
     private $receiver_additional_info;
 
@@ -287,6 +291,11 @@ class Orders
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $error_message_crm;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $sales_id_3pl;
 
     public function __construct()
     {
@@ -1175,6 +1184,18 @@ class Orders
     public function setErrorMessageCrm(?string $error_message_crm): self
     {
         $this->error_message_crm = $error_message_crm;
+
+        return $this;
+    }
+
+    public function getSalesId3pl(): ?int
+    {
+        return $this->sales_id_3pl;
+    }
+
+    public function setSalesId3pl(?int $sales_id_3pl): self
+    {
+        $this->sales_id_3pl = $sales_id_3pl;
 
         return $this;
     }

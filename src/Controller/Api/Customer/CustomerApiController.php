@@ -47,10 +47,12 @@ class CustomerApiController extends AbstractController
         $this->customer = $customerRepository->findOneBy(['email' => $username]);
     }
 
+
     /**
-     * @Route("/order", name="api_customer_order",methods={"POST"})
+     * @Route("/order/{id}", name="api_customer_order",methods={"get"})
      */
-    public function newOrder(
+    public function order(
+        $id,
         Request $request,
         StatusOrderTypeRepository $statusOrderTypeRepository,
         ShoppingCartRepository $shoppingCartRepository,
@@ -60,7 +62,7 @@ class CustomerApiController extends AbstractController
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
         OrdersRepository $ordersRepository
     ): Response {
-
+        dd('funciona order '. $id);
         // $pre_order = [
         //     'items' => [
         //         [
