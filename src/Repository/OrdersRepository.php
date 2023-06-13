@@ -64,32 +64,15 @@ class OrdersRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // /**
-    //  * @return Orders[] Returns an array of Orders objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findOrderByCustomerId($customer_id, $order_id)
     {
         return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('o.id', 'ASC')
-            ->setMaxResults(10)
+            ->where('o.customer =:customer_id')
+            ->andWhere('o.id =:order_id')
+            ->setParameter('customer_id', $customer_id)
+            ->setParameter('order_id', $order_id)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Orders
-    {
-        return $this->createQueryBuilder('o')
-            ->andWhere('o.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -55,7 +55,7 @@ class OrdersProducts
     private $weight;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float",nullable=true)
      */
     private $price;
 

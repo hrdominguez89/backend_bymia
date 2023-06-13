@@ -52,6 +52,7 @@ class ShoppingCart
 
     /**
      * @ORM\OneToOne(targetEntity=FavoriteProduct::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $favorite;
 

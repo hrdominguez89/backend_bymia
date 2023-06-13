@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/api/customer")
  */
-class CustomerOrderApiController extends AbstractController
+class CustomerAddressApiController extends AbstractController
 {
 
     private $customer;
@@ -84,7 +84,7 @@ class CustomerOrderApiController extends AbstractController
             if ($product_on_cart->getAvailable() < $quantity) {
                 $product_on_cart->setQuantity($quantity);
                 $errors['product_quantity_not_available'][] = $product_on_cart->getBasicDataProduct();
-
+                
                 continue;
             }
 
@@ -128,10 +128,11 @@ class CustomerOrderApiController extends AbstractController
                 ->setProduct($shopping_cart_product->getProduct())
                 ->setName($shopping_cart_product->getProduct()->getName())
                 ->setSku($shopping_cart_product->getProduct()->getSku())
-                ->setPartNumber($shopping_cart_product->getProduct()->getPartNumber() ?: null)
-                ->setCod($shopping_cart_product->getProduct()->getCod() ?: null)
-                ->setWeight($shopping_cart_product->getProduct()->getWeight() ?: null)
-                ->setQuantity($shopping_cart_product->getQuantity());
+                ->setPartNumber($shopping_cart_product->getProduct()->getPartNumber()?:null)
+                ->setCod($shopping_cart_product->getProduct()->getCod()?:null)
+                ->setWeight($shopping_cart_product->getProduct()->getWeight()?:null)
+                ->setQuantity($shopping_cart_product->getQuantity())
+            ;
             $em->persist($order_product);
             $em->persist($shopping_cart_product);
 
@@ -163,10 +164,10 @@ class CustomerOrderApiController extends AbstractController
     }
 
     /**
-     * @Route("/order/{order_id}", name="api_customer_order",methods={"GET","POST"})
+     * @Route("/order/{id}", name="api_customer_order",methods={"GET","POST"})
      */
     public function order(
-        $order_id,
+        $id,
         Request $request,
         StatusOrderTypeRepository $statusOrderTypeRepository,
         ShoppingCartRepository $shoppingCartRepository,
@@ -179,109 +180,8 @@ class CustomerOrderApiController extends AbstractController
 
         switch ($request->getMethod()) {
             case 'GET':
-                $order = $ordersRepository->findOrderByCustomerId($this->customer->getId(), $order_id);
-                $items = [];
 
-
-                switch ($order->getStatus()->getId()) {
-                    case Constants::STATUS_ORDER_PENDING:
-                        foreach ($order->getOrdersProducts() as $order_product) {
-                            $items[] = [
-                                "id" => $order_product->getProduct()->getId(),
-                                "name" => $order_product->getProduct()->getName(),
-                                "quantity" => $order_product->getQuantity(),
-                                "price" => $order_product->getProduct()->getPrice(),
-                                "discount" => $order_product->getProduct()->getDiscountActive() ?  (0 - (($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive())) : 0,
-                                "discount_price" => $order_product->getProduct()->getDiscountActive() ?  ($order_product->getProduct()->getPrice() - (($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive())) : 0,
-                                "percentage_discount" => $order_product->getProduct()->getDiscountActive() ?: 0,
-                            ];
-                        }
-                        $order = [
-                            'items' => $items
-                        ];
-                        break;
-                    default:
-                        dd('default case');
-                        break;
-                }
-
-
-                return $this->json(
-                    $order,
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-                /*
-                {
-                    "items": [
-                        {
-                            "id": 10,
-                            "name": "Prueba producto 1",
-                            "quantity": 5,
-                            "price": 10,
-                            "old_price":
-                        },
-                        {
-                            "id": 11,
-                            "name": "Prueba producto 2",
-                            "quantity": 4,
-                            "price": 20,
-                            "old_price":
-                        },
-                        {
-                            "id": 13,
-                            "name": "Prueba producto 3",
-                            "quantity": 1,
-                            "price": 300,
-                            "old_price":
-                        }
-                    ],
-                    "bill_data": {
-                        "identity_type": "DNI",
-                        "identity_number": "34987273",
-                        "country_id": 11,
-                        "country_name": "Argentina",
-                        "state_id": 4545,
-                        "state_name": "Buenos Aires",
-                        "city_id": 42022,
-                        "city_name": "Ciudad Autonoma de Buenos Aires",
-                        "code_zip" : "abc123",
-                        "additional_info": "informacion adicional",
-                        "address": "Calle 123 4to A"
-                    },
-                    "recipients": [
-                        {
-                            "recipient_id": 1,
-                            "country_name": "Argentina",
-                            "state_name": "Córdoba",
-                            "city_name": "Cosquin",
-                            "recipient_name": "Destinatario prueba 1",
-                            "address": "Direccion destinatario 1 23233",
-                            "recipient_phone": "1163549766"
-                        },
-                        {
-                            "recipient_id": 2,
-                            "country_name": "Argentina",
-                            "state_name": "Córdoba",
-                            "city_name": "La falda",
-                            "recipient_name": "Destinatario prueba 2",
-                            "address": "Direccion destinatario 2 23233",
-                            "recipient_phone": "1163549766"
-                        },
-                        {
-                            "recipient_id": 3,
-                            "country_name": "Argentina",
-                            "state_name": "Córdoba",
-                            "city_name": "Córdoba Capital",
-                            "recipient_name": "Destinatario prueba 3",
-                            "address": "Direccion destinatario 3 23233",
-                            "recipient_phone": "1163549766"
-                        }
-                    ]
-                }
-                */
-
-                $order = $ordersRepository->find(['id' => $order_id]);
+                $order = $ordersRepository->find(['id' => $id]);
 
                 return $this->json(
                     $order->generateOrderToCRM(),
@@ -354,4 +254,6 @@ class CustomerOrderApiController extends AbstractController
             );
         }
     }
+
+    
 }
