@@ -84,7 +84,7 @@ class Orders
 
     /**
      * @ORM\ManyToOne(targetEntity=CustomerAddresses::class, inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $bill_address;
 
