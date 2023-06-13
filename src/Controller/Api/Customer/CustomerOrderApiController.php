@@ -116,7 +116,11 @@ class CustomerOrderApiController extends AbstractController
         try {
             $em->flush();
             return $this->json(
-                ['order_id' => $pre_order->getId()],
+                [
+                    'status_code' => Response::HTTP_CREATED,
+                    'order_id' => $pre_order->getId(),
+                    'message' => 'Orden creada correctamente.'
+                ],
                 Response::HTTP_CREATED,
                 ['Content-Type' => 'application/json']
             );
@@ -127,6 +131,98 @@ class CustomerOrderApiController extends AbstractController
                     'message' => 'Error al intentar generar la orden'
                 ],
                 Response::HTTP_INTERNAL_SERVER_ERROR,
+                ['Content-Type' => 'application/json']
+            );
+        }
+    }
+
+    /**
+     * @Route("/order/{id}", name="api_customer_order",methods={"GET","POST"})
+     */
+    public function order(
+        $id,
+        Request $request,
+        StatusOrderTypeRepository $statusOrderTypeRepository,
+        ShoppingCartRepository $shoppingCartRepository,
+        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
+        EntityManagerInterface $em,
+        SendOrderToCrm $sendOrderToCrm,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        OrdersRepository $ordersRepository
+    ): Response {
+
+        switch ($request->getMethod()) {
+            case 'GET':
+
+                $order = $ordersRepository->find(['id' => $id]);
+
+                return $this->json(
+                    $order->generateOrderToCRM(),
+                    Response::HTTP_OK,
+                    ['Content-Type' => 'application/json']
+                );
+            case 'PATCH':
+
+                $body = $request->getContent();
+                $data = json_decode($body, true);
+        }
+
+        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
+
+        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
+        if (!$shopping_cart_products) {
+            return $this->json(
+                [
+                    "shop_cart_list" => [],
+                    'message' => 'No tiene productos en su lista de carrito.'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        }
+    }
+
+    /**
+     * @Route("/orders", name="api_customer_orders",methods={"GET"})
+     */
+    public function orders(
+        $id,
+        Request $request,
+        StatusOrderTypeRepository $statusOrderTypeRepository,
+        ShoppingCartRepository $shoppingCartRepository,
+        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
+        EntityManagerInterface $em,
+        SendOrderToCrm $sendOrderToCrm,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        OrdersRepository $ordersRepository
+    ): Response {
+
+        switch ($request->getMethod()) {
+            case 'GET':
+
+                $order = $ordersRepository->find(['id' => $id]);
+
+                return $this->json(
+                    $order->generateOrderToCRM(),
+                    Response::HTTP_OK,
+                    ['Content-Type' => 'application/json']
+                );
+            case 'PATCH':
+
+                $body = $request->getContent();
+                $data = json_decode($body, true);
+        }
+
+        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
+
+        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
+        if (!$shopping_cart_products) {
+            return $this->json(
+                [
+                    "shop_cart_list" => [],
+                    'message' => 'No tiene productos en su lista de carrito.'
+                ],
+                Response::HTTP_ACCEPTED,
                 ['Content-Type' => 'application/json']
             );
         }
