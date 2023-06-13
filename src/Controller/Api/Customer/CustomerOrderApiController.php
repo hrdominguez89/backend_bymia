@@ -128,7 +128,7 @@ class CustomerOrderApiController extends AbstractController
             return $this->json(
                 [
                     'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                    'message' => 'Error al intentar generar la orden'
+                    'message' => $e->getMessage()
                 ],
                 Response::HTTP_INTERNAL_SERVER_ERROR,
                 ['Content-Type' => 'application/json']
