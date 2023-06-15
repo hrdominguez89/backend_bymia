@@ -507,4 +507,39 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+
+    public function findSimilarProductBySku($sku, $product_id)
+    {
+        $sku_recortado = substr($sku, 0, 24);
+        return $this->createQueryBuilder('p')
+            ->where('p.visible = :visible')
+            ->andWhere('p.id3pl IS NOT NULL')
+            ->andWhere('p.sku like :sku_recortado')
+            ->andWhere('p.id != :product_id')
+            ->setParameter('visible', true)
+            ->setParameter('product_id', $product_id)
+            ->setParameter('sku_recortado', $sku_recortado . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findSimilarProductBySkuByModel($sku, $product_id)
+    {
+        $sku_recortado_color = substr($sku, 0, 24);
+        $sku_recortado = substr($sku, 0, 20);
+
+        return $this->createQueryBuilder('p')
+            ->where('p.visible = :visible')
+            ->andWhere('p.id3pl IS NOT NULL')
+            ->andWhere('p.sku like :sku_recortado')
+            ->andWhere('p.sku not like :sku_recortado_color')
+            ->andWhere('p.id != :product_id')
+            ->setParameter('visible', true)
+            ->setParameter('product_id', $product_id)
+            ->setParameter('sku_recortado', $sku_recortado . '%')
+            ->setParameter('sku_recortado_color', $sku_recortado_color . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }
