@@ -12,10 +12,13 @@ class FileUploader
     private $slugger;
     private $filesystem;
 
+    private $enviro;
+
     public function __construct(FilesystemInterface $filesystem, SluggerInterface $slugger)
     {
         $this->filesystem = $filesystem;
         $this->slugger = $slugger;
+        $this->enviro = $_ENV['APP_ENV'] === 'dev' ? 'testing/' : '';
     }
 
     public function upload(UploadedFile $file, $nombre, $path = false): string
@@ -24,9 +27,9 @@ class FileUploader
         $newFilename =  $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
         if ($path) {
-            $path = '/' . $path . '/' .  $newFilename;
+            $path = '/' . $this->enviro . $path . '/' .  $newFilename;
         } else {
-            $path = '/' .  $newFilename;
+            $path = '/' . $this->enviro .  $newFilename;
         }
         $stream = fopen($file->getPathname(), 'r');
         $result = $this->filesystem->writeStream($path, $stream, ['ACL' => 'public-read']);

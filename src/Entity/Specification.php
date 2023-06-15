@@ -64,13 +64,58 @@ class Specification
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="model")
      */
-    private $products;
+    private $products_model;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="color")
+     */
+    private $products_color;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="screen_resolution")
+     */
+    private $products_screen_resolution;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="screen_size")
+     */
+    private $products_screen_size;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="cpu")
+     */
+    private $products_cpu;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="gpu")
+     */
+    private $products_gpu;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="memory")
+     */
+    private $products_memory;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="storage")
+     */
+    private $products_storage;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="op_sys")
+     */
+    private $products_op_sys;
+    /**
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="conditium")
+     */
+    private $products_conditium;
 
 
     public function __construct()
     {
         $this->active = true;
-        $this->products = new ArrayCollection();
+        $this->products_model = new ArrayCollection();
+        $this->products_color = new ArrayCollection();
+        $this->products_screen_resolution = new ArrayCollection();
+        $this->products_screen_size = new ArrayCollection();
+        $this->products_cpu = new ArrayCollection();
+        $this->products_gpu = new ArrayCollection();
+        $this->products_memory = new ArrayCollection();
+        $this->products_storage = new ArrayCollection();
+        $this->products_op_sys = new ArrayCollection();
+        $this->products_conditium = new ArrayCollection();
     }
 
     /**
@@ -170,27 +215,306 @@ class Specification
     /**
      * @return Collection<int, Product>
      */
-    public function getProducts(): Collection
+    public function getProductsModel(): Collection
     {
-        return $this->products;
+        return $this->products_model;
     }
 
-    public function addProduct(Product $product): self
+    public function addProductModel(Product $product): self
     {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
+        if (!$this->products_model->contains($product)) {
+            $this->products_model[] = $product;
             $product->setModel($this);
         }
 
         return $this;
     }
 
-    public function removeProduct(Product $product): self
+    public function removeProductModel(Product $product): self
     {
-        if ($this->products->removeElement($product)) {
+        if ($this->products_model->removeElement($product)) {
             // set the owning side to null (unless already changed)
             if ($product->getModel() === $this) {
                 $product->setModel(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsColor(): Collection
+    {
+        return $this->products_color;
+    }
+
+    public function addProductColor(Product $product): self
+    {
+        if (!$this->products_color->contains($product)) {
+            $this->products_color[] = $product;
+            $product->setColor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductColor(Product $product): self
+    {
+        if ($this->products_color->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getColor() === $this) {
+                $product->setColor(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsScreenResolution(): Collection
+    {
+        return $this->products_screen_resolution;
+    }
+
+    public function addProductScreenResolution(Product $product): self
+    {
+        if (!$this->products_screen_resolution->contains($product)) {
+            $this->products_screen_resolution[] = $product;
+            $product->setScreenResolution($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductScreenResolution(Product $product): self
+    {
+        if ($this->products_screen_resolution->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getScreenResolution() === $this) {
+                $product->setScreenResolution(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsScreenSize(): Collection
+    {
+        return $this->products_screen_size;
+    }
+
+    public function addProductScreenSize(Product $product): self
+    {
+        if (!$this->products_screen_size->contains($product)) {
+            $this->products_screen_size[] = $product;
+            $product->setScreenSize($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductScreenSize(Product $product): self
+    {
+        if ($this->products_screen_size->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getScreenSize() === $this) {
+                $product->setScreenSize(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsCpu(): Collection
+    {
+        return $this->products_cpu;
+    }
+
+    public function addProductCpu(Product $product): self
+    {
+        if (!$this->products_cpu->contains($product)) {
+            $this->products_cpu[] = $product;
+            $product->setCpu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductCpu(Product $product): self
+    {
+        if ($this->products_cpu->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getCpu() === $this) {
+                $product->setCpu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsGpu(): Collection
+    {
+        return $this->products_gpu;
+    }
+
+    public function addProductGpu(Product $product): self
+    {
+        if (!$this->products_gpu->contains($product)) {
+            $this->products_gpu[] = $product;
+            $product->setGpu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductGpu(Product $product): self
+    {
+        if ($this->products_gpu->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getGpu() === $this) {
+                $product->setGpu(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsMemory(): Collection
+    {
+        return $this->products_memory;
+    }
+
+    public function addProductMemory(Product $product): self
+    {
+        if (!$this->products_memory->contains($product)) {
+            $this->products_memory[] = $product;
+            $product->setMemory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductMemory(Product $product): self
+    {
+        if ($this->products_memory->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getMemory() === $this) {
+                $product->setMemory(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsStorage(): Collection
+    {
+        return $this->products_storage;
+    }
+
+    public function addProductStorage(Product $product): self
+    {
+        if (!$this->products_storage->contains($product)) {
+            $this->products_storage[] = $product;
+            $product->setStorage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductStorage(Product $product): self
+    {
+        if ($this->products_storage->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getStorage() === $this) {
+                $product->setStorage(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsOpSys(): Collection
+    {
+        return $this->products_op_sys;
+    }
+
+    public function addProductOpSys(Product $product): self
+    {
+        if (!$this->products_op_sys->contains($product)) {
+            $this->products_op_sys[] = $product;
+            $product->setOpSys($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductOpSys(Product $product): self
+    {
+        if ($this->products_op_sys->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getOpSys() === $this) {
+                $product->setOpSys(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProductsConditium(): Collection
+    {
+        return $this->products_conditium;
+    }
+
+    public function addProductConditium(Product $product): self
+    {
+        if (!$this->products_conditium->contains($product)) {
+            $this->products_conditium[] = $product;
+            $product->setConditium($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductConditium(Product $product): self
+    {
+        if ($this->products_conditium->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getConditium() === $this) {
+                $product->setConditium(null);
             }
         }
 

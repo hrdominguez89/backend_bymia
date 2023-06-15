@@ -61,7 +61,22 @@ class Tag
     /**
      * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="tagSection1")
      */
-    private $sectionsHomes;
+    private $sectionsHomes1;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="tagSection2")
+     */
+    private $sectionsHomes2;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="tagSection3")
+     */
+    private $sectionsHomes3;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="tagSection4")
+     */
+    private $sectionsHomes4;
 
     public function __construct()
     {
@@ -69,7 +84,10 @@ class Tag
         $this->created_at = new \DateTime();
         $this->products = new ArrayCollection();
         $this->principal = false;
-        $this->sectionsHomes = new ArrayCollection();
+        $this->sectionsHomes1 = new ArrayCollection();
+        $this->sectionsHomes2 = new ArrayCollection();
+        $this->sectionsHomes3 = new ArrayCollection();
+        $this->sectionsHomes4 = new ArrayCollection();
     }
 
     /**
@@ -187,27 +205,117 @@ class Tag
     /**
      * @return Collection<int, SectionsHome>
      */
-    public function getSectionsHomes(): Collection
+    public function getSectionsHomes1(): Collection
     {
-        return $this->sectionsHomes;
+        return $this->sectionsHomes1;
     }
 
-    public function addSectionsHome(SectionsHome $sectionsHome): self
+    public function addSectionsHome1(SectionsHome $sectionsHome): self
     {
-        if (!$this->sectionsHomes->contains($sectionsHome)) {
-            $this->sectionsHomes[] = $sectionsHome;
+        if (!$this->sectionsHomes1->contains($sectionsHome)) {
+            $this->sectionsHomes1[] = $sectionsHome;
             $sectionsHome->setTagSection1($this);
         }
 
         return $this;
     }
 
-    public function removeSectionsHome(SectionsHome $sectionsHome): self
+    public function removeSectionsHome1(SectionsHome $sectionsHome): self
     {
-        if ($this->sectionsHomes->removeElement($sectionsHome)) {
+        if ($this->sectionsHomes1->removeElement($sectionsHome)) {
             // set the owning side to null (unless already changed)
             if ($sectionsHome->getTagSection1() === $this) {
                 $sectionsHome->setTagSection1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes2(): Collection
+    {
+        return $this->sectionsHomes2;
+    }
+
+    public function addSectionsHome2(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes2->contains($sectionsHome)) {
+            $this->sectionsHomes2[] = $sectionsHome;
+            $sectionsHome->setTagSection2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome2(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes2->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getTagSection2() === $this) {
+                $sectionsHome->setTagSection2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes3(): Collection
+    {
+        return $this->sectionsHomes3;
+    }
+
+    public function addSectionsHome3(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes3->contains($sectionsHome)) {
+            $this->sectionsHomes3[] = $sectionsHome;
+            $sectionsHome->setTagSection3($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome3(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes3->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getTagSection3() === $this) {
+                $sectionsHome->setTagSection3(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes4(): Collection
+    {
+        return $this->sectionsHomes4;
+    }
+
+    public function addSectionsHome(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes4->contains($sectionsHome)) {
+            $this->sectionsHomes4[] = $sectionsHome;
+            $sectionsHome->setTagSection4($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome4(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes4->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getTagSection4() === $this) {
+                $sectionsHome->setTagSection4(null);
             }
         }
 

@@ -114,7 +114,69 @@ class Category
     /**
      * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category1Section1")
      */
-    private $sectionsHomes;
+    private $sectionsHomes11;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category2Section1")
+     */
+    private $sectionsHomes21;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category3Section1")
+     */
+    private $sectionsHomes31;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category1Section2")
+     */
+    private $sectionsHomes12;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category2Section2")
+     */
+    private $sectionsHomes22;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category3Section2")
+     */
+    private $sectionsHomes32;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category1Section3")
+     */
+    private $sectionsHomes13;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category2Section3")
+     */
+    private $sectionsHomes23;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category3Section3")
+     */
+    private $sectionsHomes33;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category1Section4")
+     */
+    private $sectionsHomes14;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category2Section4")
+     */
+    private $sectionsHomes24;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=SectionsHome::class, mappedBy="category3Section4")
+     */
+    private $sectionsHomes34;
+
+
 
     public function __construct()
     {
@@ -124,8 +186,18 @@ class Category
         $this->principal = false;
         $this->attempts_send_3pl = 0;
         $this->subcategories = new ArrayCollection();
-        $this->sectionsHomes = new ArrayCollection();
-
+        $this->sectionsHomes11 = new ArrayCollection();
+        $this->sectionsHomes12 = new ArrayCollection();
+        $this->sectionsHomes13 = new ArrayCollection();
+        $this->sectionsHomes21 = new ArrayCollection();
+        $this->sectionsHomes22 = new ArrayCollection();
+        $this->sectionsHomes23 = new ArrayCollection();
+        $this->sectionsHomes31 = new ArrayCollection();
+        $this->sectionsHomes32 = new ArrayCollection();
+        $this->sectionsHomes33 = new ArrayCollection();
+        $this->sectionsHomes14 = new ArrayCollection();
+        $this->sectionsHomes24 = new ArrayCollection();
+        $this->sectionsHomes34 = new ArrayCollection();
     }
 
     /**
@@ -437,27 +509,357 @@ class Category
     /**
      * @return Collection<int, SectionsHome>
      */
-    public function getSectionsHomes(): Collection
+    public function getSectionsHomes11(): Collection
     {
-        return $this->sectionsHomes;
+        return $this->sectionsHomes11;
     }
 
-    public function addSectionsHome(SectionsHome $sectionsHome): self
+    public function addSectionsHome11(SectionsHome $sectionsHome): self
     {
-        if (!$this->sectionsHomes->contains($sectionsHome)) {
-            $this->sectionsHomes[] = $sectionsHome;
+        if (!$this->sectionsHomes11->contains($sectionsHome)) {
+            $this->sectionsHomes11[] = $sectionsHome;
             $sectionsHome->setCategory1Section1($this);
         }
 
         return $this;
     }
 
-    public function removeSectionsHome(SectionsHome $sectionsHome): self
+    public function removeSectionsHome11(SectionsHome $sectionsHome): self
     {
-        if ($this->sectionsHomes->removeElement($sectionsHome)) {
+        if ($this->sectionsHomes11->removeElement($sectionsHome)) {
             // set the owning side to null (unless already changed)
             if ($sectionsHome->getCategory1Section1() === $this) {
                 $sectionsHome->setCategory1Section1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes21(): Collection
+    {
+        return $this->sectionsHomes21;
+    }
+
+    public function addSectionsHome21(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes21->contains($sectionsHome)) {
+            $this->sectionsHomes21[] = $sectionsHome;
+            $sectionsHome->setCategory2Section1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome21(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes21->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory2Section1() === $this) {
+                $sectionsHome->setCategory2Section1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes31(): Collection
+    {
+        return $this->sectionsHomes31;
+    }
+
+    public function addSectionsHome31(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes31->contains($sectionsHome)) {
+            $this->sectionsHomes31[] = $sectionsHome;
+            $sectionsHome->setCategory3Section1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome31(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes31->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory3Section1() === $this) {
+                $sectionsHome->setCategory3Section1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes12(): Collection
+    {
+        return $this->sectionsHomes12;
+    }
+
+    public function addSectionsHome12(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes12->contains($sectionsHome)) {
+            $this->sectionsHomes12[] = $sectionsHome;
+            $sectionsHome->setCategory1Section3($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome12(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes12->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory1Section2() === $this) {
+                $sectionsHome->setCategory1Section2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes22(): Collection
+    {
+        return $this->sectionsHomes22;
+    }
+
+    public function addSectionsHome22(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes22->contains($sectionsHome)) {
+            $this->sectionsHomes22[] = $sectionsHome;
+            $sectionsHome->setCategory2Section2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome22(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes22->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory2Section2() === $this) {
+                $sectionsHome->setCategory2Section2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes32(): Collection
+    {
+        return $this->sectionsHomes32;
+    }
+
+    public function addSectionsHome32(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes32->contains($sectionsHome)) {
+            $this->sectionsHomes32[] = $sectionsHome;
+            $sectionsHome->setCategory3Section2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome32(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes32->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory3Section2() === $this) {
+                $sectionsHome->setCategory3Section2(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes13(): Collection
+    {
+        return $this->sectionsHomes13;
+    }
+
+    public function addSectionsHome13(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes13->contains($sectionsHome)) {
+            $this->sectionsHomes13[] = $sectionsHome;
+            $sectionsHome->setCategory1Section3($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome13(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes13->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory1Section3() === $this) {
+                $sectionsHome->setCategory1Section3(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes23(): Collection
+    {
+        return $this->sectionsHomes23;
+    }
+
+    public function addSectionsHome23(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes23->contains($sectionsHome)) {
+            $this->sectionsHomes23[] = $sectionsHome;
+            $sectionsHome->setCategory2Section3($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome23(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes23->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory2Section3() === $this) {
+                $sectionsHome->setCategory2Section3(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes33(): Collection
+    {
+        return $this->sectionsHomes33;
+    }
+
+    public function addSectionsHome33(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes33->contains($sectionsHome)) {
+            $this->sectionsHomes33[] = $sectionsHome;
+            $sectionsHome->setCategory3Section3($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome33(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes33->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory3Section3() === $this) {
+                $sectionsHome->setCategory3Section3(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes14(): Collection
+    {
+        return $this->sectionsHomes14;
+    }
+
+    public function addSectionsHome14(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes14->contains($sectionsHome)) {
+            $this->sectionsHomes14[] = $sectionsHome;
+            $sectionsHome->setCategory1Section4($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome14(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes14->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory1Section4() === $this) {
+                $sectionsHome->setCategory1Section4(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes24(): Collection
+    {
+        return $this->sectionsHomes24;
+    }
+
+    public function addSectionsHome24(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes24->contains($sectionsHome)) {
+            $this->sectionsHomes24[] = $sectionsHome;
+            $sectionsHome->setCategory2Section4($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome24(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes24->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory2Section4() === $this) {
+                $sectionsHome->setCategory2Section4(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SectionsHome>
+     */
+    public function getSectionsHomes34(): Collection
+    {
+        return $this->sectionsHomes34;
+    }
+
+    public function addSectionsHome34(SectionsHome $sectionsHome): self
+    {
+        if (!$this->sectionsHomes34->contains($sectionsHome)) {
+            $this->sectionsHomes34[] = $sectionsHome;
+            $sectionsHome->setCategory3Section4($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSectionsHome34(SectionsHome $sectionsHome): self
+    {
+        if ($this->sectionsHomes34->removeElement($sectionsHome)) {
+            // set the owning side to null (unless already changed)
+            if ($sectionsHome->getCategory3Section4() === $this) {
+                $sectionsHome->setCategory3Section4(null);
             }
         }
 

@@ -193,54 +193,54 @@ class Product
     private $weight;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_model")
      * @ORM\JoinColumn(nullable=false)
      */
     private $model;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_color")
      * @ORM\JoinColumn(nullable=false)
      */
     private $color;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_screen_resolution")
      */
     private $screen_resolution;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_screen_size")
      */
     private $screen_size;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_cpu")
      */
     private $cpu;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_gpu")
      */
     private $gpu;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_memory")
      */
     private $memory;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_storage")
      */
     private $storage;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_op_sys")
      */
     private $op_sys;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products")
+     * @ORM\ManyToOne(targetEntity=Specification::class, inversedBy="products_conditium")
      * @ORM\JoinColumn(nullable=false)
      */
     private $conditium;

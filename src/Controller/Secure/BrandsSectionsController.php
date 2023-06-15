@@ -81,6 +81,8 @@ class BrandsSectionsController extends AbstractController
                 $data['brands']->setBrandImage6($_ENV['AWS_S3_URL'] . '/' . $this->pathImg . '/' . $imageFileName);
             }
 
+            // $originalImagePath = $_ENV['APP_ENV'] === 'dev' ? 'testing/' . $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg' : $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
+
             $entityManager = $em;
             $entityManager->persist($data['brands']);
             $entityManager->flush();

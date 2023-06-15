@@ -18,16 +18,6 @@ class ProductTag
     private $id;
 
     /**
-     * @var Product
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productTag")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=true)
-     * })
-     */
-    private $productId;
-
-    /**
      * @var Tag
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Tag")
@@ -43,27 +33,6 @@ class ProductTag
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return Product
-     */
-    public function getProductId(): Product
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @param Product $productId
-     * @return $this
-     */
-    public function setProductId(Product $productId): ProductTag
-    {
-        $this->productId = $productId;
-
-        $productId->addProductTag($this);
-
-        return $this;
     }
 
     /**

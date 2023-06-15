@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\FileUploader;
+use Intervention\Image\ImageManager;
 use Aws\S3\S3Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -55,7 +56,8 @@ class ProductsController extends AbstractController
         TagRepository $tagRepository,
         SubcategoryRepository $subcategoryRepository,
         ProductSubcategoryRepository $productSubcategoryRepository,
-        ProductImagesRepository $productImagesRepository
+        ProductImagesRepository $productImagesRepository,
+        ImageManager $imageManager
     ) {
         $this->productRepository = $productRepository;
         $this->brandRepository = $brandRepository;
@@ -66,6 +68,7 @@ class ProductsController extends AbstractController
         $this->productTagRepository = $productTagRepository;
         $this->parameterBag = $parameterBag;
         $this->productImagesRepository = $productImagesRepository;
+        $this->imageManager = $imageManager;
     }
 
     /**
@@ -130,7 +133,6 @@ class ProductsController extends AbstractController
                     ]);
                     $indexImage = 0;
                     foreach ($imagesFiles as $imageFile) {
-
                         $images = new ProductImages;
                         if ($indexImage == 0) {
                             $images->setPrincipal(true);
@@ -138,20 +140,46 @@ class ProductsController extends AbstractController
                         }
 
                         $file = base64_decode(explode(',', $imageFile)[1]);
-                        $path = $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
-                        // Upload the image to the S3 bucket
+                        $tmpImage = $this->imageManager->make($file);
+                        $tmpImagePath = sys_get_temp_dir() . '/' . uniqid() . '.jpg';
+                        $tmpImage->save($tmpImagePath);
+
+                        $originalImagePath = $_ENV['APP_ENV'] === 'dev' ? 'testing/' . $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg' : $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
+                        $scaledImagePath = $_ENV['APP_ENV'] === 'dev' ? 'testing/' . $this->pathImg . '/thumbnails' . '/' . $productNameSlug . '-' . uniqid() . '.jpg' : $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
+
+                        // Subir la imagen original al S3
                         $s3->putObject([
                             'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
-                            'Key' => $path,
-                            'Body' => $file,
+                            'Key' => $originalImagePath,
+                            'Body' => file_get_contents($tmpImagePath),
                             'ACL' => 'public-read',
                         ]);
-                        $images->setImage($_ENV['AWS_S3_URL'] . '/' . $path);
+
+                        // Escalar la imagen proporcionalmente
+                        $scaledImage = $tmpImage->resize(200, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        });
+
+                        // Subir la imagen escalada al S3
+                        $s3->putObject([
+                            'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
+                            'Key' => $scaledImagePath,
+                            'Body' => $scaledImage->encode('jpg'),
+                            'ACL' => 'public-read',
+                        ]);
+
+                        // Eliminar el archivo temporal
+                        unlink($tmpImagePath);
+
+                        $images->setImage($_ENV['AWS_S3_URL'] . '/' . $originalImagePath);
+                        // Guardar la ruta de la imagen escalada en la entidad de imágenes si es necesario
+                        $images->setImgThumbnail($_ENV['AWS_S3_URL'] . '/' . $scaledImagePath);
                         $images->setProduct($data['product']);
                         $entityManager->persist($images);
                     }
                 } catch (\Exception $e) {
-                    //ver como manejar este error
+                    // Manejar el error
                 }
             }
             $entityManager->flush();
@@ -225,15 +253,41 @@ class ProductsController extends AbstractController
                         }
                         $indexImage++;
                         $file = base64_decode(explode(',', $imageFile)[1]);
-                        $path = $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
-                        // Upload the image to the S3 bucket
+                        $tmpImage = $this->imageManager->make($file);
+                        $tmpImagePath = sys_get_temp_dir() . '/' . uniqid() . '.jpg';
+                        $tmpImage->save($tmpImagePath);
+
+                        $originalImagePath = $_ENV['APP_ENV'] === 'dev' ? 'testing/' . $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg' : $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
+                        $scaledImagePath = $_ENV['APP_ENV'] === 'dev' ? 'testing/' . $this->pathImg . '/thumbnails' . '/' . $productNameSlug . '-' . uniqid() . '.jpg' : $this->pathImg . '/' . $productNameSlug . '-' . uniqid() . '.jpg';
+
+                        // Subir la imagen original al S3
                         $s3->putObject([
                             'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
-                            'Key' => $path,
-                            'Body' => $file,
+                            'Key' => $originalImagePath,
+                            'Body' => file_get_contents($tmpImagePath),
                             'ACL' => 'public-read',
                         ]);
-                        $images->setImage($_ENV['AWS_S3_URL'] . '/' . $path);
+
+                        // Escalar la imagen proporcionalmente
+                        $scaledImage = $tmpImage->resize(200, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        });
+
+                        // Subir la imagen escalada al S3
+                        $s3->putObject([
+                            'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
+                            'Key' => $scaledImagePath,
+                            'Body' => $scaledImage->encode('jpg'),
+                            'ACL' => 'public-read',
+                        ]);
+
+                        // Eliminar el archivo temporal
+                        unlink($tmpImagePath);
+
+                        $images->setImage($_ENV['AWS_S3_URL'] . '/' . $originalImagePath);
+                        // Guardar la ruta de la imagen escalada en la entidad de imágenes si es necesario
+                        $images->setImgThumbnail($_ENV['AWS_S3_URL'] . '/' . $scaledImagePath);
                         $images->setProduct($data['product']);
                         $entityManager->persist($images);
                     }
@@ -392,6 +446,8 @@ class ProductsController extends AbstractController
             }
 
             $path = explode($_ENV['AWS_S3_URL'] . '/', $imageObject->getImage())[1];
+            $paththumbnail = explode($_ENV['AWS_S3_URL'] . '/', $imageObject->getImgThumbnail())[1];
+
 
             $em->remove($imageObject);
             $em->flush();
@@ -409,6 +465,11 @@ class ProductsController extends AbstractController
             $s3->deleteObject([
                 'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
                 'Key'    => $path
+            ]);
+
+            $s3->deleteObject([
+                'Bucket' => $_ENV['AWS_S3_BUCKET_NAME'],
+                'Key'    => $paththumbnail
             ]);
 
             $data['status'] = true;

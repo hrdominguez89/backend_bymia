@@ -18,16 +18,6 @@ class ProductSubcategory
     private $id;
 
     /**
-     * @var Product
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productSubcategories")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=false)
-     * })
-     */
-    private $productId;
-
-    /**
      * @var Subcategory
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Subcategory")
@@ -39,7 +29,6 @@ class ProductSubcategory
 
     public function __construct(Product $product, Subcategory $subcategory)
     {
-        $this->setProductId($product);
         $this->setSubCategory($subcategory);
     }
 
@@ -57,19 +46,6 @@ class ProductSubcategory
     public function getProductId(): Product
     {
         return $this->productId;
-    }
-
-    /**
-     * @param Product $productId
-     * @return $this
-     */
-    public function setProductId(Product $productId): ProductSubcategory
-    {
-        $this->productId = $productId;
-
-        $productId->addProductSubcategory($this);
-
-        return $this;
     }
 
     /**
