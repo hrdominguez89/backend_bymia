@@ -175,12 +175,28 @@ class CustomerOrderApiController extends AbstractController
         SendOrderToCrm $sendOrderToCrm,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
         OrdersRepository $ordersRepository
+        // CustomerAd
     ): Response {
 
         switch ($request->getMethod()) {
             case 'GET':
                 $order = $ordersRepository->findOrderByCustomerId($this->customer->getId(), $order_id);
                 $items = [];
+                $bill_data = [
+                    "bill_data" => [
+                        "identity_type" => "DNI",
+                        "identity_number" => "34987273",
+                        "country_id" => 11,
+                        "country_name" => "Argentina",
+                        "state_id" => 4545,
+                        "state_name" => "Buenos Aires",
+                        "city_id" => 42022,
+                        "city_name" => "Ciudad Autonoma de Buenos Aires",
+                        "code_zip" => "abc123",
+                        "additional_info" => "informacion adicional",
+                        "address" => "Calle 123 4to A"
+                    ]
+                ];
 
 
                 switch ($order->getStatus()->getId()) {
@@ -191,9 +207,7 @@ class CustomerOrderApiController extends AbstractController
                                 "name" => $order_product->getProduct()->getName(),
                                 "quantity" => $order_product->getQuantity(),
                                 "price" => $order_product->getProduct()->getPrice(),
-                                "discount" => $order_product->getProduct()->getDiscountActive() ?  (0 - (($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive())) : 0,
                                 "discount_price" => $order_product->getProduct()->getDiscountActive() ?  ($order_product->getProduct()->getPrice() - (($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive())) : 0,
-                                "percentage_discount" => $order_product->getProduct()->getDiscountActive() ?: 0,
                             ];
                         }
                         $order = [

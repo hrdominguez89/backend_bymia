@@ -205,6 +205,11 @@ class Customer extends BaseUser
      */
     private $shoppingCarts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Recipients::class, mappedBy="customer", orphanRemoval=true)
+     */
+    private $recipients;
+
 
     public function __construct()
     {
@@ -220,6 +225,7 @@ class Customer extends BaseUser
         $this->orders = new ArrayCollection();
         $this->favoriteProducts = new ArrayCollection();
         $this->shoppingCarts = new ArrayCollection();
+        $this->recipients = new ArrayCollection();
     }
 
 
@@ -827,6 +833,36 @@ class Customer extends BaseUser
             // set the owning side to null (unless already changed)
             if ($shoppingCart->getCustomer() === $this) {
                 $shoppingCart->setCustomer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipients>
+     */
+    public function getRecipients(): Collection
+    {
+        return $this->recipients;
+    }
+
+    public function addRecipient(Recipients $recipient): self
+    {
+        if (!$this->recipients->contains($recipient)) {
+            $this->recipients[] = $recipient;
+            $recipient->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipient(Recipients $recipient): self
+    {
+        if ($this->recipients->removeElement($recipient)) {
+            // set the owning side to null (unless already changed)
+            if ($recipient->getCustomer() === $this) {
+                $recipient->setCustomer(null);
             }
         }
 

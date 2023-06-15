@@ -35,6 +35,11 @@ class ProductImages
      */
     private $principal;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $img_thumbnail;
+
     public function __construct()
     {
         $this->principal = false;
@@ -87,6 +92,18 @@ class ProductImages
     public function setPrincipal(?bool $principal): self
     {
         $this->principal = $principal;
+
+        return $this;
+    }
+
+    public function getImgThumbnail(): ?string
+    {
+        return $this->img_thumbnail;
+    }
+
+    public function setImgThumbnail(?string $img_thumbnail): self
+    {
+        $this->img_thumbnail = $img_thumbnail;
 
         return $this;
     }

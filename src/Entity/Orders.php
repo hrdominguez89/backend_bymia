@@ -297,6 +297,16 @@ class Orders
      */
     private $sales_id_3pl;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Recipients::class, inversedBy="orders")
+     */
+    private $recipient;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ShippingTypes::class, inversedBy="orders")
+     */
+    private $shipping_type;
+
     public function __construct()
     {
         $this->guideNumbers = new ArrayCollection();
@@ -966,6 +976,7 @@ class Orders
             ],
             "international_shipping" => $this->getInternationalShipping() ? 1 : 0,
             "shipping" => $this->getShipping() ? 1 : 0,
+            "shipping_type" => $this->getShippingType() ? $this->getShippingType()->getId() : null,
             "bill_file" => $this->getBillFile(),
             "payments_files" => $payments_files_result,
             "payments_received_files" => $payments_received_files_result,
@@ -1282,6 +1293,30 @@ class Orders
     public function setSalesId3pl(?int $sales_id_3pl): self
     {
         $this->sales_id_3pl = $sales_id_3pl;
+
+        return $this;
+    }
+
+    public function getRecipient(): ?Recipients
+    {
+        return $this->recipient;
+    }
+
+    public function setRecipient(?Recipients $recipient): self
+    {
+        $this->recipient = $recipient;
+
+        return $this;
+    }
+
+    public function getShippingType(): ?ShippingTypes
+    {
+        return $this->shipping_type;
+    }
+
+    public function setShippingType(?ShippingTypes $shipping_type): self
+    {
+        $this->shipping_type = $shipping_type;
 
         return $this;
     }

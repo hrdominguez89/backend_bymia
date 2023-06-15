@@ -105,12 +105,18 @@ class States
      */
     private $receiver_orders;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Recipients::class, mappedBy="state")
+     */
+    private $recipients;
+
     public function __construct()
     {
         $this->cities = new ArrayCollection();
         $this->customerAddresses = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->receiver_orders = new ArrayCollection();
+        $this->recipients = new ArrayCollection();
     }
 
     public function __toString()
@@ -393,6 +399,36 @@ class States
             // set the owning side to null (unless already changed)
             if ($receiverOrder->getReceiverState() === $this) {
                 $receiverOrder->setReceiverState(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipients>
+     */
+    public function getRecipients(): Collection
+    {
+        return $this->recipients;
+    }
+
+    public function addRecipient(Recipients $recipient): self
+    {
+        if (!$this->recipients->contains($recipient)) {
+            $this->recipients[] = $recipient;
+            $recipient->setState($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipient(Recipients $recipient): self
+    {
+        if ($this->recipients->removeElement($recipient)) {
+            // set the owning side to null (unless already changed)
+            if ($recipient->getState() === $this) {
+                $recipient->setState(null);
             }
         }
 

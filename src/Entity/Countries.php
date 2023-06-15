@@ -179,6 +179,11 @@ class Countries
      */
     private $receiver_orders;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Recipients::class, mappedBy="country")
+     */
+    private $recipients;
+
     public function __construct()
     {
         $this->states = new ArrayCollection();
@@ -187,6 +192,7 @@ class Countries
         $this->customers = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->receiver_orders = new ArrayCollection();
+        $this->recipients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -680,6 +686,36 @@ class Countries
             // set the owning side to null (unless already changed)
             if ($receiverOrder->getReceiverCountry() === $this) {
                 $receiverOrder->setReceiverCountry(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipients>
+     */
+    public function getRecipients(): Collection
+    {
+        return $this->recipients;
+    }
+
+    public function addRecipient(Recipients $recipient): self
+    {
+        if (!$this->recipients->contains($recipient)) {
+            $this->recipients[] = $recipient;
+            $recipient->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipient(Recipients $recipient): self
+    {
+        if ($this->recipients->removeElement($recipient)) {
+            // set the owning side to null (unless already changed)
+            if ($recipient->getCountry() === $this) {
+                $recipient->setCountry(null);
             }
         }
 

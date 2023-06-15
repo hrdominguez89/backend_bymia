@@ -43,7 +43,7 @@ class CustomerAddressApiController extends AbstractController
     }
 
     /**
-     * @Route("/pre-order", name="api_customer_pre_order",methods={"POST"})
+     * @Route("/pre-ordera", name="api_customer_pre_ordera",methods={"POST"})
      */
     public function preOrder(
         Request $request,
@@ -164,7 +164,7 @@ class CustomerAddressApiController extends AbstractController
     }
 
     /**
-     * @Route("/order/{id}", name="api_customer_order",methods={"GET","POST"})
+     * @Route("/ordera/{id}", name="api_customer_ordera",methods={"GET","POST"})
      */
     public function order(
         $id,
@@ -210,7 +210,7 @@ class CustomerAddressApiController extends AbstractController
     }
 
     /**
-     * @Route("/orders", name="api_customer_orders",methods={"GET"})
+     * @Route("/ordersa", name="api_customer_ordersa",methods={"GET"})
      */
     public function orders(
         $id,
