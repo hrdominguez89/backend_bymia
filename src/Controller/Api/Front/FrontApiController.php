@@ -573,12 +573,13 @@ class FrontApiController extends AbstractController
                     foreach ($products as $product) {
                         $productsByCategory[] = $product->getBasicDataProduct();
                     }
-
-                    $products_by_sections[$i - 1]['categories'][] =
-                        [
-                            "category" => $sections->$getCategoryNSectionN()->getName(),
-                            "products" => $productsByCategory
-                        ];
+                    if($sections->$getCategoryNSectionN()){
+                        $products_by_sections[$i - 1]['categories'][] =
+                            [
+                                "category" => $sections->$getCategoryNSectionN()->getName(),
+                                "products" => $productsByCategory
+                            ];
+                    }
                 }
             }
 
