@@ -50,7 +50,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '1ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category2Section1', EntityType::class, [
@@ -65,7 +65,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '2da. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category3Section1', EntityType::class, [
@@ -80,7 +80,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '3ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('titleSection2', TextType::class, [
@@ -115,7 +115,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '1ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category2Section2', EntityType::class, [
@@ -130,7 +130,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '2da. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category3Section2', EntityType::class, [
@@ -145,7 +145,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '3ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
 
@@ -182,7 +182,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '1ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category2Section3', EntityType::class, [
@@ -197,7 +197,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '2da. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category3Section3', EntityType::class, [
@@ -212,7 +212,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '3ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('titleSection4', TextType::class, [
@@ -248,7 +248,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '1ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category2Section4', EntityType::class, [
@@ -263,7 +263,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '2da. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ])
 
             ->add('category3Section4', EntityType::class, [
@@ -278,7 +278,7 @@ class SectionsHomeType extends AbstractType
                 'placeholder' => 'Seleccione una categoría.',
                 'label' => '3ra. categoría',
                 'choice_label' => 'name',
-                'required' => true,
+                // 'required' => true,
             ]);
     }
 
