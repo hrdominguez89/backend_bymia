@@ -24,19 +24,19 @@ class SectionsHome
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes11")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category1Section1;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes21")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category2Section1;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes31")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category3Section1;
 
@@ -47,19 +47,19 @@ class SectionsHome
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes12")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category1Section2;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes22")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category2Section2;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes32")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category3Section2;
 
@@ -70,19 +70,19 @@ class SectionsHome
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes13")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category1Section3;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes23")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category2Section3;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes33")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category3Section3;
 
@@ -93,18 +93,19 @@ class SectionsHome
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes14")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category1Section4;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes24")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category2Section4;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="sectionsHomes34")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $category3Section4;
 
