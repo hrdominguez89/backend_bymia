@@ -573,7 +573,7 @@ class FrontApiController extends AbstractController
                     foreach ($products as $product) {
                         $productsByCategory[] = $product->getBasicDataProduct();
                     }
-                    if($sections->$getCategoryNSectionN()){
+                    if ($sections->$getCategoryNSectionN()) {
                         $products_by_sections[$i - 1]['categories'][] =
                             [
                                 "category" => $sections->$getCategoryNSectionN()->getName(),
@@ -604,7 +604,7 @@ class FrontApiController extends AbstractController
     {
         //traigo el producto 1
         $product = $productRepository->findActiveProductById($product_id);
-        
+
         if ($product) {
             //busco productos similares
             //$similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
@@ -619,12 +619,12 @@ class FrontApiController extends AbstractController
             //         'principal' => $product_image->getPrincipal() ? true : false,
             //     ];
             // }
-            // $breadcrumbs = [];
-            // $breadcrumbs[] = $product->getCategory()->getName();
-            // if ($product->getSubcategory()) {
-            //     $breadcrumbs[] = $product->getSubcategory()->getName();
-            // }
-            // $breadcrumbs[] = $product->getBrand()->getName();
+            $breadcrumbs = [];
+            $breadcrumbs[] = $product->getCategory()->getName();
+            if ($product->getSubcategory()) {
+                $breadcrumbs[] = $product->getSubcategory()->getName();
+            }
+            $breadcrumbs[] = $product->getBrand()->getName();
 
             // $similar_by_color = [];
             // if ($similar_products) {
@@ -667,8 +667,8 @@ class FrontApiController extends AbstractController
             $productJson = [
                 "id" => $product->getId(),
                 "name" => $product->getName(),
-                //"slug" => $product->getSlug(),
-                //"breadcrumbs" => $breadcrumbs,
+                "slug" => $product->getSlug(),
+                "breadcrumbs" => $breadcrumbs,
                 //"category" => $product->getCategory() ? $product->getCategory()->getName() : null,
                 //"subcategory" => $product->getSubcategory() ? $product->getSubcategory()->getName() : null,
                 //"brand" => $product->getBrand() ? $product->getBrand()->getName() : null,
