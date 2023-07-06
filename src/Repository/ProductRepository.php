@@ -511,6 +511,7 @@ class ProductRepository extends ServiceEntityRepository
 
     public function findSimilarProductBySku($sku, $product_id)
     {
+        // recorto el sku para traer los productos que son similares por SKU
         $sku_recortado = substr($sku, 0, 24);
         return $this->createQueryBuilder('p')
             ->where('p.visible = :visible')
@@ -526,7 +527,9 @@ class ProductRepository extends ServiceEntityRepository
 
     public function findSimilarProductBySkuByModel($sku, $product_id)
     {
+        //sku recortado hasta el color inclusive
         $sku_recortado_color = substr($sku, 0, 24);
+        //sku recortado solo categoria, marca y modelo-
         $sku_recortado = substr($sku, 0, 20);
 
         return $this->createQueryBuilder('p')

@@ -682,7 +682,7 @@ class FrontApiController extends AbstractController
                 "short_description_en" => $product->getDescriptionEn(),
                 "long_description_en" => $product->getLongDescriptionEn(),
                 "images" => $images,
-                "tag" => $product->getTag(),
+                "tag" => $product->getTag()->getName(),
                 "rating" => (int)$product->getRating(),
                 "reviews" => (int)$product->getReviews(),
                 //"conditium" => $product->getConditium() ? $product->getConditium()->getName() : null,
