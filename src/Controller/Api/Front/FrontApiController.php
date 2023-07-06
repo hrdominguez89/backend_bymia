@@ -611,14 +611,14 @@ class FrontApiController extends AbstractController
 
             $similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
 
-            // $images = [];
-            // foreach ($product->getImage() as $product_image) {
-            //     $images[] = [
-            //         'image' => $product_image->getImage(),
-            //         'thumbnail' => $product_image->getImgThumbnail(),
-            //         'principal' => $product_image->getPrincipal() ? true : false,
-            //     ];
-            // }
+            $images = [];
+            foreach ($product->getImage() as $product_image) {
+                $images[] = [
+                    'image' => $product_image->getImage(),
+                    'thumbnail' => $product_image->getImgThumbnail(),
+                    'principal' => $product_image->getPrincipal() ? true : false,
+                ];
+            }
             $breadcrumbs = [];
             $breadcrumbs[] = $product->getCategory()->getName();
             if ($product->getSubcategory()) {
@@ -681,7 +681,7 @@ class FrontApiController extends AbstractController
                 //"long_description_es" => $product->getLongDescriptionEs(),
                 //"short_description_en" => $product->getDescriptionEn(),
                 //"long_description_en" => $product->getLongDescriptionEn(),
-                //"images" => $images,
+                "images" => $images,
                 //"tag" => $product->getTag(),
                 //"rating" => (int)$product->getRating(),
                 //"reviews" => (int)$product->getReviews(),
