@@ -601,9 +601,11 @@ class FrontApiController extends AbstractController
      */
     public function productDetail(Request $request, ProductRepository $productRepository, $product_id): Response
     {
-        //traigo la linea 1 de secciones.
+        //traigo el producto 1
         $product = $productRepository->findActiveProductById($product_id);
+        
         if ($product) {
+            //busco productos similares
             $similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
 
             $similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
@@ -661,7 +663,7 @@ class FrontApiController extends AbstractController
                 }
             }
 
-            $product = [
+            $productJson = [
                 "id" => $product->getId(),
                 "name" => $product->getName(),
                 "slug" => $product->getSlug(),
@@ -702,7 +704,7 @@ class FrontApiController extends AbstractController
             ];
 
             return $this->json(
-                $product,
+                $productJson,
                 Response::HTTP_OK,
                 ['Content-Type' => 'application/json']
             );
