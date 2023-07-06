@@ -609,7 +609,7 @@ class FrontApiController extends AbstractController
             //busco productos similares
             $similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
 
-            //$similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
+            $similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
 
             // $images = [];
             // foreach ($product->getImage() as $product_image) {
@@ -645,24 +645,24 @@ class FrontApiController extends AbstractController
                 }
             }
 
-            // $similar_by_model = [];
-            // if ($similar_products_by_model) {
-            //     foreach ($similar_products_by_model as $similar_product) {
-            //         $similar_by_model[] = [
-            //             "product_id" => $similar_product->getId(),
-            //             "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
-            //             "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
-            //             "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
-            //             "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
-            //             "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
-            //             "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
-            //             "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
-            //             "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
-            //             "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
+            $similar_by_model = [];
+            if ($similar_products_by_model) {
+                foreach ($similar_products_by_model as $similar_product) {
+                    $similar_by_model[] = [
+                        "product_id" => $similar_product->getId(),
+                        "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
+                        "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
+                        "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
+                        "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
+                        "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
+                        "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
+                        "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
+                        "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
+                        "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
 
-            //         ];
-            //     }
-            // }
+                    ];
+                }
+            }
 
             $productJson = [
                 "id" => $product->getId(),
@@ -690,7 +690,7 @@ class FrontApiController extends AbstractController
                 //"color" => $product->getColor() ? $product->getColor()->getName() : null,
                 //"colorHex" => $product->getColor() ? $product->getColor()->getColorHexadecimal() : null,
                 "similar_by_color" => $similar_by_color ?: null,
-                //"similar_by_model" => $similar_by_model ?: null,
+                "similar_by_model" => $similar_by_model ?: null,
                 //"especification" => [
                 //    "weight" => $product->getWeight() ? $product->getWeight() : null,
                 //    "screen_resolution" => $product->getScreenResolution() ? $product->getScreenResolution()->getName() : null,
