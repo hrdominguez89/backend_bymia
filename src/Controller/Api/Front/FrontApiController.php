@@ -607,7 +607,7 @@ class FrontApiController extends AbstractController
 
         if ($product) {
             //busco productos similares
-            //$similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
+            $similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
 
             //$similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
 
@@ -626,24 +626,24 @@ class FrontApiController extends AbstractController
             }
             $breadcrumbs[] = $product->getBrand()->getName();
 
-            // $similar_by_color = [];
-            // if ($similar_products) {
-            //     foreach ($similar_products as $similar_product) {
-            //         $similar_by_color[] = [
-            //             "product_id" => $similar_product->getId(),
-            //             "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
-            //             "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
-            //             "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
-            //             "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
-            //             "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
-            //             "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
-            //             "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
-            //             "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
-            //             "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
+            $similar_by_color = [];
+            if ($similar_products) {
+                foreach ($similar_products as $similar_product) {
+                    $similar_by_color[] = [
+                        "product_id" => $similar_product->getId(),
+                        "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
+                        "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
+                        "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
+                        "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
+                        "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
+                        "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
+                        "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
+                        "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
+                        "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
 
-            //         ];
-            //     }
-            // }
+                    ];
+                }
+            }
 
             // $similar_by_model = [];
             // if ($similar_products_by_model) {
@@ -689,7 +689,7 @@ class FrontApiController extends AbstractController
                 //"storage" => $product->getStorage() ? $product->getStorage()->getName() : null,
                 //"color" => $product->getColor() ? $product->getColor()->getName() : null,
                 //"colorHex" => $product->getColor() ? $product->getColor()->getColorHexadecimal() : null,
-                //"similar_by_color" => $similar_by_color ?: null,
+                "similar_by_color" => $similar_by_color ?: null,
                 //"similar_by_model" => $similar_by_model ?: null,
                 //"especification" => [
                 //    "weight" => $product->getWeight() ? $product->getWeight() : null,
