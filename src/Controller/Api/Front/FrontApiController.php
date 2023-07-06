@@ -607,68 +607,68 @@ class FrontApiController extends AbstractController
         
         if ($product) {
             //busco productos similares
-            $similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
+            //$similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
 
-            $similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
+            //$similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
 
-            $images = [];
-            foreach ($product->getImage() as $product_image) {
-                $images[] = [
-                    'image' => $product_image->getImage(),
-                    'thumbnail' => $product_image->getImgThumbnail(),
-                    'principal' => $product_image->getPrincipal() ? true : false,
-                ];
-            }
-            $breadcrumbs = [];
-            $breadcrumbs[] = $product->getCategory()->getName();
-            if ($product->getSubcategory()) {
-                $breadcrumbs[] = $product->getSubcategory()->getName();
-            }
-            $breadcrumbs[] = $product->getBrand()->getName();
+            // $images = [];
+            // foreach ($product->getImage() as $product_image) {
+            //     $images[] = [
+            //         'image' => $product_image->getImage(),
+            //         'thumbnail' => $product_image->getImgThumbnail(),
+            //         'principal' => $product_image->getPrincipal() ? true : false,
+            //     ];
+            // }
+            // $breadcrumbs = [];
+            // $breadcrumbs[] = $product->getCategory()->getName();
+            // if ($product->getSubcategory()) {
+            //     $breadcrumbs[] = $product->getSubcategory()->getName();
+            // }
+            // $breadcrumbs[] = $product->getBrand()->getName();
 
-            $similar_by_color = [];
-            if ($similar_products) {
-                foreach ($similar_products as $similar_product) {
-                    $similar_by_color[] = [
-                        "product_id" => $similar_product->getId(),
-                        "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
-                        "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
-                        "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
-                        "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
-                        "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
-                        "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
-                        "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
-                        "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
-                        "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
+            // $similar_by_color = [];
+            // if ($similar_products) {
+            //     foreach ($similar_products as $similar_product) {
+            //         $similar_by_color[] = [
+            //             "product_id" => $similar_product->getId(),
+            //             "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
+            //             "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
+            //             "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
+            //             "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
+            //             "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
+            //             "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
+            //             "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
+            //             "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
+            //             "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
 
-                    ];
-                }
-            }
+            //         ];
+            //     }
+            // }
 
-            $similar_by_model = [];
-            if ($similar_products_by_model) {
-                foreach ($similar_products_by_model as $similar_product) {
-                    $similar_by_model[] = [
-                        "product_id" => $similar_product->getId(),
-                        "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
-                        "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
-                        "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
-                        "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
-                        "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
-                        "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
-                        "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
-                        "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
-                        "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
+            // $similar_by_model = [];
+            // if ($similar_products_by_model) {
+            //     foreach ($similar_products_by_model as $similar_product) {
+            //         $similar_by_model[] = [
+            //             "product_id" => $similar_product->getId(),
+            //             "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
+            //             "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
+            //             "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
+            //             "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
+            //             "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
+            //             "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
+            //             "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
+            //             "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
+            //             "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
 
-                    ];
-                }
-            }
+            //         ];
+            //     }
+            // }
 
             $productJson = [
                 "id" => $product->getId(),
                 "name" => $product->getName(),
                 "slug" => $product->getSlug(),
-                "breadcrumbs" => $breadcrumbs,
+                //"breadcrumbs" => $breadcrumbs,
                 "category" => $product->getCategory() ? $product->getCategory()->getName() : null,
                 "subcategory" => $product->getSubcategory() ? $product->getSubcategory()->getName() : null,
                 "brand" => $product->getBrand() ? $product->getBrand()->getName() : null,
@@ -681,7 +681,7 @@ class FrontApiController extends AbstractController
                 "long_description_es" => $product->getLongDescriptionEs(),
                 "short_description_en" => $product->getDescriptionEn(),
                 "long_description_en" => $product->getLongDescriptionEn(),
-                "images" => $images,
+                //"images" => $images,
                 "tag" => $product->getTag(),
                 "rating" => (int)$product->getRating(),
                 "reviews" => (int)$product->getReviews(),
