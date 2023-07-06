@@ -604,6 +604,13 @@ class FrontApiController extends AbstractController
     {
         //traigo el producto 1
         $product = $productRepository->findActiveProductById($product_id);
+
+        
+        return $this->json(
+            $product->getBasicDataProduct(),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
         
         if ($product) {
             //busco productos similares
