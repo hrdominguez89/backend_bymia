@@ -604,13 +604,6 @@ class FrontApiController extends AbstractController
     {
         //traigo el producto 1
         $product = $productRepository->findActiveProductById($product_id);
-
-        
-        return $this->json(
-            $product->getBasicDataProduct(),
-            Response::HTTP_OK,
-            ['Content-Type' => 'application/json']
-        );
         
         if ($product) {
             //busco productos similares
@@ -696,8 +689,8 @@ class FrontApiController extends AbstractController
                 "storage" => $product->getStorage() ? $product->getStorage()->getName() : null,
                 "color" => $product->getColor() ? $product->getColor()->getName() : null,
                 "colorHex" => $product->getColor() ? $product->getColor()->getColorHexadecimal() : null,
-                "similar_by_color" => $similar_by_color ?: null,
-                "similar_by_model" => $similar_by_model ?: null,
+                //"similar_by_color" => $similar_by_color ?: null,
+                //"similar_by_model" => $similar_by_model ?: null,
                 "especification" => [
                     "weight" => $product->getWeight() ? $product->getWeight() : null,
                     "screen_resolution" => $product->getScreenResolution() ? $product->getScreenResolution()->getName() : null,
