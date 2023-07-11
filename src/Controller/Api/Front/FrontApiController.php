@@ -397,9 +397,7 @@ class FrontApiController extends AbstractController
         // ]
 
         $limit = $request->query->getInt('l', 4);
-        //$index = $request->query->getInt('i', 0) * $limit;
-        $index = $request->query->getInt('i', 0) == 1 ?  ($request->query->getInt('i') - 1) * $limit : 0;
-        
+        $index = $request->query->getInt('i', 0) * $limit;
 
         if ($keywords) {
             $array_keywords_minus = explode(' ', strtolower($keywords));
@@ -454,7 +452,7 @@ class FrontApiController extends AbstractController
         }
 
         return $this->json(
-            ['message' => 'Not found'],
+            [],
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
