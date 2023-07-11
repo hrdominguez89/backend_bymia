@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Constants\Constants;
 use App\Entity\Product;
+use App\Entity\Specification;
 use App\Form\Model\ProductSearchDto;
 use App\Helpers\ProductTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -10,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use DateTime;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -514,35 +517,43 @@ class ProductRepository extends ServiceEntityRepository
         // recorto el sku para traer los productos que son similares por SKU
         $sku_recortado = substr($sku, 0, 24);
         return $this->createQueryBuilder('p')
+            ->join(Specification::class, 'msp', Join::WITH, 'msp.id = p.storage')
             ->where('p.visible = :visible')
             ->andWhere('p.id3pl IS NOT NULL')
             ->andWhere('p.sku like :sku_recortado')
-            ->andWhere('p.id != :product_id')
+            // ->andWhere('p.id != :product_id')
             ->setParameter('visible', true)
-            ->setParameter('product_id', $product_id)
+            // ->setParameter('product_id', $product_id)
             ->setParameter('sku_recortado', $sku_recortado . '%')
+            ->orderBy('msp.name','asc')
             ->getQuery()
             ->getResult();
     }
 
-    public function findSimilarProductBySkuByModel($sku, $product_id)
+    public function findColorsAvailable($sku, $product_id)
     {
         //sku recortado hasta el color inclusive
-        $sku_recortado_color = substr($sku, 0, 24);
+        // $sku_recortado_color = substr($sku, 0, 24);
         //sku recortado solo categoria, marca y modelo-
         $sku_recortado = substr($sku, 0, 20);
 
         return $this->createQueryBuilder('p')
+            ->select('max(p.id) as product_id,msp.name as color, msp.colorHexadecimal')
+            ->join(Specification::class, 'msp', Join::WITH, 'msp.id = p.color')
             ->where('p.visible = :visible')
             ->andWhere('p.id3pl IS NOT NULL')
             ->andWhere('p.sku like :sku_recortado')
-            ->andWhere('p.sku not like :sku_recortado_color')
-            ->andWhere('p.id != :product_id')
+            // ->andWhere('p.sku not like :sku_recortado_color')
+            //->andWhere('p.id != :product_id')
             ->setParameter('visible', true)
-            ->setParameter('product_id', $product_id)
+            //->setParameter('product_id', $product_id)
             ->setParameter('sku_recortado', $sku_recortado . '%')
-            ->setParameter('sku_recortado_color', $sku_recortado_color . '%')
+            // ->setParameter('sku_recortado_color', $sku_recortado_color . '%')
+            ->orderBy('msp.name', 'asc')
+            ->groupBy('msp.name,msp.colorHexadecimal')
             ->getQuery()
             ->getResult();
     }
 }
+
+// tengo el id de producto, necesito productos 

@@ -453,7 +453,7 @@ class FrontApiController extends AbstractController
 
         return $this->json(
             ['message' => 'Not found'],
-            Response::HTTP_NOT_FOUND,
+            Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
     }
@@ -606,10 +606,12 @@ class FrontApiController extends AbstractController
         $product = $productRepository->findActiveProductById($product_id);
 
         if ($product) {
-            //busco productos similares
-            $similar_products = $productRepository->findSimilarProductBySku($product->getSku(), $product_id);
 
-            $similar_products_by_model = $productRepository->findSimilarProductBySkuByModel($product->getSku(), $product_id);
+            //busco productos similares
+            $other_colors = $productRepository->findColorsAvailable($product->getSku(), $product_id);
+
+            $others_models = $product->getStorage() ? $productRepository->findSimilarProductBySku($product->getSku(), $product_id) : false;
+
 
             $images = [];
             foreach ($product->getImage() as $product_image) {
@@ -626,40 +628,25 @@ class FrontApiController extends AbstractController
             }
             $breadcrumbs[] = $product->getBrand()->getName();
 
-            $similar_by_color = [];
-            if ($similar_products) {
-                foreach ($similar_products as $similar_product) {
-                    $similar_by_color[] = [
-                        "product_id" => $similar_product->getId(),
-                        "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
-                        "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
-                        "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
-                        "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
-                        "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
-                        "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
-                        "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
-                        "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
-                        "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
-
+            $products_by_models = [];
+            if ($others_models) {
+                foreach ($others_models as $other_model) {
+                    $products_by_models[] = [
+                        "product_id" => $other_model->getId(),
+                        "storage" => $other_model->getStorage() ? $other_model->getStorage()->getName() : null,
+                        "active" =>  $other_model->getId() == $product_id ? true : false,
                     ];
                 }
             }
 
-            $similar_by_model = [];
-            if ($similar_products_by_model) {
-                foreach ($similar_products_by_model as $similar_product) {
-                    $similar_by_model[] = [
-                        "product_id" => $similar_product->getId(),
-                        "storage" => $similar_product->getStorage() ? $similar_product->getStorage()->getName() : null,
-                        "memory" => $similar_product->getMemory() ? $similar_product->getMemory()->getName() : null,
-                        "screen_size" => $similar_product->getScreenSize() ? $similar_product->getScreenSize()->getName() : null,
-                        "os" => $similar_product->getOpSys() ? $similar_product->getOpSys()->getName() : null,
-                        "screen_resolution" => $similar_product->getScreenResolution() ? $similar_product->getScreenResolution()->getName() : null,
-                        "cpu" => $similar_product->getCpu() ? $similar_product->getCpu()->getName() : null,
-                        "gpu" => $similar_product->getGpu() ? $similar_product->getGpu()->getName() : null,
-                        "color" => $similar_product->getColor() ? $similar_product->getColor()->getName() : null,
-                        "colorHex" => $similar_product->getColor() ? $similar_product->getColor()->getColorHexadecimal() : null,
-
+            $products_by_color = [];
+            if ($other_colors) {
+                foreach ($other_colors as $other_color) {
+                    $products_by_color[] = [
+                        "product_id" => $other_color['color'] == ($product->getColor() ? $product->getColor()->getName() : null) ? (int) $product_id : $other_color['product_id'],
+                        "color" => $other_color['color'],
+                        "colorHexadecimal" => $other_color['colorHexadecimal'],
+                        "active" => $other_color['color'] == ($product->getColor() ? $product->getColor()->getName() : null) ? true : false,
                     ];
                 }
             }
@@ -686,12 +673,12 @@ class FrontApiController extends AbstractController
                 "rating" => (int)$product->getRating(),
                 "reviews" => (int)$product->getReviews(),
                 "conditium" => $product->getConditium() ? $product->getConditium()->getName() : null,
-                "storage" => $product->getStorage() ? $product->getStorage()->getName() : null,
-                "color" => $product->getColor() ? $product->getColor()->getName() : null,
-                "colorHex" => $product->getColor() ? $product->getColor()->getColorHexadecimal() : null,
-                "similar_by_color" => $similar_by_color ?: null,
-                "similar_by_model" => $similar_by_model ?: null,
-                "especification" => [
+                // "storage" => $product->getStorage() ? $product->getStorage()->getName() : null,
+                // "color" => $product->getColor() ? $product->getColor()->getName() : null,
+                // "colorHex" => $product->getColor() ? $product->getColor()->getColorHexadecimal() : null,
+                "products_by_color" => $products_by_color ?: null,
+                "products_models" => $products_by_models ?: null,
+                "product_detail" => [
                     "weight" => $product->getWeight() ? $product->getWeight() : null,
                     "screen_resolution" => $product->getScreenResolution() ? $product->getScreenResolution()->getName() : null,
                     "screen_size" => $product->getScreenSize() ? $product->getScreenSize()->getName() : null,
