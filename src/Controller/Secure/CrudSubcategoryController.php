@@ -113,4 +113,32 @@ class CrudSubcategoryController extends AbstractController
         }
         return new JsonResponse($data);
     }
+
+    /**
+     * @Route("/updateVisible/subcategory", name="secure_subcategory_update_visible", methods={"post"})
+     */
+    public function updateVisible(EntityManagerInterface $em, Request $request, SubcategoryRepository $subcategoryRepository): Response
+    {
+        $id = (int)$request->get('id');
+        $visible = $request->get('visible');
+
+
+        $entity_object = $subcategoryRepository->find($id);
+
+        if ($visible == 'on') {
+            $entity_object->setVisible(false);
+            $data['visible'] = false;
+        } else {
+            $entity_object->setVisible(true);
+            $data['visible'] = true;
+        }
+
+        $entityManager = $em;
+        $entityManager->persist($entity_object);
+        $entityManager->flush();
+
+        $data['status'] = true;
+
+        return new JsonResponse($data);
+    }
 }
