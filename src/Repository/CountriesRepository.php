@@ -48,7 +48,7 @@ class CountriesRepository extends ServiceEntityRepository
             c.id,
             c.name,
             c.phonecode,
-            CONCAT('https://countryflagsapi.com/svg/',LOWER(c.iso3)) as flag
+            CONCAT('https://flagcdn.com/20x15/',LOWER(c.iso2),'.png') as flag
 
             FROM App:Countries c
 
