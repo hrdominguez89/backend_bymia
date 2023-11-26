@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Countries;
 use App\Entity\Customer;
-use App\Entity\CustomerStatusType;
 use App\Entity\CustomersTypesRoles;
 use App\Entity\GenderType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,6 +19,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class RegisterCustomerApiType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

@@ -463,74 +463,40 @@ class FrontApiController extends AbstractController
      */
     public function productsTag($slug_tag, Request $request, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
     {
-        if ($slug_tag == 'random') {
-        } else {
-            $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
-            if ($tag) {
 
-                $categoryLaptops = $categoryRepository->findOneBySlug('laptops');
-                $categoryCelulares = $categoryRepository->findOneBySlug('celulares');
-                $categoryAudio = $categoryRepository->findOneBySlug('audio');
+        $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
+        if ($tag) {
 
-                $limit = $request->query->getInt('l', 4);
-                $index = $request->query->getInt('i', 0) * $limit;
+            $limit = $request->query->getInt('l', 4);
+            $index = $request->query->getInt('i', 0) * $limit;
 
-                $productsLaptops = $productRepository->findProductsVisibleByTag($tag, $categoryLaptops, $limit, $index);
-                $productsCelulares = $productRepository->findProductsVisibleByTag($tag, $categoryCelulares, $limit, $index);
-                $productsAudio = $productRepository->findProductsVisibleByTag($tag, $categoryAudio, $limit, $index);
+            $code = $request->query->getInt('code', 0);
+            $order = $request->query->getInt('order', 0);
 
-
-                //productos por placas de video
-                $productsByCategory = [];
-
-                foreach ($productsAudio as $productAudio) {
-                    $productsByCategory[] = $productAudio->getBasicDataProduct();
-                }
-
-                $products[] = [
-                    "category" => "Audio",
-                    "products" => $productsByCategory
-                ];
-
-                // productos por categoria laptops
-                $productsByCategory = [];
-
-                foreach ($productsLaptops as $productLaptop) {
-                    $productsByCategory[] = $productLaptop->getBasicDataProduct();
-                }
-
-                $products[] = [
-                    "category" => 'Laptops',
-                    "products" => $productsByCategory
-                ];
-
-                // productos por categoria celulares
-
-                $productsByCategory = [];
-
-                foreach ($productsCelulares as $productCelular) {
-                    $productsByCategory[] = $productCelular->getBasicDataProduct();
-                }
-
-                $products[] = [
-                    "category" => "Celulares",
-                    "products" => $productsByCategory
-                ];
-
-
-
-                return $this->json(
-                    $products,
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-            } else {
-                return $this->json(
-                    ['message' => 'Not found'],
-                    Response::HTTP_NOT_FOUND,
-                    ['Content-Type' => 'application/json']
-                );
+            if ($code === 0) {
+                $code = mt_rand(1, 15);
+                $order = ['asc', 'desc'][mt_rand(0, 1)];
             }
+
+            $products = $productRepository->findProductRandom($code, $order, $tag);
+            dd($products);
+
+            // REPLICAR LA SIGUIENTE CONSULTA EN EL PRODUCTrEPOSITORY
+            // SELECCIONA EL NRO RAMDON SI ES QUE NO TIENE CODE, SI YA LA TIENE 
+            // SELECT substring(name,7,1) as letra FROM public.mia_product
+            // ORDER BY letra ASC 
+
+            return $this->json(
+                $products,
+                Response::HTTP_OK,
+                ['Content-Type' => 'application/json']
+            );
+        } else {
+            return $this->json(
+                ['message' => 'Not found'],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
         }
     }
 
@@ -860,7 +826,7 @@ class FrontApiController extends AbstractController
         $data = json_decode($body, true);
 
         //find relational objects
-        $country = $countriesRepository->find($data['country_phone_code']);
+        // $country = $countriesRepository->find($data['country_id']);
         $customer_type_role = $customersTypesRolesRepository->find($data['customer_type_role']);
         $status_customer = $customerStatusTypeRepository->find(Constants::CUSTOMER_STATUS_PENDING);
         $registration_type = $registrationTypeRepository->find(Constants::REGISTRATION_TYPE_WEB);
@@ -869,7 +835,7 @@ class FrontApiController extends AbstractController
 
         //set Customer data
         $customer = new Customer();
-        $customer->setCountryPhoneCode($country)
+        $customer
             ->setCustomerTypeRole($customer_type_role)
             ->setVerificationCode(Uuid::v4())
             ->setStatus($status_customer)
