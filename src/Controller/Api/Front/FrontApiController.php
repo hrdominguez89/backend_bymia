@@ -121,6 +121,26 @@ class FrontApiController extends AbstractController
             if (!$passwordHasherFactoryInterface->getPasswordHasher($customer)->verify($customer->getPassword(), $data['password'])) {
                 throw new Exception();
             }
+            if ($customer->getStatus()->getId() == Constants::CUSTOMER_STATUS_PENDING) {
+                return $this->json(
+                    [
+                        "status" => false,
+                        'message' => 'Su cuenta aún no fue validada, por favor revise su correo inclusive en la carpeta SPAM.',
+                    ],
+                    Response::HTTP_UNAUTHORIZED,
+                    ['Content-Type' => 'application/json']
+                );
+            }
+            if ($customer->getStatus()->getId() == Constants::CUSTOMER_STATUS_DISABLED) {
+                return $this->json(
+                    [
+                        "status" => false,
+                        'message' => 'Su cuenta se encuentra deshabilitada.',
+                    ],
+                    Response::HTTP_UNAUTHORIZED,
+                    ['Content-Type' => 'application/json']
+                );
+            }
         } catch (\Exception $e) {
             return $this->json(
                 [
@@ -897,8 +917,8 @@ class FrontApiController extends AbstractController
         CustomerRepository $customerRepository,
         CustomerStatusTypeRepository $customerStatusTypeRepository,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        EnqueueEmail $queue
-
+        EnqueueEmail $queue,
+        SendCustomerToCrm $sendCustomerToCrm
     ): Response {
 
         $body = $request->getContent();
@@ -952,6 +972,9 @@ class FrontApiController extends AbstractController
 
         //Intento enviar el correo encolado
         $queue->sendEnqueue($id_email);
+        
+        //envio por helper los datos del cliente al crm
+        $sendCustomerToCrm->SendCustomerToCrm($customer);
 
         return $this->json(
             [
