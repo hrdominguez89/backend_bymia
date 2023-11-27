@@ -28,7 +28,7 @@ security:
             provider: api_customer
             custom_authenticator: App\Security\CustomerApiAuthenticator
         api:
-            pattern: ^/api$
+            pattern: ^/api/*
             lazy: false
             provider: api_users
             custom_authenticator: App\Security\ApiAuthenticator
