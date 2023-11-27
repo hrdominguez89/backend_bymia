@@ -439,6 +439,23 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+
+    public function findProductRandom($columna, $order, $tag, $limit, $index)
+    {
+        $products = $this->createQueryBuilder('p');
+        $products->where('p.visible = true');
+        $products->andWhere('p.id3pl IS NOT NULL');
+        $products->andWhere('p.tag = :tag')
+            ->setParameter('tag', $tag)
+            ->orderBy('p.'.$columna, $order);
+
+        if ($index) {
+            $products->setFirstResult($index);
+        }
+        $products->setMaxResults($limit);
+        return $products->getQuery()->getResult();
+    }
+
     public function findProductByFilters($filters, $limit = 4, $index = 0, $keywords)
     {
 
@@ -525,7 +542,7 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('visible', true)
             // ->setParameter('product_id', $product_id)
             ->setParameter('sku_recortado', $sku_recortado . '%')
-            ->orderBy('msp.name','asc')
+            ->orderBy('msp.name', 'asc')
             ->getQuery()
             ->getResult();
     }

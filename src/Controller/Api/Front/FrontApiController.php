@@ -483,7 +483,6 @@ class FrontApiController extends AbstractController
      */
     public function productsTag($slug_tag, Request $request, CategoryRepository $categoryRepository, TagRepository $tagRepository, ProductRepository $productRepository): Response
     {
-
         $tag = $tagRepository->findTagVisibleBySlug($slug_tag);
         if ($tag) {
 
@@ -493,14 +492,70 @@ class FrontApiController extends AbstractController
             $code = $request->query->getInt('code', 0);
             $order = $request->query->getInt('order', 0);
 
+            $columnas = [
+                'id',
+                'sku',
+                'slug',
+                'cod',
+                'part_number',
+                'onhand',
+                'commited',
+                'incomming',
+                'available',
+                'id3pl',
+                'created_at',
+                'category',
+                'brand',
+                'name',
+                'visible',
+                'inventory',
+                'subcategory',
+                'status_sent_3pl',
+                'attempts_send_3pl',
+                'error_message_3pl',
+                'long_description_es',
+                'long_description_en',
+                'model',
+                'color',
+                'screen_resolution',
+                'screen_size',
+                'cpu',
+                'gpu',
+                'memory',
+                'storage',
+                'op_sys',
+                'conditium',
+                'weight',
+                'tag',
+                'tag_expires',
+                'tag_expiration_date',
+                'rating',
+                'reviews'
+            ];
+
+
             if ($code === 0) {
-                $code = mt_rand(1, 15);
-                $order = ['asc', 'desc'][mt_rand(0, 1)];
+                $code = mt_rand(0, (count($columnas) - 1));
+                $order = [
+                    'asc',
+                    'desc'
+                ][mt_rand(0, 1)];
             }
 
-            $products = $productRepository->findProductRandom($code, $order, $tag);
-            dd($products);
-
+            $products = $productRepository->findProductRandom($columnas[$code], $order, $tag, $limit, $index);
+            
+            if ($products) {
+                $products_founded = [];
+                foreach ($products as $product) {
+                    $products_founded[] = $product->getBasicDataProduct();
+                }
+    
+                return $this->json(
+                    $products_founded,
+                    Response::HTTP_OK,
+                    ['Content-Type' => 'application/json']
+                );
+            }
             // REPLICAR LA SIGUIENTE CONSULTA EN EL PRODUCTrEPOSITORY
             // SELECCIONA EL NRO RAMDON SI ES QUE NO TIENE CODE, SI YA LA TIENE 
             // SELECT substring(name,7,1) as letra FROM public.mia_product
@@ -972,7 +1027,7 @@ class FrontApiController extends AbstractController
 
         //Intento enviar el correo encolado
         $queue->sendEnqueue($id_email);
-        
+
         //envio por helper los datos del cliente al crm
         $sendCustomerToCrm->SendCustomerToCrm($customer);
 
