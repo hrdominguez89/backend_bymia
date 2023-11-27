@@ -46,7 +46,7 @@ security:
                 target: app_security_login
 
     access_control:
-        - { path: ^/api/customer/*, roles: PUBLIC_ACCESS }
+        - { path: ^/api/customer/*, roles: ROLE_CUSTOMER }
         - { path: ^/api/crm/*, roles: ROLE_CLIENT_CRM }
         - { path: ^/api/3pl/*, roles: ROLE_CLIENT_3PL }
         - { path: ^/api/front/*, roles: ROLE_CLIENT_FRONT }
