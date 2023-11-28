@@ -327,7 +327,6 @@ class CustomerOrderApiController extends AbstractController
      * @Route("/orders", name="api_customer_orders",methods={"GET"})
      */
     public function orders(
-        $id,
         Request $request,
         StatusOrderTypeRepository $statusOrderTypeRepository,
         ShoppingCartRepository $shoppingCartRepository,
@@ -338,34 +337,73 @@ class CustomerOrderApiController extends AbstractController
         OrdersRepository $ordersRepository
     ): Response {
 
-        switch ($request->getMethod()) {
-            case 'GET':
-
-                $order = $ordersRepository->find(['id' => $id]);
-
-                return $this->json(
-                    $order->generateOrderToCRM(),
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-            case 'PATCH':
-
-                $body = $request->getContent();
-                $data = json_decode($body, true);
-        }
-
-        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
-
-        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
-        if (!$shopping_cart_products) {
-            return $this->json(
+        return $this->json(
+            [
                 [
-                    "shop_cart_list" => [],
-                    'message' => 'No tiene productos en su lista de carrito.'
+                    'orderPlaced' => '01/01/2023',
+                    'total' => '185.000',
+                    'sendTo' => 'Diego Vidal Caro 1',
+                    'numberOrder' => '123456789',
+                    'detail' => [
+                        'items'=>[
+                            'quantity'=>'(x1 Unit)',
+                            'name'=> 'Tv Samsung',
+                            'price' => '25.00'
+                        ],
+                        'products'=>[
+                            'total'=> 1,
+                            'totalPrice'=> '25.00'
+                        ],
+                        'productDiscount'=> '0',
+                        'promocionalDiscount'=> '0',
+                    ],
+                    'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
                 ],
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
-        }
+                [
+                    'orderPlaced' => '01/01/2023',
+                    'total' => '185.000',
+                    'sendTo' => 'Diego Vidal Caro 2',
+                    'numberOrder' => '123456788',
+                    'detail' => [
+                        'items'=>[
+                            'quantity'=>'(x1 Unit)',
+                            'name'=> 'Tv Samsung',
+                            'price' => '25.00'
+                        ],
+                        'products'=>[
+                            'total'=> '1',
+                            'totalPrice'=> '25.00'
+                        ],
+                        'productDiscount'=> '0',
+                        'promocionalDiscount'=> '0',
+                    ],
+                    'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
+                ],
+                [
+                    'orderPlaced' => '01/01/2023',
+                    'total' => '185.000',
+                    'sendTo' => 'Diego Vidal Caro 2',
+                    'numberOrder' => '123456788',
+                    'detail' => [
+                        'items'=>[
+                            'quantity'=>'(x1 Unit)',
+                            'name'=> 'Tv Samsung',
+                            'price' => '25.00'
+                        ],
+                        'products'=>[
+                            'total'=> '1',
+                            'totalPrice'=> '25.00'
+                        ],
+                        'productDiscount'=> '0',
+                        'promocionalDiscount'=> '0',
+                    ],
+                    'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
+                ]
+            ],
+            Response::HTTP_ACCEPTED,
+            ['Content-Type' => 'application/json']
+        );
+
+        $this->customer->getId();
     }
 }
