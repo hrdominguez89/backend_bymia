@@ -346,13 +346,17 @@ class CustomerOrderApiController extends AbstractController
                     'numberOrder' => '123456789',
                     'detail' => [
                         'items' => [
-                            'quantity' => '(x1 Unit)',
-                            'name' => 'Tv Samsung',
-                            'price' => '25.00'
+                            [
+                                'quantity' => '(x1 Unit)',
+                                'name' => 'Tv Samsung',
+                                'price' => '25.00'
+                            ],
                         ],
                         'products' => [
-                            'total' => 1,
-                            'totalPrice' => '25.00'
+                            [
+                                'total' => 1,
+                                'totalPrice' => '25.00'
+                            ],
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
@@ -363,27 +367,7 @@ class CustomerOrderApiController extends AbstractController
                     'orderPlaced' => '01/01/2023',
                     'total' => '185.000',
                     'sendTo' => 'Diego Vidal Caro 2',
-                    'numberOrder' => '123456788',
-                    'detail' => [
-                        'items' => [
-                            'quantity' => '(x1 Unit)',
-                            'name' => 'Tv Samsung',
-                            'price' => '25.00'
-                        ],
-                        'products' => [
-                            'total' => '1',
-                            'totalPrice' => '25.00'
-                        ],
-                        'productDiscount' => '0',
-                        'promocionalDiscount' => '0',
-                    ],
-                    'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
-                ],
-                [
-                    'orderPlaced' => '01/01/2023',
-                    'total' => '185.000',
-                    'sendTo' => 'Diego Vidal Caro 2',
-                    'numberOrder' => '123456788',
+                    'numberOrder' => '123456789',
                     'detail' => [
                         'items' => [
                             [
@@ -394,15 +378,53 @@ class CustomerOrderApiController extends AbstractController
                         ],
                         'products' => [
                             [
-                                'total' => '1',
+                                'total' => 1,
                                 'totalPrice' => '25.00'
-                            ]
+                            ],
+                        ],
+                        'productDiscount' => '0',
+                        'promocionalDiscount' => '0',
+                    ],
+                    'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
+                ],
+                [
+                    'orderPlaced' => '01/01/2023',
+                    'total' => '185.000',
+                    'sendTo' => 'Diego Vidal Caro 3',
+                    'numberOrder' => '123456789',
+                    'detail' => [
+                        'items' => [
+                            [
+                                'quantity' => '(x1 Unit)',
+                                'name' => 'Tv Samsung',
+                                'price' => '25.00'
+                            ],
+                            [
+                                'quantity' => '(x1 Unit)',
+                                'name' => 'Tv Samsung',
+                                'price' => '25.00'
+                            ],
+                            [
+                                'quantity' => '(x1 Unit)',
+                                'name' => 'Tv Samsung',
+                                'price' => '25.00'
+                            ],
+                        ],
+                        'products' => [
+                            [
+                                'total' => 1,
+                                'totalPrice' => '25.00'
+                            ],
+                            [
+                                'total' => 1,
+                                'totalPrice' => '25.00'
+                            ],
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
                     ],
                     'bill' => ''
-                ]
+                ],
             ],
             Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
