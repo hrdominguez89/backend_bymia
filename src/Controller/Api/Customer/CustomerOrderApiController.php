@@ -354,7 +354,7 @@ class CustomerOrderApiController extends AbstractController
                         ],
                         'products' => [
                             [
-                                'total' => 1,
+                                'total' => '1',
                                 'totalPrice' => '25.00'
                             ],
                         ],
@@ -378,7 +378,7 @@ class CustomerOrderApiController extends AbstractController
                         ],
                         'products' => [
                             [
-                                'total' => 1,
+                                'total' => '1',
                                 'totalPrice' => '25.00'
                             ],
                         ],
@@ -412,11 +412,11 @@ class CustomerOrderApiController extends AbstractController
                         ],
                         'products' => [
                             [
-                                'total' => 1,
+                                'total' => '1',
                                 'totalPrice' => '25.00'
                             ],
                             [
-                                'total' => 1,
+                                'total' => '1',
                                 'totalPrice' => '25.00'
                             ],
                         ],
