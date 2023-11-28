@@ -360,6 +360,7 @@ class CustomerOrderApiController extends AbstractController
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
+                        'tax' => '0'
                     ],
                     'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
                 ],
@@ -384,6 +385,7 @@ class CustomerOrderApiController extends AbstractController
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
+                        'tax' => '0'
                     ],
                     'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
                 ],
@@ -422,6 +424,7 @@ class CustomerOrderApiController extends AbstractController
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
+                        'tax' => '0'
                     ],
                     'bill' => ''
                 ],
