@@ -63,7 +63,7 @@ class CustomerOrderApiController extends AbstractController
         $shopping_cart_products = [];
         // Iterar sobre los productos enviados en la solicitud
         foreach ($data['products'] as $product_cart) {
-            $productId = $product_cart['product_id'];
+            $productId = $product_cart['id']; //product_id
             $quantity = $product_cart['quantity'];
 
             // Verificar si el producto existe y está activo
