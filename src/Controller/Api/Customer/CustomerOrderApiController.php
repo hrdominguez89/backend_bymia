@@ -13,7 +13,6 @@ use App\Repository\ProductRepository;
 use App\Repository\ShoppingCartRepository;
 use App\Repository\StatusOrderTypeRepository;
 use App\Repository\StatusTypeShoppingCartRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -52,8 +51,7 @@ class CustomerOrderApiController extends AbstractController
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository,
-        SendOrderToCrm $sendOrderToCrm
+        ProductRepository $productRepository
     ): Response {
 
         $body = $request->getContent();
@@ -141,12 +139,10 @@ class CustomerOrderApiController extends AbstractController
         $em->persist($pre_order);
         try {
             $em->flush();
-            $sendOrderToCrm->SendOrderToCrm($pre_order);
             return $this->json(
                 [
                     'status_code' => Response::HTTP_CREATED,
                     'order_id' => $pre_order->getId(),
-                    'pre-order-data' => $pre_order->generateOrderToCRM(),
                     'message' => 'Orden creada correctamente.'
                 ],
                 Response::HTTP_CREATED,
@@ -350,6 +346,7 @@ class CustomerOrderApiController extends AbstractController
         return $this->json(
             [
                 [
+                    'status' => 8,
                     'orderPlaced' => '01/01/2023',
                     'total' => '185.000',
                     'sendTo' => 'Diego Vidal Caro 1',
@@ -375,6 +372,7 @@ class CustomerOrderApiController extends AbstractController
                     'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
                 ],
                 [
+                    'status' => 7,
                     'orderPlaced' => '01/01/2023',
                     'total' => '185.000',
                     'sendTo' => 'Diego Vidal Caro 2',
@@ -400,6 +398,7 @@ class CustomerOrderApiController extends AbstractController
                     'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
                 ],
                 [
+                    'status' => 1,
                     'orderPlaced' => '01/01/2023',
                     'total' => '185.000',
                     'sendTo' => 'Diego Vidal Caro 3',
