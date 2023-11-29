@@ -379,6 +379,7 @@ class CustomerOrderApiController extends AbstractController
                     "productDiscount" => (string)$order->getTotalProductDiscount()?:'0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount()?:'0',
                     "tax" => (string)$order->getTax()?:'0',
+                    "totalOrderPrice"=> (string)$sumaTotalPrecioProductos,
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
