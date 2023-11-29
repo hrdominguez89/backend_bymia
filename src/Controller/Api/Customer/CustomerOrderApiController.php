@@ -343,101 +343,53 @@ class CustomerOrderApiController extends AbstractController
         OrdersRepository $ordersRepository
     ): Response {
 
+        $this->customer->getId();
+        $orders = $ordersRepository->findOrdersByCustomerId($this->customer->getId());
+
+        $orderToSend = [];
+        foreach ($orders as $order) {
+            $sumaProductos = 0;
+            $sumaTotalPrecioProductos = 0.00;
+            $orders_products_array = $order->getOrdersProducts();
+            $orders_products_result = [];
+
+            foreach ($orders_products_array as $order_product) {
+                $orders_products_result[] = [
+                    'quantity' => $order_product->getQuantity(),
+                    'name' => $order_product->getProduct()->getName(),
+                    'price' => $order_product->getPrice(),
+                ];
+                $sumaProductos += $order_product->getQuantity();
+                $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getPrice());
+            }
+
+
+            $orderToSend[] = [
+                'status' => $order->getStatus()->getId(),
+                'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
+                'total' => (string) $sumaTotalPrecioProductos, // revisar, podria ser.. $order->getTotalOrder()
+                'sendTo' => $order->getReceiverName() ?: '',
+                'numberOrder' => $order->getId(),
+                'detail' => [
+                    'items' => $orders_products_result,
+                    'products' => [
+                        'total' => $sumaProductos,
+                        'totalPrice' => $sumaTotalPrecioProductos,
+                    ],
+                    "productDiscount" => $order->getTotalProductDiscount(),
+                    "promocionalDiscount" => $order->getPromotionalCodeDiscount(),
+                    "tax" => $order->getTax(),
+                ],
+                'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '', //revisar, recibe mas de un recibo de recepcion de pago
+                'bill' => $order->getBillFile() ?: '',
+            ];
+        }
+
+
         return $this->json(
-            [
-                [
-                    'status' => 8,
-                    'orderPlaced' => '01/01/2023',
-                    'total' => '185.000',
-                    'sendTo' => 'Diego Vidal Caro 1',
-                    'numberOrder' => '123456789',
-                    'detail' => [
-                        'items' => [
-                            [
-                                'quantity' => '(x1 Unit)',
-                                'name' => 'Tv Samsung',
-                                'price' => '25.00'
-                            ],
-                        ],
-                        'products' => [
-                            'total' => '1',
-                            'totalPrice' => '25.00'
-                        ],
-                        'productDiscount' => '0',
-                        'promocionalDiscount' => '0',
-                        'tax' => '0',
-                        'totalOrderPrice' => '25.00'
-                    ],
-                    'receiptOfPayment' => '',
-                    'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
-                ],
-                [
-                    'status' => 7,
-                    'orderPlaced' => '01/01/2023',
-                    'total' => '185.000',
-                    'sendTo' => 'Diego Vidal Caro 2',
-                    'numberOrder' => '123456789',
-                    'detail' => [
-                        'items' => [
-                            [
-                                'quantity' => '(x1 Unit)',
-                                'name' => 'Tv Samsung',
-                                'price' => '25.00'
-                            ],
-                        ],
-                        'products' => [
-                            'total' => '1',
-                            'totalPrice' => '25.00'
-                        ],
-                        'productDiscount' => '0',
-                        'promocionalDiscount' => '0',
-                        'tax' => '0',
-                        'totalOrderPrice' => '25.00'
-                    ],
-                    'receiptOfPayment' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg',
-                    'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
-                ],
-                [
-                    'status' => 1,
-                    'orderPlaced' => '01/01/2023',
-                    'total' => '185.000',
-                    'sendTo' => 'Diego Vidal Caro 3',
-                    'numberOrder' => '123456789',
-                    'detail' => [
-                        'items' => [
-                            [
-                                'quantity' => '(x1 Unit)',
-                                'name' => 'Tv Samsung',
-                                'price' => '25.00'
-                            ],
-                            [
-                                'quantity' => '(x1 Unit)',
-                                'name' => 'Tv Samsung',
-                                'price' => '25.00'
-                            ],
-                            [
-                                'quantity' => '(x1 Unit)',
-                                'name' => 'Tv Samsung',
-                                'price' => '25.00'
-                            ],
-                        ],
-                        'products' => [
-                            'total' => '3',
-                            'totalPrice' => '75.00'
-                        ],
-                        'productDiscount' => '0',
-                        'promocionalDiscount' => '0',
-                        'tax' => '0',
-                        'totalOrderPrice' => '25.00'
-                    ],
-                    'receiptOfPayment' => '',
-                    'bill' => ''
-                ],
-            ],
+            $orderToSend,
             Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );
-
-        $this->customer->getId();
     }
 }
