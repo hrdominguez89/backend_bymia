@@ -146,6 +146,7 @@ class CustomerOrderApiController extends AbstractController
                 [
                     'status_code' => Response::HTTP_CREATED,
                     'order_id' => $pre_order->getId(),
+                    'pre-order-data' => $pre_order,
                     'message' => 'Orden creada correctamente.'
                 ],
                 Response::HTTP_CREATED,
@@ -181,6 +182,14 @@ class CustomerOrderApiController extends AbstractController
 
         switch ($request->getMethod()) {
             case 'GET':
+                return $this->json(
+                    [
+                        'ok' => 'ok',
+                        'order_id' => $order_id
+                    ],
+                    Response::HTTP_OK,
+                    ['Content-Type' => 'application/json']
+                );
                 $order = $ordersRepository->findOrderByCustomerId($this->customer->getId(), $order_id);
                 $items = [];
                 $bill_data = [
@@ -303,7 +312,7 @@ class CustomerOrderApiController extends AbstractController
                     Response::HTTP_OK,
                     ['Content-Type' => 'application/json']
                 );
-            case 'PATCH':
+            case 'POST':
 
                 $body = $request->getContent();
                 $data = json_decode($body, true);
