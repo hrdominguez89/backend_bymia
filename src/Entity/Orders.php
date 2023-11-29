@@ -968,7 +968,7 @@ class Orders
                 "customer_type" => $this->getCustomerType()->getId(),
                 "name" => $this->getCustomerName(),
                 "email" => $this->getCustomerEmail(),
-                "phone_code" => $this->getCustomerPhoneCode()->getId(),
+                "phone_code" => $this->getCustomerPhoneCode() ? $this->getCustomerPhoneCode()->getId() : null,
                 "cel_phone_customer" => $this->getCelPhoneCustomer(),
                 "phone_customer" => $this->getPhoneCustomer(),
                 "customer_identity_type" => $this->getCustomerIdentityType(),
@@ -989,7 +989,7 @@ class Orders
                 "phone_cell" => $this->getReceiverPhoneCell(),
                 "phone_home" => $this->getReceiverPhoneHome(),
                 "email" => $this->getReceiverEmail(),
-                "country_id" => $this->getReceiverCountry()->getId(),
+                "country_id" => $this->getReceiverCountry() ? $this->getReceiverCountry()->getId() : null,
                 "state_id" => $this->getReceiverState() ? $this->getReceiverState()->getId() : null,
                 "city_id" => $this->getReceiverCity() ? $this->getReceiverCity()->getId() : null,
                 "address" => $this->getReceiverAddress(),
@@ -997,8 +997,8 @@ class Orders
                 "additional_info" => $this->getReceiverAdditionalInfo()
             ],
             "bill_address" => [
-                "bill_address_id" => $this->getBillAddress()->getId(),
-                "country_id" => $this->getBillCountry()->getId(),
+                "bill_address_id" => $this->getBillAddress() ? $this->getBillAddress()->getId() : null,
+                "country_id" => $this->getBillCountry() ? $this->getBillCountry()->getId() : null,
                 "state_id" => $this->getBillState() ? $this->getBillState()->getId() : null,
                 "city_id" => $this->getBillCity() ? $this->getBillCity()->getId() : null,
                 "address" => $this->getBillAddressOrder(),
