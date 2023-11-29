@@ -146,7 +146,7 @@ class CustomerOrderApiController extends AbstractController
                 [
                     'status_code' => Response::HTTP_CREATED,
                     'order_id' => $pre_order->getId(),
-                    'pre-order-data' => $pre_order,
+                    'pre-order-data' => $pre_order->generateOrderToCRM(),
                     'message' => 'Orden creada correctamente.'
                 ],
                 Response::HTTP_CREATED,
