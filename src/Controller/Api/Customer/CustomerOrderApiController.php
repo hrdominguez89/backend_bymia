@@ -60,7 +60,7 @@ class CustomerOrderApiController extends AbstractController
 
         // Crear arrays para almacenar los errores
         $errors = [];
-
+        $shopping_cart_products = [];
         // Iterar sobre los productos enviados en la solicitud
         foreach ($data['products'] as $product_cart) {
             $productId = $product_cart['product_id'];
