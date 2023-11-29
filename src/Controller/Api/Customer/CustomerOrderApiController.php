@@ -380,7 +380,7 @@ class CustomerOrderApiController extends AbstractController
                     "promocionalDiscount" => $order->getPromotionalCodeDiscount(),
                     "tax" => $order->getTax(),
                 ],
-                'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '', //revisar, recibe mas de un recibo de recepcion de pago
+                'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
             ];
         }
