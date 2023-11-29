@@ -168,11 +168,32 @@ class CustomerOrderApiController extends AbstractController
         OrdersRepository $ordersRepository
     ): Response {
 
+        if (!(int)$order_id) {
+            return $this->json(
+                [
+                    'status_code' => Response::HTTP_CONFLICT,
+                    'message' => 'El ID indicado, no es valido.'
+                ],
+                Response::HTTP_CONFLICT,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
         $this->customer->getId();
         $order = $ordersRepository->findOneBy([
             'id' => $order_id,
             'customer' => $this->customer->getId()
         ]);
+        if (!$order) {
+            return $this->json(
+                [
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'No se encontron orden con el ID indicado.'
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
         $sumaProductos = 0;
         $sumaTotalPrecioProductos = 0.00;
         $orders_products_array = $order->getOrdersProducts();

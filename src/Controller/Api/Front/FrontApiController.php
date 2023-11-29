@@ -26,6 +26,7 @@ use App\Repository\AdvertisementsRepository;
 use App\Repository\BrandRepository;
 use App\Repository\BrandsSectionsRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\CitiesRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
@@ -34,6 +35,7 @@ use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
 use App\Repository\SectionsHomeRepository;
 use App\Repository\ShoppingCartRepository;
+use App\Repository\StatesRepository;
 use App\Repository\TagRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -543,13 +545,13 @@ class FrontApiController extends AbstractController
             }
 
             $products = $productRepository->findProductRandom($columnas[$code], $order, $tag, $limit, $index);
-            
+
             if ($products) {
                 $products_founded = [];
                 foreach ($products as $product) {
                     $products_founded[] = $product->getBasicDataProduct();
                 }
-    
+
                 return $this->json(
                     $products_founded,
                     Response::HTTP_OK,
@@ -844,6 +846,34 @@ class FrontApiController extends AbstractController
         $countries = $countriesRepository->getCountries();
         return $this->json(
             $countries,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/state-code/{country_id}", name="api_state_code",methods={"GET"})
+     */
+    public function stateCode($country_id, StatesRepository $statesRepository): Response
+    {
+
+        $states = $statesRepository->findVisibleStatesByCountryId($country_id);
+        return $this->json(
+            $states,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/city-code/{state_id}", name="api_city_code",methods={"GET"})
+     */
+    public function cityCode($state_id, CitiesRepository $citiesRepository): Response
+    {
+
+        $cities = $citiesRepository->findVisibleCitiesByStateId($state_id);
+        return $this->json(
+            $cities,
             Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
