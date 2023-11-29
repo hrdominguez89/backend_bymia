@@ -355,30 +355,30 @@ class CustomerOrderApiController extends AbstractController
 
             foreach ($orders_products_array as $order_product) {
                 $orders_products_result[] = [
-                    'quantity' => $order_product->getQuantity(),
+                    'quantity' => '(x'.$order_product->getQuantity().' Unit)',
                     'name' => $order_product->getProduct()->getName(),
-                    'price' => $order_product->getPrice(),
+                    'price' => (string)$order_product->getProduct()->getPrice(),
                 ];
                 $sumaProductos += $order_product->getQuantity();
-                $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getPrice());
+                $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
             }
 
 
             $orderToSend[] = [
-                'status' => $order->getStatus()->getId(),
+                'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
                 'total' => (string) $sumaTotalPrecioProductos, // revisar, podria ser.. $order->getTotalOrder()
                 'sendTo' => $order->getReceiverName() ?: '',
-                'numberOrder' => $order->getId(),
+                'numberOrder' => (string)$order->getId(),
                 'detail' => [
                     'items' => $orders_products_result,
                     'products' => [
-                        'total' => $sumaProductos,
-                        'totalPrice' => $sumaTotalPrecioProductos,
+                        'total' => (string)$sumaProductos,
+                        'totalPrice' => (string)$sumaTotalPrecioProductos,
                     ],
-                    "productDiscount" => $order->getTotalProductDiscount(),
-                    "promocionalDiscount" => $order->getPromotionalCodeDiscount(),
-                    "tax" => $order->getTax(),
+                    "productDiscount" => (string)$order->getTotalProductDiscount()?:'0',
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount()?:'0',
+                    "tax" => (string)$order->getTax()?:'0',
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
