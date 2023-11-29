@@ -83,12 +83,11 @@ class CustomerOrderApiController extends AbstractController
 
             // Verificar disponibilidad de cantidad
             if ($product_on_cart->getProduct()->getAvailable() < $quantity) {
-                $product_on_cart->setQuantity($quantity);
                 $errors['product_quantity_not_available'][] = $product_on_cart->getProduct()->getBasicDataProduct();
 
                 continue;
             }
-
+            $product_on_cart->setQuantity($quantity);
             // Agregar producto al carrito de compras
             $shopping_cart_products[] = $product_on_cart;
         }
