@@ -52,7 +52,8 @@ class CustomerOrderApiController extends AbstractController
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        SendOrderToCrm $sendOrderToCrm
     ): Response {
 
         $body = $request->getContent();
@@ -141,6 +142,7 @@ class CustomerOrderApiController extends AbstractController
         $em->persist($pre_order);
         try {
             $em->flush();
+            $sendOrderToCrm->SendOrderToCrm($pre_order);
             return $this->json(
                 [
                     'status_code' => Response::HTTP_CREATED,
