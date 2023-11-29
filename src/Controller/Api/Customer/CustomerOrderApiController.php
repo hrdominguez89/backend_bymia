@@ -353,15 +353,15 @@ class CustomerOrderApiController extends AbstractController
                             ],
                         ],
                         'products' => [
-                            [
-                                'total' => '1',
-                                'totalPrice' => '25.00'
-                            ],
+                            'total' => '1',
+                            'totalPrice' => '25.00'
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
-                        'tax' => '0'
+                        'tax' => '0',
+                        'totalOrderPrice' => '25.00'
                     ],
+                    'receiptOfPayment' => '',
                     'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
                 ],
                 [
@@ -378,15 +378,15 @@ class CustomerOrderApiController extends AbstractController
                             ],
                         ],
                         'products' => [
-                            [
-                                'total' => '1',
-                                'totalPrice' => '25.00'
-                            ],
+                            'total' => '1',
+                            'totalPrice' => '25.00'
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
-                        'tax' => '0'
+                        'tax' => '0',
+                        'totalOrderPrice' => '25.00'
                     ],
+                    'receiptOfPayment' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg',
                     'bill' => 'https://imagesbymiashop.s3.us-east-1.amazonaws.com/products/HD-SMART-TV-65-648bc3d6b976c.jpg'
                 ],
                 [
@@ -413,19 +413,15 @@ class CustomerOrderApiController extends AbstractController
                             ],
                         ],
                         'products' => [
-                            [
-                                'total' => '1',
-                                'totalPrice' => '25.00'
-                            ],
-                            [
-                                'total' => '1',
-                                'totalPrice' => '25.00'
-                            ],
+                            'total' => '3',
+                            'totalPrice' => '75.00'
                         ],
                         'productDiscount' => '0',
                         'promocionalDiscount' => '0',
-                        'tax' => '0'
+                        'tax' => '0',
+                        'totalOrderPrice' => '25.00'
                     ],
+                    'receiptOfPayment' => '',
                     'bill' => ''
                 ],
             ],
