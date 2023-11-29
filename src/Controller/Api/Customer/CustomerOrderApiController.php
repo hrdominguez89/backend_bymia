@@ -161,172 +161,61 @@ class CustomerOrderApiController extends AbstractController
     }
 
     /**
-     * @Route("/order/{order_id}", name="api_customer_order",methods={"GET","POST"})
+     * @Route("/order/{order_id}", name="api_customer_order_by_id",methods={"GET","POST"})
      */
     public function order(
         $order_id,
-        Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
-        EntityManagerInterface $em,
-        SendOrderToCrm $sendOrderToCrm,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
         OrdersRepository $ordersRepository
-        // CustomerAd
     ): Response {
 
-        switch ($request->getMethod()) {
-            case 'GET':
-                return $this->json(
-                    [
-                        'ok' => 'ok',
-                        'order_id' => $order_id
-                    ],
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-                $order = $ordersRepository->findOrderByCustomerId($this->customer->getId(), $order_id);
-                $items = [];
-                $bill_data = [
-                    "bill_data" => [
-                        "identity_type" => "DNI",
-                        "identity_number" => "34987273",
-                        "country_id" => 11,
-                        "country_name" => "Argentina",
-                        "state_id" => 4545,
-                        "state_name" => "Buenos Aires",
-                        "city_id" => 42022,
-                        "city_name" => "Ciudad Autonoma de Buenos Aires",
-                        "code_zip" => "abc123",
-                        "additional_info" => "informacion adicional",
-                        "address" => "Calle 123 4to A"
-                    ]
-                ];
+        $this->customer->getId();
+        $order = $ordersRepository->findOneBy([
+            'id' => $order_id,
+            'customer' => $this->customer->getId()
+        ]);
+        $sumaProductos = 0;
+        $sumaTotalPrecioProductos = 0.00;
+        $orders_products_array = $order->getOrdersProducts();
+        $orders_products_result = [];
 
-
-                switch ($order->getStatus()->getId()) {
-                    case Constants::STATUS_ORDER_PENDING:
-                        foreach ($order->getOrdersProducts() as $order_product) {
-                            $items[] = [
-                                "id" => $order_product->getProduct()->getId(),
-                                "name" => $order_product->getProduct()->getName(),
-                                "quantity" => $order_product->getQuantity(),
-                                "price" => $order_product->getProduct()->getPrice(),
-                                "discount_price" => $order_product->getProduct()->getDiscountActive() ?  ($order_product->getProduct()->getPrice() - (($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive())) : 0,
-                            ];
-                        }
-                        $order = [
-                            'items' => $items
-                        ];
-                        break;
-                    default:
-                        dd('default case');
-                        break;
-                }
-
-
-                return $this->json(
-                    $order,
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-                /*
-                {
-                    "items": [
-                        {
-                            "id": 10,
-                            "name": "Prueba producto 1",
-                            "quantity": 5,
-                            "price": 10,
-                            "old_price":
-                        },
-                        {
-                            "id": 11,
-                            "name": "Prueba producto 2",
-                            "quantity": 4,
-                            "price": 20,
-                            "old_price":
-                        },
-                        {
-                            "id": 13,
-                            "name": "Prueba producto 3",
-                            "quantity": 1,
-                            "price": 300,
-                            "old_price":
-                        }
-                    ],
-                    "bill_data": {
-                        "identity_type": "DNI",
-                        "identity_number": "34987273",
-                        "country_id": 11,
-                        "country_name": "Argentina",
-                        "state_id": 4545,
-                        "state_name": "Buenos Aires",
-                        "city_id": 42022,
-                        "city_name": "Ciudad Autonoma de Buenos Aires",
-                        "code_zip" : "abc123",
-                        "additional_info": "informacion adicional",
-                        "address": "Calle 123 4to A"
-                    },
-                    "recipients": [
-                        {
-                            "recipient_id": 1,
-                            "country_name": "Argentina",
-                            "state_name": "Córdoba",
-                            "city_name": "Cosquin",
-                            "recipient_name": "Destinatario prueba 1",
-                            "address": "Direccion destinatario 1 23233",
-                            "recipient_phone": "1163549766"
-                        },
-                        {
-                            "recipient_id": 2,
-                            "country_name": "Argentina",
-                            "state_name": "Córdoba",
-                            "city_name": "La falda",
-                            "recipient_name": "Destinatario prueba 2",
-                            "address": "Direccion destinatario 2 23233",
-                            "recipient_phone": "1163549766"
-                        },
-                        {
-                            "recipient_id": 3,
-                            "country_name": "Argentina",
-                            "state_name": "Córdoba",
-                            "city_name": "Córdoba Capital",
-                            "recipient_name": "Destinatario prueba 3",
-                            "address": "Direccion destinatario 3 23233",
-                            "recipient_phone": "1163549766"
-                        }
-                    ]
-                }
-                */
-
-                $order = $ordersRepository->find(['id' => $order_id]);
-
-                return $this->json(
-                    $order->generateOrderToCRM(),
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-            case 'POST':
-
-                $body = $request->getContent();
-                $data = json_decode($body, true);
+        foreach ($orders_products_array as $order_product) {
+            $orders_products_result[] = [
+                'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
+                'name' => $order_product->getProduct()->getName(),
+                'price' => (string)$order_product->getProduct()->getPrice(),
+            ];
+            $sumaProductos += $order_product->getQuantity();
+            $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
         }
 
-        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
 
-        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
-        if (!$shopping_cart_products) {
-            return $this->json(
-                [
-                    "shop_cart_list" => [],
-                    'message' => 'No tiene productos en su lista de carrito.'
+        $orderToSend = [
+            'status' => (string)$order->getStatus()->getId(),
+            'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
+            'total' => (string) $sumaTotalPrecioProductos, // revisar, podria ser.. $order->getTotalOrder()
+            'sendTo' => $order->getReceiverName() ?: '',
+            'numberOrder' => (string)$order->getId(),
+            'detail' => [
+                'items' => $orders_products_result,
+                'products' => [
+                    'total' => (string)$sumaProductos,
+                    'totalPrice' => (string)$sumaTotalPrecioProductos,
                 ],
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
-        }
+                "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
+                "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
+                "tax" => (string)$order->getTax() ?: '0',
+                "totalOrderPrice" => (string)$sumaTotalPrecioProductos,
+            ],
+            'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
+            'bill' => $order->getBillFile() ?: '',
+        ];
+
+
+        return $this->json(
+            $orderToSend,
+            Response::HTTP_ACCEPTED,
+            ['Content-Type' => 'application/json']
+        );
     }
 
     /**
@@ -355,7 +244,7 @@ class CustomerOrderApiController extends AbstractController
 
             foreach ($orders_products_array as $order_product) {
                 $orders_products_result[] = [
-                    'quantity' => '(x'.$order_product->getQuantity().' Unit)',
+                    'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
                     'name' => $order_product->getProduct()->getName(),
                     'price' => (string)$order_product->getProduct()->getPrice(),
                 ];
@@ -376,10 +265,10 @@ class CustomerOrderApiController extends AbstractController
                         'total' => (string)$sumaProductos,
                         'totalPrice' => (string)$sumaTotalPrecioProductos,
                     ],
-                    "productDiscount" => (string)$order->getTotalProductDiscount()?:'0',
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount()?:'0',
-                    "tax" => (string)$order->getTax()?:'0',
-                    "totalOrderPrice"=> (string)$sumaTotalPrecioProductos,
+                    "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
+                    "tax" => (string)$order->getTax() ?: '0',
+                    "totalOrderPrice" => (string)$sumaTotalPrecioProductos,
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
