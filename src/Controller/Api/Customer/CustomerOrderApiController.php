@@ -161,11 +161,12 @@ class CustomerOrderApiController extends AbstractController
     }
 
     /**
-     * @Route("/order/{order_id}", name="api_customer_order_by_id",methods={"GET","POST"})
+     * @Route("/order/{order_id}", name="api_customer_order_by_id",methods={"GET","PATCH"})
      */
     public function order(
         $order_id,
-        OrdersRepository $ordersRepository
+        OrdersRepository $ordersRepository,
+        Request $request
     ): Response {
 
         if (!(int)$order_id) {
@@ -179,11 +180,11 @@ class CustomerOrderApiController extends AbstractController
             );
         }
 
-        $this->customer->getId();
         $order = $ordersRepository->findOneBy([
             'id' => $order_id,
-            'customer' => $this->customer->getId()
+            'customer' => $this->customer->getId(),
         ]);
+
         if (!$order) {
             return $this->json(
                 [
@@ -194,46 +195,69 @@ class CustomerOrderApiController extends AbstractController
                 ['Content-Type' => 'application/json']
             );
         }
-        $sumaProductos = 0;
-        $sumaTotalPrecioProductos = 0.00;
-        $orders_products_array = $order->getOrdersProducts();
-        $orders_products_result = [];
+        if ($order->getStatus()->getId() != Constants::STATUS_ORDER_PENDING) {
+            return $this->json(
+                [
+                    'status' => true,
+                    'status_code' => Response::HTTP_CONFLICT,
+                    'message' => 'Esta orden ya se encuentra procesada.'
+                ],
+                Response::HTTP_CONFLICT,
+                ['Content-Type' => 'application/json']
+            );
+        }
+        if ($request->getMethod() == 'GET') {
+            $sumaProductos = 0;
+            $sumaTotalPrecioProductos = 0.00;
+            $orders_products_array = $order->getOrdersProducts();
+            $orders_products_result = [];
 
-        foreach ($orders_products_array as $order_product) {
-            $orders_products_result[] = [
-                'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
-                'name' => $order_product->getProduct()->getName(),
-                'price' => (string)$order_product->getProduct()->getPrice(),
+            foreach ($orders_products_array as $order_product) {
+                $orders_products_result[] = [
+                    'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
+                    'name' => $order_product->getProduct()->getName(),
+                    'price' => (string)$order_product->getProduct()->getPrice(),
+                ];
+                $sumaProductos += $order_product->getQuantity();
+                $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
+            }
+
+
+            $orderToSend = [
+                'status' => (string)$order->getStatus()->getId(),
+                'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
+                'total' => (string) $sumaTotalPrecioProductos, // revisar, podria ser.. $order->getTotalOrder()
+                'sendTo' => $order->getReceiverName() ?: '',
+                'numberOrder' => (string)$order->getId(),
+                'detail' => [
+                    'items' => $orders_products_result,
+                    'products' => [
+                        'total' => (string)$sumaProductos,
+                        'totalPrice' => (string)$sumaTotalPrecioProductos,
+                    ],
+                    "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
+                    "tax" => (string)$order->getTax() ?: '0',
+                    "totalOrderPrice" => (string)$sumaTotalPrecioProductos,
+                ],
+                'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
+                'bill' => $order->getBillFile() ?: '',
             ];
-            $sumaProductos += $order_product->getQuantity();
-            $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
+
+
+            return $this->json(
+                $orderToSend,
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
         }
 
-
-        $orderToSend = [
-            'status' => (string)$order->getStatus()->getId(),
-            'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-            'total' => (string) $sumaTotalPrecioProductos, // revisar, podria ser.. $order->getTotalOrder()
-            'sendTo' => $order->getReceiverName() ?: '',
-            'numberOrder' => (string)$order->getId(),
-            'detail' => [
-                'items' => $orders_products_result,
-                'products' => [
-                    'total' => (string)$sumaProductos,
-                    'totalPrice' => (string)$sumaTotalPrecioProductos,
-                ],
-                "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
-                "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
-                "tax" => (string)$order->getTax() ?: '0',
-                "totalOrderPrice" => (string)$sumaTotalPrecioProductos,
-            ],
-            'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
-            'bill' => $order->getBillFile() ?: '',
-        ];
-
-
         return $this->json(
-            $orderToSend,
+            [
+                'status' => true,
+                'status_code' => Response::HTTP_ACCEPTED,
+                'message' => 'Su orden ya se encuentra en proceso.'
+            ],
             Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );
