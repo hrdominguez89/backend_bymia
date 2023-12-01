@@ -95,7 +95,7 @@ class CustomerOrderApiController extends AbstractController
 
                 continue;
             }
-            $subTotal += $product_on_cart->getProduct()->getRealPrice();
+            $subTotal += $product_on_cart->getProduct()->getRealPrice()*$quantity;
             $product_on_cart->setQuantity($quantity);
             // Agregar producto al carrito de compras
             $shopping_cart_products[] = $product_on_cart;
