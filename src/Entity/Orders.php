@@ -954,10 +954,9 @@ class Orders
             ];
         }
 
-
         return [
             "order_id" => $this->getId(),
-            "inventory_id" => $this->getInventoryId(),
+            // "inventory_id" => $this->getInventoryId(),
             "created_at" => $this->getCreatedAt()->format('Y-m-d H:i:s'),
             "status_order" => $this->getStatus()->getId(),
             "packages" => $guide_numbers_result,
@@ -989,14 +988,12 @@ class Orders
                 "phone_cell" => $this->getReceiverPhoneCell(),
                 "phone_home" => $this->getReceiverPhoneHome(),
                 "email" => $this->getReceiverEmail(),
-                "destiny"=>[
-                    "country_id" => $this->getReceiverCountry() ? $this->getReceiverCountry()->getId() : null,
-                    "state_id" => $this->getReceiverState() ? $this->getReceiverState()->getId() : null,
-                    "city_id" => $this->getReceiverCity() ? $this->getReceiverCity()->getId() : null,
-                    "address" => $this->getReceiverAddress(),
-                    "cod_zip" => $this->getReceiverCodZip(),
-                    "additional_info" => $this->getReceiverAdditionalInfo()
-                ]
+                "country_id" => $this->getReceiverCountry() ? $this->getReceiverCountry()->getId() : null,
+                "state_id" => $this->getReceiverState() ? $this->getReceiverState()->getId() : null,
+                "city_id" => $this->getReceiverCity() ? $this->getReceiverCity()->getId() : null,
+                "address" => $this->getReceiverAddress(),
+                "cod_zip" => $this->getReceiverCodZip(),
+                "additional_info" => $this->getReceiverAdditionalInfo()
             ],
             "bill_address" => [
                 "bill_address_id" => $this->getBillAddress() ? $this->getBillAddress()->getId() : null,
