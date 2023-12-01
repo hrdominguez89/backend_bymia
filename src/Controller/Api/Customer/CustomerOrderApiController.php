@@ -66,7 +66,7 @@ class CustomerOrderApiController extends AbstractController
         $data = json_decode($body, true);
 
 
-        $subTotal=0;
+        $subTotal = 0;
         // Crear arrays para almacenar los errores
         $errors = [];
         $shopping_cart_products = [];
@@ -95,7 +95,7 @@ class CustomerOrderApiController extends AbstractController
 
                 continue;
             }
-            $subTotal += $product_on_cart->getProduct()->getRealPrice()*$quantity;
+            $subTotal += $product_on_cart->getProduct()->getRealPrice() * $quantity;
             $product_on_cart->setQuantity($quantity);
             // Agregar producto al carrito de compras
             $shopping_cart_products[] = $product_on_cart;
@@ -298,8 +298,8 @@ class CustomerOrderApiController extends AbstractController
         $customer_address->setRegistrationDate(new \DateTime());
         $customer_address->setActive(true);
         $customer_address->setCountry($country_bill);
-        $customer_address->setState($statesRepository->find($request->get('customer_addresses')['state']));
-        $customer_address->setCity($citiesRepository->find($request->get('customer_addresses')['city']));
+        $customer_address->setState($state_bill);
+        $customer_address->setCity($city_bill);
         $customer_address->setRegistrationType($registration_type_id);
         $customer_address->setPostalCode($data['order']['billData']['code_zip']);
         $customer_address->setAdditionalInfo($data['order']['billData']['additional_info']);
