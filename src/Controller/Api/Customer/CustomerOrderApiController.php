@@ -281,13 +281,13 @@ class CustomerOrderApiController extends AbstractController
 
         $status_order_id = $statusOrderTypeRepository->find(Constants::STATUS_ORDER_OPEN);
         $registration_type_id = $registrationTypeRepository->find(1); //1 =  registracion web
-        $country_bill = $countriesRepository->find($data['billData']['country_id']);
-        $state_bill = $statesRepository->find($data['billData']['state_id']);
-        $city_bill = $citiesRepository->find($data['billData']['city_id']);
+        $country_bill = $countriesRepository->find($data['order']['billData']['country_id']);
+        $state_bill = $statesRepository->find($data['order']['billData']['state_id']);
+        $city_bill = $citiesRepository->find($data['order']['billData']['city_id']);
 
-        $country_recipient = $countriesRepository->find($data['recipient']['country_id']);
-        $state_recipient = $statesRepository->find($data['recipient']['state_id']);
-        $city_recipient = $citiesRepository->find($data['recipient']['city_id']);
+        $country_recipient = $countriesRepository->find($data['order']['recipient']['country_id']);
+        $state_recipient = $statesRepository->find($data['order']['recipient']['state_id']);
+        $city_recipient = $citiesRepository->find($data['order']['recipient']['city_id']);
 
         //esto setea international shipping = 2
         $international_shipping_id = $shippingTypesRepository->find(2);
@@ -301,8 +301,8 @@ class CustomerOrderApiController extends AbstractController
         $customer_address->setState($statesRepository->find($request->get('customer_addresses')['state']));
         $customer_address->setCity($citiesRepository->find($request->get('customer_addresses')['city']));
         $customer_address->setRegistrationType($registration_type_id);
-        $customer_address->setPostalCode($data['billData']['code_zip']);
-        $customer_address->setAdditionalInfo($data['billData']['additional_info']);
+        $customer_address->setPostalCode($data['order']['billData']['code_zip']);
+        $customer_address->setAdditionalInfo($data['order']['billData']['additional_info']);
         $customer_address->setHomeAddress(false);
         $customer_address->setBillingAddress(true);
         $customerAddressesRepository->updateBillingAddress($this->customer->getId());
@@ -316,13 +316,13 @@ class CustomerOrderApiController extends AbstractController
         $recipient_address->setCountry($country_recipient);
         $recipient_address->setState($state_recipient);
         $recipient_address->setCity($city_recipient);
-        $recipient_address->setName($data['recipient']['name']);
-        $recipient_address->setIdentityType($data['recipient']['identity_type']);
-        $recipient_address->setIdentityNumber($data['recipient']['identity_number']);
-        $recipient_address->setAddress($data['recipient']['address']);
-        $recipient_address->setZipCode($data['recipient']['code_zip']);
-        $recipient_address->setPhone($data['recipient']['phone']);
-        $recipient_address->setEmail($data['recipient']['email']);
+        $recipient_address->setName($data['order']['recipient']['name']);
+        $recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
+        $recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
+        $recipient_address->setAddress($data['order']['recipient']['address']);
+        $recipient_address->setZipCode($data['order']['recipient']['code_zip']);
+        $recipient_address->setPhone($data['order']['recipient']['phone']);
+        $recipient_address->setEmail($data['order']['recipient']['email']);
         $entityManager->persist($recipient_address);
 
 
@@ -342,24 +342,24 @@ class CustomerOrderApiController extends AbstractController
         $order->setBillCountry($country_bill);
         $order->setBillState($state_bill);
         $order->setBillCity($city_bill);
-        $order->setCustomerIdentityType($data['billData']['identity_type']);
-        $order->setCustomerIdentityNumber($data['billData']['identity_number']);
+        $order->setCustomerIdentityType($data['order']['billData']['identity_type']);
+        $order->setCustomerIdentityNumber($data['order']['billData']['identity_number']);
         $order->setInternationalShipping(TRUE);
         $order->setShipping(TRUE);
-        $order->setBillAddressOrder($data['billData']['address']); //ver de insertar en customer address
-        $order->setBillPostalCode($data['billData']['code_zip']); //ver de insertar en customer address
-        $order->setBillAdditionalInfo($data['billData']['additional_info'] ?: null); //ver de insertar en customer address
+        $order->setBillAddressOrder($data['order']['billData']['address']); //ver de insertar en customer address
+        $order->setBillPostalCode($data['order']['billData']['code_zip']); //ver de insertar en customer address
+        $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: null); //ver de insertar en customer address
         $order->setReceiverCountry($country_recipient);
         $order->setReceiverState($state_recipient);
         $order->setReceiverCity($city_recipient);
-        $order->setReceiverName($data['recipient']['name']);
-        $order->setReceiverDocumentType($data['recipient']['identity_type']);
-        $order->setReceiverDocument($data['recipient']['identity_number']);
-        $order->setReceiverPhoneCell($data['recipient']['phone']);
-        $order->setReceiverEmail($data['recipient']['email']);
-        $order->setReceiverAddress($data['recipient']['address']);
-        $order->setReceiverCodZip($data['recipient']['code_zip']);
-        $order->setReceiverAdditionalInfo($data['recipient']['additional_info'] ?: null);
+        $order->setReceiverName($data['order']['recipient']['name']);
+        $order->setReceiverDocumentType($data['order']['recipient']['identity_type']);
+        $order->setReceiverDocument($data['order']['recipient']['identity_number']);
+        $order->setReceiverPhoneCell($data['order']['recipient']['phone']);
+        $order->setReceiverEmail($data['order']['recipient']['email']);
+        $order->setReceiverAddress($data['order']['recipient']['address']);
+        $order->setReceiverCodZip($data['order']['recipient']['code_zip']);
+        $order->setReceiverAdditionalInfo($data['order']['recipient']['additional_info'] ?: null);
         $order->setShippingType($international_shipping_id);
         $order->setRecipient($recipient_address);
 
