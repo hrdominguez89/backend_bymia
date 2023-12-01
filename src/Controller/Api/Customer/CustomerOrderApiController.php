@@ -186,7 +186,8 @@ class CustomerOrderApiController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         CustomerAddressesRepository $customerAddressesRepository,
-        RegistrationTypeRepository $registrationTypeRepository
+        RegistrationTypeRepository $registrationTypeRepository,
+        SendOrderToCrm $sendOrderToCrm
     ): Response {
 
         if (!(int)$order_id) {
@@ -367,8 +368,12 @@ class CustomerOrderApiController extends AbstractController
             $order->setShippingType($international_shipping_id);
             $order->setRecipient($recipient_address);
 
+            //envio por helper los datos del cliente al crm
+
             $entityManager->persist($order);
             $entityManager->flush();
+
+            $sendOrderToCrm->SendOrderToCrm($order);
 
             //actualizar orden con los datos de contacto.
 
