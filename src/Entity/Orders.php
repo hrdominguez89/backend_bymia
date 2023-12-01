@@ -913,7 +913,7 @@ class Orders
                 'qty' => $order_product->getQuantity(),
                 'weight' => $order_product->getProduct()->getWeight(),
                 'price' => $order_product->getProduct()->getPrice(),
-                'discount' => $order_product->getProduct()->getDiscount()
+                'discount' => $order_product->getProduct()->getDiscountActive() ?: 0
             ];
         }
 
