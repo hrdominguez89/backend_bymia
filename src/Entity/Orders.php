@@ -910,10 +910,10 @@ class Orders
             $orders_products_result[] = [
                 'product_id' => $order_product->getProduct()->getId3pl(),
                 'product_name' => $order_product->getProduct()->getName(),
-                'qty' => $order_product->getQuantity(),
-                'weight' => $order_product->getWeight(),
-                'price' => $order_product->getPrice(),
-                'discount' => $order_product->getDiscount()
+                'qty' => $order_product->getProduct()->getQuantity(),
+                'weight' => $order_product->getProduct()->getWeight(),
+                'price' => $order_product->getProduct()->getPrice(),
+                'discount' => $order_product->getProduct()->getDiscount()
             ];
         }
 
