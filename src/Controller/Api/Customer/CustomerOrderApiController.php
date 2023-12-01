@@ -300,6 +300,7 @@ class CustomerOrderApiController extends AbstractController
         $customer_address->setCountry($country_bill);
         $customer_address->setState($state_bill);
         $customer_address->setCity($city_bill);
+        $customer_address->setStreet($data['order']['billData']['address']);
         $customer_address->setRegistrationType($registration_type_id);
         $customer_address->setPostalCode($data['order']['billData']['code_zip']);
         $customer_address->setAdditionalInfo($data['order']['billData']['additional_info']);
