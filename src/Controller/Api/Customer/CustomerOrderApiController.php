@@ -359,7 +359,7 @@ class CustomerOrderApiController extends AbstractController
         $order->setReceiverEmail($data['order']['recipient']['email']);
         $order->setReceiverAddress($data['order']['recipient']['address']);
         $order->setReceiverCodZip($data['order']['recipient']['code_zip']);
-        $order->setReceiverAdditionalInfo($data['order']['recipient']['additional_info'] ?: null);
+        $order->setReceiverAdditionalInfo($data['order']['recipient']['additional_info'] ?: '');
         $order->setShippingType($international_shipping_id);
         $order->setRecipient($recipient_address);
 
