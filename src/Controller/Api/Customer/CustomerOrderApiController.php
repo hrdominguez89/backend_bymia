@@ -383,6 +383,7 @@ class CustomerOrderApiController extends AbstractController
             return $this->json(
                 [
                     'status' => true,
+                    'orden'=>$order->generateOrderToCRM(),
                     'status_code' => Response::HTTP_ACCEPTED,
                     'message' => 'Su orden ya se encuentra en proceso.'
                 ],
