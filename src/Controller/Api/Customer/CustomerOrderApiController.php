@@ -272,117 +272,129 @@ class CustomerOrderApiController extends AbstractController
             );
         }
 
+
+        //revisar que los productos sigan estando disponibles.
+
         // SI ES PATCH ACTUALIZA LA ORDEN Y PASA A ESTADO ACEPTADO
         //$order <-- ya tengo la orden
         //$this->customer <-- el cliente.
+        try {
+            $body = $request->getContent();
+            $data = json_decode($body, true);
 
-        $body = $request->getContent();
-        $data = json_decode($body, true);
+            $status_order_id = $statusOrderTypeRepository->find(Constants::STATUS_ORDER_OPEN);
+            $registration_type_id = $registrationTypeRepository->find(1); //1 =  registracion web
+            $country_bill = $countriesRepository->find($data['order']['billData']['country_id']);
+            $state_bill = $statesRepository->find($data['order']['billData']['state_id']);
+            $city_bill = $citiesRepository->find($data['order']['billData']['city_id']);
 
-        $status_order_id = $statusOrderTypeRepository->find(Constants::STATUS_ORDER_OPEN);
-        $registration_type_id = $registrationTypeRepository->find(1); //1 =  registracion web
-        $country_bill = $countriesRepository->find($data['order']['billData']['country_id']);
-        $state_bill = $statesRepository->find($data['order']['billData']['state_id']);
-        $city_bill = $citiesRepository->find($data['order']['billData']['city_id']);
+            $country_recipient = $countriesRepository->find($data['order']['recipient']['country_id']);
+            $state_recipient = $statesRepository->find($data['order']['recipient']['state_id']);
+            $city_recipient = $citiesRepository->find($data['order']['recipient']['city_id']);
 
-        $country_recipient = $countriesRepository->find($data['order']['recipient']['country_id']);
-        $state_recipient = $statesRepository->find($data['order']['recipient']['state_id']);
-        $city_recipient = $citiesRepository->find($data['order']['recipient']['city_id']);
+            //esto setea international shipping = 2
+            $international_shipping_id = $shippingTypesRepository->find(2);
 
-        //esto setea international shipping = 2
-        $international_shipping_id = $shippingTypesRepository->find(2);
+            //SETEO DIRECCION DEL CLIENTE COMO DIRECCION DE FACTURACION
+            $customer_address = new CustomerAddresses();
+            $customer_address->setCustomer($this->customer);
+            $customer_address->setRegistrationDate(new \DateTime());
+            $customer_address->setActive(true);
+            $customer_address->setCountry($country_bill);
+            $customer_address->setState($state_bill);
+            $customer_address->setCity($city_bill);
+            $customer_address->setStreet($data['order']['billData']['address']);
+            $customer_address->setRegistrationType($registration_type_id);
+            $customer_address->setPostalCode($data['order']['billData']['code_zip']);
+            $customer_address->setAdditionalInfo($data['order']['billData']['additional_info']);
+            $customer_address->setHomeAddress(false);
+            $customer_address->setBillingAddress(true);
+            $customerAddressesRepository->updateBillingAddress($this->customer->getId());
+            $entityManager = $em;
+            $entityManager->persist($customer_address);
 
-        //SETEO DIRECCION DEL CLIENTE COMO DIRECCION DE FACTURACION
-        $customer_address = new CustomerAddresses();
-        $customer_address->setCustomer($this->customer);
-        $customer_address->setRegistrationDate(new \DateTime());
-        $customer_address->setActive(true);
-        $customer_address->setCountry($country_bill);
-        $customer_address->setState($state_bill);
-        $customer_address->setCity($city_bill);
-        $customer_address->setStreet($data['order']['billData']['address']);
-        $customer_address->setRegistrationType($registration_type_id);
-        $customer_address->setPostalCode($data['order']['billData']['code_zip']);
-        $customer_address->setAdditionalInfo($data['order']['billData']['additional_info']);
-        $customer_address->setHomeAddress(false);
-        $customer_address->setBillingAddress(true);
-        $customerAddressesRepository->updateBillingAddress($this->customer->getId());
-        $entityManager = $em;
-        $entityManager->persist($customer_address);
+            //SETEO direccion del destinatario
 
-        //SETEO direccion del destinatario
-
-        $recipient_address = new Recipients();
-        $recipient_address->setCustomer($this->customer);
-        $recipient_address->setCountry($country_recipient);
-        $recipient_address->setState($state_recipient);
-        $recipient_address->setCity($city_recipient);
-        $recipient_address->setName($data['order']['recipient']['name']);
-        $recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
-        $recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
-        $recipient_address->setAddress($data['order']['recipient']['address']);
-        $recipient_address->setZipCode($data['order']['recipient']['code_zip']);
-        $recipient_address->setPhone($data['order']['recipient']['phone']);
-        $recipient_address->setEmail($data['order']['recipient']['email']);
-        $entityManager->persist($recipient_address);
+            $recipient_address = new Recipients();
+            $recipient_address->setCustomer($this->customer);
+            $recipient_address->setCountry($country_recipient);
+            $recipient_address->setState($state_recipient);
+            $recipient_address->setCity($city_recipient);
+            $recipient_address->setName($data['order']['recipient']['name']);
+            $recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
+            $recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
+            $recipient_address->setAddress($data['order']['recipient']['address']);
+            $recipient_address->setZipCode($data['order']['recipient']['code_zip']);
+            $recipient_address->setPhone($data['order']['recipient']['phone']);
+            $recipient_address->setEmail($data['order']['recipient']['email']);
+            $entityManager->persist($recipient_address);
 
 
-        //por ahora esto se setea a 0
-        $order->setTotalProductDiscount(0);
-        $order->setPromotionalCodeDiscount(0);
-        $order->setTax(0);
-        $order->setShippingCost(0);
-        $order->setShippingDiscount(0);
-        $order->setPaypalServiceCost(0);
-        //
+            //por ahora esto se setea a 0
+            $order->setTotalProductDiscount(0);
+            $order->setPromotionalCodeDiscount(0);
+            $order->setTax(0);
+            $order->setShippingCost(0);
+            $order->setShippingDiscount(0);
+            $order->setPaypalServiceCost(0);
+            //
 
-        $order->setTotalOrder($order->getSubtotal());
+            $order->setTotalOrder($order->getSubtotal());
 
-        $order->setStatus($status_order_id);
-        $order->setBillAddress($customer_address);
-        $order->setBillCountry($country_bill);
-        $order->setBillState($state_bill);
-        $order->setBillCity($city_bill);
-        $order->setCustomerIdentityType($data['order']['billData']['identity_type']);
-        $order->setCustomerIdentityNumber($data['order']['billData']['identity_number']);
-        $order->setInternationalShipping(TRUE);
-        $order->setShipping(TRUE);
-        $order->setBillAddressOrder($data['order']['billData']['address']); //ver de insertar en customer address
-        $order->setBillPostalCode($data['order']['billData']['code_zip']); //ver de insertar en customer address
-        $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: null); //ver de insertar en customer address
-        $order->setReceiverCountry($country_recipient);
-        $order->setReceiverState($state_recipient);
-        $order->setReceiverCity($city_recipient);
-        $order->setReceiverName($data['order']['recipient']['name']);
-        $order->setReceiverDocumentType($data['order']['recipient']['identity_type']);
-        $order->setReceiverDocument($data['order']['recipient']['identity_number']);
-        $order->setReceiverPhoneCell($data['order']['recipient']['phone']);
-        $order->setReceiverEmail($data['order']['recipient']['email']);
-        $order->setReceiverAddress($data['order']['recipient']['address']);
-        $order->setReceiverCodZip($data['order']['recipient']['code_zip']);
-        $order->setReceiverAdditionalInfo($data['order']['recipient']['additional_info'] ?: '');
-        $order->setShippingType($international_shipping_id);
-        $order->setRecipient($recipient_address);
+            $order->setStatus($status_order_id);
+            $order->setBillAddress($customer_address);
+            $order->setBillCountry($country_bill);
+            $order->setBillState($state_bill);
+            $order->setBillCity($city_bill);
+            $order->setCustomerIdentityType($data['order']['billData']['identity_type']);
+            $order->setCustomerIdentityNumber($data['order']['billData']['identity_number']);
+            $order->setInternationalShipping(TRUE);
+            $order->setShipping(TRUE);
+            $order->setBillAddressOrder($data['order']['billData']['address']); //ver de insertar en customer address
+            $order->setBillPostalCode($data['order']['billData']['code_zip']); //ver de insertar en customer address
+            $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: null); //ver de insertar en customer address
+            $order->setReceiverCountry($country_recipient);
+            $order->setReceiverState($state_recipient);
+            $order->setReceiverCity($city_recipient);
+            $order->setReceiverName($data['order']['recipient']['name']);
+            $order->setReceiverDocumentType($data['order']['recipient']['identity_type']);
+            $order->setReceiverDocument($data['order']['recipient']['identity_number']);
+            $order->setReceiverPhoneCell($data['order']['recipient']['phone']);
+            $order->setReceiverEmail($data['order']['recipient']['email']);
+            $order->setReceiverAddress($data['order']['recipient']['address']);
+            $order->setReceiverCodZip($data['order']['recipient']['code_zip']);
+            $order->setReceiverAdditionalInfo($data['order']['recipient']['additional_info'] ?: '');
+            $order->setShippingType($international_shipping_id);
+            $order->setRecipient($recipient_address);
 
-        $entityManager->persist($order);
-        $entityManager->flush();
-        //revisar que los productos sigan estando disponibles.
+            $entityManager->persist($order);
+            $entityManager->flush();
 
-        //actualizar orden con los datos de contacto.
+            //actualizar orden con los datos de contacto.
 
-        //enviar orden al crm
+            //enviar orden al crm
 
-        //retornar mensaje ok
-        return $this->json(
-            [
-                'status' => true,
-                'orden' => $order->generateOrderToCRM(),
-                'status_code' => Response::HTTP_ACCEPTED,
-                'message' => 'Su orden ya se encuentra en proceso.'
-            ],
-            Response::HTTP_ACCEPTED,
-            ['Content-Type' => 'application/json']
-        );
+            //retornar mensaje ok
+            return $this->json(
+                [
+                    'status' => true,
+                    'status_code' => Response::HTTP_ACCEPTED,
+                    'message' => 'Su orden ya se encuentra en proceso.'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        } catch (Exception $e) {
+            return $this->json(
+                [
+                    'status' => true,
+                    'status_code' => Response::HTTP_ACCEPTED,
+                    'message' => 'Error: ' . $e->getMessage()
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        }
     }
 
     /**
