@@ -18,7 +18,7 @@ class FileUploader
     {
         $this->filesystem = $filesystem;
         $this->slugger = $slugger;
-        $this->enviro = $_ENV['APP_ENV'] === 'dev' ? '' : '';//esto a puntaba a la carpeta testing en el s3, la saque x seguridad
+        $this->enviro = $_ENV['APP_ENV'] === 'dev' ? '' : '';//esto a puntaba a la carpeta testing en el s3, la saque x seguridad/
     }
 
     public function upload(UploadedFile $file, $nombre, $path = false): string
