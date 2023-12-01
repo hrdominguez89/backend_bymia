@@ -387,11 +387,11 @@ class CustomerOrderApiController extends AbstractController
         } catch (Exception $e) {
             return $this->json(
                 [
-                    'status' => true,
-                    'status_code' => Response::HTTP_ACCEPTED,
+                    'status' => false,
+                    'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
                     'message' => 'Error: ' . $e->getMessage()
                 ],
-                Response::HTTP_ACCEPTED,
+                Response::HTTP_INTERNAL_SERVER_ERROR,
                 ['Content-Type' => 'application/json']
             );
         }
