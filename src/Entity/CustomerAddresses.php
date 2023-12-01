@@ -47,17 +47,17 @@ class CustomerAddresses
     private $street;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     public $number_street;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $floor;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $department;
 
@@ -93,6 +93,7 @@ class CustomerAddresses
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customerAddresses")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $registration_user;
 

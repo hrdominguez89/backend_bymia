@@ -1111,6 +1111,11 @@ class Product
         return $discountActive->first() ? $discountActive->first()->getPercentageDiscount() : null;
     }
 
+
+    public function getRealPrice(){
+        return $this->getDiscountActive() ?  ($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())) : $this->getPrice();
+    }
+
     public function getBasicDataProduct()
     {
         return [
