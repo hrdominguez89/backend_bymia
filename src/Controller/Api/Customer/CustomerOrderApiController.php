@@ -351,9 +351,12 @@ class CustomerOrderApiController extends AbstractController
             $order->setCustomerIdentityNumber($data['order']['billData']['identity_number']);
             $order->setInternationalShipping(TRUE);
             $order->setShipping(TRUE);
-            $order->setBillAddressOrder($data['order']['billData']['address']); //ver de insertar en customer address
-            $order->setBillPostalCode($data['order']['billData']['code_zip']); //ver de insertar en customer address
-            $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: null); //ver de insertar en customer address
+            $order->setBillAddressOrder($data['order']['billData']['address']);
+            $order->setBillPostalCode($data['order']['billData']['code_zip']);
+            $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: null);
+            $order->setBillName($data['order']['billData']['name']);
+            $order->setBillIdentityType($data['order']['billData']['identity_type']);
+            $order->setBillIdentityNumber($data['order']['billData']['identity_number']);
             $order->setReceiverCountry($country_recipient);
             $order->setReceiverState($state_recipient);
             $order->setReceiverCity($city_recipient);
@@ -383,7 +386,7 @@ class CustomerOrderApiController extends AbstractController
             return $this->json(
                 [
                     'status' => true,
-                    'orden'=>$order->generateOrderToCRM(),
+                    'orden' => $order->generateOrderToCRM(),
                     'status_code' => Response::HTTP_ACCEPTED,
                     'message' => 'Su orden ya se encuentra en proceso.'
                 ],
