@@ -122,9 +122,9 @@ class CustomerAddressApiController extends AbstractController
             [
                 'customerData' => $customerData,
                 'status' => TRUE,
-                'status_code' => Response::HTTP_NOT_FOUND,
+                'status_code' => Response::HTTP_OK,
             ],
-            Response::HTTP_NOT_FOUND,
+            Response::HTTP_OK,
             ['Content-Type' => 'application/json']
         );
     }
