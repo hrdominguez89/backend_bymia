@@ -307,6 +307,21 @@ class Orders
      */
     private $shipping_type;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $bill_name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $bill_identity_type;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $bill_identity_number;
+
     public function __construct()
     {
         $this->guideNumbers = new ArrayCollection();
@@ -1316,6 +1331,42 @@ class Orders
     public function setShippingType(?ShippingTypes $shipping_type): self
     {
         $this->shipping_type = $shipping_type;
+
+        return $this;
+    }
+
+    public function getBillName(): ?string
+    {
+        return $this->bill_name;
+    }
+
+    public function setBillName(?string $bill_name): self
+    {
+        $this->bill_name = $bill_name;
+
+        return $this;
+    }
+
+    public function getBillIdentityType(): ?string
+    {
+        return $this->bill_identity_type;
+    }
+
+    public function setBillIdentityType(?string $bill_identity_type): self
+    {
+        $this->bill_identity_type = $bill_identity_type;
+
+        return $this;
+    }
+
+    public function getBillIdentityNumber(): ?string
+    {
+        return $this->bill_identity_number;
+    }
+
+    public function setBillIdentityNumber(?string $bill_identity_number): self
+    {
+        $this->bill_identity_number = $bill_identity_number;
 
         return $this;
     }
