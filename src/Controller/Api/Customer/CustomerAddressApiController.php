@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 
 /**
- * @Route("/api/customer")
+ * @Route("/api/customer/data")
  */
 class CustomerAddressApiController extends AbstractController
 {
@@ -42,10 +42,97 @@ class CustomerAddressApiController extends AbstractController
         $this->customer = $customerRepository->findOneBy(['email' => $username]);
     }
 
+
     /**
-     * @Route("/pre-ordera", name="api_customer_pre_ordera",methods={"POST"})
+     * @Route("", name="customer_full_data",methods={"GET"})
      */
-    public function preOrder(
+    public function fullDataCustomer(
+        ShoppingCartRepository $shoppingCartRepository,
+        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
+        EntityManagerInterface $em,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        ProductRepository $productRepository
+    ): Response {
+        if (!$this->customer) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'Cliente no encontrado.'
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $customerData = [
+            'code_id' => $this->customer->getId(),
+            'type_user' => $this->customer->getCustomerTypeRole()->getName(),
+            'name' => $this->customer->getName(),
+            'email' => $this->customer->getEmail(),
+            'phone' => (string)$this->customer->getPhone() ? $this->customer->getCountryPhoneCode()->getPhonecode() . ($this->customer->getStateCodePhone() ? $this->customer->getStateCodePhone() : '') . $this->customer->getPhone() : '',
+            'gender' => $this->customer->getGenderType()->getDescription(),
+            'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
+            'latest_billing_data' => [
+                'code_id' => 1,
+                'type_user' => null,
+                'name' => 'Nombre Facturacion',
+                'email' => 'factura@factura.com',
+                'phone' => '1112223344',
+                'identity_type' => 'dni',
+                'identity_number' => '34987273',
+                'country' => 'República Dominicana',
+                'state' => 'Estado de RD',
+                'city' => 'Ciudad de RD',
+                'address' => 'CALLE AVENIDA SIEMPRE VIVA',
+                'zip_code' => '1027'
+            ],
+            'my_addresses' => [
+                [
+                    'name' => 'Nombre de la persona',
+                    'phone' => '11199922288',
+                    'country' => 'República Dominicana',
+                    'state' => 'Estado de RD',
+                    'city' => 'Ciudad de RD',
+                    'zip_code' => '1234',
+                    'address' => 'Avenida 1'
+                ],
+                [
+                    'name' => 'Nombre de la persona',
+                    'phone' => '11199922288',
+                    'country' => 'República Dominicana',
+                    'state' => 'Estado de RD',
+                    'city' => 'Ciudad de RD',
+                    'zip_code' => '1234',
+                    'address' => 'Avenida 2'
+                ],
+                [
+                    'name' => 'Nombre de la persona',
+                    'phone' => '11199922288',
+                    'country' => 'República Dominicana',
+                    'state' => 'Estado de RD',
+                    'city' => 'Ciudad de RD',
+                    'zip_code' => '1234',
+                    'address' => 'Avenida 3'
+                ],
+            ]
+        ];
+
+        return $this->json(
+            [
+                'customerData' => $customerData,
+                'status' => TRUE,
+                'status_code' => Response::HTTP_NOT_FOUND,
+            ],
+            Response::HTTP_NOT_FOUND,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/bill", name="customer_bill_data",methods={"GET"})
+     */
+    public function billData(
         Request $request,
         StatusOrderTypeRepository $statusOrderTypeRepository,
         ShoppingCartRepository $shoppingCartRepository,
@@ -55,205 +142,38 @@ class CustomerAddressApiController extends AbstractController
         ProductRepository $productRepository
     ): Response {
 
-        $body = $request->getContent();
-        $data = json_decode($body, true);
-
-        // Crear arrays para almacenar los errores
-        $errors = [];
-
-        // Iterar sobre los productos enviados en la solicitud
-        foreach ($data['products'] as $product_cart) {
-            $productId = $product_cart['product_id'];
-            $quantity = $product_cart['quantity'];
-
-            // Verificar si el producto existe y está activo
-            $product = $productRepository->findActiveProductById($productId);
-            if (!$product) {
-                $errors['product_not_found'][] = $productId;
-                continue;
-            }
-
-            // Verificar si el producto está en el carrito de compras
-            $product_on_cart = $shoppingCartRepository->findShoppingCartProductByStatus($productId, $this->customer->getId(), Constants::STATUS_SHOPPING_CART_ACTIVO);
-            if (!$product_on_cart) {
-                $errors['product_not_added_cart'][] = $product->getBasicDataProduct();
-                continue;
-            }
-
-            // Verificar disponibilidad de cantidad
-            if ($product_on_cart->getAvailable() < $quantity) {
-                $product_on_cart->setQuantity($quantity);
-                $errors['product_quantity_not_available'][] = $product_on_cart->getBasicDataProduct();
-                
-                continue;
-            }
-
-            // Agregar producto al carrito de compras
-            $shopping_cart_products[] = $product_on_cart;
-        }
-
-        // Verificar si hubo errores
-        if (!empty($errors)) {
-            $response = [
-                "status_code" => Response::HTTP_CONFLICT,
-                'message' => 'Error al intentar agregar uno o más productos a la orden.',
-                "errors" => $errors
-            ];
-            return $this->json($response, Response::HTTP_CONFLICT, ['Content-Type' => 'application/json']);
-        }
-
-        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
-        $pre_order = new Orders();
-
-        $pre_order
-            ->setCustomer($this->customer)
-            ->setCustomerType($this->customer->getCustomerTypeRole())
-            ->setCustomerName($this->customer->getName())
-            ->setCustomerEmail($this->customer->getEmail())
-            ->setCustomerPhoneCode($this->customer->getCountryPhoneCode())
-            ->setCelPhoneCustomer($this->customer->getCelPhone())
-            ->setPhoneCustomer($this->customer->getPhone() ?: null)
-            ->setStatusSentCrm($status_sent_crm)
-            ->setAttemptsSendCrm(0)
-            ->setStatus($statusOrderTypeRepository->findOneBy(["id" => Constants::STATUS_ORDER_PENDING]))
-            ->setCreatedAt(new \DateTime())
-            ->setWarehouse($shopping_cart_products[0]->getProduct()->getInventory()->getWarehouse()) //revisar porque estoy forzando a un warehouse
-            ->setInventoryId($shopping_cart_products[0]->getProduct()->getInventory()->getId()); //revisar porque estoy forzando a un inventario
-
-        foreach ($shopping_cart_products as $shopping_cart_product) {
-            $shopping_cart_product->setStatus($statusTypeShoppingCartRepository->findOneBy(["id" => Constants::STATUS_SHOPPING_CART_EN_ORDEN]));
-            $order_product = new OrdersProducts();
-            $order_product
-                ->setNumberOrder($pre_order)
-                ->setProduct($shopping_cart_product->getProduct())
-                ->setName($shopping_cart_product->getProduct()->getName())
-                ->setSku($shopping_cart_product->getProduct()->getSku())
-                ->setPartNumber($shopping_cart_product->getProduct()->getPartNumber()?:null)
-                ->setCod($shopping_cart_product->getProduct()->getCod()?:null)
-                ->setWeight($shopping_cart_product->getProduct()->getWeight()?:null)
-                ->setQuantity($shopping_cart_product->getQuantity())
-            ;
-            $em->persist($order_product);
-            $em->persist($shopping_cart_product);
-
-            $pre_order->addOrdersProduct($order_product);
-        }
-
-        $em->persist($pre_order);
-        try {
-            $em->flush();
-            return $this->json(
-                [
-                    'status_code' => Response::HTTP_CREATED,
-                    'order_id' => $pre_order->getId(),
-                    'message' => 'Orden creada correctamente.'
-                ],
-                Response::HTTP_CREATED,
-                ['Content-Type' => 'application/json']
-            );
-        } catch (Exception $e) {
-            return $this->json(
-                [
-                    'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                    'message' => $e->getMessage()
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-                ['Content-Type' => 'application/json']
-            );
-        }
+        return $this->json(
+            [
+                'status' => false,
+                'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Mensaje de error'
+            ],
+            Response::HTTP_INTERNAL_SERVER_ERROR,
+            ['Content-Type' => 'application/json']
+        );
     }
 
     /**
-     * @Route("/ordera/{id}", name="api_customer_ordera",methods={"GET","POST"})
+     * @Route("/recipient", name="customer_recipient_data",methods={"GET"})
      */
-    public function order(
-        $id,
+    public function recipientData(
         Request $request,
         StatusOrderTypeRepository $statusOrderTypeRepository,
         ShoppingCartRepository $shoppingCartRepository,
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
-        SendOrderToCrm $sendOrderToCrm,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        OrdersRepository $ordersRepository
+        ProductRepository $productRepository
     ): Response {
 
-        switch ($request->getMethod()) {
-            case 'GET':
-
-                $order = $ordersRepository->find(['id' => $id]);
-
-                return $this->json(
-                    $order->generateOrderToCRM(),
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-            case 'PATCH':
-
-                $body = $request->getContent();
-                $data = json_decode($body, true);
-        }
-
-        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
-
-        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
-        if (!$shopping_cart_products) {
-            return $this->json(
-                [
-                    "shop_cart_list" => [],
-                    'message' => 'No tiene productos en su lista de carrito.'
-                ],
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
-        }
+        return $this->json(
+            [
+                'status' => false,
+                'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Mensaje de error'
+            ],
+            Response::HTTP_INTERNAL_SERVER_ERROR,
+            ['Content-Type' => 'application/json']
+        );
     }
-
-    /**
-     * @Route("/ordersa", name="api_customer_ordersa",methods={"GET"})
-     */
-    public function orders(
-        $id,
-        Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
-        EntityManagerInterface $em,
-        SendOrderToCrm $sendOrderToCrm,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        OrdersRepository $ordersRepository
-    ): Response {
-
-        switch ($request->getMethod()) {
-            case 'GET':
-
-                $order = $ordersRepository->find(['id' => $id]);
-
-                return $this->json(
-                    $order->generateOrderToCRM(),
-                    Response::HTTP_OK,
-                    ['Content-Type' => 'application/json']
-                );
-            case 'PATCH':
-
-                $body = $request->getContent();
-                $data = json_decode($body, true);
-        }
-
-        $status_sent_crm = $communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_PENDING);
-
-        $shopping_cart_products = $shoppingCartRepository->findAllShoppingCartProductsByStatus($this->customer->getId(), 1);
-        if (!$shopping_cart_products) {
-            return $this->json(
-                [
-                    "shop_cart_list" => [],
-                    'message' => 'No tiene productos en su lista de carrito.'
-                ],
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
-        }
-    }
-
-    
 }
