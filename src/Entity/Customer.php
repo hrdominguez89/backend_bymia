@@ -399,6 +399,7 @@ class Customer extends BaseUser
             'identity_number' => $this->getIdentityNumber(),
             'phone' => $this->getPhone() ? $this->getCountryPhoneCode()->getPhonecode() . ($this->getStateCodePhone() ? $this->getStateCodePhone() : '') . $this->getPhone() : '',
             'cel_phone' => $this->getCountryPhoneCode()->getPhonecode() . ($this->getStateCodePhone() ? $this->getStateCodePhone() : '') . $this->getCelPhone(),
+            'status'=> $this->getStatus()->getId(),
             'status_id' => $this->getStatus()->getId(),
             'status_name' => $this->getStatus()->getName(),
             'gender_type_id' => $this->getGenderType() ? $this->getGenderType()->getId() : '',
