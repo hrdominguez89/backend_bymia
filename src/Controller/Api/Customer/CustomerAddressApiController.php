@@ -88,18 +88,19 @@ class CustomerAddressApiController extends AbstractController
             //     'address' => '',
             //     'zip_code' => '',
             // ],
-            'my_addresses' => null,
-            // [
-            //     [
-            //         'name' => '',
-            //         'phone' => '',
-            //         'country' => '',
-            //         'state' => '',
-            //         'city' => '',
-            //         'zip_code' => '',
-            //         'address' => '',
-            //     ],
-            // ]
+            'my_addresses' => 
+            // null,
+            [
+                [
+                    'name' => '',
+                    'phone' => '',
+                    'country' => '',
+                    'state' => '',
+                    'city' => '',
+                    'zip_code' => '',
+                    'address' => '',
+                ],
+            ]
         ];
 
         return $this->json(
