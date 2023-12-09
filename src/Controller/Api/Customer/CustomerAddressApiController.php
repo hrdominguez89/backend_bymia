@@ -74,20 +74,31 @@ class CustomerAddressApiController extends AbstractController
             'gender' => $this->customer->getGenderType()->getDescription(),
             'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
             'latest_billing_data' => [
-                'code_id' => '',
-                'type_user' => null,
-                'name' => '',
-                'email' => '',
-                'phone' => '',
-                'identity_type' => '',
-                'identity_number' => '',
-                'country' => '',
-                'state' => '',
-                'city' => '',
-                'address' => '',
-                'zip_code' => '',
+                // 'code_id' => '',
+                // 'type_user' => null,
+                // 'name' => '',
+                // 'email' => '',
+                // 'phone' => '',
+                // 'identity_type' => '',
+                // 'identity_number' => '',
+                // 'country' => '',
+                // 'state' => '',
+                // 'city' => '',
+                // 'address' => '',
+                // 'zip_code' => '',
             ],
-            'my_addresses' => []
+            'my_addresses' => [
+                []
+                // [
+                //     'name' => '',
+                //     'phone' => '',
+                //     'country' => '',
+                //     'state' => '',
+                //     'city' => '',
+                //     'zip_code' => '',
+                //     'address' => '',
+                // ],
+            ]
         ];
 
         return $this->json(
