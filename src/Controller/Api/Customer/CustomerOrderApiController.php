@@ -393,29 +393,33 @@ class CustomerOrderApiController extends AbstractController
                 $customerAddressesRepository->updateBillingAddress($this->customer->getId());
                 $entityManager->persist($customer_bill_address);
             }
-            if (!$customer_recipient_address) {
-                //SETEO direccion del destcustomer_inatario
-                $customer_recipient_address = new CustomerAddresses();
-                $customer_recipient_address->setCustomer($this->customer);
-                $customer_recipient_address->setRegistrationDate(new \DateTime());
-                $customer_recipient_address->setActive(true);
-                $customer_recipient_address->setCountry($country_recipient);
-                $customer_recipient_address->setState($state_recipient);
-                $customer_recipient_address->setCity($city_recipient);
-                $customer_recipient_address->setName($data['order']['recipient']['name']);
-                $customer_recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
-                $customer_recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
-                $customer_recipient_address->setStreet($data['order']['recipient']['address']);
-                $customer_recipient_address->setRegistrationType($registration_type_id);
-                $customer_recipient_address->setPostalCode($data['order']['recipient']['code_zip']);
-                $customer_recipient_address->setAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
-                $customer_recipient_address->setPhone($data['order']['recipient']['phone']);
-                $customer_recipient_address->setEmail($data['order']['recipient']['email']);
-                $customer_recipient_address->setHomeAddress(true);
-                $customer_recipient_address->setBillingAddress(false);
-
-                $customerAddressesRepository->updateHomeAddress($this->customer->getId());
-                $entityManager->persist($customer_recipient_address);
+            if(!$data['order']['same_address']){
+                if (!$customer_recipient_address) {
+                    //SETEO direccion del destcustomer_inatario
+                    $customer_recipient_address = new CustomerAddresses();
+                    $customer_recipient_address->setCustomer($this->customer);
+                    $customer_recipient_address->setRegistrationDate(new \DateTime());
+                    $customer_recipient_address->setActive(true);
+                    $customer_recipient_address->setCountry($country_recipient);
+                    $customer_recipient_address->setState($state_recipient);
+                    $customer_recipient_address->setCity($city_recipient);
+                    $customer_recipient_address->setName($data['order']['recipient']['name']);
+                    $customer_recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
+                    $customer_recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
+                    $customer_recipient_address->setStreet($data['order']['recipient']['address']);
+                    $customer_recipient_address->setRegistrationType($registration_type_id);
+                    $customer_recipient_address->setPostalCode($data['order']['recipient']['code_zip']);
+                    $customer_recipient_address->setAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
+                    $customer_recipient_address->setPhone($data['order']['recipient']['phone']);
+                    $customer_recipient_address->setEmail($data['order']['recipient']['email']);
+                    $customer_recipient_address->setHomeAddress(true);
+                    $customer_recipient_address->setBillingAddress(false);
+    
+                    $customerAddressesRepository->updateHomeAddress($this->customer->getId());
+                    $entityManager->persist($customer_recipient_address);
+                }
+            }else{
+                $customer_recipient_address = $customer_bill_address;
             }
 
             //por ahora esto se setea a 0
