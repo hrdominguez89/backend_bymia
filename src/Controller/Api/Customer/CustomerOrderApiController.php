@@ -228,6 +228,7 @@ class CustomerOrderApiController extends AbstractController
             );
         }
         if ($request->getMethod() == 'GET') {
+            $bill_address = $customerAddressesRepository->findOneBy(['active' => true, 'customer' => $this->customer, 'billing_address' => true], ['id' => 'DESC']);
             $sumaProductos = 0;
             $sumaTotalPrecioProductos = 0.00;
             $orders_products_array = $order->getOrdersProducts();
@@ -266,18 +267,18 @@ class CustomerOrderApiController extends AbstractController
                 'bill_address' =>
                 // null,
                 [
-                    // 'address_id' => 1,
-                    // 'name' => 'nombre del cliente',
-                    // 'identity_type' => 'DNI',
-                    // 'identity_number' => '34987273',
-                    // 'country_id' => '62',
-                    // 'state_id' => '4095',
-                    // 'city_id' => '31197',
-                    // 'address' => 'CALLE PRUEBA 123',
-                    // 'code_zip' => '12345',
-                    // 'phone' => '999888777',
-                    // 'email' => 'sarasa@gmail.com',
-                    // 'addional_info' => null,
+                    'address_id' => $bill_address->getId(),
+                    'name' => $bill_address->getName(),
+                    'identity_type' => $bill_address->getIdentityType(),
+                    'identity_number' => $bill_address->getIdentityNumber(),
+                    'country_id' => $bill_address->getCountry()->getId(),
+                    'state_id' => $bill_address->getState()->getId(),
+                    'city_id' => $bill_address->getCity()->getId(),
+                    'address' => $bill_address->getStreet(),
+                    'code_zip' => $bill_address->getPostalCode(),
+                    'phone' => $bill_address->getPhone(),
+                    'email' => $bill_address->getEmail(),
+                    'addional_info' => $bill_address->getAdditionalInfo(),
                 ],
                 'recipient_address' =>
                 // null,
@@ -393,7 +394,7 @@ class CustomerOrderApiController extends AbstractController
                 $customerAddressesRepository->updateBillingAddress($this->customer->getId());
                 $entityManager->persist($customer_bill_address);
             }
-            if(!$data['order']['same_address']){
+            if (!$data['order']['same_address']) {
                 if (!$customer_recipient_address) {
                     //SETEO direccion del destcustomer_inatario
                     $customer_recipient_address = new CustomerAddresses();
@@ -414,11 +415,11 @@ class CustomerOrderApiController extends AbstractController
                     $customer_recipient_address->setEmail($data['order']['recipient']['email']);
                     $customer_recipient_address->setHomeAddress(true);
                     $customer_recipient_address->setBillingAddress(false);
-    
+
                     $customerAddressesRepository->updateHomeAddress($this->customer->getId());
                     $entityManager->persist($customer_recipient_address);
                 }
-            }else{
+            } else {
                 $customer_recipient_address = $customer_bill_address;
             }
 
