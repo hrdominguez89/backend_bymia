@@ -345,6 +345,9 @@ class CustomerOrderApiController extends AbstractController
             $body = $request->getContent();
             $data = json_decode($body, true);
 
+
+            //VALORES NECESARIOS PARA HACER UPDATE A LA ORDEN
+
             $status_order_id = $statusOrderTypeRepository->find(Constants::STATUS_ORDER_OPEN);
             $registration_type_id = $registrationTypeRepository->find(1); //1 =  registracion web
             $country_bill = $countriesRepository->find($data['order']['billData']['country_id']);
@@ -358,54 +361,62 @@ class CustomerOrderApiController extends AbstractController
             //esto setea international shipping = 2
             $international_shipping_id = $shippingTypesRepository->find(2);
 
-            //SETEO DIRECCION DEL CLIENTE COMO DIRECCION DE FACTURACION
-            $customer_address = new CustomerAddresses();
-            $customer_address->setCustomer($this->customer);
-            $customer_address->setRegistrationDate(new \DateTime());
-            $customer_address->setActive(true);
-            $customer_address->setCountry($country_bill);
-            $customer_address->setState($state_bill);
-            $customer_address->setCity($city_bill);
-            $customer_address->setName($data['order']['billData']['name']);
-            $customer_address->setIdentityType($data['order']['billData']['identity_type']);
-            $customer_address->setIdentityNumber($data['order']['billData']['identity_number']);
-            $customer_address->setStreet($data['order']['billData']['address']);
-            $customer_address->setRegistrationType($registration_type_id);
-            $customer_address->setPostalCode($data['order']['billData']['code_zip']);
-            $customer_address->setAdditionalInfo(@$data['order']['billData']['additional_info'] ?: '');
-            $customer_address->setPhone($data['order']['billData']['phone']);
-            $customer_address->setEmail($data['order']['billData']['email']);
-            $customer_address->setHomeAddress(false);
-            $customer_address->setBillingAddress(true);
+            //FIN VALORES NECESARIOS
 
-            $customerAddressesRepository->updateBillingAddress($this->customer->getId());
             $entityManager = $em;
-            $entityManager->persist($customer_address);
 
-            //SETEO direccion del destinatario
+            $customer_bill_address = $customerAddressesRepository->find($data['order']['billData']['address_id']);
+            $customer_recipient_address = $customerAddressesRepository->find($data['order']['recipient']['address_id']);
 
-            $recipient_address = new CustomerAddresses();
-            $recipient_address->setCustomer($this->customer);
-            $recipient_address->setRegistrationDate(new \DateTime());
-            $recipient_address->setActive(true);
-            $recipient_address->setCountry($country_recipient);
-            $recipient_address->setState($state_recipient);
-            $recipient_address->setCity($city_recipient);
-            $recipient_address->setName($data['order']['recipient']['name']);
-            $recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
-            $recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
-            $recipient_address->setStreet($data['order']['recipient']['address']);
-            $recipient_address->setRegistrationType($registration_type_id);
-            $recipient_address->setPostalCode($data['order']['recipient']['code_zip']);
-            $recipient_address->setAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
-            $recipient_address->setPhone($data['order']['recipient']['phone']);
-            $recipient_address->setEmail($data['order']['recipient']['email']);
-            $recipient_address->setHomeAddress(true);
-            $recipient_address->setBillingAddress(false);
+            if (!$customer_bill_address) { //SI CUSTOMER_BILL_ADDRESS ES NULO INSERTI DATOS DE FACTURACION
 
-            $customerAddressesRepository->updateHomeAddress($this->customer->getId());
-            $entityManager->persist($recipient_address);
+                //SETEO DIRECCION DEL CLIENTE COMO DIRECCION DE FACTURACION
+                $customer_bill_address = new CustomerAddresses();
+                $customer_bill_address->setCustomer($this->customer);
+                $customer_bill_address->setRegistrationDate(new \DateTime());
+                $customer_bill_address->setActive(true);
+                $customer_bill_address->setCountry($country_bill);
+                $customer_bill_address->setState($state_bill);
+                $customer_bill_address->setCity($city_bill);
+                $customer_bill_address->setName($data['order']['billData']['name']);
+                $customer_bill_address->setIdentityType($data['order']['billData']['identity_type']);
+                $customer_bill_address->setIdentityNumber($data['order']['billData']['identity_number']);
+                $customer_bill_address->setStreet($data['order']['billData']['address']);
+                $customer_bill_address->setRegistrationType($registration_type_id);
+                $customer_bill_address->setPostalCode($data['order']['billData']['code_zip']);
+                $customer_bill_address->setAdditionalInfo(@$data['order']['billData']['additional_info'] ?: '');
+                $customer_bill_address->setPhone($data['order']['billData']['phone']);
+                $customer_bill_address->setEmail($data['order']['billData']['email']);
+                $customer_bill_address->setHomeAddress(false);
+                $customer_bill_address->setBillingAddress(true);
 
+                $customerAddressesRepository->updateBillingAddress($this->customer->getId());
+                $entityManager->persist($customer_bill_address);
+            }
+            if (!$customer_recipient_address) {
+                //SETEO direccion del destcustomer_inatario
+                $customer_recipient_address = new CustomerAddresses();
+                $customer_recipient_address->setCustomer($this->customer);
+                $customer_recipient_address->setRegistrationDate(new \DateTime());
+                $customer_recipient_address->setActive(true);
+                $customer_recipient_address->setCountry($country_recipient);
+                $customer_recipient_address->setState($state_recipient);
+                $customer_recipient_address->setCity($city_recipient);
+                $customer_recipient_address->setName($data['order']['recipient']['name']);
+                $customer_recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
+                $customer_recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
+                $customer_recipient_address->setStreet($data['order']['recipient']['address']);
+                $customer_recipient_address->setRegistrationType($registration_type_id);
+                $customer_recipient_address->setPostalCode($data['order']['recipient']['code_zip']);
+                $customer_recipient_address->setAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
+                $customer_recipient_address->setPhone($data['order']['recipient']['phone']);
+                $customer_recipient_address->setEmail($data['order']['recipient']['email']);
+                $customer_recipient_address->setHomeAddress(true);
+                $customer_recipient_address->setBillingAddress(false);
+
+                $customerAddressesRepository->updateHomeAddress($this->customer->getId());
+                $entityManager->persist($customer_recipient_address);
+            }
 
             //por ahora esto se setea a 0
             $order->setTotalProductDiscount(0);
@@ -419,7 +430,7 @@ class CustomerOrderApiController extends AbstractController
             $order->setTotalOrder($order->getSubtotal());
 
             $order->setStatus($status_order_id);
-            $order->setBillAddress($customer_address);
+            $order->setBillAddress($customer_bill_address);
             $order->setBillCountry($country_bill);
             $order->setBillState($state_bill);
             $order->setBillCity($city_bill);
@@ -445,7 +456,7 @@ class CustomerOrderApiController extends AbstractController
             $order->setReceiverCodZip($data['order']['recipient']['code_zip']);
             $order->setReceiverAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
             $order->setShippingType($international_shipping_id);
-            // $order->setRecipient($recipient_address);
+            $order->setReceiverAddress($customer_recipient_address);
 
             //envio por helper los datos del cliente al crm
 
