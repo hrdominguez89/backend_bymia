@@ -369,7 +369,7 @@ class CustomerOrderApiController extends AbstractController
             $customer_address->setStreet($data['order']['billData']['address']);
             $customer_address->setRegistrationType($registration_type_id);
             $customer_address->setPostalCode($data['order']['billData']['code_zip']);
-            $customer_address->setAdditionalInfo($data['order']['billData']['additional_info'] ?: '');
+            $customer_address->setAdditionalInfo(@$data['order']['billData']['additional_info'] ?: '');
             $customer_address->setHomeAddress(false);
             $customer_address->setBillingAddress(true);
             $customerAddressesRepository->updateBillingAddress($this->customer->getId());
@@ -415,7 +415,7 @@ class CustomerOrderApiController extends AbstractController
             $order->setShipping(TRUE);
             $order->setBillAddressOrder($data['order']['billData']['address']);
             $order->setBillPostalCode($data['order']['billData']['code_zip']);
-            $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: '');
+            $order->setBillAdditionalInfo(@$data['order']['billData']['additional_info'] ?: '');
             $order->setBillName($data['order']['billData']['name']);
             $order->setBillIdentityType($data['order']['billData']['identity_type']);
             $order->setBillIdentityNumber($data['order']['billData']['identity_number']);
@@ -429,7 +429,7 @@ class CustomerOrderApiController extends AbstractController
             $order->setReceiverEmail($data['order']['recipient']['email']);
             $order->setReceiverAddress($data['order']['recipient']['address']);
             $order->setReceiverCodZip($data['order']['recipient']['code_zip']);
-            $order->setReceiverAdditionalInfo($data['order']['recipient']['additional_info'] ?: '');
+            $order->setReceiverAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
             $order->setShippingType($international_shipping_id);
             $order->setRecipient($recipient_address);
 
