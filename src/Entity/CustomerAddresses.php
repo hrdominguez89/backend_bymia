@@ -137,6 +137,11 @@ class CustomerAddresses
      */
     private $receiver_address;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $recipe_address;
+
     public function __construct()
     {
         $this->registration_date = new \DateTime();
@@ -515,13 +520,41 @@ class CustomerAddresses
                 'email' => $this->getEmail(),
                 'identity_type' => $this->getIdentityType(),
                 'identity_number' => $this->getIdentityNumber(),
-                'country' => $this->getCountry()->getId(),
-                'state' => $this->getState()->getId(),
-                'city' => $this->getCity()->getId(),
+                'country' => $this->getCountry()->getName(),
+                'state' => $this->getState()->getName(),
+                'city' => $this->getCity()->getName(),
                 'address' => $this->getStreet(),
                 'phone' => $this->getPhone(),
                 'zip_code' => $this->getPostalCode(),
                 'additional_info' => $this->getAdditionalInfo(),
             ];
+    }
+
+    public function getRecipeDataToProfile()
+    {
+        return
+            [
+                'code_id' => $this->getId(),
+                'name' => $this->getName(),
+                'phone' => $this->getPhone(),
+                'country' => $this->getCountry()->getName(),
+                'state' => $this->getState()->getName(),
+                'city' => $this->getCity()->getName(),
+                'zip_code' => $this->getPostalCode(),
+                'address' => $this->getStreet(),
+                'additional_info' => $this->getAdditionalInfo(),
+            ];
+    }
+
+    public function isRecipeAddress(): ?bool
+    {
+        return $this->recipe_address;
+    }
+
+    public function setRecipeAddress(?bool $recipe_address): self
+    {
+        $this->recipe_address = $recipe_address;
+
+        return $this;
     }
 }

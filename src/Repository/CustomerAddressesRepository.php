@@ -58,6 +58,25 @@ class CustomerAddressesRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return CustomerAddresses[] Returns an array of CustomerAddresses objects
+     */
+    public function getLastFiveAddress($customer)
+    {
+        return $this->createQueryBuilder('ca')
+            ->where('ca.active = :active')
+            ->andWhere('ca.recipe_address = :recipe_address')
+            ->andWhere('ca.customer = :customer')
+            ->setParameter('customer', $customer)
+            ->setParameter('active', true)
+            ->setParameter('recipe_address', true)
+            ->orderBy('ca.id','DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function updateHomeAddress($customer_id)
     {
         $this->getEntityManager()

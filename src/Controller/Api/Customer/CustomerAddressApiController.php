@@ -69,6 +69,13 @@ class CustomerAddressApiController extends AbstractController
 
         $bill_address = $customerAddressesRepository->findOneBy(['active' => true, 'customer' => $this->customer, 'billing_address' => true], ['id' => 'DESC']);
 
+        $recipes_addresses = $customerAddressesRepository->getLastFiveAddress($this->customer);
+
+        $recipes_addresses_data=[];
+        foreach($recipes_addresses as $recipe_address){
+            $recipes_addresses_data[]= $recipe_address->getRecipeDataToProfile();
+        }
+
         $customerData = [
             'code_id' => $this->customer->getId(),
             'type_user' => $this->customer->getCustomerTypeRole()->getName(),
@@ -77,21 +84,8 @@ class CustomerAddressApiController extends AbstractController
             'phone' => (string)$this->customer->getPhone() ? $this->customer->getCountryPhoneCode()->getPhonecode() . ($this->customer->getStateCodePhone() ? $this->customer->getStateCodePhone() : '') . $this->customer->getPhone() : '',
             'gender' => $this->customer->getGenderType()->getDescription(),
             'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
-            'latest_billing_data' => $bill_address->getBillAddressDataToProfile(),
-            // null, //resolver primero ordenes, eso resuelve este dilema de direcciones.
-            'my_addresses' =>
-            // null,
-            [
-                [
-                    'name' => '',
-                    'phone' => '',
-                    'country' => '',
-                    'state' => '',
-                    'city' => '',
-                    'zip_code' => '',
-                    'address' => '',
-                ],
-            ]
+            'latest_billing_data' => $bill_address->getBillAddressDataToProfile() ?: null,
+            'my_addresses' => $recipes_addresses_data?:null,
         ];
 
         return $this->json(
