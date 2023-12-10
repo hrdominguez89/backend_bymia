@@ -365,8 +365,8 @@ class CustomerOrderApiController extends AbstractController
 
             $entityManager = $em;
 
-            $customer_bill_address = @$customerAddressesRepository->find($data['order']['billData']['address_id']) ?: null;
-            $customer_recipient_address = @$customerAddressesRepository->find($data['order']['recipient']['address_id']) ?: null;
+            $customer_bill_address = @$data['order']['billData']['address_id'] ? $customerAddressesRepository->find($data['order']['billData']['address_id']) : null;
+            $customer_recipient_address = @$data['order']['recipient']['address_id'] ? $customerAddressesRepository->find($data['order']['recipient']['address_id']) : null;
 
             if (!$customer_bill_address) { //SI CUSTOMER_BILL_ADDRESS ES NULO INSERTI DATOS DE FACTURACION
 
