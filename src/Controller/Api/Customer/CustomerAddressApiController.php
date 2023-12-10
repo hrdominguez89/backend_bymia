@@ -7,6 +7,7 @@ use App\Entity\Orders;
 use App\Entity\OrdersProducts;
 use App\Helpers\SendOrderToCrm;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
+use App\Repository\CustomerAddressesRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
@@ -51,7 +52,8 @@ class CustomerAddressApiController extends AbstractController
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        CustomerAddressesRepository $customerAddressesRepository
     ): Response {
         if (!$this->customer) {
             return $this->json(
@@ -65,6 +67,8 @@ class CustomerAddressApiController extends AbstractController
             );
         }
 
+        $bill_address = $customerAddressesRepository->findOneBy(['active' => true, 'customer' => $this->customer, 'billing_address' => true], ['id' => 'DESC']);
+
         $customerData = [
             'code_id' => $this->customer->getId(),
             'type_user' => $this->customer->getCustomerTypeRole()->getName(),
@@ -73,23 +77,9 @@ class CustomerAddressApiController extends AbstractController
             'phone' => (string)$this->customer->getPhone() ? $this->customer->getCountryPhoneCode()->getPhonecode() . ($this->customer->getStateCodePhone() ? $this->customer->getStateCodePhone() : '') . $this->customer->getPhone() : '',
             'gender' => $this->customer->getGenderType()->getDescription(),
             'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
-            'latest_billing_data' => 
+            'latest_billing_data' => $bill_address->getBillAddressDataToProfile(),
             // null, //resolver primero ordenes, eso resuelve este dilema de direcciones.
-            [
-                'code_id' => '',
-                'type_user' => null,
-                'name' => '',
-                'email' => '',
-                'phone' => '',
-                'identity_type' => '',
-                'identity_number' => '',
-                'country' => '',
-                'state' => '',
-                'city' => '',
-                'address' => '',
-                'zip_code' => '',
-            ],
-            'my_addresses' => 
+            'my_addresses' =>
             // null,
             [
                 [

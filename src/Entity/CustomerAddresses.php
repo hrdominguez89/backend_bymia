@@ -485,4 +485,43 @@ class CustomerAddresses
 
         return $this;
     }
+
+    public function getAddressDataToOrder()
+    {
+        return
+            [
+                'address_id' => $this->getId(),
+                'name' => $this->getName(),
+                'identity_type' => $this->getIdentityType(),
+                'identity_number' => $this->getIdentityNumber(),
+                'country_id' => $this->getCountry()->getId(),
+                'state_id' => $this->getState()->getId(),
+                'city_id' => $this->getCity()->getId(),
+                'address' => $this->getStreet(),
+                'code_zip' => $this->getPostalCode(),
+                'phone' => $this->getPhone(),
+                'email' => $this->getEmail(),
+                'additional_info' => $this->getAdditionalInfo(),
+            ];
+    }
+
+    public function getBillAddressDataToProfile()
+    {
+        return
+            [
+                'code_id' => $this->getId(),
+                'type_user' => $this->getCustomer()->getCustomerTypeRole()->getDescription(),
+                'name' => $this->getName(),
+                'email' => $this->getEmail(),
+                'identity_type' => $this->getIdentityType(),
+                'identity_number' => $this->getIdentityNumber(),
+                'country' => $this->getCountry()->getId(),
+                'state' => $this->getState()->getId(),
+                'city' => $this->getCity()->getId(),
+                'address' => $this->getStreet(),
+                'phone' => $this->getPhone(),
+                'zip_code' => $this->getPostalCode(),
+                'additional_info' => $this->getAdditionalInfo(),
+            ];
+    }
 }

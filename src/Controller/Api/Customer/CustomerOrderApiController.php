@@ -264,22 +264,7 @@ class CustomerOrderApiController extends AbstractController
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
-                'bill_address' =>
-                // null,
-                [
-                    'address_id' => $bill_address->getId(),
-                    'name' => $bill_address->getName(),
-                    'identity_type' => $bill_address->getIdentityType(),
-                    'identity_number' => $bill_address->getIdentityNumber(),
-                    'country_id' => $bill_address->getCountry()->getId(),
-                    'state_id' => $bill_address->getState()->getId(),
-                    'city_id' => $bill_address->getCity()->getId(),
-                    'address' => $bill_address->getStreet(),
-                    'code_zip' => $bill_address->getPostalCode(),
-                    'phone' => $bill_address->getPhone(),
-                    'email' => $bill_address->getEmail(),
-                    'additional_info' => $bill_address->getAdditionalInfo(),
-                ],
+                'bill_address' => $bill_address->getAddressDataToOrder(),
                 'recipient_address' =>
                 // null,
                 [
