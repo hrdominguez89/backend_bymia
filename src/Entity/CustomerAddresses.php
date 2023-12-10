@@ -107,6 +107,31 @@ class CustomerAddresses
      */
     private $orders;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $identity_type;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $identity_number;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $phone;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $email;
+
     public function __construct()
     {
         $this->registration_date = new \DateTime();
@@ -361,6 +386,66 @@ class CustomerAddresses
                 $order->setBillAddress(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getIdentityType(): ?string
+    {
+        return $this->identity_type;
+    }
+
+    public function setIdentityType(?string $identity_type): self
+    {
+        $this->identity_type = $identity_type;
+
+        return $this;
+    }
+
+    public function getIdentityNumber(): ?string
+    {
+        return $this->identity_number;
+    }
+
+    public function setIdentityNumber(?string $identity_number): self
+    {
+        $this->identity_number = $identity_number;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
