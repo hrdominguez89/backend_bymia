@@ -366,30 +366,44 @@ class CustomerOrderApiController extends AbstractController
             $customer_address->setCountry($country_bill);
             $customer_address->setState($state_bill);
             $customer_address->setCity($city_bill);
+            $customer_address->setName($data['order']['billData']['name']);
+            $customer_address->setIdentityType($data['order']['billData']['identity_type']);
+            $customer_address->setIdentityNumber($data['order']['billData']['identity_number']);
             $customer_address->setStreet($data['order']['billData']['address']);
             $customer_address->setRegistrationType($registration_type_id);
             $customer_address->setPostalCode($data['order']['billData']['code_zip']);
             $customer_address->setAdditionalInfo(@$data['order']['billData']['additional_info'] ?: '');
+            $customer_address->setPhone($data['order']['billData']['phone']);
+            $customer_address->setEmail($data['order']['billData']['email']);
             $customer_address->setHomeAddress(false);
             $customer_address->setBillingAddress(true);
+
             $customerAddressesRepository->updateBillingAddress($this->customer->getId());
             $entityManager = $em;
             $entityManager->persist($customer_address);
 
             //SETEO direccion del destinatario
 
-            $recipient_address = new Recipients();
+            $recipient_address = new CustomerAddresses();
             $recipient_address->setCustomer($this->customer);
+            $recipient_address->setRegistrationDate(new \DateTime());
+            $recipient_address->setActive(true);
             $recipient_address->setCountry($country_recipient);
             $recipient_address->setState($state_recipient);
             $recipient_address->setCity($city_recipient);
             $recipient_address->setName($data['order']['recipient']['name']);
             $recipient_address->setIdentityType($data['order']['recipient']['identity_type']);
             $recipient_address->setIdentityNumber($data['order']['recipient']['identity_number']);
-            $recipient_address->setAddress($data['order']['recipient']['address']);
-            $recipient_address->setZipCode($data['order']['recipient']['code_zip']);
+            $recipient_address->setStreet($data['order']['recipient']['address']);
+            $recipient_address->setRegistrationType($registration_type_id);
+            $recipient_address->setPostalCode($data['order']['recipient']['code_zip']);
+            $recipient_address->setAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
             $recipient_address->setPhone($data['order']['recipient']['phone']);
             $recipient_address->setEmail($data['order']['recipient']['email']);
+            $recipient_address->setHomeAddress(true);
+            $recipient_address->setBillingAddress(false);
+
+            $customerAddressesRepository->updateHomeAddress($this->customer->getId());
             $entityManager->persist($recipient_address);
 
 
@@ -427,11 +441,11 @@ class CustomerOrderApiController extends AbstractController
             $order->setReceiverDocument($data['order']['recipient']['identity_number']);
             $order->setReceiverPhoneCell($data['order']['recipient']['phone']);
             $order->setReceiverEmail($data['order']['recipient']['email']);
-            $order->setReceiverAddress($data['order']['recipient']['address']);
+            $order->setReceiverAddressOrder($data['order']['recipient']['address']);
             $order->setReceiverCodZip($data['order']['recipient']['code_zip']);
             $order->setReceiverAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
             $order->setShippingType($international_shipping_id);
-            $order->setRecipient($recipient_address);
+            // $order->setRecipient($recipient_address);
 
             //envio por helper los datos del cliente al crm
 

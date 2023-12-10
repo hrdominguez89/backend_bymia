@@ -132,11 +132,17 @@ class CustomerAddresses
      */
     private $email;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Orders::class, mappedBy="receiver_address")
+     */
+    private $receiver_address;
+
     public function __construct()
     {
         $this->registration_date = new \DateTime();
         $this->active = true;
         $this->orders = new ArrayCollection();
+        $this->receiver_address = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -446,6 +452,36 @@ class CustomerAddresses
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Orders>
+     */
+    public function getReceiverAddress(): Collection
+    {
+        return $this->receiver_address;
+    }
+
+    public function addReceiverAddress(Orders $receiverAddress): self
+    {
+        if (!$this->receiver_address->contains($receiverAddress)) {
+            $this->receiver_address[] = $receiverAddress;
+            $receiverAddress->setReceiverAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiverAddress(Orders $receiverAddress): self
+    {
+        if ($this->receiver_address->removeElement($receiverAddress)) {
+            // set the owning side to null (unless already changed)
+            if ($receiverAddress->getReceiverAddress() === $this) {
+                $receiverAddress->setReceiverAddress(null);
+            }
+        }
 
         return $this;
     }

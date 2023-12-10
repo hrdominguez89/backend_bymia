@@ -233,7 +233,7 @@ class Orders
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $receiver_address;
+    private $receiver_address_order;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -316,6 +316,11 @@ class Orders
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $bill_identity_number;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=CustomerAddresses::class, inversedBy="receiver_address")
+     */
+    private $receiver_address;
 
     public function __construct()
     {
@@ -850,14 +855,14 @@ class Orders
         return $this;
     }
 
-    public function getReceiverAddress(): ?string
+    public function getReceiverAddressOrder(): ?string
     {
-        return $this->receiver_address;
+        return $this->receiver_address_order;
     }
 
-    public function setReceiverAddress(string $receiver_address): self
+    public function setReceiverAddressOrder(string $receiver_address_order): self
     {
-        $this->receiver_address = $receiver_address;
+        $this->receiver_address_order = $receiver_address_order;
 
         return $this;
     }
@@ -1004,7 +1009,7 @@ class Orders
                 "state_name" => $this->getReceiverState() ? $this->getReceiverState()->getName() : null,
                 "city_id" => $this->getReceiverCity() ? $this->getReceiverCity()->getId() : null,
                 "city_name" => $this->getReceiverCity() ? $this->getReceiverCity()->getName() : null,
-                "address" => $this->getReceiverAddress(),
+                "address" => $this->getReceiverAddressOrder(),
                 "cod_zip" => $this->getReceiverCodZip(),
                 "additional_info" => $this->getReceiverAdditionalInfo()
             ],
@@ -1359,6 +1364,18 @@ class Orders
     public function setBillIdentityNumber(?string $bill_identity_number): self
     {
         $this->bill_identity_number = $bill_identity_number;
+
+        return $this;
+    }
+
+    public function getReceiverAddress(): ?CustomerAddresses
+    {
+        return $this->receiver_address;
+    }
+
+    public function setReceiverAddress(?CustomerAddresses $receiver_address): self
+    {
+        $this->receiver_address = $receiver_address;
 
         return $this;
     }
