@@ -74,7 +74,7 @@ class CustomerAddressApiController extends AbstractController
             'gender' => $this->customer->getGenderType()->getDescription(),
             'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
             'latest_billing_data' => 
-            // null,
+            // null, //resolver primero ordenes, eso resuelve este dilema de direcciones.
             [
                 'code_id' => '',
                 'type_user' => null,

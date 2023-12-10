@@ -263,6 +263,8 @@ class CustomerOrderApiController extends AbstractController
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
+                'bill_address' => null,
+                'recipient_address' => null,
             ];
 
 
