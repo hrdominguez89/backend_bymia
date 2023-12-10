@@ -263,66 +263,66 @@ class CustomerOrderApiController extends AbstractController
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
-                'bill_address' => 
+                'bill_address' =>
                 // null,
                 [
-                    'address_id'=>1,
-                    'name'=>'nombre del cliente',
+                    'address_id' => 1,
+                    'name' => 'nombre del cliente',
                     'identity_type' => 'DNI',
-                    'identity_number'=>'34987273',
+                    'identity_number' => '34987273',
                     'country_id' => '62',
                     'state_id' => '4095',
-                    'city_id'=> '31197',
-                    'address'=> 'CALLE PRUEBA 123',
+                    'city_id' => '31197',
+                    'address' => 'CALLE PRUEBA 123',
                     'code_zip' => '12345',
-                    'phone'=> '999888777',
-                    'email'=>'sarasa@gmail.com',
-                    'addional_info'=>null,
+                    'phone' => '999888777',
+                    'email' => 'sarasa@gmail.com',
+                    'addional_info' => null,
                 ],
-                'recipient_address' => 
+                'recipient_address' =>
                 // null,
                 [
                     [
-                        'address_id'=>2,
-                        'name'=>'nombre del cliente recipient 1',
+                        'address_id' => 2,
+                        'name' => 'nombre del cliente recipient 1',
                         'identity_type' => 'DNI',
-                        'identity_number'=>'34987273',
+                        'identity_number' => '34987273',
                         'country_id' => '62',
                         'state_id' => '4095',
-                        'city_id'=> '31197',
-                        'address'=> 'CALLE PRUEBA r 123',
+                        'city_id' => '31197',
+                        'address' => 'CALLE PRUEBA r 123',
                         'code_zip' => '12345',
-                        'phone'=> '999888777',
-                        'email'=>'sarasa@gmail.com',
-                        'addional_info'=>null,
+                        'phone' => '999888777',
+                        'email' => 'sarasa@gmail.com',
+                        'addional_info' => null,
                     ],
                     [
-                        'address_id'=>3,
-                        'name'=>'nombre del cliente recipient 2',
+                        'address_id' => 3,
+                        'name' => 'nombre del cliente recipient 2',
                         'identity_type' => 'DNI',
-                        'identity_number'=>'34987273',
+                        'identity_number' => '34987273',
                         'country_id' => '62',
                         'state_id' => '4095',
-                        'city_id'=> '31197',
-                        'address'=> 'CALLE PRUEBA r 123',
+                        'city_id' => '31197',
+                        'address' => 'CALLE PRUEBA r 123',
                         'code_zip' => '12345',
-                        'phone'=> '999888777',
-                        'email'=>'sarasa@gmail.com',
-                        'addional_info'=>null,
+                        'phone' => '999888777',
+                        'email' => 'sarasa@gmail.com',
+                        'addional_info' => null,
                     ],
                     [
-                        'address_id'=>4,
-                        'name'=>'nombre del cliente recipient 3',
+                        'address_id' => 4,
+                        'name' => 'nombre del cliente recipient 3',
                         'identity_type' => 'DNI',
-                        'identity_number'=>'34987273',
+                        'identity_number' => '34987273',
                         'country_id' => '62',
                         'state_id' => '4095',
-                        'city_id'=> '31197',
-                        'address'=> 'CALLE PRUEBA r 123',
+                        'city_id' => '31197',
+                        'address' => 'CALLE PRUEBA r 123',
                         'code_zip' => '12345',
-                        'phone'=> '999888777',
-                        'email'=>'sarasa@gmail.com',
-                        'addional_info'=>null,
+                        'phone' => '999888777',
+                        'email' => 'sarasa@gmail.com',
+                        'addional_info' => null,
                     ],
                 ]
             ];
@@ -369,7 +369,7 @@ class CustomerOrderApiController extends AbstractController
             $customer_address->setStreet($data['order']['billData']['address']);
             $customer_address->setRegistrationType($registration_type_id);
             $customer_address->setPostalCode($data['order']['billData']['code_zip']);
-            $customer_address->setAdditionalInfo($data['order']['billData']['additional_info']);
+            $customer_address->setAdditionalInfo($data['order']['billData']['additional_info'] ?: '');
             $customer_address->setHomeAddress(false);
             $customer_address->setBillingAddress(true);
             $customerAddressesRepository->updateBillingAddress($this->customer->getId());
@@ -415,7 +415,7 @@ class CustomerOrderApiController extends AbstractController
             $order->setShipping(TRUE);
             $order->setBillAddressOrder($data['order']['billData']['address']);
             $order->setBillPostalCode($data['order']['billData']['code_zip']);
-            $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: null);
+            $order->setBillAdditionalInfo($data['order']['billData']['additional_info'] ?: '');
             $order->setBillName($data['order']['billData']['name']);
             $order->setBillIdentityType($data['order']['billData']['identity_type']);
             $order->setBillIdentityNumber($data['order']['billData']['identity_number']);

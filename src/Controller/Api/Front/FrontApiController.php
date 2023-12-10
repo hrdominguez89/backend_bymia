@@ -1094,13 +1094,22 @@ class FrontApiController extends AbstractController
         if (!$customer) {
             return $this->json(
                 [
-                    'status' => false,
-                    'status_code' => Response::HTTP_NOT_FOUND,
-                    'message' => 'El correo ' . $data['email'] . ' no se encuentra registrada.'
+                    'status' => true,
+                    'status_code' => Response::HTTP_OK,
+                    'message' => 'Se ha enviado un e-mail a ' . $data['email'] . ' revise su bandeja de entrada o la carpeta spam para continuar.',
                 ],
-                Response::HTTP_NOT_FOUND,
+                Response::HTTP_OK,
                 ['Content-Type' => 'application/json']
             );
+            // return $this->json(
+            //     [
+            //         'status' => false,
+            //         'status_code' => Response::HTTP_NOT_FOUND,
+            //         'message' => 'El correo ' . $data['email'] . ' no se encuentra registrada.'
+            //     ],
+            //     Response::HTTP_NOT_FOUND,
+            //     ['Content-Type' => 'application/json']
+            // );
         }
 
         $customer
@@ -1127,6 +1136,7 @@ class FrontApiController extends AbstractController
         return $this->json(
             [
                 'status' => true,
+                'status_code' => Response::HTTP_OK,
                 'message' => 'Se ha enviado un e-mail a ' . $data['email'] . ' revise su bandeja de entrada o la carpeta spam para continuar.',
             ],
             Response::HTTP_OK,
@@ -1220,6 +1230,7 @@ class FrontApiController extends AbstractController
         return $this->json(
             [
                 'status' => true,
+                'status_code' => Response::HTTP_OK,
                 'message' => 'Cambio de contraseña exitoso.'
             ],
             Response::HTTP_OK,
