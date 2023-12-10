@@ -96,17 +96,11 @@ class Cities
      */
     private $receiver_orders;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Recipients::class, mappedBy="city")
-     */
-    private $recipients;
-
     public function __construct()
     {
         $this->customerAddresses = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->receiver_orders = new ArrayCollection();
-        $this->recipients = new ArrayCollection();
     }
 
     public function __toString()
@@ -353,33 +347,4 @@ class Cities
         return $this;
     }
 
-    /**
-     * @return Collection<int, Recipients>
-     */
-    public function getRecipients(): Collection
-    {
-        return $this->recipients;
-    }
-
-    public function addRecipient(Recipients $recipient): self
-    {
-        if (!$this->recipients->contains($recipient)) {
-            $this->recipients[] = $recipient;
-            $recipient->setCity($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRecipient(Recipients $recipient): self
-    {
-        if ($this->recipients->removeElement($recipient)) {
-            // set the owning side to null (unless already changed)
-            if ($recipient->getCity() === $this) {
-                $recipient->setCity(null);
-            }
-        }
-
-        return $this;
-    }
 }

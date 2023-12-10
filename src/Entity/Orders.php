@@ -298,11 +298,6 @@ class Orders
     private $sales_id_3pl;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Recipients::class, inversedBy="orders")
-     */
-    private $recipient;
-
-    /**
      * @ORM\ManyToOne(targetEntity=ShippingTypes::class, inversedBy="orders")
      */
     private $shipping_type;
@@ -1316,18 +1311,6 @@ class Orders
     public function setSalesId3pl(?int $sales_id_3pl): self
     {
         $this->sales_id_3pl = $sales_id_3pl;
-
-        return $this;
-    }
-
-    public function getRecipient(): ?Recipients
-    {
-        return $this->recipient;
-    }
-
-    public function setRecipient(?Recipients $recipient): self
-    {
-        $this->recipient = $recipient;
 
         return $this;
     }
