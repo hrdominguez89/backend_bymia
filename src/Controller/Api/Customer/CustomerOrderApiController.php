@@ -265,66 +265,10 @@ class CustomerOrderApiController extends AbstractController
                 'bill' => $order->getBillFile() ?: '',
                 'bill_address' =>
                 // null,
-                [
-                    'address_id' => 1,
-                    'name' => 'nombre del cliente',
-                    'identity_type' => 'DNI',
-                    'identity_number' => '34987273',
-                    'country_id' => '62',
-                    'state_id' => '4095',
-                    'city_id' => '31197',
-                    'address' => 'CALLE PRUEBA 123',
-                    'code_zip' => '12345',
-                    'phone' => '999888777',
-                    'email' => 'sarasa@gmail.com',
-                    'addional_info' => null,
-                ],
+                [],
                 'recipient_address' =>
                 // null,
-                [
-                    [
-                        'address_id' => 2,
-                        'name' => 'nombre del cliente recipient 1',
-                        'identity_type' => 'DNI',
-                        'identity_number' => '34987273',
-                        'country_id' => '62',
-                        'state_id' => '4095',
-                        'city_id' => '31197',
-                        'address' => 'CALLE PRUEBA r 123',
-                        'code_zip' => '12345',
-                        'phone' => '999888777',
-                        'email' => 'sarasa@gmail.com',
-                        'addional_info' => null,
-                    ],
-                    [
-                        'address_id' => 3,
-                        'name' => 'nombre del cliente recipient 2',
-                        'identity_type' => 'DNI',
-                        'identity_number' => '34987273',
-                        'country_id' => '62',
-                        'state_id' => '4095',
-                        'city_id' => '31197',
-                        'address' => 'CALLE PRUEBA r 123',
-                        'code_zip' => '12345',
-                        'phone' => '999888777',
-                        'email' => 'sarasa@gmail.com',
-                        'addional_info' => null,
-                    ],
-                    [
-                        'address_id' => 4,
-                        'name' => 'nombre del cliente recipient 3',
-                        'identity_type' => 'DNI',
-                        'identity_number' => '34987273',
-                        'country_id' => '62',
-                        'state_id' => '4095',
-                        'city_id' => '31197',
-                        'address' => 'CALLE PRUEBA r 123',
-                        'code_zip' => '12345',
-                        'phone' => '999888777',
-                        'email' => 'sarasa@gmail.com',
-                        'addional_info' => null,
-                    ],
-                ]
+                []
             ];
 
 
