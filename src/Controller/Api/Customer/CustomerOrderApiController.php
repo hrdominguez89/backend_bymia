@@ -278,7 +278,7 @@ class CustomerOrderApiController extends AbstractController
                     'code_zip' => $bill_address->getPostalCode(),
                     'phone' => $bill_address->getPhone(),
                     'email' => $bill_address->getEmail(),
-                    'addional_info' => $bill_address->getAdditionalInfo(),
+                    'additional_info' => $bill_address->getAdditionalInfo(),
                 ],
                 'recipient_address' =>
                 // null,
@@ -295,7 +295,7 @@ class CustomerOrderApiController extends AbstractController
                     //     'code_zip' => '12345',
                     //     'phone' => '999888777',
                     //     'email' => 'sarasa@gmail.com',
-                    //     'addional_info' => null,
+                    //     'additional_info' => null,
                     // ],
                     // [
                     //     'address_id' => 3,
@@ -309,7 +309,7 @@ class CustomerOrderApiController extends AbstractController
                     //     'code_zip' => '12345',
                     //     'phone' => '999888777',
                     //     'email' => 'sarasa@gmail.com',
-                    //     'addional_info' => null,
+                    //     'additional_info' => null,
                     // ],
                     // [
                     //     'address_id' => 4,
@@ -323,7 +323,7 @@ class CustomerOrderApiController extends AbstractController
                     //     'code_zip' => '12345',
                     //     'phone' => '999888777',
                     //     'email' => 'sarasa@gmail.com',
-                    //     'addional_info' => null,
+                    //     'additional_info' => null,
                     // ],
                 ]
             ];
