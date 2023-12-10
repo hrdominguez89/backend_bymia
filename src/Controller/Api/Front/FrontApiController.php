@@ -1071,6 +1071,164 @@ class FrontApiController extends AbstractController
         );
     }
 
+    /**
+     * @Route("/forgot-password", name="api_forgot_password_customer", methods={"POST"})
+     */
+    public function forgotPassword(
+
+        EntityManagerInterface $em,
+        Request $request,
+        CustomerRepository $customerRepository,
+        CustomerStatusTypeRepository $customerStatusTypeRepository,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        EnqueueEmail $queue,
+        SendCustomerToCrm $sendCustomerToCrm
+    ): Response {
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        //get Customer data
+        $customer = $customerRepository->findOneBy(['email' => $data['email']]);
+
+        if (!$customer) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'El correo ' . $data['email'] . ' no se encuentra registrada.'
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $customer
+            ->setVerificationCode(Uuid::v4())
+            ->setChangePasswordDate(new \DateTime);
+
+        $em->persist($customer);
+        $em->flush();
+
+        //queue the email
+        $id_email = $queue->enqueue(
+            Constants::EMAIL_TYPE_FORGET_PASSWORD, //tipo de email
+            $customer->getEmail(), //email destinatario
+            [ //parametros
+                'name' => $customer->getName(),
+                'url_front_change_password' => $_ENV['FRONT_URL'] . $_ENV['FRONT_CHANGE_PASSWORD'] . '?code=' . $customer->getVerificationCode() . '&id=' . $customer->getId(),
+
+            ]
+        );
+
+        //Intento enviar el correo encolado
+        $queue->sendEnqueue($id_email);
+
+        return $this->json(
+            [
+                'status' => true,
+                'message' => 'Se ha enviado un e-mail a ' . $data['email'] . ' revise su bandeja de entrada o la carpeta spam para continuar.',
+            ],
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+
+    /**
+     * @Route("/change-password", name="api_change_password_customer", methods={"POST"})
+     */
+    public function changePassword(
+
+        EntityManagerInterface $em,
+        Request $request,
+        CustomerRepository $customerRepository,
+        CustomerStatusTypeRepository $customerStatusTypeRepository,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        EnqueueEmail $queue,
+        SendCustomerToCrm $sendCustomerToCrm
+    ): Response {
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        //get Customer data
+        $customer = $customerRepository->findOneBy(['id' => $data['id']]);
+
+        if (!($data['code'] && $data['id'] && $data['password'])) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_BAD_REQUEST,
+                    'message' => 'Los datos enviados son erroneos.'
+                ],
+                Response::HTTP_BAD_REQUEST,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        if (!$customer || (!$customer->getVerificationCode() || !$customer->getVerificationCode()->equals(Uuid::fromString($data['code'])))) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'No fue posible encontrar el usuario o el enlace expiró.'
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $currentDate = new \DateTime();
+
+        $timeDiff = $currentDate->diff($customer->getChangePasswordDate());
+        $totalDays = $timeDiff->days;
+
+        $maxDays = 2;
+        if ($totalDays > $maxDays) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_CONFLICT,
+                    'message' => 'El enlace expiró, por favor solicite un reinicio de contraseña nuevamente'
+                ],
+                Response::HTTP_CONFLICT,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $customer
+            ->setPassword($data['password'])
+            ->setChangePasswordDate(null)
+            ->setVerificationCode(null);
+        $em->persist($customer);
+        $em->flush();
+
+        //queue the email
+        $id_email = $queue->enqueue(
+            Constants::EMAIL_TYPE_PASSWORD_CHANGE_SUCCESSFUL, //tipo de email
+            $customer->getEmail(), //email destinatario
+            [ //parametros
+                'name' => $customer->getName(),
+                'url_front_login' => $_ENV['FRONT_URL'] . $_ENV['FRONT_LOGIN'],
+            ]
+        );
+
+        //Intento enviar el correo encolado
+        $queue->sendEnqueue($id_email);
+
+        return $this->json(
+            [
+                'status' => true,
+                'message' => 'Cambio de contraseña exitoso.'
+            ],
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+
+
     private function getErrorsFromForm(FormInterface $form)
     {
         $errors = array();
