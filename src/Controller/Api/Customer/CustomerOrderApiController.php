@@ -256,7 +256,7 @@ class CustomerOrderApiController extends AbstractController
             $orderToSend = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => number_format($sumaTotalPrecioProductos, 2), // revisar, podria ser.. $order->getTotalOrder()
+                'total' => number_format($sumaTotalPrecioProductos, 2,',','.'), // revisar, podria ser.. $order->getTotalOrder()
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
                 'detail' => [
@@ -486,7 +486,7 @@ class CustomerOrderApiController extends AbstractController
             $orderToSend[] = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => number_format($sumaTotalPrecioProductos, 2), // revisar, podria ser.. $order->getTotalOrder()
+                'total' => number_format($sumaTotalPrecioProductos, 2,',','.'), // revisar, podria ser.. $order->getTotalOrder()
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
                 'detail' => [
