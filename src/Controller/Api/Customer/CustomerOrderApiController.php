@@ -262,7 +262,7 @@ class CustomerOrderApiController extends AbstractController
                 'detail' => [
                     'items' => $orders_products_result,
                     'products' => [
-                        'total' => (string)$sumaProductos,
+                        'total' => number_format($sumaProductos, 2, ',', '.'),
                         'totalPrice' => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
@@ -492,7 +492,7 @@ class CustomerOrderApiController extends AbstractController
                 'detail' => [
                     'items' => $orders_products_result,
                     'products' => [
-                        'total' => (string)$sumaProductos,
+                        'total' => number_format($sumaProductos, 2, ',', '.'),
                         'totalPrice' => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
