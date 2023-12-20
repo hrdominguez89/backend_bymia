@@ -263,12 +263,12 @@ class CustomerOrderApiController extends AbstractController
                     'items' => $orders_products_result,
                     'products' => [
                         'total' => (string)$sumaProductos,
-                        'totalPrice' => (string)$sumaTotalPrecioProductos,
+                        'totalPrice' => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$sumaTotalPrecioProductos,
+                    "totalOrderPrice" => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
@@ -493,12 +493,12 @@ class CustomerOrderApiController extends AbstractController
                     'items' => $orders_products_result,
                     'products' => [
                         'total' => (string)$sumaProductos,
-                        'totalPrice' => (string)$sumaTotalPrecioProductos,
+                        'totalPrice' => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$sumaTotalPrecioProductos,
+                    "totalOrderPrice" => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
