@@ -252,7 +252,7 @@ class CustomerOrderApiController extends AbstractController
                 $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
             }
 
-
+dd($sumaTotalPrecioProductos);
             $orderToSend = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
