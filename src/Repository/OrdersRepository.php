@@ -80,6 +80,7 @@ class OrdersRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->where('o.customer =:customer_id')
             ->setParameter('customer_id', $customer_id)
+            ->orderBy('id','desc')
             ->getQuery()
             ->getResult();
     }
