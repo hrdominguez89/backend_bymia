@@ -188,8 +188,38 @@ class CustomerOrderApiController extends AbstractController
         EntityManagerInterface $em,
         CustomerAddressesRepository $customerAddressesRepository,
         RegistrationTypeRepository $registrationTypeRepository,
+        HttpClientInterface $client,
         SendOrderToCrm $sendOrderToCrm
     ): Response {
+
+        try {
+            $response = $client->request(
+                'POST',
+                'https://lab.cardnet.com.do/sessions',
+                [
+                    'json'  => [
+                        "AVS" => "33024 1000 ST JOHN PLACE PEMBROKE PINES FLORIDA",
+                        "AcquiringInstitutionCode" => "349",
+                        "CancelUrl" => "https://tokecardnet.000webhostapp.com/ReturnUrli.php",
+                        "CurrencyCode" => "214",
+                        "MerchantName" => "Bymia",
+                        "MerchantNumber" => "349000000",
+                        "MerchantTerminal" => "58585858",
+                        "MerchantType" => "7997",
+                        "PageLanguaje" => "ENG",
+                        "ReturnUrl" => "https://tokecardnet.000webhostapp.com/ReturnUrli.php",
+                        "TransactionType" => "200"
+                    ],
+                ]
+            );
+            $body = $response->getContent(false);
+            $data_response = json_decode($body, true);
+
+            dd($data_response);
+        } catch (TransportExceptionInterface $e) {
+            dd($e->getMessage());
+        }
+
 
         if (!(int)$order_id) {
             return $this->json(
@@ -460,40 +490,11 @@ class CustomerOrderApiController extends AbstractController
         EntityManagerInterface $em,
         SendOrderToCrm $sendOrderToCrm,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        OrdersRepository $ordersRepository,
-        HttpClientInterface $client
+        OrdersRepository $ordersRepository
     ): Response {
 
         $this->customer->getId();
         $orders = $ordersRepository->findOrdersByCustomerId($this->customer->getId());
-
-        try {
-            $response = $client->request(
-                'POST',
-                'https://lab.cardnet.com.do/sessions',
-                [
-                    'json'  => [
-                        "AVS" => "33024 1000 ST JOHN PLACE PEMBROKE PINES FLORIDA",
-                        "AcquiringInstitutionCode" => "349",
-                        "CancelUrl" => "https://tokecardnet.000webhostapp.com/ReturnUrli.php",
-                        "CurrencyCode" => "214",
-                        "MerchantName" => "Bymia",
-                        "MerchantNumber" => "349000000",
-                        "MerchantTerminal" => "58585858",
-                        "MerchantType" => "7997",
-                        "PageLanguaje" => "ENG",
-                        "ReturnUrl" => "https://tokecardnet.000webhostapp.com/ReturnUrli.php",
-                        "TransactionType" => "200"
-                    ],
-                ]
-            );
-            $body = $response->getContent(false);
-            $data_response = json_decode($body, true);
-
-            dd($data_response);
-        } catch (TransportExceptionInterface $e) {
-            dd($e->getMessage());
-        }
 
         $orderToSend = [];
         foreach ($orders as $order) {
