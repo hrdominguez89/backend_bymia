@@ -215,9 +215,21 @@ class CustomerOrderApiController extends AbstractController
             $body = $response->getContent(false);
             $data_response = json_decode($body, true);
 
-            dd($data_response);
+            return $this->json(
+                [
+                    'data' => $data_response
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
         } catch (TransportExceptionInterface $e) {
-            dd($e->getMessage());
+            return $this->json(
+                [
+                    'error' => $e->getMessage()
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
         }
 
 
