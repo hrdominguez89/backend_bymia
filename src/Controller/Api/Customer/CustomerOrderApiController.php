@@ -329,9 +329,9 @@ class CustomerOrderApiController extends AbstractController
                             'total' => (string)$sumaProductos,
                             'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentos, 2, ',', '.'),
                         ],
-                        "productDiscount" => number_format($descuento, 2, ',', '.'),
+                        "productDiscount" => $descuento,
                         "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
-                        "tax" => number_format($ITBIS, 2, ',', '.'),
+                        "tax" => $ITBIS,
                         "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
                     ],
                     'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
