@@ -263,10 +263,11 @@ class CustomerOrderApiController extends AbstractController
                 $sumaProductos += $order_product->getQuantity();
                 $sumaTotalPrecioProductosSinDescuentos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
                 $descuentoDelProducto = ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
+                $precioConDescuento = $order_product->getProduct()->getPrice()-$descuentoDelProducto;
                 $descuento += $descuentoDelProducto;
                 $ITBIS += $order_product->getQuantity() * ($order_product->getProduct()->getDiscountActive() ? //si existe descuento sobre el producto
                     //[precio bruto prod - (precio precio bruto prod / 100% * porcentaje de descuento) ]= precio del producto con descuento y a eso le saco el 18 %
-                    $descuentoDelProducto - ($descuentoDelProducto / 1.18)
+                    $precioConDescuento - ($precioConDescuento / 1.18)
                     //si no precio sobre 1.18 esto me da el 18 % del itbis y lo voy sumando.
                     : ($order_product->getProduct()->getPrice() - ($order_product->getProduct()->getPrice() / 1.18)));
                 $totalOrder += ($sumaTotalPrecioProductosSinDescuentos - $descuento);
