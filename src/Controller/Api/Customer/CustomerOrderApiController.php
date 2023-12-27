@@ -262,12 +262,13 @@ class CustomerOrderApiController extends AbstractController
                 ];
                 $sumaProductos += $order_product->getQuantity();
                 $sumaTotalPrecioProductosSinDescuentos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
-                $descuento += ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
+                $descuentoDelProducto = ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
+                $descuento += $descuentoDelProducto;
                 $ITBIS += $order_product->getQuantity() * ($order_product->getProduct()->getDiscountActive() ? //si existe descuento sobre el producto
-                    //[precio bruto prod - (precio precio bruto prod / 100% * porcentaje de descuento) ]= precio del producto con descuento
-                    $order_product->getProduct()->getPrice() - (($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive())
+                    //[precio bruto prod - (precio precio bruto prod / 100% * porcentaje de descuento) ]= precio del producto con descuento y a eso le saco el 18 %
+                    $descuentoDelProducto - ($descuentoDelProducto * 1.18)
                     //si no precio por 1.18 esto me da el 18 % del itbis y lo voy sumando.
-                    : ($order_product->getProduct()->getPrice() * 1.18));
+                    : ($order_product->getProduct()->getPrice() - ($order_product->getProduct()->getPrice() * 1.18)));
                 $totalOrder += ($sumaTotalPrecioProductosSinDescuentos - $descuento);
             }
 
@@ -328,9 +329,9 @@ class CustomerOrderApiController extends AbstractController
                             'total' => (string)$sumaProductos,
                             'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentos, 2, ',', '.'),
                         ],
-                        "productDiscount" => number_format(($descuento * (-1)), 2, ',', '.'),
+                        "productDiscount" => number_format($descuento, 2, ',', '.') * -1,
                         "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
-                        "tax" => $ITBIS,
+                        "tax" => number_format($ITBIS, 2, ',', '.'),
                         "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
                     ],
                     'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
