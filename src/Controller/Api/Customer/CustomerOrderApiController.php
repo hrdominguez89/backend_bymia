@@ -7,6 +7,7 @@ use App\Entity\CustomerAddresses;
 use App\Entity\Orders;
 use App\Entity\OrdersProducts;
 use App\Entity\Recipients;
+use App\Entity\Transactions;
 use App\Helpers\SendOrderToCrm;
 use App\Repository\CitiesRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
@@ -21,6 +22,7 @@ use App\Repository\ShoppingCartRepository;
 use App\Repository\StatesRepository;
 use App\Repository\StatusOrderTypeRepository;
 use App\Repository\StatusTypeShoppingCartRepository;
+use App\Repository\StatusTypeTransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -134,6 +136,7 @@ class CustomerOrderApiController extends AbstractController
         foreach ($shopping_cart_products as $shopping_cart_product) {
             $shopping_cart_product->setStatus($statusTypeShoppingCartRepository->findOneBy(["id" => Constants::STATUS_SHOPPING_CART_EN_ORDEN]));
             $order_product = new OrdersProducts();
+            //NO GUARDO PRECIO PORQUE AUN NO FUE PAGADO, CUANDO REALICE EL PAGO AHI SE GUARDA EL PRECIO.
             $order_product
                 ->setNumberOrder($pre_order)
                 ->setProduct($shopping_cart_product->getProduct())
@@ -142,7 +145,8 @@ class CustomerOrderApiController extends AbstractController
                 ->setPartNumber($shopping_cart_product->getProduct()->getPartNumber() ?: null)
                 ->setCod($shopping_cart_product->getProduct()->getCod() ?: null)
                 ->setWeight($shopping_cart_product->getProduct()->getWeight() ?: null)
-                ->setQuantity($shopping_cart_product->getQuantity());
+                ->setQuantity($shopping_cart_product->getQuantity())
+                ->setShoppingCart($shopping_cart_product->getId());
             $em->persist($order_product);
             $em->persist($shopping_cart_product);
 
@@ -189,48 +193,10 @@ class CustomerOrderApiController extends AbstractController
         CustomerAddressesRepository $customerAddressesRepository,
         RegistrationTypeRepository $registrationTypeRepository,
         HttpClientInterface $client,
+        StatusTypeTransactionRepository $statusTypeTransactionRepository,
         SendOrderToCrm $sendOrderToCrm
     ): Response {
 
-        try {
-            $response = $client->request(
-                'POST',
-                'https://lab.cardnet.com.do/sessions',
-                [
-                    'json'  => [
-                        "AVS" => "33024 1000 ST JOHN PLACE PEMBROKE PINES FLORIDA",
-                        "AcquiringInstitutionCode" => "349",
-                        "CancelUrl" => "https://tokecardnet.000webhostapp.com/ReturnUrli.php",
-                        "CurrencyCode" => "214",
-                        "MerchantName" => "Bymia",
-                        "MerchantNumber" => "349000000",
-                        "MerchantTerminal" => "58585858",
-                        "MerchantType" => "7997",
-                        "PageLanguaje" => "ENG",
-                        "ReturnUrl" => "https://tokecardnet.000webhostapp.com/ReturnUrli.php",
-                        "TransactionType" => "200"
-                    ],
-                ]
-            );
-            $body = $response->getContent(false);
-            $data_response = json_decode($body, true);
-
-            return $this->json(
-                [
-                    'data' => $data_response
-                ],
-                Response::HTTP_NOT_FOUND,
-                ['Content-Type' => 'application/json']
-            );
-        } catch (TransportExceptionInterface $e) {
-            return $this->json(
-                [
-                    'error' => $e->getMessage()
-                ],
-                Response::HTTP_NOT_FOUND,
-                ['Content-Type' => 'application/json']
-            );
-        }
 
 
         if (!(int)$order_id) {
@@ -281,7 +247,10 @@ class CustomerOrderApiController extends AbstractController
             }
 
             $sumaProductos = 0;
-            $sumaTotalPrecioProductos = 0.00;
+            $sumaTotalPrecioProductosSinDescuentos = 0.00;
+            $descuento = 0.00;
+            $totalOrder = 0.00;
+            $ITBIS = 0.00;
             $orders_products_array = $order->getOrdersProducts();
             $orders_products_result = [];
 
@@ -292,39 +261,99 @@ class CustomerOrderApiController extends AbstractController
                     'price' => (string)$order_product->getProduct()->getPrice(),
                 ];
                 $sumaProductos += $order_product->getQuantity();
-                $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
+                $sumaTotalPrecioProductosSinDescuentos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
+                $descuento += ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
+                $ITBIS += $order_product->getQuantity() * ($order_product->getProduct()->getDiscountActive() ? //si existe descuento sobre el producto
+                    //[precio bruto prod - (precio precio bruto prod / 100% * porcentaje de descuento) ]= precio del producto con descuento
+                    $order_product->getProduct()->getPrice() - (($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive())
+                    //si no precio por 1.18 esto me da el 18 % del itbis y lo voy sumando.
+                    : ($order_product->getProduct()->getPrice() * 1.18));
+                $totalOrder += ($sumaTotalPrecioProductosSinDescuentos - $descuento);
             }
 
+            $transaction =  new Transactions;
+            $transaction->setNumberOrder($order);
+            $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
+            $transaction->setAmount($sumaTotalPrecioProductosSinDescuentos);
+            $transaction->setTax($ITBIS);
+            $em->persist($transaction);
+            $em->flush();
 
-            $orderToSend = [
-                'status' => (string)$order->getStatus()->getId(),
-                'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => number_format($sumaTotalPrecioProductos, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
-                'sendTo' => $order->getReceiverName() ?: '',
-                'numberOrder' => (string)$order->getId(),
-                'detail' => [
-                    'items' => $orders_products_result,
-                    'products' => [
-                        'total' => (string)$sumaProductos,
-                        'totalPrice' => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
+
+            try {
+                $response_session = $client->request(
+                    'POST',
+                    $_ENV['CARDNET_URL_SESSION'],
+                    [
+                        'json'  => [
+                            "TransactionType" => $_ENV['CARDNET_TRANSACTION_TYPE'],
+                            "CurrencyCode" => $_ENV['CARDNET_CURRENCY_CODE'],
+                            "AcquiringInstitutionCode" => $_ENV['CARDNET_ACQUIRING_INSTITUTION_CODE'],
+                            "MerchantType" => $_ENV['CARDNET_MERCHANT_TYPE'],
+                            "MerchantNumber" => $_ENV['CARDNET_MERCHANT_NUMBER'],
+                            "MerchantTerminal" => $_ENV['CARDNET_MERCHANT_TERMINAL'],
+                            "ReturnUrl" => $_ENV['CARDNET_SUCCESS_URL'],
+                            "CancelUrl" => $_ENV['CARDNET_CANCEL_URL'],
+                            "PageLanguaje" => $_ENV['CARDNET_PAGE_LANGUAGE'],
+                            "OrdenId" => $order->getId(),
+                            "TransactionId" => $transaction->getId(),
+                            "Tax" => $ITBIS,
+                            "MerchantName" => $_ENV['CARDNET_MERCHANT_NAME'],
+                            "AVS" => $order->getReceiverAddressOrder(),
+                            "Amount" => $totalOrder,
+                        ],
+                    ]
+                );
+                $body = $response_session->getContent(false);
+                $data_session = json_decode($body, true);
+
+                $transaction->setSession($data_session['SESSION']);
+                $transaction->setSessionKey($data_session['session-key']);
+                $em->persist($transaction);
+                $em->flush();
+
+                //TODO: FALTA GUARDAR EL ID DE SESSION Y EL SESSION KEY EN TRANSACTION
+
+                $orderToSend = [
+                    'status' => (string)$order->getStatus()->getId(),
+                    'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
+                    'total' => number_format($totalOrder, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
+                    'sendTo' => $order->getReceiverName() ?: '',
+                    'numberOrder' => (string)$order->getId(),
+                    'SESSION' => $data_session['SESSION'],
+                    'session-key' => $data_session['session-key'],
+                    'detail' => [
+                        'items' => $orders_products_result,
+                        'products' => [
+                            'total' => (string)$sumaProductos,
+                            'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentos, 2, ',', '.'),
+                        ],
+                        "productDiscount" => number_format(($descuento * (-1)), 2, ',', '.'),
+                        "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                        "tax" => $ITBIS,
+                        "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
                     ],
-                    "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
-                    "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => number_format($sumaTotalPrecioProductos, 2, ',', '.'),
-                ],
-                'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
-                'bill' => $order->getBillFile() ?: '',
-                'bill_address' => $bill_address->getAddressDataToOrder() ?: null,
-                'recipient_address' => $recipes_addresses_data ?: null
-            ];
+                    'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
+                    'bill' => $order->getBillFile() ?: '',
+                    'bill_address' => $bill_address->getAddressDataToOrder() ?: null,
+                    'recipient_address' => $recipes_addresses_data ?: null
+                ];
 
 
-            return $this->json(
-                $orderToSend,
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
+                return $this->json(
+                    $orderToSend,
+                    Response::HTTP_ACCEPTED,
+                    ['Content-Type' => 'application/json']
+                );
+            } catch (TransportExceptionInterface $e) {
+                return $this->json(
+                    [
+                        'error' => $e->getMessage()
+                    ],
+                    Response::HTTP_NOT_FOUND,
+                    ['Content-Type' => 'application/json']
+                );
+            }
         }
 
 
@@ -511,7 +540,7 @@ class CustomerOrderApiController extends AbstractController
         $orderToSend = [];
         foreach ($orders as $order) {
             $sumaProductos = 0;
-            $sumaTotalPrecioProductos = 0.00;
+            $sumaTotalPrecioProductosSinDescuentos = 0.00;
             $orders_products_array = $order->getOrdersProducts();
             $orders_products_result = [];
 
@@ -522,26 +551,26 @@ class CustomerOrderApiController extends AbstractController
                     'price' => (string)$order_product->getProduct()->getPrice(),
                 ];
                 $sumaProductos += $order_product->getQuantity();
-                $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
+                $sumaTotalPrecioProductosSinDescuentos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
             }
 
 
             $orderToSend[] = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => (string) $sumaTotalPrecioProductos, // revisar, podria ser.. $order->getTotalOrder()
+                'total' => (string) $sumaTotalPrecioProductosSinDescuentos, // revisar, podria ser.. $order->getTotalOrder()
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
                 'detail' => [
                     'items' => $orders_products_result,
                     'products' => [
                         'total' => (string)$sumaProductos,
-                        'totalPrice' => (string)$sumaTotalPrecioProductos,
+                        'totalPrice' => (string)$sumaTotalPrecioProductosSinDescuentos,
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$sumaTotalPrecioProductos,
+                    "totalOrderPrice" => (string)$sumaTotalPrecioProductosSinDescuentos,
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',

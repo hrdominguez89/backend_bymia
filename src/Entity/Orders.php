@@ -322,6 +322,11 @@ class Orders
      */
     private $receiver_address;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Transactions::class, mappedBy="number_order")
+     */
+    private $transactions;
+
     public function __construct()
     {
         $this->guideNumbers = new ArrayCollection();
@@ -332,6 +337,7 @@ class Orders
         $this->paymentsTransactionsCodes = new ArrayCollection();
         $this->attempts_send_crm = 0;
         $this->created_at = new \DateTime();
+        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1376,6 +1382,36 @@ class Orders
     public function setReceiverAddress(?CustomerAddresses $receiver_address): self
     {
         $this->receiver_address = $receiver_address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transactions>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transactions $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions[] = $transaction;
+            $transaction->setNumberOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transactions $transaction): self
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getNumberOrder() === $this) {
+                $transaction->setNumberOrder(null);
+            }
+        }
 
         return $this;
     }
