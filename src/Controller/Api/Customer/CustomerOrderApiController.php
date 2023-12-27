@@ -329,7 +329,7 @@ class CustomerOrderApiController extends AbstractController
                             'total' => (string)$sumaProductos,
                             'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentos, 2, ',', '.'),
                         ],
-                        "productDiscount" => number_format($descuento, 2, ',', '.') * -1,
+                        "productDiscount" => number_format($descuento, 2, ',', '.'),
                         "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                         "tax" => number_format($ITBIS, 2, ',', '.'),
                         "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
