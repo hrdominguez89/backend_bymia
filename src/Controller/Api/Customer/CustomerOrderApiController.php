@@ -146,7 +146,7 @@ class CustomerOrderApiController extends AbstractController
                 ->setCod($shopping_cart_product->getProduct()->getCod() ?: null)
                 ->setWeight($shopping_cart_product->getProduct()->getWeight() ?: null)
                 ->setQuantity($shopping_cart_product->getQuantity())
-                ->setShoppingCart($shopping_cart_product->getId());
+                ->setShoppingCart($shopping_cart_product);
             $em->persist($order_product);
             $em->persist($shopping_cart_product);
 
