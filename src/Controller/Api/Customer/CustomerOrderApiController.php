@@ -567,7 +567,7 @@ class CustomerOrderApiController extends AbstractController
                 $orders_products_result[] = [
                     'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
                     'name' => $order_product->getProduct()->getName(),
-                    'price' => (string)$order_product->getProduct()->getPrice(),
+                    'price' => (string)$order_product->getPrice(),
                 ];
                 $sumaProductos += $order_product->getQuantity();
                 $sumaTotalPrecioProductosSinDescuentos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
@@ -589,7 +589,7 @@ class CustomerOrderApiController extends AbstractController
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$sumaTotalPrecioProductosSinDescuentos,
+                    "totalOrderPrice" => (string)$order->getTotalOrder(),
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
