@@ -577,19 +577,19 @@ class CustomerOrderApiController extends AbstractController
             $orderToSend[] = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => (string) $order->getTotalOrder(), // revisar, podria ser.. $order->getTotalOrder()
+                'total' => (string) $order->getTotalOrder() ?: $order->getSubtotal(), // revisar, podria ser.. $order->getTotalOrder()
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
                 'detail' => [
                     'items' => $orders_products_result,
                     'products' => [
                         'total' => (string)$sumaProductos,
-                        'totalPrice' => (string)$order->getTotalOrder(),
+                        'totalPrice' => (string)$order->getTotalOrder() ?: $order->getSubtotal(),
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$order->getTotalOrder(),
+                    "totalOrderPrice" => (string)$order->getTotalOrder() ?: $order->getSubtotal(),
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
