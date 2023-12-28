@@ -96,6 +96,7 @@ class CustomerCartApiController extends AbstractController
 
         $actual_datetime = new DateTime();
 
+        $favorite_products_list = [];
 
         foreach ($favorite_products as $favorite_product) {
             if ($favorite_product->getProduct()->getAvailable() > 0) {
@@ -113,10 +114,7 @@ class CustomerCartApiController extends AbstractController
                 $em->persist($favorite_product);
                 $em->persist($shopping_cart_product);
             } else {
-                $favorite_products_list = [];
-                foreach ($favorite_products as $favorite_product) {
-                    $favorite_products_list[] = $favorite_product->getProduct()->getBasicDataProduct();
-                }
+                $favorite_products_list[] = $favorite_product->getProduct()->getBasicDataProduct();
             }
         }
         $message = 'Productos agregados al carrito correctamente.';
