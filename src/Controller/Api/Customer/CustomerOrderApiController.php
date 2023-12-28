@@ -453,7 +453,7 @@ class CustomerOrderApiController extends AbstractController
             $totalPreciosSinDescuentos = 0;
             foreach ($products_in_order as $product_in_order) {
                 $product_in_order->setPrice($product_in_order->getProduct()->getPrice());
-                $product_in_order->setDiscount($product_in_order->getProduct()->getDiscountActive());
+                $product_in_order->setDiscount($product_in_order->getProduct()->getDiscountActive() ?: 0);
                 $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
                 $entityManager->persist($product_in_order);
 
