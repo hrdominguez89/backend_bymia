@@ -1105,10 +1105,18 @@ class Product
 
     public function getDiscountActive()
     {
+        $discountActivePercentage = $this->getProductDiscounts()->filter(function (ProductDiscount $productDiscount) {
+            return $productDiscount->getActive();
+        });
+        return $discountActivePercentage->first() ? $discountActivePercentage->first()->getPercentageDiscount() : null;
+    }
+
+    public function getDiscountActiveObject()
+    {
         $discountActive = $this->getProductDiscounts()->filter(function (ProductDiscount $productDiscount) {
             return $productDiscount->getActive();
         });
-        return $discountActive->first() ? $discountActive->first()->getPercentageDiscount() : null;
+        return $discountActive->first() ? $discountActive->first() : null;
     }
 
 

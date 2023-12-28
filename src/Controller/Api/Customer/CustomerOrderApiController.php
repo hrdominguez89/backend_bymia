@@ -14,6 +14,7 @@ use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CountriesRepository;
 use App\Repository\CustomerAddressesRepository;
 use App\Repository\CustomerRepository;
+use App\Repository\OrdersProductsRepository;
 use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
@@ -194,6 +195,7 @@ class CustomerOrderApiController extends AbstractController
         RegistrationTypeRepository $registrationTypeRepository,
         HttpClientInterface $client,
         StatusTypeTransactionRepository $statusTypeTransactionRepository,
+        OrdersProductsRepository $ordersProductsRepository,
         SendOrderToCrm $sendOrderToCrm
     ): Response {
 
@@ -263,7 +265,7 @@ class CustomerOrderApiController extends AbstractController
                 $sumaProductos += $order_product->getQuantity();
                 $sumaTotalPrecioProductosSinDescuentos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
                 $descuentoDelProducto = ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
-                $precioConDescuento = $order_product->getProduct()->getPrice() - $descuentoDelProducto;
+                $precioConDescuento = $order_product->getProduct()->getPrice() - $descuentoDelProducto; //POR AHORA NO LO USO
                 $descuento += $descuentoDelProducto;
             }
             $totalOrder = ($sumaTotalPrecioProductosSinDescuentos - $descuento);
@@ -443,16 +445,35 @@ class CustomerOrderApiController extends AbstractController
                 $customer_recipient_address = $customer_bill_address;
             }
 
+            $products_in_order = $ordersProductsRepository->findBy([
+                'number_order' => $order,
+            ]);
+
+            $totalProductDiscount = 0;
+            $totalPreciosSinDescuentos = 0;
+            foreach ($products_in_order as $product_in_order) {
+                $product_in_order->setPrice($product_in_order->getProduct()->getPrice());
+                $product_in_order->setDiscount($product_in_order->getProduct()->getDiscountActive());
+                $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
+                $entityManager->persist($product_in_order);
+
+                $totalProductDiscount += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
+                $totalPreciosSinDescuentos += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
+            }
+            $entityManager->flush();
+
+            $totalOrder = $totalPreciosSinDescuentos - $totalProductDiscount; //por ahora es asi, falta descuento x codigo promocional.
+            $ITBIS = $totalOrder - ($totalOrder / 1.18);
+            $order->setTax($ITBIS); //se cobra el itbis en RD
+            $order->setTotalProductDiscount($totalProductDiscount);
             //por ahora esto se setea a 0
-            $order->setTotalProductDiscount(0);
-            $order->setPromotionalCodeDiscount(0);
-            $order->setTax(0);
-            $order->setShippingCost(0);
-            $order->setShippingDiscount(0);
-            $order->setPaypalServiceCost(0);
+            $order->setPromotionalCodeDiscount(0); //seteamos esto a 0 por el momento
+            $order->setShippingCost(0); //seteamos esto a 0 por el momento
+            $order->setShippingDiscount(0); //seteamos esto a 0 por el momento
+            $order->setPaypalServiceCost(0); //seteamos esto a 0 por el momento
             //
 
-            $order->setTotalOrder($order->getSubtotal());
+            $order->setTotalOrder($totalOrder);
 
             $order->setStatus($status_order_id);
             $order->setBillAddress($customer_bill_address);

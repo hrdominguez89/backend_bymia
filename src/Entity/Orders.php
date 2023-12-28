@@ -933,8 +933,8 @@ class Orders
                 'product_name' => $order_product->getProduct()->getName(),
                 'qty' => $order_product->getQuantity(),
                 'weight' => $order_product->getProduct()->getWeight(),
-                'price' => $order_product->getProduct()->getPrice(),
-                'discount' => $order_product->getProduct()->getDiscountActive() ?: 0
+                'price' => $order_product->getPrice(),
+                'discount' => $order_product->getDiscount() ?: 0
             ];
         }
 
@@ -1058,74 +1058,6 @@ class Orders
                 'discount' => $order_product->getDiscount()
             ];
         }
-
-        // {
-        //     "items": [
-        //         {
-        //             "id": 10,
-        //             "name": "Prueba producto 1",
-        //             "quantity": 5,
-        //             "price": 10,
-        //             "0": 25
-        //         },
-        //         {
-        //             "id": 11,
-        //             "name": "Prueba producto 2",
-        //             "quantity": 4,
-        //             "price": 20,
-        //             "0": 25
-        //         },
-        //         {
-        //             "id": 13,
-        //             "name": "Prueba producto 3",
-        //             "quantity": 1,
-        //             "price": 300,
-        //             "0": 25
-        //         }
-        //     ],
-        //     "bill_data": {
-        //         "identity_type": "DNI",
-        //         "identity_number": "34987273",
-        //         "country_id": 11,
-        //         "country_name": "Argentina",
-        //         "state_id": 4545,
-        //         "state_name": "Buenos Aires",
-        //         "city_id": 42022,
-        //         "city_name": "Ciudad Autonoma de Buenos Aires",
-        //         "code_zip" : "abc123",
-        //         "additional_info": "informacion adicional",
-        //         "address": "Calle 123 4to A"
-        //     },
-        //     "recipients": [
-        //         {
-        //             "recipient_id": 1,
-        //             "country_name": "Argentina",
-        //             "state_name": "Córdoba",
-        //             "city_name": "Cosquin",
-        //             "recipient_name": "Destinatario prueba 1",
-        //             "address": "Direccion destinatario 1 23233",
-        //             "recipient_phone": "1163549766"
-        //         },
-        //         {
-        //             "recipient_id": 2,
-        //             "country_name": "Argentina",
-        //             "state_name": "Córdoba",
-        //             "city_name": "La falda",
-        //             "recipient_name": "Destinatario prueba 2",
-        //             "address": "Direccion destinatario 2 23233",
-        //             "recipient_phone": "1163549766"
-        //         },
-        //         {
-        //             "recipient_id": 3,
-        //             "country_name": "Argentina",
-        //             "state_name": "Córdoba",
-        //             "city_name": "Córdoba Capital",
-        //             "recipient_name": "Destinatario prueba 3",
-        //             "address": "Direccion destinatario 3 23233",
-        //             "recipient_phone": "1163549766"
-        //         }
-        //     ]
-        // }
         return [];
     }
 
