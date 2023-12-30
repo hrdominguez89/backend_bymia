@@ -24,6 +24,8 @@ use App\Repository\StatesRepository;
 use App\Repository\StatusOrderTypeRepository;
 use App\Repository\StatusTypeShoppingCartRepository;
 use App\Repository\StatusTypeTransactionRepository;
+use App\Repository\TransactionsRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -196,10 +198,9 @@ class CustomerOrderApiController extends AbstractController
         HttpClientInterface $client,
         StatusTypeTransactionRepository $statusTypeTransactionRepository,
         OrdersProductsRepository $ordersProductsRepository,
+        TransactionsRepository $transactionsRepository,
         SendOrderToCrm $sendOrderToCrm
     ): Response {
-
-
 
         if (!(int)$order_id) {
             return $this->json(
@@ -271,14 +272,28 @@ class CustomerOrderApiController extends AbstractController
             $totalOrder = ($sumaTotalPrecioProductosSinDescuentos - $descuento);
             $ITBIS = $totalOrder - ($totalOrder / 1.18);
 
-            $transaction =  new Transactions;
-            $transaction->setNumberOrder($order);
-            $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
-            $transaction->setAmount($sumaTotalPrecioProductosSinDescuentos);
-            $transaction->setTax($ITBIS);
-            $em->persist($transaction);
-            $em->flush();
 
+
+            $fechaActual = new DateTime();
+
+            $fechaActual->modify('-10 minutes');
+
+            $criterios = [
+                'number_order' => $order,
+                'status_id' => 1, // Cambiar por el ID del status que buscas (en este caso 1)
+                'created_at' => $fechaActual,
+            ];
+
+            $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
+            if (!$transaction) {
+                $transaction =  new Transactions;
+                $transaction->setNumberOrder($order);
+                $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
+                $transaction->setAmount($totalOrder);
+                $transaction->setTax($ITBIS);
+                $em->persist($transaction);
+                $em->flush();
+            }
 
             try {
                 $response_session = $client->request(
@@ -297,10 +312,10 @@ class CustomerOrderApiController extends AbstractController
                             "PageLanguaje" => $_ENV['CARDNET_PAGE_LANGUAGE'],
                             "OrdenId" => $order->getId(),
                             "TransactionId" => $transaction->getId(),
-                            "Tax" => $ITBIS,
+                            "Tax" => $ITBIS * 100,
                             "MerchantName" => $_ENV['CARDNET_MERCHANT_NAME'],
                             "AVS" => $order->getReceiverAddressOrder(),
-                            "Amount" => $totalOrder,
+                            "Amount" => $totalOrder * 100,
                         ],
                     ]
                 );
@@ -322,6 +337,7 @@ class CustomerOrderApiController extends AbstractController
                     'numberOrder' => (string)$order->getId(),
                     'SESSION' => $data_session['SESSION'],
                     'session-key' => $data_session['session-key'],
+                    'transaction_id' => $transaction->getId(),
                     'detail' => [
                         'items' => $orders_products_result,
                         'products' => [
@@ -543,13 +559,6 @@ class CustomerOrderApiController extends AbstractController
      * @Route("/orders", name="api_customer_orders",methods={"GET"})
      */
     public function orders(
-        Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
-        EntityManagerInterface $em,
-        SendOrderToCrm $sendOrderToCrm,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
         OrdersRepository $ordersRepository
     ): Response {
 
@@ -577,19 +586,19 @@ class CustomerOrderApiController extends AbstractController
             $orderToSend[] = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => (string) $order->getTotalOrder()? :$sumaTotalPrecioProductos, // revisar, podria ser.. $order->getTotalOrder()
+                'total' => (string) $order->getTotalOrder() ?: $sumaTotalPrecioProductos,
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
                 'detail' => [
                     'items' => $orders_products_result,
                     'products' => [
                         'total' => (string)$sumaProductos,
-                        'totalPrice' => (string)$order->getTotalOrder()? :$sumaTotalPrecioProductos,
+                        'totalPrice' => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductos,
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$order->getTotalOrder()? :$sumaTotalPrecioProductos,
+                    "totalOrderPrice" => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductos,
                 ],
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
