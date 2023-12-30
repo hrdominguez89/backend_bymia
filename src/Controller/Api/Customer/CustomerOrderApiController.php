@@ -280,7 +280,7 @@ class CustomerOrderApiController extends AbstractController
 
             $criterios = [
                 'number_order' => $order,
-                'status_id' => 1, // Cambiar por el ID del status que buscas (en este caso 1)
+                'status' => $statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW), // Cambiar por el ID del status que buscas (en este caso 1)
                 'created_at' => $fechaActual,
             ];
 
