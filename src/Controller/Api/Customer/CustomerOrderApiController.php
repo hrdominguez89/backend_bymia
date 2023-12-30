@@ -281,11 +281,11 @@ class CustomerOrderApiController extends AbstractController
             $criterios = [
                 'number_order' => $order,
                 'status' => $statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW), // Cambiar por el ID del status que buscas (en este caso 1)
-                'created_at' => $fechaActual,
             ];
 
             $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
-            if (!$transaction) {
+
+            if (!$transaction || $transaction->getCreatedAt() >= $fechaActual ) {
                 $transaction =  new Transactions;
                 $transaction->setNumberOrder($order);
                 $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
