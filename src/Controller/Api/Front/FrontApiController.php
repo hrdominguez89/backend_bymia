@@ -31,12 +31,15 @@ use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
 use App\Repository\FavoriteProductRepository;
+use App\Repository\PrivacyPolicyRepository;
 use App\Repository\ProductRepository;
+use App\Repository\RefundRepository;
 use App\Repository\RegistrationTypeRepository;
 use App\Repository\SectionsHomeRepository;
 use App\Repository\ShoppingCartRepository;
 use App\Repository\StatesRepository;
 use App\Repository\TagRepository;
+use App\Repository\TermsConditionsRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -806,6 +809,50 @@ class FrontApiController extends AbstractController
             ['Content-Type' => 'application/json']
         );
     }
+
+    /**
+     * @Route("/terms", name="api_terms",methods={"GET"})
+     */
+    public function terms(TermsConditionsRepository $termsConditionsRepository): Response
+    {
+
+        $terms = $termsConditionsRepository->find(1);
+        return $this->json(
+            $terms,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/policies", name="api_policies",methods={"GET"})
+     */
+    public function policies(PrivacyPolicyRepository $privacyPolicyRepository): Response
+    {
+
+        $policies = $privacyPolicyRepository->find(1);
+        return $this->json(
+            $policies,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+
+    /**
+     * @Route("/refund", name="api_refund",methods={"GET"})
+     */
+    public function refund(RefundRepository $refundRepository): Response
+    {
+
+        $refund = $refundRepository->find(1);
+        return $this->json(
+            $refund,
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
 
     /**
      * @Route("/faqs", name="api_faqs",methods={"GET"})
