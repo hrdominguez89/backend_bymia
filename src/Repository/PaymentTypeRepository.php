@@ -39,6 +39,18 @@ class PaymentTypeRepository extends ServiceEntityRepository
         }
     }
 
+    public function getPayments():array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $data = $entityManager->createQuery(
+            'SELECT p.id,p.name
+            FROM App\Entity\PaymentType p
+            order by p.id ASC'
+        )->getArrayResult();
+        return $data;
+    }
+
 //    /**
 //     * @return PaymentType[] Returns an array of PaymentType objects
 //     */

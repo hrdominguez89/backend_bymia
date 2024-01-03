@@ -243,7 +243,7 @@ class CustomerOrderApiController extends AbstractController
         }
         if ($request->getMethod() == 'GET') {
 
-            $paymentsTypes = $paymentTypeRepository->findAll();
+            $paymentsTypes = $paymentTypeRepository->getPayments();
 
             $bill_address = $customerAddressesRepository->findOneBy(['active' => true, 'customer' => $this->customer, 'billing_address' => true], ['id' => 'DESC']);
 
@@ -281,7 +281,7 @@ class CustomerOrderApiController extends AbstractController
 
             $fechaActual = new DateTime();
 
-            $fechaActual->modify('-10 minutes');
+            $fechaActual->modify('-30 minutes');
 
             $criterios = [
                 'number_order' => $order,
