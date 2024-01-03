@@ -521,6 +521,7 @@ class CustomerOrderApiController extends AbstractController
                         'status_code' => Response::HTTP_ACCEPTED,
                         'paymentTypeId' => $order->getPaymentType()->getId(),
                         'urlCardnet' => $order->getPaymentType()->getUrl(),
+                        'SESSION' => $data_session['SESSION'],
                     ];
 
                     return $this->json(
@@ -559,6 +560,7 @@ class CustomerOrderApiController extends AbstractController
                     'status_code' => Response::HTTP_ACCEPTED,
                     'paymentTypeId' => $order->getPaymentType()->getId(),
                     'urlCardnet' => NULL,
+                    'SESSION' => NULL,
                     'message' => 'Su orden ya se encuentra en proceso.'
                 ],
                 Response::HTTP_ACCEPTED,
