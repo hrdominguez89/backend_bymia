@@ -839,7 +839,7 @@ class FrontApiController extends AbstractController
         $data = json_decode($body, true);
 
         $transaction =  $transactionsRepository->findOneBy([
-            'number_order_id' => $data['order'],
+            'number_order' => $data['order'],
             'id'=> $data['transaction'],
             'status'=>1,
         ]);
