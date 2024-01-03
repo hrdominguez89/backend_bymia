@@ -31,6 +31,7 @@ use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\CustomerStatusTypeRepository;
 use App\Repository\FavoriteProductRepository;
+use App\Repository\OrderRepository;
 use App\Repository\PrivacyPolicyRepository;
 use App\Repository\ProductRepository;
 use App\Repository\RefundRepository;
@@ -40,6 +41,7 @@ use App\Repository\ShoppingCartRepository;
 use App\Repository\StatesRepository;
 use App\Repository\TagRepository;
 use App\Repository\TermsConditionsRepository;
+use App\Repository\TransactionsRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -820,6 +822,46 @@ class FrontApiController extends AbstractController
         return $this->json(
             $terms,
             Response::HTTP_OK,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/order-status", name="api_order_status",methods={"POST"})
+     */
+    public function orderStatus(
+        Request $request,
+        TransactionsRepository $transactionsRepository,
+        EntityManagerInterface $em
+    ): Response {
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        // $data['customer'];
+        // $data['status']; // 1 accepted y 2 //rejected
+        // $data['order']; //
+        // $data['transaction'];
+
+        if($data['status'] == 2){
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code'=>Response::HTTP_ACCEPTED,
+                    'message' => 'La operación fue rechazada, por favor aguarde unos instantes e intente nuevamente, si el problema persiste pongase en contacto con atención al cliente.'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        return $this->json(
+            [
+                'status' => true,
+                'status_code'=>Response::HTTP_ACCEPTED,
+                'message' => 'La operación fue realizada correctamente.'
+            ],
+            Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );
     }
