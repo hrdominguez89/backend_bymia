@@ -327,6 +327,11 @@ class Orders
      */
     private $transactions;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PaymentType::class, inversedBy="orders")
+     */
+    private $payment_type;
+
     public function __construct()
     {
         $this->guideNumbers = new ArrayCollection();
@@ -1344,6 +1349,18 @@ class Orders
                 $transaction->setNumberOrder(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPaymentType(): ?PaymentType
+    {
+        return $this->payment_type;
+    }
+
+    public function setPaymentType(?PaymentType $payment_type): self
+    {
+        $this->payment_type = $payment_type;
 
         return $this;
     }

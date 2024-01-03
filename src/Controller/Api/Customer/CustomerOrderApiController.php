@@ -16,6 +16,7 @@ use App\Repository\CustomerAddressesRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\OrdersProductsRepository;
 use App\Repository\OrdersRepository;
+use App\Repository\PaymentTypeRepository;
 use App\Repository\ProductRepository;
 use App\Repository\RegistrationTypeRepository;
 use App\Repository\ShippingTypesRepository;
@@ -199,6 +200,7 @@ class CustomerOrderApiController extends AbstractController
         StatusTypeTransactionRepository $statusTypeTransactionRepository,
         OrdersProductsRepository $ordersProductsRepository,
         TransactionsRepository $transactionsRepository,
+        PaymentTypeRepository $paymentTypeRepository,
         SendOrderToCrm $sendOrderToCrm
     ): Response {
 
@@ -240,6 +242,9 @@ class CustomerOrderApiController extends AbstractController
             );
         }
         if ($request->getMethod() == 'GET') {
+
+            $paymentsTypes = $paymentTypeRepository->findAll();
+
             $bill_address = $customerAddressesRepository->findOneBy(['active' => true, 'customer' => $this->customer, 'billing_address' => true], ['id' => 'DESC']);
 
             $recipes_addresses = $customerAddressesRepository->getLastFiveAddress($this->customer);
@@ -327,10 +332,9 @@ class CustomerOrderApiController extends AbstractController
                 $em->persist($transaction);
                 $em->flush();
 
-                //TODO: FALTA GUARDAR EL ID DE SESSION Y EL SESSION KEY EN TRANSACTION
-
                 $orderToSend = [
                     'status' => (string)$order->getStatus()->getId(),
+                    'paymentsTypes' => $paymentsTypes,
                     'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
                     'total' => number_format($totalOrder, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
                     'sendTo' => $order->getReceiverName() ?: '',
