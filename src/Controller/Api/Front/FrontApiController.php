@@ -838,10 +838,12 @@ class FrontApiController extends AbstractController
         $body = $request->getContent();
         $data = json_decode($body, true);
 
+
+        dd($data['order']);
         $transaction =  $transactionsRepository->findOneBy([
             'number_order' => $data['order'],
-            'id'=> $data['transaction'],
-            'status'=>1,
+            'id' => $data['transaction'],
+            'status' => 1,
         ]);
 
         dd($transaction);
