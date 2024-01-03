@@ -45,9 +45,9 @@ class TransactionsRepository extends ServiceEntityRepository
             ->createQuery('
             UPDATE App:Transactions t
             SET
-                t.status_id = 2
+                t.status = 2
             WHERE t.number_order =:number_order
-            AND t.status_id = 1
+            AND t.status = 1
             ')
             ->setParameter('number_order', $order)
             ->execute();
