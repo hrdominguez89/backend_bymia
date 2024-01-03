@@ -838,16 +838,22 @@ class FrontApiController extends AbstractController
         $body = $request->getContent();
         $data = json_decode($body, true);
 
-        // $data['customer'];
+        $transaction =  $transactionsRepository->findOneBy([
+            'number_order_id' => $data['order'],
+            'id'=> $data['transaction'],
+            'status'=>1,
+        ]);
+
+        dd($transaction);
         // $data['status']; // 1 accepted y 2 //rejected
         // $data['order']; //
         // $data['transaction'];
 
-        if($data['status'] == 2){
+        if ($data['status'] == 2) {
             return $this->json(
                 [
                     'status' => false,
-                    'status_code'=>Response::HTTP_ACCEPTED,
+                    'status_code' => Response::HTTP_ACCEPTED,
                     'message' => 'La operación fue rechazada, por favor aguarde unos instantes e intente nuevamente, si el problema persiste pongase en contacto con atención al cliente.'
                 ],
                 Response::HTTP_ACCEPTED,
@@ -858,7 +864,7 @@ class FrontApiController extends AbstractController
         return $this->json(
             [
                 'status' => true,
-                'status_code'=>Response::HTTP_ACCEPTED,
+                'status_code' => Response::HTTP_ACCEPTED,
                 'message' => 'La operación fue realizada correctamente.'
             ],
             Response::HTTP_ACCEPTED,
