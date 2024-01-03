@@ -843,12 +843,12 @@ class FrontApiController extends AbstractController
             'number_order' => $data['order'],
             'id' => $data['transaction'],
             'status' => 1,
-        ]);
+        ],['id'=>'DESC']);
 
         return $this->json(
             [
                 'status' => false,
-                'data' => $transaction,
+                'data' => $transaction->get,
                 'status_code' => Response::HTTP_ACCEPTED,
                 'message' => 'La operación fue rechazada, por favor aguarde unos instantes e intente nuevamente, si el problema persiste pongase en contacto con atención al cliente.'
             ],
