@@ -277,103 +277,36 @@ class CustomerOrderApiController extends AbstractController
             $totalOrder = ($sumaTotalPrecioProductosSinDescuentos - $descuento);
             $ITBIS = $totalOrder - ($totalOrder / 1.18);
 
-
-
-            $fechaActual = new DateTime();
-
-            $fechaActual->modify('-30 minutes');
-
-            $criterios = [
-                'number_order' => $order,
-                'status' => $statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW), // Cambiar por el ID del status que buscas (en este caso 1)
+            $orderToSend = [
+                'status' => (string)$order->getStatus()->getId(),
+                'paymentsTypes' => $paymentsTypes,
+                'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
+                'total' => number_format($totalOrder, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
+                'sendTo' => $order->getReceiverName() ?: '',
+                'numberOrder' => (string)$order->getId(),
+                'detail' => [
+                    'items' => $orders_products_result,
+                    'products' => [
+                        'total' => (string)$sumaProductos,
+                        'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentos, 2, ',', '.'),
+                    ],
+                    "productDiscount" => $descuento,
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "tax" => $ITBIS,
+                    "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
+                ],
+                'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
+                'bill' => $order->getBillFile() ?: '',
+                'bill_address' => $bill_address->getAddressDataToOrder() ?: null,
+                'recipient_address' => $recipes_addresses_data ?: null
             ];
 
-            $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
 
-            if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual) ) {
-                $transaction =  new Transactions;
-                $transaction->setNumberOrder($order);
-                $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
-                $transaction->setAmount($totalOrder);
-                $transaction->setTax($ITBIS);
-                $em->persist($transaction);
-                $em->flush();
-            }
-
-            try {
-                $response_session = $client->request(
-                    'POST',
-                    $_ENV['CARDNET_URL_SESSION'],
-                    [
-                        'json'  => [
-                            "TransactionType" => $_ENV['CARDNET_TRANSACTION_TYPE'],
-                            "CurrencyCode" => $_ENV['CARDNET_CURRENCY_CODE'],
-                            "AcquiringInstitutionCode" => $_ENV['CARDNET_ACQUIRING_INSTITUTION_CODE'],
-                            "MerchantType" => $_ENV['CARDNET_MERCHANT_TYPE'],
-                            "MerchantNumber" => $_ENV['CARDNET_MERCHANT_NUMBER'],
-                            "MerchantTerminal" => $_ENV['CARDNET_MERCHANT_TERMINAL'],
-                            "ReturnUrl" => $_ENV['CARDNET_SUCCESS_URL'],
-                            "CancelUrl" => $_ENV['CARDNET_CANCEL_URL'],
-                            "PageLanguaje" => $_ENV['CARDNET_PAGE_LANGUAGE'],
-                            "OrdenId" => $order->getId(),
-                            "TransactionId" => $transaction->getId(),
-                            "Tax" => $ITBIS * 100,
-                            "MerchantName" => $_ENV['CARDNET_MERCHANT_NAME'],
-                            "AVS" => $order->getReceiverAddressOrder(),
-                            "Amount" => $totalOrder * 100,
-                        ],
-                    ]
-                );
-                $body = $response_session->getContent(false);
-                $data_session = json_decode($body, true);
-
-                $transaction->setSession($data_session['SESSION']);
-                $transaction->setSessionKey($data_session['session-key']);
-                $em->persist($transaction);
-                $em->flush();
-
-                $orderToSend = [
-                    'status' => (string)$order->getStatus()->getId(),
-                    'paymentsTypes' => $paymentsTypes,
-                    'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                    'total' => number_format($totalOrder, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
-                    'sendTo' => $order->getReceiverName() ?: '',
-                    'numberOrder' => (string)$order->getId(),
-                    'SESSION' => $data_session['SESSION'],
-                    'session-key' => $data_session['session-key'],
-                    'transaction_id' => $transaction->getId(),
-                    'detail' => [
-                        'items' => $orders_products_result,
-                        'products' => [
-                            'total' => (string)$sumaProductos,
-                            'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentos, 2, ',', '.'),
-                        ],
-                        "productDiscount" => $descuento,
-                        "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
-                        "tax" => $ITBIS,
-                        "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
-                    ],
-                    'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
-                    'bill' => $order->getBillFile() ?: '',
-                    'bill_address' => $bill_address->getAddressDataToOrder() ?: null,
-                    'recipient_address' => $recipes_addresses_data ?: null
-                ];
-
-
-                return $this->json(
-                    $orderToSend,
-                    Response::HTTP_ACCEPTED,
-                    ['Content-Type' => 'application/json']
-                );
-            } catch (TransportExceptionInterface $e) {
-                return $this->json(
-                    [
-                        'error' => $e->getMessage()
-                    ],
-                    Response::HTTP_NOT_FOUND,
-                    ['Content-Type' => 'application/json']
-                );
-            }
+            return $this->json(
+                $orderToSend,
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
         }
 
 
@@ -484,6 +417,9 @@ class CustomerOrderApiController extends AbstractController
 
             $totalOrder = $totalPreciosSinDescuentos - $totalProductDiscount; //por ahora es asi, falta descuento x codigo promocional.
             $ITBIS = $totalOrder - ($totalOrder / 1.18);
+
+            $order->setPaymentType($paymentTypeRepository->find($data['order']['paymentTypeId']));
+
             $order->setTax($ITBIS); //se cobra el itbis en RD
             $order->setTotalProductDiscount($totalProductDiscount);
             //por ahora esto se setea a 0
@@ -495,7 +431,6 @@ class CustomerOrderApiController extends AbstractController
 
             $order->setTotalOrder($totalOrder);
 
-            $order->setStatus($status_order_id);
             $order->setBillAddress($customer_bill_address);
             $order->setBillCountry($country_bill);
             $order->setBillState($state_bill);
@@ -524,7 +459,89 @@ class CustomerOrderApiController extends AbstractController
             $order->setShippingType($international_shipping_id);
             $order->setReceiverAddress($customer_recipient_address);
 
+
+            if ($data['order']['paymentTypeId'] != Constants::PAYMENT_TYPE_TRANSACTION) {
+
+                $fechaActual = new DateTime();
+
+                $fechaActual->modify('-30 minutes');
+
+                $criterios = [
+                    'number_order' => $order,
+                    'status' => $statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW),
+                ];
+
+                $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
+
+                if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual)) {
+                    $transaction =  new Transactions;
+                    $transaction->setNumberOrder($order);
+                    $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
+                    $transaction->setAmount($totalOrder);
+                    $transaction->setTax($ITBIS);
+                    $em->persist($transaction);
+                    $em->flush();
+                }
+
+                try {
+                    $response_session = $client->request(
+                        'POST',
+                        $_ENV['CARDNET_URL_SESSION'],
+                        [
+                            'json'  => [
+                                "TransactionType" => $_ENV['CARDNET_TRANSACTION_TYPE'],
+                                "CurrencyCode" => $_ENV['CARDNET_CURRENCY_CODE'],
+                                "AcquiringInstitutionCode" => $_ENV['CARDNET_ACQUIRING_INSTITUTION_CODE'],
+                                "MerchantType" => $_ENV['CARDNET_MERCHANT_TYPE'],
+                                "MerchantNumber" => $_ENV['CARDNET_MERCHANT_NUMBER'],
+                                "MerchantTerminal" => $_ENV['CARDNET_MERCHANT_TERMINAL'],
+                                "ReturnUrl" => $_ENV['CARDNET_SUCCESS_URL'],
+                                "CancelUrl" => $_ENV['CARDNET_CANCEL_URL'],
+                                "PageLanguaje" => $_ENV['CARDNET_PAGE_LANGUAGE'],
+                                "OrdenId" => $order->getId(),
+                                "TransactionId" => $transaction->getId(),
+                                "Tax" => $ITBIS * 100,
+                                "MerchantName" => $_ENV['CARDNET_MERCHANT_NAME'],
+                                "AVS" => $order->getReceiverAddressOrder(),
+                                "Amount" => $totalOrder * 100,
+                            ],
+                        ]
+                    );
+                    $body = $response_session->getContent(false);
+                    $data_session = json_decode($body, true);
+
+                    $transaction->setSession($data_session['SESSION']);
+                    $transaction->setSessionKey($data_session['session-key']);
+                    $em->persist($transaction);
+                    $em->persist($order);
+                    $em->flush();
+
+                    $responseCardnet = [
+                        'status' => true,
+                        'status_code' => Response::HTTP_ACCEPTED,
+                        'paymentTypeId' => $order->getPaymentType()->getId(),
+                        'urlCardnet' => $order->getPaymentType()->getUrl(),
+                    ];
+
+                    return $this->json(
+                        $responseCardnet,
+                        Response::HTTP_ACCEPTED,
+                        ['Content-Type' => 'application/json']
+                    );
+                } catch (TransportExceptionInterface $e) {
+                    return $this->json(
+                        [
+                            'status' => false,
+                            'status_code' => Response::HTTP_NOT_FOUND,
+                            'message' => $e->getMessage()
+                        ],
+                        Response::HTTP_NOT_FOUND,
+                        ['Content-Type' => 'application/json']
+                    );
+                }
+            }
             //envio por helper los datos del cliente al crm
+            $order->setStatus($status_order_id);
 
             $entityManager->persist($order);
             $entityManager->flush();
@@ -539,8 +556,9 @@ class CustomerOrderApiController extends AbstractController
             return $this->json(
                 [
                     'status' => true,
-                    'orden' => $order->generateOrderToCRM(),
                     'status_code' => Response::HTTP_ACCEPTED,
+                    'paymentTypeId' => $order->getPaymentType()->getId(),
+                    'urlCardnet' => NULL,
                     'message' => 'Su orden ya se encuentra en proceso.'
                 ],
                 Response::HTTP_ACCEPTED,
