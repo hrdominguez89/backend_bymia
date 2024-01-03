@@ -845,6 +845,17 @@ class FrontApiController extends AbstractController
             'status' => 1,
         ], ['id' => 'DESC']);
 
+        if (!$transaction || $transaction->getNumberOrder()->getCustomer()->getId() != $data['customer']) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_ACCEPTED,
+                    'message' => 'Los datos indicados son incorrectos'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        }
         return $this->json(
             [
                 'status' => false,
