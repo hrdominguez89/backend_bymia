@@ -47,6 +47,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Uid\Uuid;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @Route("/api/front")
@@ -832,6 +834,7 @@ class FrontApiController extends AbstractController
     public function orderStatus(
         Request $request,
         TransactionsRepository $transactionsRepository,
+        HttpClientInterface $client,
         EntityManagerInterface $em
     ): Response {
 
@@ -839,12 +842,15 @@ class FrontApiController extends AbstractController
         $data = json_decode($body, true);
 
 
+        //TRAIGO UNA TRANSACTION QUE COINCIDA CON LOS VALORES INDICADOS
         $transaction =  $transactionsRepository->findOneBy([
             'number_order' => $data['order'],
             'id' => $data['transaction'],
             'status' => 1,
         ], ['id' => 'DESC']);
 
+
+        //SI NO EXISTE TRANSACTION O SI EXISTE PERO NO COINCIDE CON EL NRO DE CLIENTE ARROJO ERROR
         if (!$transaction || $transaction->getNumberOrder()->getCustomer()->getId() != $data['customer']) {
             return $this->json(
                 [
@@ -856,20 +862,8 @@ class FrontApiController extends AbstractController
                 ['Content-Type' => 'application/json']
             );
         }
-        return $this->json(
-            [
-                'status' => false,
-                'data' => $transaction->getSession(),
-                'status_code' => Response::HTTP_ACCEPTED,
-                'message' => 'La operación fue rechazada, por favor aguarde unos instantes e intente nuevamente, si el problema persiste pongase en contacto con atención al cliente.'
-            ],
-            Response::HTTP_ACCEPTED,
-            ['Content-Type' => 'application/json']
-        );
-        // $data['status']; // 1 accepted y 2 //rejected
-        // $data['order']; //
-        // $data['transaction'];
 
+        //SI EL STATUS ID ES 2 = REJECTED ANALIZO EL RESULTADO DE LA SESION
         if ($data['status'] == 2) {
             return $this->json(
                 [
@@ -881,16 +875,52 @@ class FrontApiController extends AbstractController
                 ['Content-Type' => 'application/json']
             );
         }
+        //SI EL STATUS ES ID 1 = ACCEPTED ANALIZO EL RESULTADO DE LA SESION
+        try {
+            $response_session_verify = $client->request(
+                'GET',
+                $_ENV['CARDNET_URL_SESSION'] . '/' . $transaction->getSession() . '?sk=' . $transaction->getSessionKey()
+            );
 
-        return $this->json(
-            [
-                'status' => true,
-                'status_code' => Response::HTTP_ACCEPTED,
-                'message' => 'La operación fue realizada correctamente.'
-            ],
-            Response::HTTP_ACCEPTED,
-            ['Content-Type' => 'application/json']
-        );
+            $body = $response_session_verify->getContent(false);
+            $data_session_verify = json_decode($body, true);
+
+            // $transaction->setSession($data_session_verify['SESSION']);
+            // $transaction->setSessionKey($data_session_verify['session-key']);
+            // $em->persist($transaction);
+            // $em->persist($order);
+            // $em->flush();
+
+            // $responseCardnet = [
+            //     'status' => true,
+            //     'status_code' => Response::HTTP_ACCEPTED,
+            //     'paymentTypeId' => $order->getPaymentType()->getId(),
+            //     'urlCardnet' => $order->getPaymentType()->getUrl(),
+            //     'SESSION' => $data_session_verify['SESSION'],
+            // ];
+
+
+            return $this->json(
+                [
+                    'status' => true,
+                    'data'=>$data_session_verify,
+                    'status_code' => Response::HTTP_ACCEPTED,
+                    'message' => 'La operación fue realizada correctamente.'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        } catch (TransportExceptionInterface $e) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => $e->getMessage()
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
     }
 
     /**
