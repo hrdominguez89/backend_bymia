@@ -39,7 +39,7 @@ class TransactionsRepository extends ServiceEntityRepository
         }
     }
 
-    public function cancelAllTransaction($order)
+    public function cancelOldNewTransaction($order)
     {
         $this->getEntityManager()
             ->createQuery('
@@ -47,6 +47,7 @@ class TransactionsRepository extends ServiceEntityRepository
             SET
                 t.status_id = 2
             WHERE t.number_order =:number_order
+            AND t.status_id = 1
             ')
             ->setParameter('number_order', $order)
             ->execute();

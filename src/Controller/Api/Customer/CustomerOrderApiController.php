@@ -474,7 +474,7 @@ class CustomerOrderApiController extends AbstractController
                 $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
 
                 if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual)) {
-                    $transactionsRepository->cancelAllTransaction($order);
+                    $transactionsRepository->cancelOldNewTransaction($order);
                     $transaction =  new Transactions;
                     $transaction->setNumberOrder($order);
                     $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
