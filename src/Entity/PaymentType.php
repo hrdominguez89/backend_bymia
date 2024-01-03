@@ -34,6 +34,11 @@ class PaymentType
      */
     private $orders;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $active;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -94,6 +99,18 @@ class PaymentType
                 $order->setPaymentType(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(?bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }

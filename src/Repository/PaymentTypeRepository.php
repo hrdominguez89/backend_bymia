@@ -46,6 +46,7 @@ class PaymentTypeRepository extends ServiceEntityRepository
         $data = $entityManager->createQuery(
             'SELECT p.id,p.name
             FROM App\Entity\PaymentType p
+            WHERE p.active = true
             order by p.id ASC'
         )->getArrayResult();
         return $data;
