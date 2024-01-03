@@ -474,6 +474,7 @@ class CustomerOrderApiController extends AbstractController
                 $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
 
                 if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual)) {
+                    $transactionsRepository->cancelAllTransaction($order);
                     $transaction =  new Transactions;
                     $transaction->setNumberOrder($order);
                     $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
@@ -495,8 +496,8 @@ class CustomerOrderApiController extends AbstractController
                                 "MerchantType" => $_ENV['CARDNET_MERCHANT_TYPE'],
                                 "MerchantNumber" => $_ENV['CARDNET_MERCHANT_NUMBER'],
                                 "MerchantTerminal" => $_ENV['CARDNET_MERCHANT_TERMINAL'],
-                                "ReturnUrl" => $_ENV['CARDNET_SUCCESS_URL'].'?customer='.$this->customer->getId().'&order='.$order->getId().'&transaction='.$transaction->getId().'&status=1',//1 es accepted
-                                "CancelUrl" => $_ENV['CARDNET_CANCEL_URL'].'?customer='.$this->customer->getId().'&order='.$order->getId().'&transaction='.$transaction->getId().'&status=2',//2 es rejected
+                                "ReturnUrl" => $_ENV['CARDNET_SUCCESS_URL'] . '?customer=' . $this->customer->getId() . '&order=' . $order->getId() . '&transaction=' . $transaction->getId() . '&status=1', //1 es accepted
+                                "CancelUrl" => $_ENV['CARDNET_CANCEL_URL'] . '?customer=' . $this->customer->getId() . '&order=' . $order->getId() . '&transaction=' . $transaction->getId() . '&status=2', //2 es rejected
                                 "PageLanguaje" => $_ENV['CARDNET_PAGE_LANGUAGE'],
                                 "OrdenId" => $order->getId(),
                                 "TransactionId" => $transaction->getId(),

@@ -39,6 +39,19 @@ class TransactionsRepository extends ServiceEntityRepository
         }
     }
 
+    public function cancelAllTransaction($order)
+    {
+        $this->getEntityManager()
+            ->createQuery('
+            UPDATE App:Transactions t
+            SET
+                t.status_id = 2
+            WHERE t.number_order =:number_order
+            ')
+            ->setParameter('number_order', $order)
+            ->execute();
+    }
+
 //    /**
 //     * @return Transactions[] Returns an array of Transactions objects
 //     */
