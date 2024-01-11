@@ -84,7 +84,7 @@ class CustomerAddressApiController extends AbstractController
             'type_user_id' => $this->customer->getCustomerTypeRole() ? $this->customer->getCustomerTypeRole()->getId() : '',
             'name' => $this->customer->getName(),
             'email' => $this->customer->getEmail(),
-            'phone_code'=> (string)$this->customer->getCountryPhoneCode()? (string)$this->customer->getCountryPhoneCode()->getPhonecode():'',
+            'phone_code' => (string)$this->customer->getCountryPhoneCode() ? $this->customer->getCountryPhoneCode()->getPhonecode() : '',
             'phone' => (string)$this->customer->getPhone() ? $this->customer->getPhone() : '',
             'gender' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getDescription() : '',
             'gender_id' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getId() : '',
