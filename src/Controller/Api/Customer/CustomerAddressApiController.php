@@ -71,21 +71,23 @@ class CustomerAddressApiController extends AbstractController
 
         $recipes_addresses = $customerAddressesRepository->getLastFiveAddress($this->customer);
 
-        $recipes_addresses_data=[];
-        foreach($recipes_addresses as $recipe_address){
-            $recipes_addresses_data[]= $recipe_address->getRecipeDataToProfile();
+        $recipes_addresses_data = [];
+        foreach ($recipes_addresses as $recipe_address) {
+            $recipes_addresses_data[] = $recipe_address->getRecipeDataToProfile();
         }
 
         $customerData = [
             'code_id' => $this->customer->getId(),
-            'type_user' => $this->customer->getCustomerTypeRole()->getName(),
+            'type_user' => $this->customer->getCustomerTypeRole() ? $this->customer->getCustomerTypeRole()->getName() : '',
+            'type_user_id' => $this->customer->getCustomerTypeRole() ? $this->customer->getCustomerTypeRole()->getId() : '',
             'name' => $this->customer->getName(),
             'email' => $this->customer->getEmail(),
             'phone' => (string)$this->customer->getPhone() ? $this->customer->getCountryPhoneCode()->getPhonecode() . ($this->customer->getStateCodePhone() ? $this->customer->getStateCodePhone() : '') . $this->customer->getPhone() : '',
-            'gender' => $this->customer->getGenderType()->getDescription(),
+            'gender' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getDescription() : '',
+            'gender_id' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getId() : '',
             'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
             'latest_billing_data' => $bill_address->getBillAddressDataToProfile() ?: null,
-            'my_addresses' => $recipes_addresses_data?:null,
+            'my_addresses' => $recipes_addresses_data ?: null,
         ];
 
         return $this->json(

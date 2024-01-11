@@ -899,6 +899,82 @@ class FrontApiController extends AbstractController
             //     'SESSION' => $data_session_verify['SESSION'],
             // ];
 
+            // 00 Aprobada
+            // 01 Llamar al Banco
+            // 02 Llamar al Banco
+            // 03 Comercio Invalido
+            // 04 Rechazada
+            // 05 Rechazada
+            // 06 Error en Mensaje
+            // 07 Tarjeta Rechazada
+            // 08 Llamar al Banco
+            // 09 Request in progress
+            // 10 Aprobación Parcial
+            // 11 Approved VIP
+            // 12 Transaccion Invalida
+            // 13 Monto Invalido
+            // 14 Cuenta Invalida
+            // 15 No such issuer
+            // 16 Approved update track 3
+            // 17 Customer cancellation
+            // 18 Customer dispute
+            // 19 Reintentar Transaccion
+            // 20 No tomo accion
+            // 21 No tomo acción
+            // 22 Transaccion No Aprobada
+            // 23 Transaccion No Aceptada
+            // 24 File update not supported
+            // 25 Unable to locate record
+            // 26 Duplicate record
+            // 27 File update edit error
+            // 28 File update file locked
+            // 30 File update failed
+            // 31 Bin no soportado
+            // 32 Tx. Completada Parcialmente
+            // 33 Tarjeta Expirada
+            // 34 Transacción No Aprobada
+            // 35 Transaccion No Aprobada
+            // 36 Transaccion No Aprobada
+            // 37 Transaccion No Aprobada
+            // 38 Transaccion No Aprobada
+            // 39 Tarjeta Invalida
+            // 40 Función no Soportada
+            // 41 Transacción No Aprobada
+            // 42 Cuenta Invalida
+            // 43 Transacción No Aprobada
+            // 44 No investment account
+            // 51 Fondos insuficientes
+            // 52 Cuenta Invalidad
+            // 53 Cuenta Invalidad
+            // 54 Tarjeta vencida
+            // 56 Cuenta Invalidad
+            // 57 Transaccion no permitida
+            // 58 Transaccion no permitida en terminal
+            // 60 Contactar Adquirente
+            // 61 Excedió Limte de Retiro
+            // 62 Tarjeta Restringida
+            // 65 Excedió Cantidad de Intento
+            // 66 Contactar Adquirente
+            // 67 Hard capture
+            // 68 Response received too late
+            // 75 Pin excedio Limte de Intentos
+            // 77 Captura de Lote Invalida
+            // 78 Intervención del Banco Requerida
+            // 79 Rechazada
+            // 81 Pin invalido
+            // 82 PIN Required
+            // 85 Llaves no disponibles
+            // 89 Terminal Invalida
+            // 90 Cierre en proceso
+            // 91 Host No Disponible
+            // 92 Error de Ruteo
+            // 94 Duplicate Transaction
+            // 95 Error de Reconciliación
+            // 96 Error de Sistema
+            // 97 Emisor no Disponible
+            // 98 Excede Limite de Efectivo
+            // 99 CVV or CVC Error response
+            // TF Solicitud de autenticación rechazada o no completada.
 
             return $this->json(
                 [
