@@ -78,11 +78,14 @@ class CustomerAddressApiController extends AbstractController
 
         $customerData = [
             'code_id' => $this->customer->getId(),
+            'country_name' => $this->customer->getCountryPhoneCode() ? $this->customer->getCountryPhoneCode()->getName() : '',
+            'country_id' => $this->customer->getCountryPhoneCode() ? $this->customer->getCountryPhoneCode()->getId() : '',
             'type_user' => $this->customer->getCustomerTypeRole() ? $this->customer->getCustomerTypeRole()->getName() : '',
             'type_user_id' => $this->customer->getCustomerTypeRole() ? $this->customer->getCustomerTypeRole()->getId() : '',
             'name' => $this->customer->getName(),
             'email' => $this->customer->getEmail(),
-            'phone' => (string)$this->customer->getPhone() ? $this->customer->getCountryPhoneCode()->getPhonecode() . ($this->customer->getStateCodePhone() ? $this->customer->getStateCodePhone() : '') . $this->customer->getPhone() : '',
+            'phone_code'=> (string)$this->customer->getCountryPhoneCode()? (string)$this->customer->getCountryPhoneCode()->getPhonecode():'',
+            'phone' => (string)$this->customer->getPhone() ? $this->customer->getPhone() : '',
             'gender' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getDescription() : '',
             'gender_id' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getId() : '',
             'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
