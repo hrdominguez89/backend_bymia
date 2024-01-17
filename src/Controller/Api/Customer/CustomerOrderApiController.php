@@ -418,6 +418,8 @@ class CustomerOrderApiController extends AbstractController
             $totalOrder = $totalPreciosSinDescuentos - $totalProductDiscount; //por ahora es asi, falta descuento x codigo promocional.
             $ITBIS = $totalOrder - ($totalOrder / 1.18);
 
+            $lastPaymentType = $order->getPaymentType() ?? null;
+
             $order->setPaymentType($paymentTypeRepository->find($data['order']['paymentTypeId']));
 
             $order->setTax($ITBIS); //se cobra el itbis en RD
@@ -474,7 +476,7 @@ class CustomerOrderApiController extends AbstractController
 
                 return $this->json(
                     [
-                        'paymentType_id_base' => $transaction->getNumberOrder()->getPaymentType()->getId(),
+                        'paymentType_id_base' => $lastPaymentType,
                         'paymentType_pasado' => $data['order']['paymentTypeId']
                     ],
                     Response::HTTP_ACCEPTED,
