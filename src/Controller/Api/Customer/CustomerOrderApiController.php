@@ -418,7 +418,7 @@ class CustomerOrderApiController extends AbstractController
             $totalOrder = $totalPreciosSinDescuentos - $totalProductDiscount; //por ahora es asi, falta descuento x codigo promocional.
             $ITBIS = $totalOrder - ($totalOrder / 1.18);
 
-            $lastPaymentType = $order->getPaymentType() ?? null;
+            $lastPaymentType = $order->getPaymentType() ? $order->getPaymentType()->getId() : null;
 
             $order->setPaymentType($paymentTypeRepository->find($data['order']['paymentTypeId']));
 
