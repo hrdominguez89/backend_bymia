@@ -427,7 +427,6 @@ class CustomerOrderApiController extends AbstractController
             $order->setShippingCost(0); //seteamos esto a 0 por el momento
             $order->setShippingDiscount(0); //seteamos esto a 0 por el momento
             $order->setPaypalServiceCost(0); //seteamos esto a 0 por el momento
-            //
 
             $order->setTotalOrder($totalOrder);
 
@@ -484,6 +483,8 @@ class CustomerOrderApiController extends AbstractController
                     $em->flush();
                 }
 
+                dd($totalOrder * 100);die();
+                
                 try {
                     $response_session = $client->request(
                         'POST',
