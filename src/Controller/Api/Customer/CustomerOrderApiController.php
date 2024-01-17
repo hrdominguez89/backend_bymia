@@ -483,8 +483,10 @@ class CustomerOrderApiController extends AbstractController
                     $em->flush();
                 }
 
-                dd($totalOrder * 100);die();
-                
+                echo '<pre>';
+                var_dump($totalOrder * 100);
+                die();
+
                 try {
                     $response_session = $client->request(
                         'POST',
