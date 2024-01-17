@@ -472,6 +472,15 @@ class CustomerOrderApiController extends AbstractController
 
                 $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
 
+                return $this->json(
+                    [
+                        'paymentType_id_base' => $transaction->getNumberOrder()->getPaymentType()->getId(),
+                        'paymentType_pasado' => $data['order']['paymentTypeId']
+                    ],
+                    Response::HTTP_ACCEPTED,
+                    ['Content-Type' => 'application/json']
+                );
+
                 if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual) || !($transaction->getNumberOrder()->getPaymentType()->getId() == $data['order']['paymentTypeId'])) {
                     $transactionsRepository->cancelOldNewTransaction($order);
                     $transaction =  new Transactions;
