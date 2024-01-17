@@ -105,7 +105,7 @@ class CustomerAddressApiController extends AbstractController
     }
 
     /**
-     * @Route("/bill", name="customer_bill_data",methods={"GET"})
+     * @Route("/bill", name="custo_updatemer_bill_data",methods={"GET"})
      */
     public function billData(
         Request $request,
@@ -148,6 +148,79 @@ class CustomerAddressApiController extends AbstractController
                 'message' => 'Mensaje de error'
             ],
             Response::HTTP_INTERNAL_SERVER_ERROR,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/profile", name="customer_profile_data",methods={"PATCH"})
+     */
+    public function profileData(
+        Request $request,
+        StatusOrderTypeRepository $statusOrderTypeRepository,
+        ShoppingCartRepository $shoppingCartRepository,
+        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
+        EntityManagerInterface $em,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        ProductRepository $productRepository
+    ): Response {
+
+        return $this->json(
+            [
+                'status' => true,
+                'status_code' => Response::HTTP_ACCEPTED,
+                'message' => 'Datos actualizados correctamente'
+            ],
+            Response::HTTP_ACCEPTED,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/bill/{bill_address_id}", name="customer_bill_data_update",methods={"PATCH"})
+     */
+    public function updateBillData(
+        $bill_address_id,
+        Request $request,
+        StatusOrderTypeRepository $statusOrderTypeRepository,
+        ShoppingCartRepository $shoppingCartRepository,
+        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
+        EntityManagerInterface $em,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        ProductRepository $productRepository
+    ): Response {
+
+        return $this->json(
+            [
+                'status' => true,
+                'status_code' => Response::HTTP_ACCEPTED,
+                'message' => 'Datos actualizados correctamente'
+            ],
+            Response::HTTP_ACCEPTED,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
+    /**
+     * @Route("/address/{addres_id}", name="customer_address_data_update",methods={"PATCH"})
+     */
+    public function updateAddressData(
+        Request $request,
+        StatusOrderTypeRepository $statusOrderTypeRepository,
+        ShoppingCartRepository $shoppingCartRepository,
+        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
+        EntityManagerInterface $em,
+        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
+        ProductRepository $productRepository
+    ): Response {
+
+        return $this->json(
+            [
+                'status' => true,
+                'status_code' => Response::HTTP_ACCEPTED,
+                'message' => 'Datos actualizados correctamente'
+            ],
+            Response::HTTP_ACCEPTED,
             ['Content-Type' => 'application/json']
         );
     }
