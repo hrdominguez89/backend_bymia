@@ -483,9 +483,12 @@ class CustomerOrderApiController extends AbstractController
                     $em->flush();
                 }
 
-                echo '<pre>';
-                var_dump($totalOrder * 100);
-                die();
+
+                return $this->json(
+                    $totalOrder * 100,
+                    Response::HTTP_ACCEPTED,
+                    ['Content-Type' => 'application/json']
+                );
 
                 try {
                     $response_session = $client->request(
