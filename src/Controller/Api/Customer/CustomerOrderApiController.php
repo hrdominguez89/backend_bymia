@@ -483,13 +483,6 @@ class CustomerOrderApiController extends AbstractController
                     $em->flush();
                 }
 
-
-                return $this->json(
-                    $totalOrder * 100,
-                    Response::HTTP_ACCEPTED,
-                    ['Content-Type' => 'application/json']
-                );
-
                 try {
                     $response_session = $client->request(
                         'POST',
@@ -507,10 +500,10 @@ class CustomerOrderApiController extends AbstractController
                                 "PageLanguaje" => $_ENV['CARDNET_PAGE_LANGUAGE'],
                                 "OrdenId" => $order->getId(),
                                 "TransactionId" => $transaction->getId(),
-                                "Tax" => $ITBIS * 100,
+                                "Tax" => (int)($ITBIS * 100),
                                 "MerchantName" => $_ENV['CARDNET_MERCHANT_NAME'],
                                 "AVS" => $order->getReceiverAddressOrder(),
-                                "Amount" => $totalOrder * 100,
+                                "Amount" => (int)($totalOrder * 100),
                             ],
                         ]
                     );
