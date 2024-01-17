@@ -418,6 +418,7 @@ class CustomerOrderApiController extends AbstractController
             $totalOrder = $totalPreciosSinDescuentos - $totalProductDiscount; //por ahora es asi, falta descuento x codigo promocional.
             $ITBIS = $totalOrder - ($totalOrder / 1.18);
 
+            //Creo lastpayment para saber cual fue el ultimo tipo de pago, porque si es diferente al creado anterior tengo que crear un nuevo session id
             $lastPaymentType = $order->getPaymentType() ? $order->getPaymentType()->getId() : null;
 
             $order->setPaymentType($paymentTypeRepository->find($data['order']['paymentTypeId']));
@@ -474,16 +475,7 @@ class CustomerOrderApiController extends AbstractController
 
                 $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
 
-                return $this->json(
-                    [
-                        'paymentType_id_base' => $lastPaymentType,
-                        'paymentType_pasado' => $data['order']['paymentTypeId']
-                    ],
-                    Response::HTTP_ACCEPTED,
-                    ['Content-Type' => 'application/json']
-                );
-
-                if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual) || !($transaction->getNumberOrder()->getPaymentType()->getId() == $data['order']['paymentTypeId'])) {
+                if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual) || !(@$lastPaymentType == $data['order']['paymentTypeId'])) {
                     $transactionsRepository->cancelOldNewTransaction($order);
                     $transaction =  new Transactions;
                     $transaction->setNumberOrder($order);
