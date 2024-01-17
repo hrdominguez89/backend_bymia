@@ -472,7 +472,7 @@ class CustomerOrderApiController extends AbstractController
 
                 $transaction = $transactionsRepository->findOneBy($criterios, ['created_at' => 'DESC']);
 
-                if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual)) {
+                if (!$transaction || !($transaction->getCreatedAt() >= $fechaActual) || !$transaction->getNumberOrder()->getPaymentType()->getId() == $data['order']['paymentTypeId']) {
                     $transactionsRepository->cancelOldNewTransaction($order);
                     $transaction =  new Transactions;
                     $transaction->setNumberOrder($order);
@@ -489,12 +489,12 @@ class CustomerOrderApiController extends AbstractController
                         $_ENV['CARDNET_URL_SESSION'],
                         [
                             'json'  => [
+                                "MerchantType" => $data['order']['paymentTypeId'] == Constants::PAYMENT_TYPE_CARDNET_ONE_PAYMENT ? $_ENV['CARDNET_MERCHANT_TYPE'] : $_ENV['CARDNET_MERCHANT_TYPE_CUOTAS'],
+                                "MerchantNumber" => $data['order']['paymentTypeId'] == Constants::PAYMENT_TYPE_CARDNET_ONE_PAYMENT ?  $_ENV['CARDNET_MERCHANT_NUMBER'] : $_ENV['CARDNET_MERCHANT_NUMBER_CUOTAS'],
+                                "MerchantTerminal" => $data['order']['paymentTypeId'] == Constants::PAYMENT_TYPE_CARDNET_ONE_PAYMENT ?  $_ENV['CARDNET_MERCHANT_TERMINAL'] : $_ENV['CARDNET_MERCHANT_TERMINAL_CUOTAS'],
                                 "TransactionType" => $_ENV['CARDNET_TRANSACTION_TYPE'],
                                 "CurrencyCode" => $_ENV['CARDNET_CURRENCY_CODE'],
                                 "AcquiringInstitutionCode" => $_ENV['CARDNET_ACQUIRING_INSTITUTION_CODE'],
-                                "MerchantType" => $_ENV['CARDNET_MERCHANT_TYPE'],
-                                "MerchantNumber" => $_ENV['CARDNET_MERCHANT_NUMBER'],
-                                "MerchantTerminal" => $_ENV['CARDNET_MERCHANT_TERMINAL'],
                                 "ReturnUrl" => $_ENV['CARDNET_SUCCESS_URL'] . '?customer=' . $this->customer->getId() . '&order=' . $order->getId() . '&transaction=' . $transaction->getId() . '&status=1', //1 es accepted
                                 "CancelUrl" => $_ENV['CARDNET_CANCEL_URL'] . '?customer=' . $this->customer->getId() . '&order=' . $order->getId() . '&transaction=' . $transaction->getId() . '&status=2', //2 es rejected
                                 "PageLanguaje" => $_ENV['CARDNET_PAGE_LANGUAGE'],
@@ -504,6 +504,24 @@ class CustomerOrderApiController extends AbstractController
                                 "MerchantName" => $_ENV['CARDNET_MERCHANT_NAME'],
                                 "AVS" => $order->getReceiverAddressOrder(),
                                 "Amount" => (int)($totalOrder * 100),
+                                "3DS_email" => $data['order']['billData']['email'],
+                                "3DS_mobilePhone" => $data['order']['billData']['phone'],
+                                "3DS_workPhone" => " ",
+                                "3DS_homePhone" => " ",
+                                "3DS_billAddr_line1" => $data['order']['billData']['address'],
+                                "3DS_billAddr_line2" => $data['order']['billData']['additional_info'],
+                                "3DS_billAddr_line3" => " ",
+                                "3DS_billAddr_city" => $city_bill->getName(),
+                                "3DS_billAddr_state" => $state_bill->getName(),
+                                "3DS_billAddr_country" => $country_bill->getName(),
+                                "3DS_billAddr_postCode" => $data['order']['billData']['code_zip'],
+                                "3DS_shipAddr_line1" => $data['order']['recipient']['address'],
+                                "3DS_shipAddr_line2" => $data['order']['recipient']['additional_info'],
+                                "3DS_shipAddr_line3" => " ",
+                                "3DS_shipAddr_city" => $city_recipient->getName(),
+                                "3DS_shipAddr_state" => $state_recipient->getName(),
+                                "3DS_shipAddr_country" => $country_recipient->getName(),
+                                "3DS_shipAddr_postCode" => $data['order']['recipient']['code_zip']
                             ],
                         ]
                     );
