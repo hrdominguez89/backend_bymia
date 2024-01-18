@@ -45,7 +45,7 @@ class TransactionsRepository extends ServiceEntityRepository
             ->createQuery('
             UPDATE App:Transactions t
             SET
-                t.status = 2
+                t.status = 2,
                 updated_at =:updated_at
             WHERE t.number_order =:number_order
             AND t.status = 1
