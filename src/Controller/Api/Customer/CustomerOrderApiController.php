@@ -250,8 +250,10 @@ class CustomerOrderApiController extends AbstractController
             $recipes_addresses = $customerAddressesRepository->getLastFiveAddress($this->customer);
 
             $recipes_addresses_data = [];
-            foreach ($recipes_addresses as $recipe_address) {
-                $recipes_addresses_data[] = $recipe_address->getAddressDataToOrder();
+            if ($recipes_addresses) {
+                foreach ($recipes_addresses as $recipe_address) {
+                    $recipes_addresses_data[] = $recipe_address->getAddressDataToOrder();
+                }
             }
 
             $sumaProductos = 0;
