@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Constants\Constants;
 use App\Repository\OrdersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -331,6 +332,16 @@ class Orders
      * @ORM\ManyToOne(targetEntity=PaymentType::class, inversedBy="orders")
      */
     private $payment_type;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $proforma_bill_file;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $fiscalInvoiceRequired;
 
     public function __construct()
     {
@@ -1003,6 +1014,15 @@ class Orders
             "shipping" => $this->getShipping() ? 1 : 0,
             "shipping_type" => $this->getShippingType() ? $this->getShippingType()->getId() : null,
             "bill_file" => $this->getBillFile(),
+            "proforma_bill_file" => $this->getProformaBillFile(),
+            "payment_type_id" => $this->getPaymentType() ? $this->getPaymentType()->getId() : null,
+            "transaction_id" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getId() : null,
+            "AuthorizationCode" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getAuthorizationCode() : null,
+            "TxToken" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getTxToken() : null,
+            "ResponseCode" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getResponseCode() : null,
+            "CreditcardNumber" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getCreditcardNumber() : null,
+            "RetrivalReferenceNumber" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getRetrivalReferenceNumber() : null,
+            "RemoteResponseCode" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getRemoteResponseCode() : null,
             "payments_files" => $payments_files_result,
             "payments_received_files" => $payments_received_files_result,
             "payments_transactions_codes" => $payments_transactions_codes_result,
@@ -1331,6 +1351,19 @@ class Orders
         return $this->transactions;
     }
 
+    /**
+     * @return Transaction|null La transacción aprobada, o null si no hay ninguna.
+     */
+    public function getTransactionApproved(): ?Transactions
+    {
+        // Filtra las transacciones para obtener solo las aprobadas
+        $transactionApproved = $this->transactions->filter(function (Transactions $transaction) {
+            return $transaction->getStatus() === Constants::STATUS_TRANSACTION_ACCEPTED; // 2 representa el estado "aprobada"
+        });
+
+        return $transactionApproved ?: null;
+    }
+
     public function addTransaction(Transactions $transaction): self
     {
         if (!$this->transactions->contains($transaction)) {
@@ -1361,6 +1394,30 @@ class Orders
     public function setPaymentType(?PaymentType $payment_type): self
     {
         $this->payment_type = $payment_type;
+
+        return $this;
+    }
+
+    public function getProformaBillFile(): ?string
+    {
+        return $this->proforma_bill_file;
+    }
+
+    public function setProformaBillFile(?string $proforma_bill_file): self
+    {
+        $this->proforma_bill_file = $proforma_bill_file;
+
+        return $this;
+    }
+
+    public function isFiscalInvoiceRequired(): ?bool
+    {
+        return $this->fiscalInvoiceRequired;
+    }
+
+    public function setFiscalInvoiceRequired(?bool $fiscalInvoiceRequired): self
+    {
+        $this->fiscalInvoiceRequired = $fiscalInvoiceRequired;
 
         return $this;
     }

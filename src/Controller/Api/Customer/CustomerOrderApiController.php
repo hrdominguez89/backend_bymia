@@ -463,6 +463,7 @@ class CustomerOrderApiController extends AbstractController
             $order->setReceiverAdditionalInfo(@$data['order']['recipient']['additional_info'] ?: '');
             $order->setShippingType($international_shipping_id);
             $order->setReceiverAddress($customer_recipient_address);
+            $order->setFiscalInvoiceRequired($data['order']['fiscalInvoiceId'] == 1 ? true : false);
 
 
             if ($data['order']['paymentTypeId'] != Constants::PAYMENT_TYPE_TRANSACTION) {

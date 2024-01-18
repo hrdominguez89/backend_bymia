@@ -19,9 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
 use App\Entity\Product;
+use App\Entity\StatusTypeTransaction;
 use App\Form\ContactType;
 use App\Form\ListPriceType;
 use App\Helpers\SendCustomerToCrm;
+use App\Helpers\SendOrderToCrm;
 use App\Repository\AdvertisementsRepository;
 use App\Repository\BrandRepository;
 use App\Repository\BrandsSectionsRepository;
@@ -39,6 +41,8 @@ use App\Repository\RegistrationTypeRepository;
 use App\Repository\SectionsHomeRepository;
 use App\Repository\ShoppingCartRepository;
 use App\Repository\StatesRepository;
+use App\Repository\StatusOrderTypeRepository;
+use App\Repository\StatusTypeTransactionRepository;
 use App\Repository\TagRepository;
 use App\Repository\TermsConditionsRepository;
 use App\Repository\TransactionsRepository;
@@ -47,6 +51,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Uid\Uuid;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use PhpParser\Node\Stmt\Const_;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -834,8 +839,11 @@ class FrontApiController extends AbstractController
     public function orderStatus(
         Request $request,
         TransactionsRepository $transactionsRepository,
+        StatusTypeTransactionRepository $statusTypeTransactionRepository,
         HttpClientInterface $client,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        SendOrderToCrm $sendOrderToCrm,
+        StatusOrderTypeRepository $statusOrderTypeRepository
     ): Response {
 
         $body = $request->getContent();
@@ -865,15 +873,6 @@ class FrontApiController extends AbstractController
 
         //SI EL STATUS ID ES 2 = REJECTED ANALIZO EL RESULTADO DE LA SESION
         if ($data['status'] == 2) {
-            return $this->json(
-                [
-                    'status' => false,
-                    'status_code' => Response::HTTP_ACCEPTED,
-                    'message' => 'La operación fue rechazada, por favor aguarde unos instantes e intente nuevamente, si el problema persiste pongase en contacto con atención al cliente.'
-                ],
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
         }
         //SI EL STATUS ES ID 1 = ACCEPTED ANALIZO EL RESULTADO DE LA SESION
         try {
@@ -885,103 +884,39 @@ class FrontApiController extends AbstractController
             $body = $response_session_verify->getContent(false);
             $data_session_verify = json_decode($body, true);
 
-            // $transaction->setSession($data_session_verify['SESSION']);
-            // $transaction->setSessionKey($data_session_verify['session-key']);
-            // $em->persist($transaction);
-            // $em->persist($order);
-            // $em->flush();
+            $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"] ?: null);
+            $transaction->setTxToken(@$data_session_verify["TxToken"] ?: null);
+            $transaction->setResponseCode(@$data_session_verify["ResponseCode"] ?: null);
+            $transaction->setCreditcardNumber(@$data_session_verify["CreditcardNumber"] ?: null);
+            $transaction->setCreditCardNumber(@$data_session_verify["CreditCardNumber"] ?: null);
+            $transaction->setRetrivalReferenceNumber(@$data_session_verify["RetrivalReferenceNumber"] ?: null);
+            $transaction->setRemoteResponseCode(@$data_session_verify["RemoteResponseCode"] ?: null);
+            $transaction->setUpdatedAt(new \DateTime());
 
-            // $responseCardnet = [
-            //     'status' => true,
-            //     'status_code' => Response::HTTP_ACCEPTED,
-            //     'paymentTypeId' => $order->getPaymentType()->getId(),
-            //     'urlCardnet' => $order->getPaymentType()->getUrl(),
-            //     'SESSION' => $data_session_verify['SESSION'],
-            // ];
+            if (@$data_session_verify["ResponseCode"]) {
+                if ($data_session_verify["ResponseCode"] == '00') {
+                    $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_ACCEPTED));
+                } else {
+                    $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_REJECTED));
+                }
+                $transaction->setErrorMessage(Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]]);
+            }
+            $em->persist($transaction);
 
-            // 00 Aprobada
-            // 01 Llamar al Banco
-            // 02 Llamar al Banco
-            // 03 Comercio Invalido
-            // 04 Rechazada
-            // 05 Rechazada
-            // 06 Error en Mensaje
-            // 07 Tarjeta Rechazada
-            // 08 Llamar al Banco
-            // 09 Request in progress
-            // 10 Aprobación Parcial
-            // 11 Approved VIP
-            // 12 Transaccion Invalida
-            // 13 Monto Invalido
-            // 14 Cuenta Invalida
-            // 15 No such issuer
-            // 16 Approved update track 3
-            // 17 Customer cancellation
-            // 18 Customer dispute
-            // 19 Reintentar Transaccion
-            // 20 No tomo accion
-            // 21 No tomo acción
-            // 22 Transaccion No Aprobada
-            // 23 Transaccion No Aceptada
-            // 24 File update not supported
-            // 25 Unable to locate record
-            // 26 Duplicate record
-            // 27 File update edit error
-            // 28 File update file locked
-            // 30 File update failed
-            // 31 Bin no soportado
-            // 32 Tx. Completada Parcialmente
-            // 33 Tarjeta Expirada
-            // 34 Transacción No Aprobada
-            // 35 Transaccion No Aprobada
-            // 36 Transaccion No Aprobada
-            // 37 Transaccion No Aprobada
-            // 38 Transaccion No Aprobada
-            // 39 Tarjeta Invalida
-            // 40 Función no Soportada
-            // 41 Transacción No Aprobada
-            // 42 Cuenta Invalida
-            // 43 Transacción No Aprobada
-            // 44 No investment account
-            // 51 Fondos insuficientes
-            // 52 Cuenta Invalidad
-            // 53 Cuenta Invalidad
-            // 54 Tarjeta vencida
-            // 56 Cuenta Invalidad
-            // 57 Transaccion no permitida
-            // 58 Transaccion no permitida en terminal
-            // 60 Contactar Adquirente
-            // 61 Excedió Limte de Retiro
-            // 62 Tarjeta Restringida
-            // 65 Excedió Cantidad de Intento
-            // 66 Contactar Adquirente
-            // 67 Hard capture
-            // 68 Response received too late
-            // 75 Pin excedio Limte de Intentos
-            // 77 Captura de Lote Invalida
-            // 78 Intervención del Banco Requerida
-            // 79 Rechazada
-            // 81 Pin invalido
-            // 82 PIN Required
-            // 85 Llaves no disponibles
-            // 89 Terminal Invalida
-            // 90 Cierre en proceso
-            // 91 Host No Disponible
-            // 92 Error de Ruteo
-            // 94 Duplicate Transaction
-            // 95 Error de Reconciliación
-            // 96 Error de Sistema
-            // 97 Emisor no Disponible
-            // 98 Excede Limite de Efectivo
-            // 99 CVV or CVC Error response
-            // TF Solicitud de autenticación rechazada o no completada.
+            $status_order_id = $statusOrderTypeRepository->find(Constants::STATUS_ORDER_OPEN);
+
+            $transaction->getNumberOrder()->setStatus($status_order_id);
+
+            $em->persist($transaction->getNumberOrder());
+            $em->flush();
+
+            $sendOrderToCrm->SendOrderToCrm($transaction->getNumberOrder());
 
             return $this->json(
                 [
                     'status' => true,
-                    'data'=>$data_session_verify,
+                    'data' => Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.',
                     'status_code' => Response::HTTP_ACCEPTED,
-                    'message' => 'La operación fue realizada correctamente.'
                 ],
                 Response::HTTP_ACCEPTED,
                 ['Content-Type' => 'application/json']

@@ -59,6 +59,41 @@ class Transactions
      */
     private $session_key;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $AuthorizationCode;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $TxToken;
+
+    /**
+     * @ORM\Column(type="string", length=2, nullable=true)
+     */
+    private $ResponseCode;
+
+    /**
+     * @ORM\Column(type="string", length=30, nullable=true)
+     */
+    private $CreditcardNumber;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $RetrivalReferenceNumber;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $RemoteResponseCode;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -161,6 +196,90 @@ class Transactions
     public function setSessionKey(?string $session_key): self
     {
         $this->session_key = $session_key;
+
+        return $this;
+    }
+
+    public function getAuthorizationCode(): ?int
+    {
+        return $this->AuthorizationCode;
+    }
+
+    public function setAuthorizationCode(?int $AuthorizationCode): self
+    {
+        $this->AuthorizationCode = $AuthorizationCode;
+
+        return $this;
+    }
+
+    public function getTxToken(): ?string
+    {
+        return $this->TxToken;
+    }
+
+    public function setTxToken(?string $TxToken): self
+    {
+        $this->TxToken = $TxToken;
+
+        return $this;
+    }
+
+    public function getResponseCode(): ?string
+    {
+        return $this->ResponseCode;
+    }
+
+    public function setResponseCode(?string $ResponseCode): self
+    {
+        $this->ResponseCode = $ResponseCode;
+
+        return $this;
+    }
+
+    public function getCreditcardNumber(): ?string
+    {
+        return $this->CreditcardNumber;
+    }
+
+    public function setCreditcardNumber(?string $CreditcardNumber): self
+    {
+        $this->CreditcardNumber = $CreditcardNumber;
+
+        return $this;
+    }
+
+    public function getRetrivalReferenceNumber(): ?string
+    {
+        return $this->RetrivalReferenceNumber;
+    }
+
+    public function setRetrivalReferenceNumber(?string $RetrivalReferenceNumber): self
+    {
+        $this->RetrivalReferenceNumber = $RetrivalReferenceNumber;
+
+        return $this;
+    }
+
+    public function getRemoteResponseCode(): ?string
+    {
+        return $this->RemoteResponseCode;
+    }
+
+    public function setRemoteResponseCode(string $RemoteResponseCode): self
+    {
+        $this->RemoteResponseCode = $RemoteResponseCode;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
