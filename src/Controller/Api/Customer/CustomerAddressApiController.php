@@ -89,7 +89,7 @@ class CustomerAddressApiController extends AbstractController
             'gender' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getDescription() : '',
             'gender_id' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getId() : '',
             'birthdate' => $this->customer->getDateOfBirth() ? (string)$this->customer->getDateOfBirth()->format('m/d/Y') : '',
-            'latest_billing_data' => $bill_address->getBillAddressDataToProfile() ?: null,
+            'latest_billing_data' => $bill_address ? $bill_address->getBillAddressDataToProfile() : null,
             'my_addresses' => $recipes_addresses_data ?: null,
         ];
 
