@@ -202,7 +202,7 @@ class CustomerAddressApiController extends AbstractController
     }
 
     /**
-     * @Route("/address/{addres_id}", name="customer_address_data_update",methods={"PATCH"})
+     * @Route("/address/{addres_id}", name="customer_address_data_update",methods={"PATCH","DELETE"})
      */
     public function updateAddressData(
         Request $request,
@@ -213,6 +213,18 @@ class CustomerAddressApiController extends AbstractController
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
         ProductRepository $productRepository
     ): Response {
+
+        if ($request->getMethod() == 'DELETE') {
+            return $this->json(
+                [
+                    'status' => true,
+                    'status_code' => Response::HTTP_ACCEPTED,
+                    'message' => 'Dirección eliminada correctamente.'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        }
 
         return $this->json(
             [
