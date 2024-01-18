@@ -249,17 +249,12 @@ class CustomerOrderApiController extends AbstractController
 
             $recipes_addresses = $customerAddressesRepository->getLastFiveAddress($this->customer);
 
-            return $this->json(
-                $recipes_addresses,
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
+
 
             $recipes_addresses_data = [];
-            if ($recipes_addresses) {
-                foreach ($recipes_addresses as $recipe_address) {
-                    $recipes_addresses_data[] = $recipe_address->getAddressDataToOrder();
-                }
+
+            foreach ($recipes_addresses as $recipe_address) {
+                $recipes_addresses_data[] = $recipe_address ? $recipe_address->getAddressDataToOrder() : [];
             }
 
             $sumaProductos = 0;
