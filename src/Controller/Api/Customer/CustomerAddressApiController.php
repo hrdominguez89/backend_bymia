@@ -88,7 +88,7 @@ class CustomerAddressApiController extends AbstractController
             'phone' => (string)$this->customer->getPhone() ? $this->customer->getPhone() : '',
             'gender' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getDescription() : '',
             'gender_id' => $this->customer->getGenderType() ? $this->customer->getGenderType()->getId() : '',
-            'birthdate' => (string)$this->customer->getDateOfBirth()->format('m/d/Y'),
+            'birthdate' => $this->customer->getDateOfBirth() ? (string)$this->customer->getDateOfBirth()->format('m/d/Y') : '',
             'latest_billing_data' => $bill_address->getBillAddressDataToProfile() ?: null,
             'my_addresses' => $recipes_addresses_data ?: null,
         ];
@@ -155,7 +155,7 @@ class CustomerAddressApiController extends AbstractController
     /**
      * @Route("/profile", name="customer_profile_data",methods={"PATCH"})
      */
-    public function profileData(
+    public function updateProfileData(
         Request $request,
         StatusOrderTypeRepository $statusOrderTypeRepository,
         ShoppingCartRepository $shoppingCartRepository,
