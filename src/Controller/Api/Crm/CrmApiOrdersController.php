@@ -102,13 +102,9 @@ class CrmApiOrdersController extends AbstractController
                         }
                     }
 
-                    if ($data['bill_file']) {
-                        $order->setBillFile($data['bill_file']);
-                    }
+                    $order->setBillFile($data['bill_file'] ?: 'esto tiene que andar');
 
-                    if ($data['proforma_bill_file']) {
-                        $order->setProformaBillFile($data['proforma_bill_file']);
-                    }
+                    $order->setProformaBillFile($data['proforma_bill_file'] ?: null);
 
                     if ($data['payments_received_files']) {
                         foreach ($data['payments_received_files'] as $payment_received_file) {
