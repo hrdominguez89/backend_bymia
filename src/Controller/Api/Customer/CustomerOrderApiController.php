@@ -652,6 +652,7 @@ class CustomerOrderApiController extends AbstractController
                 'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
                 'proforma_bill' => $order->getProformaBillFile() ?: '',
+                'sessionKey'=>$order->getTransactionApproved() ? $order->getTransactionApproved()->getSessionKey():null,
             ];
         }
 
