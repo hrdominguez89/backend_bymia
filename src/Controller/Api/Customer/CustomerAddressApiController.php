@@ -6,12 +6,15 @@ use App\Constants\Constants;
 use App\Entity\Orders;
 use App\Entity\OrdersProducts;
 use App\Helpers\SendOrderToCrm;
+use App\Repository\CitiesRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
+use App\Repository\CountriesRepository;
 use App\Repository\CustomerAddressesRepository;
 use App\Repository\CustomerRepository;
 use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ShoppingCartRepository;
+use App\Repository\StatesRepository;
 use App\Repository\StatusOrderTypeRepository;
 use App\Repository\StatusTypeShoppingCartRepository;
 use DateTime;
@@ -23,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Validator\Constraints\Country;
 
 /**
  * @Route("/api/customer/data")
@@ -188,7 +191,10 @@ class CustomerAddressApiController extends AbstractController
         EntityManagerInterface $em,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
         ProductRepository $productRepository,
-        CustomerAddressesRepository $customerAddressesRepository
+        CustomerAddressesRepository $customerAddressesRepository,
+        CitiesRepository $citiesRepository,
+        StatesRepository $statesRepository,
+        CountriesRepository $countriesRepository
     ): Response {
 
         $body = $request->getContent();
@@ -197,6 +203,21 @@ class CustomerAddressApiController extends AbstractController
         $bill_address = $customerAddressesRepository->findOneBy(['id' => $bill_address_id, 'customer' => $this->customer]);
 
         if ($bill_address) {
+            $bill_address->setAdditionalInfo($data['billingData']['additional_info'] ?: '');
+            $bill_address->setStreet($data['billingData']['address'] ?: '');
+            $bill_address->setCity($citiesRepository->find($data['billingData']['city_id']));
+            $bill_address->setState($statesRepository->find($data['billingData']['state_id']));
+            $bill_address->setCountry($countriesRepository->find($data['billingData']['country_id']));
+            $bill_address->setEmail($data['billingData']['email'] ?: '');
+            $bill_address->setIdentityType($data['billingData']['identity_type'] ?: '');
+            $bill_address->setIdentityNumber($data['billingData']['identity_number'] ?: '');
+            $bill_address->setName($data['billingData']['name'] ?: '');
+            $bill_address->setPostalCode($data['billingData']['zip_code'] ?: '');
+            $bill_address->setPhone($data['billingData']['zip_code'] ?: '');
+
+            $em->persist($bill_address);
+            $em->flush();
+
             return $this->json(
                 [
                     'status' => true,
