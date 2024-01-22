@@ -884,7 +884,7 @@ class FrontApiController extends AbstractController
             $body = $response_session_verify->getContent(false);
             $data_session_verify = json_decode($body, true);
 
-            $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"] ?: null);
+            // $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"] ?: null);
             $transaction->setTxToken(@$data_session_verify["TxToken"] ?: null);
             $transaction->setResponseCode(@$data_session_verify["ResponseCode"] ?: null);
             $transaction->setCreditcardNumber(@$data_session_verify["CreditcardNumber"] ?: null);
