@@ -51,11 +51,6 @@ class CustomerAddressApiController extends AbstractController
      * @Route("", name="customer_full_data",methods={"GET"})
      */
     public function fullDataCustomer(
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
-        EntityManagerInterface $em,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository,
         CustomerAddressesRepository $customerAddressesRepository
     ): Response {
         if (!$this->customer) {
@@ -108,54 +103,6 @@ class CustomerAddressApiController extends AbstractController
     }
 
     /**
-     * @Route("/bill", name="custo_updatemer_bill_data",methods={"GET"})
-     */
-    public function billData(
-        Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
-        EntityManagerInterface $em,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository
-    ): Response {
-
-        return $this->json(
-            [
-                'status' => false,
-                'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Mensaje de error'
-            ],
-            Response::HTTP_INTERNAL_SERVER_ERROR,
-            ['Content-Type' => 'application/json']
-        );
-    }
-
-    /**
-     * @Route("/recipient", name="customer_recipient_data",methods={"GET"})
-     */
-    public function recipientData(
-        Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
-        EntityManagerInterface $em,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository
-    ): Response {
-
-        return $this->json(
-            [
-                'status' => false,
-                'status_code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Mensaje de error'
-            ],
-            Response::HTTP_INTERNAL_SERVER_ERROR,
-            ['Content-Type' => 'application/json']
-        );
-    }
-
-    /**
      * @Route("/profile", name="customer_profile_data",methods={"PATCH"})
      */
     public function updateProfileData(
@@ -197,32 +144,7 @@ class CustomerAddressApiController extends AbstractController
 
         $bill_address = $customerAddressesRepository->findOneBy(['id' => $bill_address_id, 'customer' => $this->customer]);
 
-        if ($bill_address) {
-            $bill_address->setAdditionalInfo($data['billingData']['additional_info'] ?: '');
-            $bill_address->setStreet($data['billingData']['address'] ?: '');
-            $bill_address->setCity($citiesRepository->find($data['billingData']['city_id']));
-            $bill_address->setState($statesRepository->find($data['billingData']['state_id']));
-            $bill_address->setCountry($countriesRepository->find($data['billingData']['country_id']));
-            $bill_address->setEmail($data['billingData']['email'] ?: '');
-            $bill_address->setIdentityType($data['billingData']['identity_type'] ?: '');
-            $bill_address->setIdentityNumber($data['billingData']['identity_number'] ?: '');
-            $bill_address->setName($data['billingData']['name'] ?: '');
-            $bill_address->setPostalCode($data['billingData']['zip_code'] ?: '');
-            $bill_address->setPhone($data['billingData']['phone'] ?: '');
-
-            $em->persist($bill_address);
-            $em->flush();
-
-            return $this->json(
-                [
-                    'status' => true,
-                    'status_code' => Response::HTTP_ACCEPTED,
-                    'message' => 'Datos actualizados correctamente'
-                ],
-                Response::HTTP_ACCEPTED,
-                ['Content-Type' => 'application/json']
-            );
-        } else {
+        if (!$bill_address) {
             return $this->json(
                 [
                     'status' => false,
@@ -233,22 +155,64 @@ class CustomerAddressApiController extends AbstractController
                 ['Content-Type' => 'application/json']
             );
         }
+        $bill_address->setAdditionalInfo($data['billingData']['additional_info'] ?: '');
+        $bill_address->setStreet($data['billingData']['address'] ?: '');
+        $bill_address->setCity($citiesRepository->find($data['billingData']['city_id']));
+        $bill_address->setState($statesRepository->find($data['billingData']['state_id']));
+        $bill_address->setCountry($countriesRepository->find($data['billingData']['country_id']));
+        $bill_address->setEmail($data['billingData']['email'] ?: '');
+        $bill_address->setIdentityType($data['billingData']['identity_type'] ?: '');
+        $bill_address->setIdentityNumber($data['billingData']['identity_number'] ?: '');
+        $bill_address->setName($data['billingData']['name'] ?: '');
+        $bill_address->setPostalCode($data['billingData']['zip_code'] ?: '');
+        $bill_address->setPhone($data['billingData']['phone'] ?: '');
+
+        $em->persist($bill_address);
+        $em->flush();
+
+        return $this->json(
+            [
+                'status' => true,
+                'status_code' => Response::HTTP_ACCEPTED,
+                'message' => 'Datos actualizados correctamente'
+            ],
+            Response::HTTP_ACCEPTED,
+            ['Content-Type' => 'application/json']
+        );
     }
 
     /**
-     * @Route("/address/{addres_id}", name="customer_address_data_update",methods={"PATCH","DELETE"})
+     * @Route("/address/{address_id}", name="customer_address_data_update",methods={"PATCH","DELETE"})
      */
     public function updateAddressData(
+        $address_id,
         Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository
+        CustomerAddressesRepository $customerAddressesRepository,
+        CitiesRepository $citiesRepository,
+        StatesRepository $statesRepository,
+        CountriesRepository $countriesRepository
     ): Response {
+        $recipientAdddress = $customerAddressesRepository->findOneBy(['id' => $address_id, 'customer' => $this->customer]);
+
+        if (!$recipientAdddress) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'El ID indicado no existe.'
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
 
         if ($request->getMethod() == 'DELETE') {
+
+            $recipientAdddress->setActive(false);
+            $em->persist($recipientAdddress);
+            $em->flush();
+
             return $this->json(
                 [
                     'status' => true,
@@ -259,6 +223,25 @@ class CustomerAddressApiController extends AbstractController
                 ['Content-Type' => 'application/json']
             );
         }
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+
+        $recipientAdddress->setAdditionalInfo($data['billingData']['additional_info'] ?: '');
+        $recipientAdddress->setStreet($data['billingData']['address'] ?: '');
+        $recipientAdddress->setCity($citiesRepository->find($data['billingData']['city_id']));
+        $recipientAdddress->setState($statesRepository->find($data['billingData']['state_id']));
+        $recipientAdddress->setCountry($countriesRepository->find($data['billingData']['country_id']));
+        $recipientAdddress->setEmail($data['billingData']['email'] ?: '');
+        $recipientAdddress->setIdentityType($data['billingData']['identity_type'] ?: '');
+        $recipientAdddress->setIdentityNumber($data['billingData']['identity_number'] ?: '');
+        $recipientAdddress->setName($data['billingData']['name'] ?: '');
+        $recipientAdddress->setPostalCode($data['billingData']['zip_code'] ?: '');
+        $recipientAdddress->setPhone($data['billingData']['phone'] ?: '');
+
+        $em->persist($recipientAdddress);
+        $em->flush();
 
         return $this->json(
             [
