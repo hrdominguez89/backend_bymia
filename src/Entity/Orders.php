@@ -1364,7 +1364,7 @@ class Orders
         });
 
         // Obtén la primera transacción aprobada
-        return $transactionApproved->first() ?: null;
+        return $transactionApproved->first() ? $transactionApproved->first(): null;
     }
 
     public function addTransaction(Transactions $transaction): self
