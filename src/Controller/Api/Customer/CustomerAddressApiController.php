@@ -187,18 +187,36 @@ class CustomerAddressApiController extends AbstractController
         StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
         CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        CustomerAddressesRepository $customerAddressesRepository
     ): Response {
 
-        return $this->json(
-            [
-                'status' => true,
-                'status_code' => Response::HTTP_ACCEPTED,
-                'message' => 'Datos actualizados correctamente'
-            ],
-            Response::HTTP_ACCEPTED,
-            ['Content-Type' => 'application/json']
-        );
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        $bill_address = $customerAddressesRepository->findOneBy(['id' => $bill_address_id, 'customer' => $this->customer]);
+
+        if ($bill_address) {
+            return $this->json(
+                [
+                    'status' => true,
+                    'status_code' => Response::HTTP_ACCEPTED,
+                    'message' => 'Datos actualizados correctamente'
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+        } else {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'El ID indicado no existe.'
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
     }
 
     /**
