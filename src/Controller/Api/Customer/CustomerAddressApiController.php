@@ -185,12 +185,7 @@ class CustomerAddressApiController extends AbstractController
     public function updateBillData(
         $bill_address_id,
         Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository,
         CustomerAddressesRepository $customerAddressesRepository,
         CitiesRepository $citiesRepository,
         StatesRepository $statesRepository,
@@ -213,7 +208,7 @@ class CustomerAddressApiController extends AbstractController
             $bill_address->setIdentityNumber($data['billingData']['identity_number'] ?: '');
             $bill_address->setName($data['billingData']['name'] ?: '');
             $bill_address->setPostalCode($data['billingData']['zip_code'] ?: '');
-            $bill_address->setPhone($data['billingData']['zip_code'] ?: '');
+            $bill_address->setPhone($data['billingData']['phone'] ?: '');
 
             $em->persist($bill_address);
             $em->flush();
