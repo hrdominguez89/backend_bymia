@@ -884,6 +884,16 @@ class FrontApiController extends AbstractController
             $body = $response_session_verify->getContent(false);
             $data_session_verify = json_decode($body, true);
 
+            return $this->json(
+                [
+                    'status' => true,
+                    'data' => $data_session_verify,
+                    'status_code' => Response::HTTP_ACCEPTED,
+                ],
+                Response::HTTP_ACCEPTED,
+                ['Content-Type' => 'application/json']
+            );
+
             $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"] ?: null);
             $transaction->setTxToken(@$data_session_verify["TxToken"] ?: null);
             $transaction->setResponseCode(@$data_session_verify["ResponseCode"] ?: null);
