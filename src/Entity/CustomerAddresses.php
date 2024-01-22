@@ -522,6 +522,7 @@ class CustomerAddresses
                 'identity_number' => $this->getIdentityNumber(),
                 'country' => $this->getCountry()->getName(),
                 'country_id' => $this->getCountry()->getId(),
+                'country_phone_code' => $this->getCountry()->getPhonecode(),
                 'state' => $this->getState()->getName(),
                 'state_id' => $this->getState()->getId(),
                 'city' => $this->getCity()->getName(),
