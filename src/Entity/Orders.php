@@ -1363,8 +1363,9 @@ class Orders
             return $transaction->getStatus() == Constants::STATUS_TRANSACTION_ACCEPTED ? $transaction : null;
         });
 
+        dd($transactionApproved);
         // Obtén la primera transacción aprobada
-        return $transactionApproved->first() ?: null;
+        return $transactionApproved[0] ?: null;
     }
 
     public function addTransaction(Transactions $transaction): self
