@@ -233,7 +233,7 @@ class CustomerOrderApiController extends AbstractController
         if ($order->getStatus()->getId() != Constants::STATUS_ORDER_PENDING) {
             return $this->json(
                 [
-                    'status' => true,
+                    'status' => false,
                     'status_code' => Response::HTTP_CONFLICT,
                     'message' => 'Esta orden ya se encuentra procesada.'
                 ],
