@@ -102,7 +102,7 @@ class CrmApiOrdersController extends AbstractController
                         }
                     }
 
-                    $order->setBillFile($data['bill_file'] ?: 'esto tiene que andar');
+                    $order->setBillFile($data['bill_file'] ?: null);
 
                     $order->setProformaBillFile($data['proforma_bill_file'] ?: null);
 
