@@ -11,6 +11,8 @@ use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use App\Repository\CountriesRepository;
 use App\Repository\CustomerAddressesRepository;
 use App\Repository\CustomerRepository;
+use App\Repository\CustomersTypesRolesRepository;
+use App\Repository\GenderTypeRepository;
 use App\Repository\OrdersRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ShoppingCartRepository;
@@ -107,13 +109,37 @@ class CustomerAddressApiController extends AbstractController
      */
     public function updateProfileData(
         Request $request,
-        StatusOrderTypeRepository $statusOrderTypeRepository,
-        ShoppingCartRepository $shoppingCartRepository,
-        StatusTypeShoppingCartRepository $statusTypeShoppingCartRepository,
         EntityManagerInterface $em,
-        CommunicationStatesBetweenPlatformsRepository $communicationStatesBetweenPlatformsRepository,
-        ProductRepository $productRepository
+        CustomersTypesRolesRepository $customersTypesRolesRepository,
+        GenderTypeRepository $genderTypeRepository,
+        CountriesRepository $countriesRepository
     ): Response {
+
+
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        if (!$this->customer) {
+            return $this->json(
+                [
+                    'status' => false,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                    'message' => 'El cliente indicado no existe.'
+                ],
+                Response::HTTP_NOT_FOUND,
+                ['Content-Type' => 'application/json']
+            );
+        }
+
+        $this->customer->setName($data['profile']['name']);
+        $this->customer->setCountryPhoneCode($countriesRepository->find($data['profile']['country_id']));
+        $this->customer->setCustomerTypeRole($customersTypesRolesRepository->find($data['profile']['customer_type_role']));
+        $this->customer->setGenderType($genderTypeRepository->find($data['profile']['gender_type']));
+        $this->customer->setCelPhone($data['profile']['cel_phone']);
+        $this->customer->setDateOfBirth($data['profile']['date_of_birth']);
+
+        $em->persist($this->customer);
+        $em->flush();
 
         return $this->json(
             [
