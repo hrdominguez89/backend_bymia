@@ -915,7 +915,10 @@ class FrontApiController extends AbstractController
             return $this->json(
                 [
                     'status' => true,
-                    'data' => Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.',
+                    'data' => [
+                        'transaction'=> $data_session_verify,
+                        'message'=>Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.'
+                    ],
                     'status_code' => Response::HTTP_ACCEPTED,
                 ],
                 Response::HTTP_ACCEPTED,
