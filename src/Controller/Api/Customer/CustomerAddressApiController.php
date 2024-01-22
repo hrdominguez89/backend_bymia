@@ -136,7 +136,7 @@ class CustomerAddressApiController extends AbstractController
         $this->customer->setCustomerTypeRole($customersTypesRolesRepository->find($data['profile']['customer_type_role']));
         $this->customer->setGenderType($genderTypeRepository->find($data['profile']['gender_type']));
         $this->customer->setCelPhone($data['profile']['cel_phone']);
-        $this->customer->setDateOfBirth($data['profile']['date_of_birth']);
+        $this->customer->setDateOfBirth(DateTime::createFromFormat('Y-m-d', $data['profile']['date_of_birth']));
 
         $em->persist($this->customer);
         $em->flush();
