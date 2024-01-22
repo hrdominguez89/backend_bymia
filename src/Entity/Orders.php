@@ -1360,12 +1360,12 @@ class Orders
     {
         // Filtra las transacciones para obtener solo las aprobadas
         $transactionApproved = $this->transactions->filter(function (Transactions $transaction) {
-            return $transaction->getStatus() == Constants::STATUS_TRANSACTION_ACCEPTED ? $transaction : null;
+            return $transaction->getStatus() === Constants::STATUS_TRANSACTION_ACCEPTED;
         });
 
         dd($transactionApproved);
         // Obtén la primera transacción aprobada
-        return $transactionApproved[0] ?: null;
+        return $transactionApproved->first() ?: null;
     }
 
     public function addTransaction(Transactions $transaction): self
