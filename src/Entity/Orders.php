@@ -1003,6 +1003,7 @@ class Orders
             "cardnet_creditcard_number"=> $this->getTransactionApproved() ? $this->getTransactionApproved()->getCreditcardNumber() : null,
             "cardnet_retrival_reference_number"=> $this->getTransactionApproved() ? $this->getTransactionApproved()->getRetrivalReferenceNumber() : null,
             "cardnet_remote_response_code"=> $this->getTransactionApproved() ? $this->getTransactionApproved()->getRemoteResponseCode() : null,
+            "" => $this->isFiscalInvoiceRequired(),
             "created_at" => $this->getCreatedAt()->format('Y-m-d H:i:s'),
             "status_order" => $this->getStatus()->getId(),
             "packages" => $guide_numbers_result,
