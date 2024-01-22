@@ -104,7 +104,7 @@ class SendOrderToCrm
 
     public function SendOrderPendingToCrm()
     {
-        $orders = $this->ordersRepository->findOrdersToSendToCrm([Constants::CBP_STATUS_PENDING, Constants::CBP_STATUS_ERROR], ['registration_date' => 'ASC'], $_ENV['MAX_LIMIT_ORDER_TO_SYNC']);
+        $orders = $this->ordersRepository->findOrdersToSendToCrm([Constants::CBP_STATUS_PENDING, Constants::CBP_STATUS_ERROR], ['created_at' => 'ASC'], $_ENV['MAX_LIMIT_ORDER_TO_SYNC']);
         foreach ($orders as $order) {
             $this->SendOrderToCrm($order);
         }
