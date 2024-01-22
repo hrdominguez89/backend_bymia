@@ -7,6 +7,7 @@ use App\Repository\OrdersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @ORM\Entity(repositoryClass=OrdersRepository::class)
@@ -1363,7 +1364,11 @@ class Orders
             return $transaction->getStatus() === Constants::STATUS_TRANSACTION_ACCEPTED;
         });
 
-        dd($transactionApproved);
+        return $this->json(
+            $transactionApproved,
+            Response::HTTP_ACCEPTED,
+            ['Content-Type' => 'application/json']
+        );
         // Obtén la primera transacción aprobada
         return $transactionApproved->first() ?: null;
     }
