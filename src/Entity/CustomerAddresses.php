@@ -552,6 +552,9 @@ class CustomerAddresses
                 'zip_code' => $this->getPostalCode(),
                 'address' => $this->getStreet(),
                 'additional_info' => $this->getAdditionalInfo(),
+                'email'=> $this->getEmail(),
+                'identity_type' => $this->getIdentityType(),
+                'identity_number' => $this->getIdentityNumber()
             ];
     }
 
