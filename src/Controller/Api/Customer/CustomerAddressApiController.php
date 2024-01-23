@@ -254,17 +254,17 @@ class CustomerAddressApiController extends AbstractController
         $data = json_decode($body, true);
 
 
-        $recipientAdddress->setAdditionalInfo($data['billingData']['additional_info'] ?: '');
-        $recipientAdddress->setStreet($data['billingData']['address'] ?: '');
-        $recipientAdddress->setCity($citiesRepository->find($data['billingData']['city_id']));
-        $recipientAdddress->setState($statesRepository->find($data['billingData']['state_id']));
-        $recipientAdddress->setCountry($countriesRepository->find($data['billingData']['country_id']));
-        $recipientAdddress->setEmail($data['billingData']['email'] ?: '');
-        $recipientAdddress->setIdentityType($data['billingData']['identity_type'] ?: '');
-        $recipientAdddress->setIdentityNumber($data['billingData']['identity_number'] ?: '');
-        $recipientAdddress->setName($data['billingData']['name'] ?: '');
-        $recipientAdddress->setPostalCode($data['billingData']['zip_code'] ?: '');
-        $recipientAdddress->setPhone($data['billingData']['phone'] ?: '');
+        $recipientAdddress->setAdditionalInfo($data['address']['additional_info'] ?: '');
+        $recipientAdddress->setStreet($data['address']['address'] ?: '');
+        $recipientAdddress->setCity($citiesRepository->find($data['address']['city_id']));
+        $recipientAdddress->setState($statesRepository->find($data['address']['state_id']));
+        $recipientAdddress->setCountry($countriesRepository->find($data['address']['country_id']));
+        $recipientAdddress->setEmail($data['address']['email'] ?: '');
+        $recipientAdddress->setIdentityType($data['address']['identity_type'] ?: '');
+        $recipientAdddress->setIdentityNumber($data['address']['identity_number'] ?: '');
+        $recipientAdddress->setName($data['address']['name'] ?: '');
+        $recipientAdddress->setPostalCode($data['address']['zip_code'] ?: '');
+        $recipientAdddress->setPhone($data['address']['phone'] ?: '');
 
         $em->persist($recipientAdddress);
         $em->flush();
