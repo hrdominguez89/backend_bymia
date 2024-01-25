@@ -1059,7 +1059,7 @@ class FrontApiController extends AbstractController
                     "description_en" => $category->getDescriptionEn(),
                     "principal" => $category->getPrincipal(),
                     "image" => $category->getImage(),
-                    "url"=> $_ENV['FRONT_URL'].'/search?k=&c=["'.strtolower($category->getName()).'"]&b=[]&t=[]',
+                    "url"=> $_ENV['FRONT_URL'].'/search?k=&c=%5B"'.strtolower($category->getName()).'"%5D&b=%5B%5D&t=%5B%5D',
                     "slug" => 'c=' . $category->getId(),
                 ]
             );
