@@ -109,21 +109,21 @@ class CrmApiOrdersController extends AbstractController
 
                     $order->setBillFile($data['bill_file'] ?: null);
 
-                    $order->setProformaBillFile($data['proforma_bill_file'] ?: null);
+                    // $order->setProformaBillFile($data['proforma_bill_file'] ? $data['proforma_bill_file'] : null);
 
 
-                    if ($data['payments_files']) {
-                        foreach ($data['payments_files'] as $payment_file) {
-                            $payment_file_obj = $paymentsFilesRepository->findOneBy(['payment_file' => $payment_file]);
-                            if (!$payment_file_obj) {
-                                $payment_file_obj = new PaymentsFiles;
-                                $payment_file_obj->setOrderNumber($order);
-                                $payment_file_obj->setPaymentFile($payment_file);
+                    // if ($data['payments_files']) {
+                    //     foreach ($data['payments_files'] as $payment_file) {
+                    //         $payment_file_obj = $paymentsFilesRepository->findOneBy(['payment_file' => $payment_file]);
+                    //         if (!$payment_file_obj) {
+                    //             $payment_file_obj = new PaymentsFiles;
+                    //             $payment_file_obj->setOrderNumber($order);
+                    //             $payment_file_obj->setPaymentFile($payment_file);
 
-                                $em->persist($payment_file_obj);
-                            }
-                        }
-                    }
+                    //             $em->persist($payment_file_obj);
+                    //         }
+                    //     }
+                    // }
 
 
                     if ($data['payments_received_files']) {
