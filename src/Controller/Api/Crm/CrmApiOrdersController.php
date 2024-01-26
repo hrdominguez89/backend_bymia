@@ -7,6 +7,7 @@ use App\Entity\GuideNumbers;
 use App\Entity\ItemsGuideNumber;
 use App\Entity\PaymentsFiles;
 use App\Entity\PaymentsReceivedFiles;
+use App\Repository\DebitCreditNotesFilesRepository;
 use App\Repository\GuideNumbersRepository;
 use App\Repository\ItemsGuideNumberRepository;
 use App\Repository\OrdersRepository;
@@ -41,8 +42,9 @@ class CrmApiOrdersController extends AbstractController
         GuideNumbersRepository $guideNumbersRepository,
         ItemsGuideNumberRepository $itemsGuideNumberRepository,
         ProductRepository $productRepository,
-        PaymentsReceivedFilesRepository $paymentsFilesRepository,
-        PaymentsFilesRepository $paymentsFilesRepository
+        PaymentsReceivedFilesRepository $paymentsReceivedFilesRepository,
+        PaymentsFilesRepository $paymentsFilesRepository,
+        DebitCreditNotesFilesRepository $debitCreditNotesFilesRepository
     ): Response {
         $order = $ordersRepository->find($order_id);
         if ($order) {
@@ -139,7 +141,7 @@ class CrmApiOrdersController extends AbstractController
 
                     if ($data['debit_credit_notes_files']) {
                         foreach ($data['debit_credit_notes_files'] as $debit_credit_note_file) {
-                            $debit_credit_note_file_obj = $paymentsReceivedFilesRepository->findOneBy(['debit_credit_note_file' => $debit_credit_note_file]);
+                            $debit_credit_note_file_obj = $debitCreditNotesFilesRepository->findOneBy(['debit_credit_note_file' => $debit_credit_note_file]);
                             if (!$debit_credit_note_file_obj) {
                                 $debit_credit_note_file_obj = new DebitCreditNotesFiles;
                                 $debit_credit_note_file_obj->setNumberOrder($order);
