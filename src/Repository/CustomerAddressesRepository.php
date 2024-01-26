@@ -61,7 +61,8 @@ class CustomerAddressesRepository extends ServiceEntityRepository
     /**
      * @return CustomerAddresses[] Returns an array of CustomerAddresses objects
      */
-    public function getLastFiveAddress($customer)
+    // public function getLastFiveAddress($customer) antiguo nombre
+    public function getRecipienAddress($customer)
     {
         return $this->createQueryBuilder('ca')
             ->where('ca.active = :active')
@@ -71,7 +72,7 @@ class CustomerAddressesRepository extends ServiceEntityRepository
             ->setParameter('active', true)
             ->setParameter('recipe_address', true)
             ->orderBy('ca.id','DESC')
-            ->setMaxResults(5)
+            // ->setMaxResults(5)
             ->getQuery()
             ->getResult()
         ;

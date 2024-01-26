@@ -69,7 +69,7 @@ class CustomerAddressApiController extends AbstractController
 
         $bill_address = $customerAddressesRepository->findOneBy(['active' => true, 'customer' => $this->customer, 'billing_address' => true], ['id' => 'DESC']);
 
-        $recipes_addresses = $customerAddressesRepository->getLastFiveAddress($this->customer);
+        $recipes_addresses = $customerAddressesRepository->getRecipienAddress($this->customer);
 
         $recipes_addresses_data = [];
         foreach ($recipes_addresses as $recipe_address) {

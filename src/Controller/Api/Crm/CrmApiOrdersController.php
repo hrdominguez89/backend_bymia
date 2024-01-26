@@ -5,10 +5,12 @@ namespace App\Controller\Api\Crm;
 use App\Entity\DebitCreditNotesFiles;
 use App\Entity\GuideNumbers;
 use App\Entity\ItemsGuideNumber;
+use App\Entity\PaymentsFiles;
 use App\Entity\PaymentsReceivedFiles;
 use App\Repository\GuideNumbersRepository;
 use App\Repository\ItemsGuideNumberRepository;
 use App\Repository\OrdersRepository;
+use App\Repository\PaymentsFilesRepository;
 use App\Repository\PaymentsReceivedFilesRepository;
 use App\Repository\ProductRepository;
 use App\Repository\StatusOrderTypeRepository;
@@ -39,7 +41,8 @@ class CrmApiOrdersController extends AbstractController
         GuideNumbersRepository $guideNumbersRepository,
         ItemsGuideNumberRepository $itemsGuideNumberRepository,
         ProductRepository $productRepository,
-        PaymentsReceivedFilesRepository $paymentsReceivedFilesRepository
+        PaymentsReceivedFilesRepository $paymentsFilesRepository,
+        PaymentsFilesRepository $paymentsFilesRepository
     ): Response {
         $order = $ordersRepository->find($order_id);
         if ($order) {
@@ -105,6 +108,21 @@ class CrmApiOrdersController extends AbstractController
                     $order->setBillFile($data['bill_file'] ?: null);
 
                     $order->setProformaBillFile($data['proforma_bill_file'] ?: null);
+
+
+                    if ($data['payments_files']) {
+                        foreach ($data['payments_files'] as $payment_file) {
+                            $payment_file_obj = $paymentsFilesRepository->findOneBy(['payment_file' => $payment_file]);
+                            if (!$payment_file_obj) {
+                                $payment_file_obj = new PaymentsFiles;
+                                $payment_file_obj->setOrderNumber($order);
+                                $payment_file_obj->setPaymentFile($payment_file);
+
+                                $em->persist($payment_file_obj);
+                            }
+                        }
+                    }
+
 
                     if ($data['payments_received_files']) {
                         foreach ($data['payments_received_files'] as $payment_received_file) {
