@@ -298,7 +298,7 @@ class CustomerOrderApiController extends AbstractController
                     "tax" => $ITBIS,
                     "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
                 ],
-                'receiptOfPayment' => $order->getPaymentsFiles(),
+                'receiptOfPayment' => $order->getPaymentsFiles() ? ($order->getPaymentsFiles()[0] ? $order->getPaymentsFiles()[0]->getPaymentFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
                 'bill_address' => $bill_address ? $bill_address->getAddressDataToOrder() : null,
                 'recipient_address' => $recipes_addresses_data ?: null
@@ -649,7 +649,7 @@ class CustomerOrderApiController extends AbstractController
                     "tax" => (string)$order->getTax() ?: '0',
                     "totalOrderPrice" => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductos,
                 ],
-                'receiptOfPayment' => $order->getPaymentsReceivedFiles() ? ($order->getPaymentsReceivedFiles()[0] ? $order->getPaymentsReceivedFiles()[0]->getPaymentReceivedFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
+                'receiptOfPayment' => $order->getPaymentsFiles() ? ($order->getPaymentsFiles()[0] ? $order->getPaymentsFiles()[0]->getPaymentFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
                 'proforma_bill' => $order->getProformaBillFile() ?: ''
             ];
