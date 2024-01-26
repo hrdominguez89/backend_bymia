@@ -62,6 +62,17 @@ class CrmApiOrdersController extends AbstractController
                     $body = $request->getContent();
                     $data = json_decode($body, true);
 
+
+                    return $this->json(
+                        [
+                            'data' => $data,
+                            'json_enviado' => json_encode($data),
+                        ],
+                        Response::HTTP_ACCEPTED,
+                        ['Content-Type' => 'application/json']
+                    );
+
+
                     $status_obj = $statusOrderTypeRepository->find($data['status_order']);
 
                     $order->setStatus($status_obj);
@@ -108,6 +119,7 @@ class CrmApiOrdersController extends AbstractController
                     }
 
                     $order->setBillFile($data['bill_file'] ?: null);
+
 
                     // $order->setProformaBillFile($data['proforma_bill_file'] ? $data['proforma_bill_file'] : null);
 
