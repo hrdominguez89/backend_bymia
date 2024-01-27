@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Constants\Constants;
 use App\Entity\Orders;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -70,9 +71,10 @@ class OrdersRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->where('o.customer =:customer_id')
             ->andWhere('o.id =:order_id')
-            ->andWhere('o.status_id=1')
+            ->andWhere('o.status=:status_id')
             ->setParameter('customer_id', $customer_id)
             ->setParameter('order_id', $order_id)
+            ->setParameter('status_id', Constants::STATUS_ORDER_OPEN)
             ->getQuery()
             ->getOneOrNullResult();
     }
