@@ -52,7 +52,7 @@ class OrdersRepository extends ServiceEntityRepository
         $ordersBymia = $this->createQueryBuilder('o')
             ->where('o.status_sent_crm IN (:statuses)')
             ->andWhere('o.attempts_send_crm <=5')
-            ->andWhere('o.status_id', 1)
+            ->andWhere('o.status', 1)
             ->setParameter('statuses', $statuses);
         if ($orders) {
             foreach ($orders as $orderKey => $orderValue) {
