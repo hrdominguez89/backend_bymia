@@ -1026,7 +1026,7 @@ class Orders
             "bill_file" => $this->getBillFile(),
             "proforma_bill_file" => $this->getProformaBillFile(),
             "payments_files" => $payments_files_result[0],//este y payments_received_files por ahora los dejo asi
-            "payments_received_files" => $payments_files_result[0],
+            "payments_received_files" => $payments_files_result?$payments_files_result[0]:[],
             "payments_transactions_codes" => $payments_transactions_codes_result,
             "debit_credit_notes_files" => $debit_credite_notes_files_result,
             "receiver" => [
