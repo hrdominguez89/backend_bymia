@@ -369,7 +369,7 @@ class CustomerOrderApiController extends AbstractController
             $customer_bill_address->setRecipeAddress(false);
             $customer_bill_address->setBillingAddress(true);
 
-            $customerAddressesRepository->updateBillingAddress($this->customer->getId());
+            // $customerAddressesRepository->updateBillingAddress($this->customer->getId());
             $entityManager->persist($customer_bill_address);
             if (!$data['order']['same_address']) {
                 if (!$customer_recipient_address) {
@@ -395,7 +395,7 @@ class CustomerOrderApiController extends AbstractController
                 $customer_recipient_address->setHomeAddress(true);
                 $customer_recipient_address->setBillingAddress(false);
 
-                $customerAddressesRepository->updateHomeAddress($this->customer->getId());
+                // $customerAddressesRepository->updateHomeAddress($this->customer->getId());
                 $entityManager->persist($customer_recipient_address);
             } else {
                 $customer_recipient_address = $customer_bill_address;
