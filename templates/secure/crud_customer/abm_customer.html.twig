@@ -69,31 +69,6 @@
                                                                 							
                                                             
                             </th>
-                            <th style="width:500px;">
-                                País &nbsp;
-                                                                							
-                                                            
-                            </th>
-                            <th>
-                                Estado/Província &nbsp;
-                                                                							
-                                                            
-                            </th>
-                            <th>
-                                Ciudad &nbsp;
-                                                                							
-                                                            
-                            </th>
-                            <th>
-                                Dirección &nbsp;
-                                                                							
-                                                            
-                            </th>
-                            <th class="text-center">
-                                Cód. Postal &nbsp;
-                                                                							
-                                                            
-                            </th>
                             <th class="text-center" data-orderable="false">
                                 Tel. Celular &nbsp;
                                                                 							
@@ -166,29 +141,6 @@
                                             {{ customer.url_instagram }}
                                         </a>
                                     {% endif %}
-                                </td>
-                                <td>
-                                    {{ customer.country }}
-                                </td>
-                                <td>
-                                    {{ customer.state }}
-                                </td>
-                                <td>
-                                    {{ customer.city }}
-                                </td>
-                                <td>
-                                    {{ customer.street }}
-                                    {{ customer.number_street }}
-                                    {% if (customer.street !='' or customer.number_street !='') and (customer.floor !='' or customer.department !='') %}
-                                        ,
-                                                                                									
-                                                                            
-                                    {% endif %}
-                                    {{ customer.floor }}
-                                    {{ customer.department }}
-                                </td>
-                                <td class="text-center">
-                                    {{ customer.postal_code }}
                                 </td>
                                 <td class="text-center">
                                     {% if customer.country_phone_code %}
