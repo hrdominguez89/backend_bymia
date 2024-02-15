@@ -23,6 +23,7 @@ class Constants
     const EMAIL_TYPE_PASSWORD_CHANGE_SUCCESSFUL = 5;
     const EMAIL_TYPE_CONTACT = 6;
     const EMAIL_TYPE_PRICE_LIST = 7;
+    const EMAIL_TYPE_NEW_ORDER_NOTICE = 8;
 
 
 

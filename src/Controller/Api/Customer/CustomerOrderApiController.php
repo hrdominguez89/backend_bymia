@@ -8,6 +8,7 @@ use App\Entity\Orders;
 use App\Entity\OrdersProducts;
 use App\Entity\Recipients;
 use App\Entity\Transactions;
+use App\Helpers\EnqueueEmail;
 use App\Helpers\SendOrderToCrm;
 use App\Repository\CitiesRepository;
 use App\Repository\CommunicationStatesBetweenPlatformsRepository;
@@ -201,7 +202,8 @@ class CustomerOrderApiController extends AbstractController
         OrdersProductsRepository $ordersProductsRepository,
         TransactionsRepository $transactionsRepository,
         PaymentTypeRepository $paymentTypeRepository,
-        SendOrderToCrm $sendOrderToCrm
+        SendOrderToCrm $sendOrderToCrm,
+        EnqueueEmail $queue
     ): Response {
 
         if (!(int)$order_id) {
@@ -407,7 +409,9 @@ class CustomerOrderApiController extends AbstractController
 
             $totalProductDiscount = 0;
             $totalPreciosSinDescuentos = 0;
+            $products_to_send_email = '';
             foreach ($products_in_order as $product_in_order) {
+                $products_to_send_email += $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . '(x' . $product_in_order->getQuantity() . ')<br>';
                 $product_in_order->setPrice($product_in_order->getProduct()->getPrice());
                 $product_in_order->setDiscount($product_in_order->getProduct()->getDiscountActive() ?: 0);
                 $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
@@ -569,14 +573,30 @@ class CustomerOrderApiController extends AbstractController
             //envio por helper los datos del cliente al crm
             $order->setStatus($status_order_id);
 
+            //actualizar orden con los datos de contacto.
             $entityManager->persist($order);
             $entityManager->flush();
 
+            //enviar orden al crm
             $sendOrderToCrm->SendOrderToCrm($order);
 
-            //actualizar orden con los datos de contacto.
+            //queue the email
+            $id_email = $queue->enqueue(
+                Constants::EMAIL_TYPE_NEW_ORDER_NOTICE, //tipo de email
+                $_ENV['EMAILS_NOTICE'],
+                [ //parametros
+                    'orden_id' => $order_id,
+                    'name' => $this->customer->getName(),
+                    'email' => $this->customer->getEmail(),
+                    'phone' => $this->customer->getCountryPhoneCode()->getPhonecode() . '-' . $this->customer->getCelPhone(),
+                    'total_order' => $totalOrder,
+                    'products' => $products_to_send_email,
+                ]
+            );
 
-            //enviar orden al crm
+            //Intento enviar el correo encolado
+            $queue->sendEnqueue($id_email);
+
 
             //retornar mensaje ok
             return $this->json(
