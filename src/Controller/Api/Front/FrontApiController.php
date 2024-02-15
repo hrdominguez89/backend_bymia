@@ -884,11 +884,11 @@ class FrontApiController extends AbstractController
             $body = $response_session_verify->getContent(false);
             $data_session_verify = json_decode($body, true);
 
-            if (@$data_session_verify["AuthorizationCode"] == "N\/A") {
-                $transaction->setAuthorizationCode(null);
-            } else {
-                $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"]);
-            }
+            // if (@$data_session_verify["AuthorizationCode"] == "N\/A") {
+            //     $transaction->setAuthorizationCode(null);
+            // } else {
+            //     $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"]);
+            // }
             $transaction->setTxToken(@$data_session_verify["TxToken"] ?: null);
             $transaction->setResponseCode(@$data_session_verify["ResponseCode"] ?: null);
             $transaction->setCreditcardNumber(@$data_session_verify["CreditcardNumber"] ?: null);
