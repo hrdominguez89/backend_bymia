@@ -884,7 +884,11 @@ class FrontApiController extends AbstractController
             $body = $response_session_verify->getContent(false);
             $data_session_verify = json_decode($body, true);
 
-            $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"] ?: null);
+            if (@$data_session_verify["AuthorizationCode"]) {
+                $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"]);
+            } else {
+                $transaction->setAuthorizationCode(null);
+            }
             $transaction->setTxToken(@$data_session_verify["TxToken"] ?: null);
             $transaction->setResponseCode(@$data_session_verify["ResponseCode"] ?: null);
             $transaction->setCreditcardNumber(@$data_session_verify["CreditcardNumber"] ?: null);
@@ -916,8 +920,8 @@ class FrontApiController extends AbstractController
                 [
                     'status' => true,
                     'data' => [
-                        'transaction'=> $data_session_verify,
-                        'message'=>Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.'
+                        'transaction' => $data_session_verify,
+                        'message' => Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.'
                     ],
                     'status_code' => Response::HTTP_ACCEPTED,
                 ],
@@ -1059,7 +1063,7 @@ class FrontApiController extends AbstractController
                     "description_en" => $category->getDescriptionEn(),
                     "principal" => $category->getPrincipal(),
                     "image" => $category->getImage(),
-                    "url"=> $_ENV['FRONT_URL'].'/search?k=&c=%5B"'.strtolower($category->getName()).'"%5D&b=%5B%5D&t=%5B%5D',
+                    "url" => $_ENV['FRONT_URL'] . '/search?k=&c=%5B"' . strtolower($category->getName()) . '"%5D&b=%5B%5D&t=%5B%5D',
                     "slug" => 'c=' . $category->getId(),
                 ]
             );
