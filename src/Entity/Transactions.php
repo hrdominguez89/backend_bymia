@@ -200,12 +200,12 @@ class Transactions
         return $this;
     }
 
-    public function getAuthorizationCode(): ?int
+    public function getAuthorizationCode(): ?string
     {
         return $this->AuthorizationCode;
     }
 
-    public function setAuthorizationCode(?int $AuthorizationCode): self
+    public function setAuthorizationCode(?string $AuthorizationCode): self
     {
         $this->AuthorizationCode = $AuthorizationCode;
 
