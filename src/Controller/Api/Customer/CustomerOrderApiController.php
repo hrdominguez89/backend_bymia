@@ -411,7 +411,7 @@ class CustomerOrderApiController extends AbstractController
             $totalPreciosSinDescuentos = 0;
             $products_to_send_email = '';
             foreach ($products_in_order as $product_in_order) {
-                $products_to_send_email += $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . '(x' . $product_in_order->getQuantity() . ')<br>';
+                $products_to_send_email = $products_to_send_email . '<br>' . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . '(x' . $product_in_order->getQuantity() . ')';
                 $product_in_order->setPrice($product_in_order->getProduct()->getPrice());
                 $product_in_order->setDiscount($product_in_order->getProduct()->getDiscountActive() ?: 0);
                 $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
@@ -585,11 +585,11 @@ class CustomerOrderApiController extends AbstractController
                 Constants::EMAIL_TYPE_NEW_ORDER_NOTICE, //tipo de email
                 $_ENV['EMAILS_NOTICE'],
                 [ //parametros
-                    'orden_id' => $order_id,
+                    'orden_id' => $order->getId(),
                     'name' => $this->customer->getName(),
                     'email' => $this->customer->getEmail(),
                     'phone' => $this->customer->getCountryPhoneCode()->getPhonecode() . '-' . $this->customer->getCelPhone(),
-                    'total_order' => $totalOrder,
+                    'total_order' => $order->getTotalOrder(),
                     'products' => $products_to_send_email,
                 ]
             );
