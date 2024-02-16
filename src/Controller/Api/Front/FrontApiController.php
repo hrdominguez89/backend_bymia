@@ -931,7 +931,7 @@ class FrontApiController extends AbstractController
     
                 $products_to_send_email = '';
                 foreach ($products_in_order as $product_in_order) {
-                    $products_to_send_email = $products_to_send_email . '<br>' . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . '(x' . $product_in_order->getQuantity() . ')';
+                    $products_to_send_email = $products_to_send_email . '<br>' . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . ' (x' . $product_in_order->getQuantity() . ')';
                 }
 
 
