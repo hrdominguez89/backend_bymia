@@ -411,7 +411,7 @@ class CustomerOrderApiController extends AbstractController
             $totalPreciosSinDescuentos = 0;
             $products_to_send_email = '';
             foreach ($products_in_order as $product_in_order) {
-                $products_to_send_email = $products_to_send_email . '<br>' . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . ' (x' . $product_in_order->getQuantity() . ')';
+                $products_to_send_email = $products_to_send_email . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . ' (x' . $product_in_order->getQuantity() . ')<br>' ;
                 $product_in_order->setPrice($product_in_order->getProduct()->getPrice());
                 $product_in_order->setDiscount($product_in_order->getProduct()->getDiscountActive() ?: 0);
                 $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
