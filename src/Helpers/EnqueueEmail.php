@@ -68,9 +68,10 @@ class EnqueueEmail
     protected function send()
     {
         //envia 1 a 1 los correos, y actualiza su estado en la base
+        $toAddresses = explode(',',$this->email->getEmailTo());
         $email_to_send = (new TemplatedEmail())
             ->from($_ENV['EMAIL_FROM'])
-            ->to(explode(',',$this->email->getEmailTo()))
+            ->to(...$toAddresses)
             ->subject($this->email->getEmailType()->getName())
             ->htmlTemplate('email/' . $this->email->getEmailType()->getTemplateName() . '.html.twig')
             ->context([
