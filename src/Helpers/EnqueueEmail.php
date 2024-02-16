@@ -70,7 +70,7 @@ class EnqueueEmail
         //envia 1 a 1 los correos, y actualiza su estado en la base
         $email_to_send = (new TemplatedEmail())
             ->from($_ENV['EMAIL_FROM'])
-            ->to($this->email->getEmailTo())
+            ->to(explode(',',$this->email->getEmailTo()))
             ->subject($this->email->getEmailType()->getName())
             ->htmlTemplate('email/' . $this->email->getEmailType()->getTemplateName() . '.html.twig')
             ->context([

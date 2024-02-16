@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Helpers\EnqueueEmail;
 use App\Constants\Constants;
+use App\Repository\OrdersProductsRepository;
 use App\Entity\Product;
 use App\Entity\StatusTypeTransaction;
 use App\Form\ContactType;
@@ -843,7 +844,9 @@ class FrontApiController extends AbstractController
         HttpClientInterface $client,
         EntityManagerInterface $em,
         SendOrderToCrm $sendOrderToCrm,
-        StatusOrderTypeRepository $statusOrderTypeRepository
+        StatusOrderTypeRepository $statusOrderTypeRepository,
+        EnqueueEmail $queue,
+        OrdersProductsRepository $ordersProductsRepository
     ): Response {
 
         $body = $request->getContent();
@@ -871,9 +874,6 @@ class FrontApiController extends AbstractController
             );
         }
 
-        //SI EL STATUS ID ES 2 = REJECTED ANALIZO EL RESULTADO DE LA SESION
-        if ($data['status'] == 2) {
-        }
         //SI EL STATUS ES ID 1 = ACCEPTED ANALIZO EL RESULTADO DE LA SESION
         try {
             $response_session_verify = $client->request(
@@ -884,11 +884,7 @@ class FrontApiController extends AbstractController
             $body = $response_session_verify->getContent(false);
             $data_session_verify = json_decode($body, true);
 
-            // if (@$data_session_verify["AuthorizationCode"] == "N\/A") {
-            //     $transaction->setAuthorizationCode(null);
-            // } else {
-            //     $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"]);
-            // }
+            $transaction->setAuthorizationCode(@$data_session_verify["AuthorizationCode"] ?: null);
             $transaction->setTxToken(@$data_session_verify["TxToken"] ?: null);
             $transaction->setResponseCode(@$data_session_verify["ResponseCode"] ?: null);
             $transaction->setCreditcardNumber(@$data_session_verify["CreditcardNumber"] ?: null);
@@ -898,30 +894,83 @@ class FrontApiController extends AbstractController
             $transaction->setUpdatedAt(new \DateTime());
 
             if (@$data_session_verify["ResponseCode"]) {
-                if ($data_session_verify["ResponseCode"] == '00') {
-                    $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_ACCEPTED));
-                } else {
+                if ($data_session_verify["ResponseCode"] != '00') {
                     $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_REJECTED));
+                    $transaction->setErrorMessage(Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]]);
+                    $em->persist($transaction);
+                    $em->flush();
+                    return $this->json(
+                        [
+                            'status' => false,
+                            'data' => [
+                                'transaction' => $data_session_verify,
+                                'message' => Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.'
+                            ],
+                            'status_code' => Response::HTTP_ACCEPTED,
+                        ],
+                        Response::HTTP_ACCEPTED,
+                        ['Content-Type' => 'application/json']
+                    );
                 }
+                $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_ACCEPTED));
                 $transaction->setErrorMessage(Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]]);
+                $em->persist($transaction);
+
+                $status_order_id = $statusOrderTypeRepository->find(Constants::STATUS_ORDER_OPEN);
+
+                $transaction->getNumberOrder()->setStatus($status_order_id);
+
+                $em->persist($transaction->getNumberOrder());
+                $em->flush();
+
+                $sendOrderToCrm->SendOrderToCrm($transaction->getNumberOrder());
+
+                $products_in_order = $ordersProductsRepository->findBy([
+                    'number_order' => $transaction->getNumberOrder(),
+                ]);
+    
+                $products_to_send_email = '';
+                foreach ($products_in_order as $product_in_order) {
+                    $products_to_send_email = $products_to_send_email . '<br>' . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . '(x' . $product_in_order->getQuantity() . ')';
+                }
+
+
+                //queue the email
+                $id_email = $queue->enqueue(
+                    Constants::EMAIL_TYPE_NEW_ORDER_NOTICE, //tipo de email
+                    $_ENV['EMAILS_NOTICE'],
+                    [ //parametros
+                        'orden_id' => $transaction->getNumberOrder()->getId(),
+                        'name' => $transaction->getNumberOrder()->getCustomer()->getName(),
+                        'email' => $transaction->getNumberOrder()->getCustomer()->getEmail(),
+                        'phone' => $transaction->getNumberOrder()->getCustomer()->getCountryPhoneCode()->getPhonecode() . '-' . $transaction->getNumberOrder()->getCustomer()->getCelPhone(),
+                        'total_order' => $transaction->getNumberOrder()->getTotalOrder(),
+                        'products' => $products_to_send_email,
+                    ]
+                );
+
+                //Intento enviar el correo encolado
+                $queue->sendEnqueue($id_email);
+
+                return $this->json(
+                    [
+                        'status' => true,
+                        'data' => [
+                            'transaction' => $data_session_verify,
+                            'message' => Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.'
+                        ],
+                        'status_code' => Response::HTTP_ACCEPTED,
+                    ],
+                    Response::HTTP_ACCEPTED,
+                    ['Content-Type' => 'application/json']
+                );
             }
-            $em->persist($transaction);
-
-            $status_order_id = $statusOrderTypeRepository->find(Constants::STATUS_ORDER_OPEN);
-
-            $transaction->getNumberOrder()->setStatus($status_order_id);
-
-            $em->persist($transaction->getNumberOrder());
-            $em->flush();
-
-            $sendOrderToCrm->SendOrderToCrm($transaction->getNumberOrder());
-
             return $this->json(
                 [
-                    'status' => true,
+                    'status' => FALSE,
                     'data' => [
-                        'transaction' => $data_session_verify,
-                        'message' => Constants::CARDNET_MESSAGES[$data_session_verify["ResponseCode"]] ?: 'La operacion no pudo ser realizada.'
+                        'transaction' => FALSE,
+                        'message' => 'La operacion no pudo ser realizada.'
                     ],
                     'status_code' => Response::HTTP_ACCEPTED,
                 ],
