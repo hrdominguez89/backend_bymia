@@ -7,6 +7,7 @@ use App\Repository\OrdersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * @ORM\Entity(repositoryClass=OrdersRepository::class)
@@ -1025,7 +1026,7 @@ class Orders
             "shipping_type" => $this->getShippingType() ? $this->getShippingType()->getId() : null,
             "bill_file" => $this->getBillFile(),
             "proforma_bill_file" => $this->getProformaBillFile(),
-            "payments_files" => $payments_files_result, //este y payments_received_files por ahora los dejo asi
+            "payments_files" => $payments_files_result,//este y payments_received_files por ahora los dejo asi
             "payments_received_files" => $payments_received_files_result,
             "payments_transactions_codes" => $payments_transactions_codes_result,
             "debit_credit_notes_files" => $debit_credite_notes_files_result,
@@ -1358,15 +1359,13 @@ class Orders
      */
     public function getTransactionApproved(): ?Transactions
     {
-        /** @var Transaction $transaction */
-        foreach ($this->getTransactions() as $transaction) {
-            if ($transaction->getStatus() === Constants::STATUS_TRANSACTION_ACCEPTED) {
-                return $transaction;
-            }
-        }
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('status', Constants::STATUS_TRANSACTION_ACCEPTED))
+            ->setMaxResults(1);
 
-        return null;
+        $approvedTransactions = $this->transactions->matching($criteria);
 
+        return $approvedTransactions->isEmpty() ? null : $approvedTransactions->first();
     }
 
     public function addTransaction(Transactions $transaction): self
