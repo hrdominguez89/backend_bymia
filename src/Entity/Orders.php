@@ -995,7 +995,7 @@ class Orders
             "order_id" => $this->getId(),
             // "inventory_id" => $this->getInventoryId(),
             "payment_type_id" => $this->getPaymentType() ? $this->getPaymentType()->getId() : null,
-            "cardnet_session" => $this->getTransactions()[0]->getSessionKey(),
+            "cardnet_session" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getSession() : null,
             "cardnet_session_key" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getSessionKey() : null,
             "cardnet_authorization_code" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getAuthorizationCode() : null,
             "cardnet_tx_token" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getTxToken() : null,
@@ -1354,7 +1354,7 @@ class Orders
     }
 
     /**
-     * @return Transactions|null La transacción aprobada, o null si no hay ninguna.
+     * @return Transaction|null La transacción aprobada, o null si no hay ninguna.
      */
     public function getTransactionApproved(): ?Transactions
     {
@@ -1364,7 +1364,7 @@ class Orders
         });
 
         // Obtén la primera transacción aprobada
-        return $transactionApproved->first() ?: null;
+        return $transactionApproved ?: null;
     }
 
     public function addTransaction(Transactions $transaction): self
