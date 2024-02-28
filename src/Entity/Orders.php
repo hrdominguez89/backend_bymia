@@ -1354,7 +1354,7 @@ class Orders
     }
 
     /**
-     * @return Transaction|null La transacción aprobada, o null si no hay ninguna.
+     * @return Transactions|null La transacción aprobada, o null si no hay ninguna.
      */
     public function getTransactionApproved(): ?Transactions
     {
