@@ -995,7 +995,7 @@ class Orders
             "order_id" => $this->getId(),
             // "inventory_id" => $this->getInventoryId(),
             "payment_type_id" => $this->getPaymentType() ? $this->getPaymentType()->getId() : null,
-            "cardnet_session" => $this->getTransactions()[0],
+            "cardnet_session" => $this->getTransactions()[0]->getSessionKey(),
             "cardnet_session_key" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getSessionKey() : null,
             "cardnet_authorization_code" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getAuthorizationCode() : null,
             "cardnet_tx_token" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getTxToken() : null,
@@ -1025,7 +1025,7 @@ class Orders
             "shipping_type" => $this->getShippingType() ? $this->getShippingType()->getId() : null,
             "bill_file" => $this->getBillFile(),
             "proforma_bill_file" => $this->getProformaBillFile(),
-            "payments_files" => $payments_files_result,//este y payments_received_files por ahora los dejo asi
+            "payments_files" => $payments_files_result, //este y payments_received_files por ahora los dejo asi
             "payments_received_files" => $payments_received_files_result,
             "payments_transactions_codes" => $payments_transactions_codes_result,
             "debit_credit_notes_files" => $debit_credite_notes_files_result,
