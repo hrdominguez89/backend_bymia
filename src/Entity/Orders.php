@@ -995,7 +995,7 @@ class Orders
             "order_id" => $this->getId(),
             // "inventory_id" => $this->getInventoryId(),
             "payment_type_id" => $this->getPaymentType() ? $this->getPaymentType()->getId() : null,
-            "cardnet_session" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getSession() : null,
+            "cardnet_session" => $this->getTransactionApproved(),
             "cardnet_session_key" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getSessionKey() : null,
             "cardnet_authorization_code" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getAuthorizationCode() : null,
             "cardnet_tx_token" => $this->getTransactionApproved() ? $this->getTransactionApproved()->getTxToken() : null,
