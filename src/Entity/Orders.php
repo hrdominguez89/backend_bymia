@@ -7,7 +7,6 @@ use App\Repository\OrdersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * @ORM\Entity(repositoryClass=OrdersRepository::class)
@@ -1359,13 +1358,13 @@ class Orders
      */
     public function getTransactionApproved(): ?Transactions
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('status', Constants::STATUS_TRANSACTION_ACCEPTED))
-            ->setMaxResults(1);
+        // Filtra las transacciones para obtener solo las aprobadas
+        $transactionApproved = $this->transactions->filter(function (Transactions $transaction) {
+            return $transaction->getStatus()->getId() === Constants::STATUS_TRANSACTION_ACCEPTED;
+        });
 
-        $approvedTransactions = $this->transactions->matching($criteria);
-
-        return $approvedTransactions->isEmpty() ? null : $approvedTransactions->first();
+        // Obtén la primera transacción aprobada
+        return $transactionApproved->first() ?: null;
     }
 
     public function addTransaction(Transactions $transaction): self
