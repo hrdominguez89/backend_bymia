@@ -1359,7 +1359,7 @@ class Orders
     public function getTransactionApproved(): ?Transactions
     {
         /** @var Transaction $transaction */
-        foreach ($this->transactions as $transaction) {
+        foreach ($this->getTransactions() as $transaction) {
             if ($transaction->getStatus() === Constants::STATUS_TRANSACTION_ACCEPTED) {
                 return $transaction;
             }
