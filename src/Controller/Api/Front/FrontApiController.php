@@ -603,22 +603,22 @@ class FrontApiController extends AbstractController
 
             $products_by_sections = [];
 
-            $limit = $request->query->getInt('l', 4);
-            $index = $request->query->getInt('i', 0) * $limit;
-
+            
             for ($i = 1; $i <= 4; $i++) {
                 //creo variables para luego utilizarlas como funciones para poder traerme los datos de cada seccion
                 $getTitleSectionN = "getTitleSection" . $i;
                 $getTagSectionN = "getTagSection" . $i;
-
+                
                 //genero un array con cada seccion con las categorias de cada seccion
                 $products_by_sections[] =
-                    [
-                        "title" => $sections->$getTitleSectionN(),
-                        "categories" => []
-                    ];
-
+                [
+                    "title" => $sections->$getTitleSectionN(),
+                    "categories" => []
+                ];
+                
                 for ($j = 1; $j <= 3; $j++) {
+                    $limit = $request->query->getInt('l', 4);
+                    $index = $request->query->getInt('i', 0) * $limit;
                     //genero variable para utilizarla luego como funcion
                     $getCategoryNSectionN = "getCategory" . $j . "Section" . $i;
 
