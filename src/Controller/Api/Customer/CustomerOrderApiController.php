@@ -310,7 +310,7 @@ class CustomerOrderApiController extends AbstractController
             }
 
             if ($hasProductsInDollars) { //si hay almenos 1 producto en dolares el unico medio de pago es x transferencia
-                $paymentsTypes = $paymentTypeRepository->findBy(['id' => 1]);
+                $paymentsTypes = $paymentTypeRepository->getElectronicPayment();
             } else {
                 $paymentsTypes = $paymentTypeRepository->getPayments();
             }
