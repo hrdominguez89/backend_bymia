@@ -86,7 +86,7 @@ class SendOrderToCrm
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
                 }
-                $communication_status['message'] = $order->getErrorMessageCrm();
+                $communication_status['message'] = $order->generateOrderToCRM();
                 $communication_status['status_code'] = $response_crm;
             } catch (TransportExceptionInterface $e) {
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
