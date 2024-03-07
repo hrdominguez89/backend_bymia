@@ -309,10 +309,10 @@ class CustomerOrderApiController extends AbstractController
                 }
             }
 
-            if (!$hasProductsInDollars) { //si hay almenos 1 producto en dolares el unico medio de pago es x transferencia
-                $paymentsTypes = $paymentTypeRepository->findAll();
-            } else {
+            if ($hasProductsInDollars) { //si hay almenos 1 producto en dolares el unico medio de pago es x transferencia
                 $paymentsTypes = $paymentTypeRepository->findBy(['id' => 1]);
+            } else {
+                $paymentsTypes = $paymentTypeRepository->getPayments();
             }
 
             $totalOrderRD = ($sumaTotalPrecioProductosSinDescuentosRD - $descuentoRD);
