@@ -329,25 +329,25 @@ class CustomerOrderApiController extends AbstractController
                 'numberOrder' => (string)$order->getId(),
                 'detailRD' => [
                     'items' => $orders_products_result_rd,
-                    'productsRD' => [
+                    'products' => [
                         'total' => (string)$sumaProductosRD,
                         'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosRD, 2, ',', '.'),
                     ],
-                    "productDiscountRD" => $descuentoRD,
-                    "promocionalDiscountRD" => (string)$order->getPromotionalCodeDiscountRD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "productDiscount" => $descuentoRD,
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountRD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                     "tax" => $ITBIS,
-                    "totalOrderPriceRD" => number_format($totalOrderRD, 2, ',', '.'),
+                    "totalOrderPrice" => number_format($totalOrderRD, 2, ',', '.'),
                 ],
                 'detailUSD' => [
                     'items' => $orders_products_result_usd,
-                    'productsUSD' => [
+                    'products' => [
                         'total' => (string)$sumaProductosUSD,
-                        'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosRD, 2, ',', '.'),
+                        'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosUSD, 2, ',', '.'),
                     ],
-                    "productDiscountUSD" => $descuentoRD,
-                    "promocionalDiscountUSD" => (string)$order->getPromotionalCodeDiscountUSD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "productDiscount" => $descuentoUSD,
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountUSD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                     "tax" => 0, 00, //en dolares tax es 0
-                    "totalOrderPriceUSD" => number_format($totalOrderUSD, 2, ',', '.'),
+                    "totalOrderPrice" => number_format($totalOrderUSD, 2, ',', '.'),
                 ],
                 'receiptOfPayment' => $order->getPaymentsFiles() ? ($order->getPaymentsFiles()[0] ? $order->getPaymentsFiles()[0]->getPaymentFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
