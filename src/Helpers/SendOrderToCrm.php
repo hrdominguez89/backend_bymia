@@ -86,13 +86,14 @@ class SendOrderToCrm
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
                 }
-                $communication_status['message'] = $order->generateOrderToCRM();
+                $communication_status['message'] = $order->getErrorMessageCrm();
                 $communication_status['status_code'] = $response_crm;
             } catch (TransportExceptionInterface $e) {
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
                 $communication_status['status_code'] = $response_crm->getStatusCode();
-                $communication_status['message'] = $e->getMessage();
+                // $communication_status['message'] = $e->getMessage();
+                $communication_status['message'] = $order->getErrorMessageCrm();
             }
 
             //grabo en base
