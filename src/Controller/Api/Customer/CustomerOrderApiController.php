@@ -728,31 +728,31 @@ class CustomerOrderApiController extends AbstractController
             $orderToSend[] = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'totalRD' => (string) $order->getTotalOrder() ?: $sumaTotalPrecioProductosRD,
-                'totalUSD' => (string) $order->getTotalOrder() ?: $sumaTotalPrecioProductosUSD,
+                'totalRD' => (string) $order->getTotalOrderRD() ?: $sumaTotalPrecioProductosRD,
+                'totalUSD' => (string) $order->getTotalOrderUSD() ?: $sumaTotalPrecioProductosUSD,
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
                 'detailRD' => [
                     'items' => $orders_products_result_rd,
                     'products' => [
                         'total' => (string)$sumaProductosRD,
-                        'totalPrice' => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosRD,
+                        'totalPrice' => (string)$order->getTotalOrderRD() ?: $sumaTotalPrecioProductosRD,
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosRD,
+                    "totalOrderPrice" => (string)$order->getTotalOrderRD() ?: $sumaTotalPrecioProductosRD,
                 ],
                 'detailUSD' => [
                     'items' => $orders_products_result_usd,
                     'products' => [
                         'total' => (string)$sumaProductosUSD,
-                        'totalPrice' => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosUSD,
+                        'totalPrice' => (string)$order->getTotalOrderUSD() ?: $sumaTotalPrecioProductosUSD,
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosUSD,
+                    "totalOrderPrice" => (string)$order->getTotalOrderUSD() ?: $sumaTotalPrecioProductosUSD,
                 ],
                 'receiptOfPayment' => $order->getPaymentsFiles() ? ($order->getPaymentsFiles()[0] ? $order->getPaymentsFiles()[0]->getPaymentFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
