@@ -440,6 +440,32 @@ class ProductRepository extends ServiceEntityRepository
     }
 
 
+    public function findAllProductsVisibleByTag($tag, $limit = 4, $index = 0)
+    {
+
+        $today = new DateTime();
+
+        $products = $this->createQueryBuilder('p')
+            ->where('p.tag = :tag')
+            ->andWhere('p.id3pl IS NOT NULL')
+            ->andWhere('p.visible = :visible')
+            ->andWhere(
+                'p.tag_expires = :tag_expires or p.tag_expiration_date > :today'
+            )
+            ->setParameter('tag', $tag)
+            ->setParameter('visible', true)
+            ->setParameter('tag_expires', false)
+            ->setParameter('today', $today);
+        if ($index) {
+            $products->setFirstResult($index);
+        }
+        $products->setMaxResults($limit);
+        $products->orderBy('RANDOM()');
+
+        return $products->getQuery()
+            ->getResult();
+    }
+
     public function findProductRandom($columna, $order, $tag, $limit, $index)
     {
         $products = $this->createQueryBuilder('p');

@@ -44,7 +44,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -59,7 +59,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -74,7 +74,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -109,7 +109,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -124,7 +124,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -139,7 +139,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -176,7 +176,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -191,7 +191,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -206,7 +206,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -242,7 +242,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -257,7 +257,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',
@@ -272,7 +272,7 @@ class SectionsHomeType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->where('c.id3pl is not null')
                         ->andWhere('c.visible = true')
-                        ->andWhere('c.principal = true')
+                        // ->andWhere('c.principal = true')
                         ->orderBy('c.name');
                 },
                 'placeholder' => 'Seleccione una categoría.',

@@ -622,7 +622,11 @@ class FrontApiController extends AbstractController
                     //genero variable para utilizarla luego como funcion
                     $getCategoryNSectionN = "getCategory" . $j . "Section" . $i;
 
-                    $products = $productRepository->findProductsVisibleByTag($sections->$getTagSectionN(), $sections->$getCategoryNSectionN(), $limit, $index);
+                    if($sections->$getCategoryNSectionN()->getNomenclature() == 'ALL'){
+                        $products = $productRepository->findAllProductsVisibleByTag($sections->$getTagSectionN(), $limit, $index);
+                    }else{
+                        $products = $productRepository->findProductsVisibleByTag($sections->$getTagSectionN(), $sections->$getCategoryNSectionN(), $limit, $index);
+                    }
 
                     $productsByCategory = [];
 
