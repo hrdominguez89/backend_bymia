@@ -966,19 +966,33 @@ class Orders
         }
 
         $orders_products_array = $this->ordersProducts;
-        $orders_products_result = [];
+        $orders_products_result_rd = [];
+        $orders_products_result_usd = [];
 
         foreach ($orders_products_array as $order_product) {
-            $orders_products_result[] = [
-                'product_id' => $order_product->getProduct()->getId3pl(),
-                'currency_id' => $order_product->getCurrency()->getId(),
-                'currency_name' => $order_product->getCurrency()->getName(),
-                'product_name' => $order_product->getProduct()->getName(),
-                'qty' => $order_product->getQuantity(),
-                'weight' => $order_product->getProduct()->getWeight(),
-                'price' => $order_product->getPrice(),
-                'discount' => $order_product->getDiscount() ?: 0
-            ];
+            if($order_product->getProduct()->getCurrency()->getId()==1){//si es rd
+                $orders_products_result_rd[] = [
+                    'product_id' => $order_product->getProduct()->getId3pl(),
+                    'currency_id' => $order_product->getCurrency()->getId(),
+                    'currency_name' => $order_product->getCurrency()->getName(),
+                    'product_name' => $order_product->getProduct()->getName(),
+                    'qty' => $order_product->getQuantity(),
+                    'weight' => $order_product->getProduct()->getWeight(),
+                    'price' => $order_product->getPrice(),
+                    'discount' => $order_product->getDiscount() ?: 0
+                ];
+            }else{ //si es dolar
+                $orders_products_result_usd[] = [
+                    'product_id' => $order_product->getProduct()->getId3pl(),
+                    'currency_id' => $order_product->getCurrency()->getId(),
+                    'currency_name' => $order_product->getCurrency()->getName(),
+                    'product_name' => $order_product->getProduct()->getName(),
+                    'qty' => $order_product->getQuantity(),
+                    'weight' => $order_product->getProduct()->getWeight(),
+                    'price' => $order_product->getPrice(),
+                    'discount' => $order_product->getDiscount() ?: 0
+                ];
+            }
         }
 
 
@@ -1035,7 +1049,8 @@ class Orders
             "status_order" => $this->getStatus()->getId(),
             "packages" => $guide_numbers_result,
             "warehouse_id" => $this->getWarehouse()->getId3pl(),
-            "items" => $orders_products_result,
+            "itemsRD" => $orders_products_result_rd,
+            "itemsUSD" => $orders_products_result_usd,
             "customer" => [
                 "id" => $this->getCustomer()->getId(),
                 "customer_type" => $this->getCustomerType()->getId(),
@@ -1092,11 +1107,13 @@ class Orders
             "promotional_code_discount_rd" => $this->getPromotionalCodeDiscountRD(),
             "tax_rd" => $this->getTaxRD(),
             "total_order_rd" => $this->getTotalOrderRD(),
+
             "subtotal_usd" => $this->getSubtotalUSD(),
             "total_product_discount_usd" => $this->getTotalProductDiscountUSD(),
             "promotional_code_discount_usd" => $this->getPromotionalCodeDiscountUSD(),
             "tax_usd" => $this->getTaxUSD(),
             "total_order_usd" => $this->getTotalOrderUSD(),
+
             "shipping_cost" => $this->getShippingCost(),
             "shipping_discount" => $this->getShippingDiscount()
         ];
