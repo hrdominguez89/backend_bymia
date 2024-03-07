@@ -469,10 +469,10 @@ class CustomerOrderApiController extends AbstractController
                 $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
                 $entityManager->persist($product_in_order);
 
-                if($product_in_order->getProduct()->getCurrency()->getId() == 1 ){ //si es en RD
+                if ($product_in_order->getProduct()->getCurrency()->getId() == 1) { //si es en RD
                     $totalProductDiscountRD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
                     $totalPreciosSinDescuentosRD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
-                }else{ //si es en dolares
+                } else { //si es en dolares
                     $totalProductDiscountUSD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
                     $totalPreciosSinDescuentosUSD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
                 }
@@ -493,10 +493,10 @@ class CustomerOrderApiController extends AbstractController
             $order->setPromotionalCodeDiscountRD(0); //seteamos esto a 0 por el momento
 
 
-            $order->setTaxUSD(0,00); //por ahora se establece en 0
+            $order->setTaxUSD(0, 00); //por ahora se establece en 0
             $order->setTotalProductDiscountUSD($totalProductDiscountUSD);
-            $order->setPromotionalCodeDiscountUSD(0,00); //seteamos esto a 0 por el momento
-            
+            $order->setPromotionalCodeDiscountUSD(0, 00); //seteamos esto a 0 por el momento
+
             //por ahora esto se setea a 0
             $order->setShippingCost(0); //seteamos esto a 0 por el momento
             $order->setShippingDiscount(0); //seteamos esto a 0 por el momento
@@ -655,6 +655,7 @@ class CustomerOrderApiController extends AbstractController
                     'email' => $this->customer->getEmail(),
                     'phone' => $this->customer->getCountryPhoneCode()->getPhonecode() . '-' . $this->customer->getCelPhone(),
                     'total_order_rd' => $order->getTotalOrderRD(),
+                    'total_order_usd' => $order->getTotalOrderusd(),
                     'products' => $products_to_send_email,
                 ]
             );

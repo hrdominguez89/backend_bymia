@@ -4,6 +4,7 @@
 <p>Cliente: {{parameters.name}}</p>
 <p>E-mail:<a href="mailto:{{parameters.email}}">{{parameters.email}}</a></p>
 <p>Teléfono:<a href="tel:{{parameters.phone}}">{{parameters.phone}}</a></p>
-<p>Total de la orden: $ {{parameters.total_order|number_format(2, ',', '.') }}<p>
+<p>Total de la orden: RD$ {{parameters.total_order_rd|number_format(2, ',', '.') }}<p>
+<p>Total de la orden: US$ {{parameters.total_order_usd|number_format(2, ',', '.') }}<p>
 <p>Productos comprados:<p>
 <p>{{parameters.products|raw}}</p>
