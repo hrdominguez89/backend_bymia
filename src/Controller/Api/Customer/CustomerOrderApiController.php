@@ -487,8 +487,14 @@ class CustomerOrderApiController extends AbstractController
 
             $order->setTaxRD($ITBIS); //se cobra el itbis en RD
             $order->setTotalProductDiscountRD($totalProductDiscountRD);
-            //por ahora esto se setea a 0
             $order->setPromotionalCodeDiscountRD(0); //seteamos esto a 0 por el momento
+
+
+            $order->setTaxUSD(0,00); //por ahora se establece en 0
+            $order->setTotalProductDiscountUSD($totalProductDiscountUSD);
+            $order->setPromotionalCodeDiscountUSD(0,00); //seteamos esto a 0 por el momento
+            
+            //por ahora esto se setea a 0
             $order->setShippingCost(0); //seteamos esto a 0 por el momento
             $order->setShippingDiscount(0); //seteamos esto a 0 por el momento
             $order->setPaypalServiceCost(0); //seteamos esto a 0 por el momento
