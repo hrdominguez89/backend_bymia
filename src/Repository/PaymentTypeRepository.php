@@ -60,7 +60,6 @@ class PaymentTypeRepository extends ServiceEntityRepository
             'SELECT p.id,p.name
             FROM App\Entity\PaymentType p
             WHERE p.active = true
-            AND
             AND p.id = 1
             order by p.id ASC'
         )->getArrayResult();
