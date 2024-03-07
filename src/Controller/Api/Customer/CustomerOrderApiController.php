@@ -334,7 +334,7 @@ class CustomerOrderApiController extends AbstractController
                         'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosRD, 2, ',', '.'),
                     ],
                     "productDiscount" => $descuentoRD,
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountRD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                     "tax" => $ITBIS,
                     "totalOrderPrice" => number_format($totalOrderRD, 2, ',', '.'),
                 ],
@@ -345,7 +345,7 @@ class CustomerOrderApiController extends AbstractController
                         'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosUSD, 2, ',', '.'),
                     ],
                     "productDiscount" => $descuentoUSD,
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountUSD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                     "tax" => 0, 00, //en dolares tax es 0
                     "totalOrderPrice" => number_format($totalOrderUSD, 2, ',', '.'),
                 ],
@@ -490,14 +490,13 @@ class CustomerOrderApiController extends AbstractController
 
             $order->setTaxRD($ITBIS); //se cobra el itbis en RD
             $order->setTotalProductDiscountRD($totalProductDiscountRD);
-            $order->setPromotionalCodeDiscountRD(0); //seteamos esto a 0 por el momento
 
 
             $order->setTaxUSD(0, 00); //por ahora se establece en 0
             $order->setTotalProductDiscountUSD($totalProductDiscountUSD);
-            $order->setPromotionalCodeDiscountUSD(0, 00); //seteamos esto a 0 por el momento
-
+            
             //por ahora esto se setea a 0
+            $order->setPromotionalCodeDiscount(0); //seteamos esto a 0 por el momento
             $order->setShippingCost(0); //seteamos esto a 0 por el momento
             $order->setShippingDiscount(0); //seteamos esto a 0 por el momento
             $order->setPaypalServiceCost(0); //seteamos esto a 0 por el momento
@@ -749,7 +748,7 @@ class CustomerOrderApiController extends AbstractController
                         'totalPrice' => (string)$order->getTotalOrderRD() ?: $sumaTotalPrecioProductosRD,
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscountRD() ?: '0',
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountRD() ?: '0',
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTaxRD() ?: '0',
                     "totalOrderPrice" => (string)$order->getTotalOrderRD() ?: $sumaTotalPrecioProductosRD,
                 ],
@@ -760,7 +759,7 @@ class CustomerOrderApiController extends AbstractController
                         'totalPrice' => (string)$order->getTotalOrderUSD() ?: $sumaTotalPrecioProductosUSD,
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscountUSD() ?: '0',
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountUSD() ?: '0',
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTaxUSD() ?: '0',
                     "totalOrderPrice" => (string)$order->getTotalOrderUSD() ?: $sumaTotalPrecioProductosUSD,
                 ],
