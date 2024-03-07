@@ -603,19 +603,19 @@ class FrontApiController extends AbstractController
 
             $products_by_sections = [];
 
-            
+
             for ($i = 1; $i <= 4; $i++) {
                 //creo variables para luego utilizarlas como funciones para poder traerme los datos de cada seccion
                 $getTitleSectionN = "getTitleSection" . $i;
                 $getTagSectionN = "getTagSection" . $i;
-                
+
                 //genero un array con cada seccion con las categorias de cada seccion
                 $products_by_sections[] =
-                [
-                    "title" => $sections->$getTitleSectionN(),
-                    "categories" => []
-                ];
-                
+                    [
+                        "title" => $sections->$getTitleSectionN(),
+                        "categories" => []
+                    ];
+
                 for ($j = 1; $j <= 3; $j++) {
                     $limit = $request->query->getInt('l', 4);
                     $index = $request->query->getInt('i', 0) * $limit;
@@ -728,6 +728,8 @@ class FrontApiController extends AbstractController
                 "sku" => $product->getSku(),
                 "price" => $product->getDiscountActive() ?  ($product->getPrice() - (($product->getPrice() / 100) * $product->getDiscountActive())) : $product->getPrice(),
                 "old_price" => $product->getDiscountActive() ? $product->getPrice() : null,
+                "currency_id" => $product->getCurrency()->getId(),
+                "currency_sign" => $product->getCurrency()->getSign(),
                 "available" => $product->getAvailable(),
                 "short_description_es" => $product->getDescriptionEs(),
                 "long_description_es" => $product->getLongDescriptionEs(),
