@@ -135,11 +135,6 @@ class Orders
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $promotional_code_discount_rd;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
     private $tax_rd;
 
     /**
@@ -356,7 +351,7 @@ class Orders
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $promotional_code_discount_usd;
+    private $promotional_code_discount;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -638,14 +633,14 @@ class Orders
         return $this;
     }
 
-    public function getPromotionalCodeDiscountRD(): ?float
+    public function getPromotionalCodeDiscount(): ?float
     {
-        return $this->promotional_code_discount_rd;
+        return $this->promotional_code_discount;
     }
 
-    public function setPromotionalCodeDiscountRD(float $promotional_code_discount_rd): self
+    public function setPromotionalCodeDiscount(float $promotional_code_discount): self
     {
-        $this->promotional_code_discount_rd = $promotional_code_discount_rd;
+        $this->promotional_code_discount = $promotional_code_discount;
 
         return $this;
     }
@@ -973,8 +968,8 @@ class Orders
             if($order_product->getProduct()->getCurrency()->getId()==1){//si es rd
                 $orders_products_result_rd[] = [
                     'product_id' => $order_product->getProduct()->getId3pl(),
-                    'currency_id' => $order_product->getCurrency()->getId(),
-                    'currency_name' => $order_product->getCurrency()->getName(),
+                    'currency_id' => $order_product->getProduct()->getCurrency()->getId(),
+                    'currency_name' => $order_product->getProduct()->getCurrency()->getName(),
                     'product_name' => $order_product->getProduct()->getName(),
                     'qty' => $order_product->getQuantity(),
                     'weight' => $order_product->getProduct()->getWeight(),
@@ -984,8 +979,8 @@ class Orders
             }else{ //si es dolar
                 $orders_products_result_usd[] = [
                     'product_id' => $order_product->getProduct()->getId3pl(),
-                    'currency_id' => $order_product->getCurrency()->getId(),
-                    'currency_name' => $order_product->getCurrency()->getName(),
+                    'currency_id' => $order_product->getProduct()->getCurrency()->getId(),
+                    'currency_name' => $order_product->getProduct()->getCurrency()->getName(),
                     'product_name' => $order_product->getProduct()->getName(),
                     'qty' => $order_product->getQuantity(),
                     'weight' => $order_product->getProduct()->getWeight(),
@@ -1104,16 +1099,15 @@ class Orders
             ],
             "subtotal_rd" => $this->getSubtotalRD(),
             "total_product_discount_rd" => $this->getTotalProductDiscountRD(),
-            "promotional_code_discount_rd" => $this->getPromotionalCodeDiscountRD(),
             "tax_rd" => $this->getTaxRD(),
             "total_order_rd" => $this->getTotalOrderRD(),
-
+            
             "subtotal_usd" => $this->getSubtotalUSD(),
             "total_product_discount_usd" => $this->getTotalProductDiscountUSD(),
-            "promotional_code_discount_usd" => $this->getPromotionalCodeDiscountUSD(),
             "tax_usd" => $this->getTaxUSD(),
             "total_order_usd" => $this->getTotalOrderUSD(),
-
+            
+            "promotional_code_discount" => $this->getPromotionalCodeDiscount(),
             "shipping_cost" => $this->getShippingCost(),
             "shipping_discount" => $this->getShippingDiscount()
         ];
@@ -1496,18 +1490,6 @@ class Orders
     public function setTotalProductDiscountUSD(?float $total_product_discount_usd): self
     {
         $this->total_product_discount_usd = $total_product_discount_usd;
-
-        return $this;
-    }
-
-    public function getPromotionalCodeDiscountUSD(): ?float
-    {
-        return $this->promotional_code_discount_usd;
-    }
-
-    public function setPromotionalCodeDiscountUSD(?float $promotional_code_discount_usd): self
-    {
-        $this->promotional_code_discount_usd = $promotional_code_discount_usd;
 
         return $this;
     }
