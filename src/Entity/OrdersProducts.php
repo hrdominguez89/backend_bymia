@@ -83,7 +83,7 @@ class OrdersProducts
 
     /**
      * @ORM\ManyToOne(targetEntity=Currency::class, inversedBy="ordersProducts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $currency;
 

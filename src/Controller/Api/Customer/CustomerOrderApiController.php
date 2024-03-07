@@ -74,7 +74,8 @@ class CustomerOrderApiController extends AbstractController
         $data = json_decode($body, true);
 
 
-        $subTotal = 0;
+        $subTotalRD = 0;
+        $subTotalUSD = 0;
         // Crear arrays para almacenar los errores
         $errors = [];
         $shopping_cart_products = [];
@@ -103,7 +104,11 @@ class CustomerOrderApiController extends AbstractController
 
                 continue;
             }
-            $subTotal += $product_on_cart->getProduct()->getRealPrice() * $quantity;
+            if ($product_on_cart->getProduct()->getCurrency()->getId() == 1) { //peso RD = 1 
+                $subTotalRD += $product_on_cart->getProduct()->getRealPrice() * $quantity;
+            } else { //dolares = 2
+                $subTotalUSD += $product_on_cart->getProduct()->getRealPrice() * $quantity;
+            }
             $product_on_cart->setQuantity($quantity);
             // Agregar producto al carrito de compras
             $shopping_cart_products[] = $product_on_cart;
@@ -123,7 +128,8 @@ class CustomerOrderApiController extends AbstractController
         $pre_order = new Orders();
 
         $pre_order
-            ->setSubtotal($subTotal)
+            ->setSubtotalRD($subTotalRD)
+            ->setSubtotalUSD($subTotalUSD)
             ->setCustomer($this->customer)
             ->setCustomerType($this->customer->getCustomerTypeRole())
             ->setCustomerName($this->customer->getName())
@@ -245,13 +251,9 @@ class CustomerOrderApiController extends AbstractController
         }
         if ($request->getMethod() == 'GET') {
 
-            $paymentsTypes = $paymentTypeRepository->getPayments();
-
             $bill_address = $customerAddressesRepository->findOneBy(['active' => true, 'customer' => $this->customer, 'billing_address' => true], ['id' => 'DESC']);
 
             $recipes_addresses = $customerAddressesRepository->getRecipienAddress($this->customer);
-
-
 
             $recipes_addresses_data = [];
 
@@ -259,46 +261,93 @@ class CustomerOrderApiController extends AbstractController
                 $recipes_addresses_data[] = $recipe_address ? $recipe_address->getAddressDataToOrder() : [];
             }
 
-            $sumaProductos = 0;
-            $sumaTotalPrecioProductosSinDescuentos = 0.00;
-            $descuento = 0.00;
-            $totalOrder = 0.00;
+            $sumaProductosRD = 0;
+            $sumaTotalPrecioProductosSinDescuentosRD = 0.00;
+            $descuentoRD = 0.00;
+            $totalOrderRD = 0.00;
             $ITBIS = 0.00;
-            $orders_products_array = $order->getOrdersProducts();
-            $orders_products_result = [];
 
+            $sumaProductosUSD = 0;
+            $sumaTotalPrecioProductosSinDescuentosUSD = 0.00;
+            $descuentoUSD = 0.00;
+            $totalOrderUSD = 0.00;
+
+            $orders_products_array = $order->getOrdersProducts();
+            $orders_products_result_rd = [];
+            $orders_products_result_usd = [];
+
+            $hasProductsInDollars = false;
             foreach ($orders_products_array as $order_product) {
-                $orders_products_result[] = [
-                    'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
-                    'name' => $order_product->getProduct()->getName(),
-                    'price' => (string)$order_product->getProduct()->getPrice(),
-                ];
-                $sumaProductos += $order_product->getQuantity();
-                $sumaTotalPrecioProductosSinDescuentos += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
-                $descuentoDelProducto = ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
-                $precioConDescuento = $order_product->getProduct()->getPrice() - $descuentoDelProducto; //POR AHORA NO LO USO
-                $descuento += $descuentoDelProducto;
+                if ($order_product->getProduct()->getCurrency()->getId() == 2) {  //productos en dolares
+                    $hasProductsInDollars = true;
+                    $orders_products_result_usd[] = [
+                        'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
+                        'name' => $order_product->getProduct()->getName(),
+                        'price' => (string)$order_product->getProduct()->getPrice(),
+                        'currency_id' => $order_product->getProduct()->getCurrency()->getId(),
+                        'currency_sign' => $order_product->getProduct()->getCurrency()->getSign(),
+                    ];
+
+                    $sumaProductosUSD += $order_product->getQuantity();
+                    $sumaTotalPrecioProductosSinDescuentosUSD += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
+                    $descuentoDelProductoUSD = ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
+                    $precioConDescuentoUSD = $order_product->getProduct()->getPrice() - $descuentoDelProductoUSD; //POR AHORA NO LO USO
+                    $descuentoUSD += $descuentoDelProductoUSD;
+                } else { //precio en pesos RD
+                    $orders_products_result_rd[] = [
+                        'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
+                        'name' => $order_product->getProduct()->getName(),
+                        'price' => (string)$order_product->getProduct()->getPrice(),
+                        'currency_id' => $order_product->getProduct()->getCurrency()->getId(),
+                        'currency_sign' => $order_product->getProduct()->getCurrency()->getSign(),
+                    ];
+                    $sumaProductosRD += $order_product->getQuantity();
+                    $sumaTotalPrecioProductosSinDescuentosRD += ($order_product->getQuantity() * $order_product->getProduct()->getPrice());
+                    $descuentoDelProductoRD = ($order_product->getProduct()->getDiscountActive() ? ((($order_product->getProduct()->getPrice() / 100) * $order_product->getProduct()->getDiscountActive()) * $order_product->getQuantity()) : 0);
+                    $precioConDescuentoRD = $order_product->getProduct()->getPrice() - $descuentoDelProductoRD; //POR AHORA NO LO USO
+                    $descuentoRD += $descuentoDelProductoRD;
+                }
             }
-            $totalOrder = ($sumaTotalPrecioProductosSinDescuentos - $descuento);
-            $ITBIS = $totalOrder - ($totalOrder / 1.18);
+
+            if ($hasProductsInDollars) { //si hay almenos 1 producto en dolares el unico medio de pago es x transferencia
+                $paymentsTypes = $paymentTypeRepository->getPayments();
+            } else {
+                $paymentsTypes = $paymentTypeRepository->findBy(['id' => 1]);
+            }
+
+            $totalOrderRD = ($sumaTotalPrecioProductosSinDescuentosRD - $descuentoRD);
+            $totalOrderUSD = ($sumaTotalPrecioProductosSinDescuentosUSD - $descuentoUSD);
+            $ITBIS = $totalOrderRD - ($totalOrderRD / 1.18);
 
             $orderToSend = [
                 'status' => (string)$order->getStatus()->getId(),
                 'paymentsTypes' => $paymentsTypes,
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => number_format($totalOrder, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
+                'totalRD' => number_format($totalOrderRD, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
+                'totalUSD' => number_format($totalOrderUSD, 2, ',', '.'), // revisar, podria ser.. $order->getTotalOrder()
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
-                'detail' => [
-                    'items' => $orders_products_result,
-                    'products' => [
-                        'total' => (string)$sumaProductos,
-                        'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentos, 2, ',', '.'),
+                'detailRD' => [
+                    'items' => $orders_products_result_rd,
+                    'productsRD' => [
+                        'total' => (string)$sumaProductosRD,
+                        'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosRD, 2, ',', '.'),
                     ],
-                    "productDiscount" => $descuento,
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "productDiscountRD" => $descuentoRD,
+                    "promocionalDiscountRD" => (string)$order->getPromotionalCodeDiscountRD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                     "tax" => $ITBIS,
-                    "totalOrderPrice" => number_format($totalOrder, 2, ',', '.'),
+                    "totalOrderPriceRD" => number_format($totalOrderRD, 2, ',', '.'),
+                ],
+                'detailUSD' => [
+                    'items' => $orders_products_result_usd,
+                    'productsUSD' => [
+                        'total' => (string)$sumaProductosUSD,
+                        'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosRD, 2, ',', '.'),
+                    ],
+                    "productDiscountUSD" => $descuentoRD,
+                    "promocionalDiscountUSD" => (string)$order->getPromotionalCodeDiscountUSD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "tax" => 0, 00, //en dolares tax es 0
+                    "totalOrderPriceUSD" => number_format($totalOrderUSD, 2, ',', '.'),
                 ],
                 'receiptOfPayment' => $order->getPaymentsFiles() ? ($order->getPaymentsFiles()[0] ? $order->getPaymentsFiles()[0]->getPaymentFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
@@ -407,38 +456,45 @@ class CustomerOrderApiController extends AbstractController
                 'number_order' => $order,
             ]);
 
-            $totalProductDiscount = 0;
-            $totalPreciosSinDescuentos = 0;
+            $totalProductDiscountRD = 0;
+            $totalProductDiscountUSD = 0;
+            $totalPreciosSinDescuentosRD = 0;
+            $totalPreciosSinDescuentosUSD = 0;
             $products_to_send_email = '';
             foreach ($products_in_order as $product_in_order) {
-                $products_to_send_email = $products_to_send_email . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . ' (x' . $product_in_order->getQuantity() . ')<br>' ;
+                $products_to_send_email = $products_to_send_email . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . ' (x' . $product_in_order->getQuantity() . ')<br>';
                 $product_in_order->setPrice($product_in_order->getProduct()->getPrice());
+                $product_in_order->setCurrency($product_in_order->getProduct()->getCurrency());
                 $product_in_order->setDiscount($product_in_order->getProduct()->getDiscountActive() ?: 0);
                 $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
                 $entityManager->persist($product_in_order);
 
-                $totalProductDiscount += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
-                $totalPreciosSinDescuentos += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
+                $totalProductDiscountRD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
+                $totalProductDiscountUSD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
+                $totalPreciosSinDescuentosRD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
+                $totalPreciosSinDescuentosUSD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
             }
             $entityManager->flush();
 
-            $totalOrder = $totalPreciosSinDescuentos - $totalProductDiscount; //por ahora es asi, falta descuento x codigo promocional.
-            $ITBIS = $totalOrder - ($totalOrder / 1.18);
+            $totalOrderRD = $totalPreciosSinDescuentosRD - $totalProductDiscountRD; //por ahora es asi, falta descuento x codigo promocional.
+            $totalOrderUSD = $totalPreciosSinDescuentosUSD - $totalProductDiscountUSD; //por ahora es asi, falta descuento x codigo promocional.
+            $ITBIS = $totalOrderRD - ($totalOrderRD / 1.18);
 
             //Creo lastpayment para saber cual fue el ultimo tipo de pago, porque si es diferente al creado anterior tengo que crear un nuevo session id
             $lastPaymentType = $order->getPaymentType() ? $order->getPaymentType()->getId() : null;
 
             $order->setPaymentType($paymentTypeRepository->find($data['order']['paymentTypeId']));
 
-            $order->setTax($ITBIS); //se cobra el itbis en RD
-            $order->setTotalProductDiscount($totalProductDiscount);
+            $order->setTaxRD($ITBIS); //se cobra el itbis en RD
+            $order->setTotalProductDiscountRD($totalProductDiscountRD);
             //por ahora esto se setea a 0
-            $order->setPromotionalCodeDiscount(0); //seteamos esto a 0 por el momento
+            $order->setPromotionalCodeDiscountRD(0); //seteamos esto a 0 por el momento
             $order->setShippingCost(0); //seteamos esto a 0 por el momento
             $order->setShippingDiscount(0); //seteamos esto a 0 por el momento
             $order->setPaypalServiceCost(0); //seteamos esto a 0 por el momento
 
-            $order->setTotalOrder($totalOrder);
+            $order->setTotalOrderRD($totalOrderRD);
+            $order->setTotalOrderUSD($totalOrderUSD);
 
             $order->setBillAddress($customer_bill_address);
             $order->setBillCountry($country_bill);
@@ -488,7 +544,7 @@ class CustomerOrderApiController extends AbstractController
                     $transaction =  new Transactions;
                     $transaction->setNumberOrder($order);
                     $transaction->setStatus($statusTypeTransactionRepository->find(Constants::STATUS_TRANSACTION_NEW));
-                    $transaction->setAmount($totalOrder);
+                    $transaction->setAmount($totalOrderRD);
                     $transaction->setTax($ITBIS);
                     $em->persist($transaction);
                     $em->flush();
@@ -514,7 +570,7 @@ class CustomerOrderApiController extends AbstractController
                                 "Tax" => (int)($ITBIS * 100),
                                 "MerchantName" => $_ENV['CARDNET_MERCHANT_NAME'],
                                 "AVS" => $order->getReceiverAddressOrder(),
-                                "Amount" => (int)($totalOrder * 100),
+                                "Amount" => (int)($totalOrderRD * 100),
                                 "3DS_email" => $data['order']['billData']['email'],
                                 "3DS_mobilePhone" => $data['order']['billData']['phone'],
                                 "3DS_workPhone" => " ",
@@ -589,7 +645,7 @@ class CustomerOrderApiController extends AbstractController
                     'name' => $this->customer->getName(),
                     'email' => $this->customer->getEmail(),
                     'phone' => $this->customer->getCountryPhoneCode()->getPhonecode() . '-' . $this->customer->getCelPhone(),
-                    'total_order' => $order->getTotalOrder(),
+                    'total_order_rd' => $order->getTotalOrderRD(),
                     'products' => $products_to_send_email,
                 ]
             );

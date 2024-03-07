@@ -125,22 +125,22 @@ class Orders
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $subtotal;
+    private $subtotal_rd;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $total_product_discount;
+    private $total_product_discount_rd;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $promotional_code_discount;
+    private $promotional_code_discount_rd;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $tax;
+    private $tax_rd;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -160,7 +160,7 @@ class Orders
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $total_order;
+    private $total_order_rd;
 
     /**
      * @ORM\ManyToOne(targetEntity=StatusOrderType::class, inversedBy="orders")
@@ -342,6 +342,31 @@ class Orders
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $fiscalInvoiceRequired;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $subtotal_usd;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $total_product_discount_usd;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $promotional_code_discount_usd;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tax_usd;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $total_order_usd;
 
     public function __construct()
     {
@@ -589,50 +614,50 @@ class Orders
         return $this;
     }
 
-    public function getSubtotal(): ?float
+    public function getSubtotalRD(): ?float
     {
-        return $this->subtotal;
+        return $this->subtotal_rd;
     }
 
-    public function setSubtotal(float $subtotal): self
+    public function setSubtotalRD(float $subtotal_rd): self
     {
-        $this->subtotal = $subtotal;
+        $this->subtotal_rd = $subtotal_rd;
 
         return $this;
     }
 
-    public function getTotalProductDiscount(): ?float
+    public function getTotalProductDiscountRD(): ?float
     {
-        return $this->total_product_discount;
+        return $this->total_product_discount_rd;
     }
 
-    public function setTotalProductDiscount(float $total_product_discount): self
+    public function setTotalProductDiscountRD(float $total_product_discount_rd): self
     {
-        $this->total_product_discount = $total_product_discount;
+        $this->total_product_discount_rd = $total_product_discount_rd;
 
         return $this;
     }
 
-    public function getPromotionalCodeDiscount(): ?float
+    public function getPromotionalCodeDiscountRD(): ?float
     {
-        return $this->promotional_code_discount;
+        return $this->promotional_code_discount_rd;
     }
 
-    public function setPromotionalCodeDiscount(float $promotional_code_discount): self
+    public function setPromotionalCodeDiscountRD(float $promotional_code_discount_rd): self
     {
-        $this->promotional_code_discount = $promotional_code_discount;
+        $this->promotional_code_discount_rd = $promotional_code_discount_rd;
 
         return $this;
     }
 
-    public function getTax(): ?float
+    public function getTaxRD(): ?float
     {
-        return $this->tax;
+        return $this->tax_rd;
     }
 
-    public function setTax(float $tax): self
+    public function setTaxRD(float $tax_rd): self
     {
-        $this->tax = $tax;
+        $this->tax_rd = $tax_rd;
 
         return $this;
     }
@@ -673,14 +698,14 @@ class Orders
         return $this;
     }
 
-    public function getTotalOrder(): ?float
+    public function getTotalOrderRD(): ?float
     {
-        return $this->total_order;
+        return $this->total_order_rd;
     }
 
-    public function setTotalOrder(float $total_order): self
+    public function setTotalOrderRD(float $total_order_rd): self
     {
-        $this->total_order = $total_order;
+        $this->total_order_rd = $total_order_rd;
 
         return $this;
     }
@@ -946,6 +971,8 @@ class Orders
         foreach ($orders_products_array as $order_product) {
             $orders_products_result[] = [
                 'product_id' => $order_product->getProduct()->getId3pl(),
+                'currency_id' => $order_product->getCurrency()->getId(),
+                'currency_name' => $order_product->getCurrency()->getName(),
                 'product_name' => $order_product->getProduct()->getName(),
                 'qty' => $order_product->getQuantity(),
                 'weight' => $order_product->getProduct()->getWeight(),
@@ -1025,7 +1052,7 @@ class Orders
             "shipping_type" => $this->getShippingType() ? $this->getShippingType()->getId() : null,
             "bill_file" => $this->getBillFile(),
             "proforma_bill_file" => $this->getProformaBillFile(),
-            "payments_files" => $payments_files_result,//este y payments_received_files por ahora los dejo asi
+            "payments_files" => $payments_files_result, //este y payments_received_files por ahora los dejo asi
             "payments_received_files" => $payments_received_files_result,
             "payments_transactions_codes" => $payments_transactions_codes_result,
             "debit_credit_notes_files" => $debit_credite_notes_files_result,
@@ -1060,13 +1087,18 @@ class Orders
                 "address" => $this->getBillAddressOrder(),
                 "cod_zip" => $this->getBillPostalCode()
             ],
-            "subtotal" => $this->getSubtotal(),
-            "total_product_discount" => $this->getTotalProductDiscount(),
-            "promotional_code_discount" => $this->getPromotionalCodeDiscount(),
-            "tax" => $this->getTax(),
+            "subtotal_rd" => $this->getSubtotalRD(),
+            "total_product_discount_rd" => $this->getTotalProductDiscountRD(),
+            "promotional_code_discount_rd" => $this->getPromotionalCodeDiscountRD(),
+            "tax_rd" => $this->getTaxRD(),
+            "total_order_rd" => $this->getTotalOrderRD(),
+            "subtotal_usd" => $this->getSubtotalUSD(),
+            "total_product_discount_usd" => $this->getTotalProductDiscountUSD(),
+            "promotional_code_discount_usd" => $this->getPromotionalCodeDiscountUSD(),
+            "tax_usd" => $this->getTaxUSD(),
+            "total_order_usd" => $this->getTotalOrderUSD(),
             "shipping_cost" => $this->getShippingCost(),
-            "shipping_discount" => $this->getShippingDiscount(),
-            "total_order" => $this->getTotalOrder()
+            "shipping_discount" => $this->getShippingDiscount()
         ];
     }
 
@@ -1082,6 +1114,8 @@ class Orders
                 'name' => $order_product->getProduct()->getName(),
                 'quantity' => $order_product->getQuantity(),
                 'price' => $order_product->getPrice(),
+                'currency_id' => $order_product->getCurrency()->getId(),
+                'currency_sign' => $order_product->getCurrency()->getSign(),
                 'discount' => $order_product->getDiscount()
             ];
         }
@@ -1421,6 +1455,66 @@ class Orders
     public function setFiscalInvoiceRequired(?bool $fiscalInvoiceRequired): self
     {
         $this->fiscalInvoiceRequired = $fiscalInvoiceRequired;
+
+        return $this;
+    }
+
+    public function getSubtotalUSD(): ?float
+    {
+        return $this->subtotal_usd;
+    }
+
+    public function setSubtotalUSD(?float $subtotal_usd): self
+    {
+        $this->subtotal_usd = $subtotal_usd;
+
+        return $this;
+    }
+
+    public function getTotalProductDiscountUSD(): ?float
+    {
+        return $this->total_product_discount_usd;
+    }
+
+    public function setTotalProductDiscountUSD(?float $total_product_discount_usd): self
+    {
+        $this->total_product_discount_usd = $total_product_discount_usd;
+
+        return $this;
+    }
+
+    public function getPromotionalCodeDiscountUSD(): ?float
+    {
+        return $this->promotional_code_discount_usd;
+    }
+
+    public function setPromotionalCodeDiscountUSD(?float $promotional_code_discount_usd): self
+    {
+        $this->promotional_code_discount_usd = $promotional_code_discount_usd;
+
+        return $this;
+    }
+
+    public function getTaxUSD(): ?float
+    {
+        return $this->tax_usd;
+    }
+
+    public function setTaxUSD(?float $tax_usd): self
+    {
+        $this->tax_usd = $tax_usd;
+
+        return $this;
+    }
+
+    public function getTotalOrderUSD(): ?float
+    {
+        return $this->total_order_usd;
+    }
+
+    public function setTotalOrderUSD(?float $total_order_usd): self
+    {
+        $this->total_order_usd = $total_order_usd;
 
         return $this;
     }

@@ -955,7 +955,7 @@ class FrontApiController extends AbstractController
                         'name' => $transaction->getNumberOrder()->getCustomer()->getName(),
                         'email' => $transaction->getNumberOrder()->getCustomer()->getEmail(),
                         'phone' => $transaction->getNumberOrder()->getCustomer()->getCountryPhoneCode()->getPhonecode() . '-' . $transaction->getNumberOrder()->getCustomer()->getCelPhone(),
-                        'total_order' => $transaction->getNumberOrder()->getTotalOrder(),
+                        'total_order_rd' => $transaction->getNumberOrder()->getTotalOrderRD(),
                         'products' => $products_to_send_email,
                     ]
                 );
