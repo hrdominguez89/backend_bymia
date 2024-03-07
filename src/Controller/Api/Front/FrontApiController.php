@@ -623,7 +623,7 @@ class FrontApiController extends AbstractController
                     $getCategoryNSectionN = "getCategory" . $j . "Section" . $i;
 
                     if($sections->$getCategoryNSectionN() && $sections->$getCategoryNSectionN()->getNomenclature() == 'ALL'){
-                        $products = $productRepository->findAllProductsVisibleByTag($sections->$getTagSectionN(), $limit, $index);
+                        $products = $productRepository->findAllProductsVisibleByTag($sections->$getTagSectionN());
                     }else{
                         $products = $productRepository->findProductsVisibleByTag($sections->$getTagSectionN(), $sections->$getCategoryNSectionN(), $limit, $index);
                     }
