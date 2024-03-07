@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Constants\Constants;
 use App\Entity\Brand;
 use App\Entity\Category;
+use App\Entity\Currency;
 use App\Entity\Inventory;
 use App\Entity\Product;
 use App\Entity\Specification;
@@ -58,6 +59,13 @@ class ProductType extends AbstractType
                 'choice_label' => function ($category, $key, $index) {
                     return $category->getName() . ' - ' . $category->getNomenclature();
                 },
+                'required' => true,
+            ])
+            ->add('currency', EntityType::class, [
+                'class'  => Currency::class,
+                'placeholder' => 'Seleccione una moneda',
+                'label' => 'Moneda *',
+                'choice_label' => 'name',
                 'required' => true,
             ])
             ->add('subcategory', ChoiceType::class, [

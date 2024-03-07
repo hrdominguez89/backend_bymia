@@ -294,6 +294,12 @@ class Product
      */
     private $shoppingCarts;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Currency::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $currency;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -1194,6 +1200,18 @@ class Product
                 $shoppingCart->setProduct(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Currency $currency): self
+    {
+        $this->currency = $currency;
 
         return $this;
     }

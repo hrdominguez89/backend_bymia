@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,32 +20,28 @@ class Currency
     private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="api_id", type="string", length=255, nullable=true)
-     */
-    private $apiId;
-
-    /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, unique=true)
+     * @ORM\Column(name="name", type="string", length=255, unique=false)
      */
     private $name;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="abbreviation", type="string", length=10, nullable=true)
+     * @ORM\Column(name="sign", type="string", length=10, nullable=false)
      */
-    private $abbreviation;
+    private $sign;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="main", type="boolean")
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="currency")
      */
-    private $main;
+    private $products;
+
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -51,25 +49,6 @@ class Currency
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getApiId(): ?string
-    {
-        return $this->apiId;
-    }
-
-    /**
-     * @param string|null $apiId
-     * @return $this
-     */
-    public function setApiId(?string $apiId): Currency
-    {
-        $this->apiId = $apiId;
-
-        return $this;
     }
 
     /**
@@ -94,44 +73,50 @@ class Currency
     /**
      * @return string|null
      */
-    public function getAbbreviation(): ?string
+    public function getSign(): ?string
     {
-        return $this->abbreviation;
+        return $this->sign;
     }
 
     /**
-     * @param string|null $abbreviation
+     * @param string|null $sign
      * @return $this
      */
-    public function setAbbreviation(?string $abbreviation): Currency
+    public function setSign(?string $sign): Currency
     {
-        $this->abbreviation = $abbreviation;
+        $this->sign = $sign;
 
         return $this;
     }
 
     /**
-     * @return bool
+     * @return Collection<int, Product>
      */
-    public function isMain(): bool
+    public function getProducts(): Collection
     {
-        return $this->main;
+        return $this->products;
     }
 
-    /**
-     * @param bool $main
-     * @return $this
-     */
-    public function setMain(bool $main): Currency
+    public function addProduct(Product $product): self
     {
-        $this->main = $main;
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setCurrency($this);
+        }
 
         return $this;
     }
 
-    public function getMain(): ?bool
+    public function removeProduct(Product $product): self
     {
-        return $this->main;
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getCurrency() === $this) {
+                $product->setCurrency(null);
+            }
+        }
+
+        return $this;
     }
 
 

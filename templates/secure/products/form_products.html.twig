@@ -207,13 +207,19 @@
 			<div class="col-12">
 				<h3>Caracteristicas</h3>
 			</div>
-			<div class="col-3">
+			<div class="col-2">
 				{{ form_label (form.cost) }}
 				{{ form_widget (form.cost) }}
 				{{ form_errors (form.cost)}}
 			</div>
 
-			<div class="col-3">
+			<div class="col-2">
+				{{ form_label (form.currency) }}
+				{{ form_widget (form.currency) }}
+				{{ form_errors (form.currency)}}
+			</div>
+
+			<div class="col-2">
 				{{ form_label (form.price) }}
 				{{ form_widget (form.price) }}
 				{{ form_errors (form.price)}}
