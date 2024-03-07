@@ -38,9 +38,15 @@ class Currency
      */
     private $products;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OrdersProducts::class, mappedBy="currency")
+     */
+    private $ordersProducts;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
+        $this->ordersProducts = new ArrayCollection();
     }
 
     /**
@@ -113,6 +119,36 @@ class Currency
             // set the owning side to null (unless already changed)
             if ($product->getCurrency() === $this) {
                 $product->setCurrency(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrdersProducts>
+     */
+    public function getOrdersProducts(): Collection
+    {
+        return $this->ordersProducts;
+    }
+
+    public function addOrdersProduct(OrdersProducts $ordersProduct): self
+    {
+        if (!$this->ordersProducts->contains($ordersProduct)) {
+            $this->ordersProducts[] = $ordersProduct;
+            $ordersProduct->setCurrency($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdersProduct(OrdersProducts $ordersProduct): self
+    {
+        if ($this->ordersProducts->removeElement($ordersProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($ordersProduct->getCurrency() === $this) {
+                $ordersProduct->setCurrency(null);
             }
         }
 

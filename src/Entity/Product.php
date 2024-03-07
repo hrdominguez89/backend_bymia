@@ -1126,7 +1126,8 @@ class Product
     }
 
 
-    public function getRealPrice(){
+    public function getRealPrice()
+    {
         return $this->getDiscountActive() ?  ($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())) : $this->getPrice();
     }
 
@@ -1141,6 +1142,8 @@ class Product
             "old_price" => $this->getDiscountActive() ? $this->getPrice() : null,
             "price" => $this->getDiscountActive() ?  ($this->getPrice() - (($this->getPrice() / 100) * $this->getDiscountActive())) : $this->getPrice(),
             "available" => $this->getAvailable(),
+            "currency_id" => $this->getCurrency()->getId(),
+            "currency_sign" => $this->getCurrency()->getSign()
         ];
     }
 

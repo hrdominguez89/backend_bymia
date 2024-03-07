@@ -81,6 +81,12 @@ class OrdersProducts
      */
     private $shopping_cart;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Currency::class, inversedBy="ordersProducts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $currency;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -226,6 +232,18 @@ class OrdersProducts
     public function setShoppingCart(ShoppingCart $shopping_cart): self
     {
         $this->shopping_cart = $shopping_cart;
+
+        return $this;
+    }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Currency $currency): self
+    {
+        $this->currency = $currency;
 
         return $this;
     }
