@@ -334,7 +334,7 @@ class CustomerOrderApiController extends AbstractController
                         'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosRD, 2, ',', '.'),
                     ],
                     "productDiscount" => $descuentoRD,
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountRD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                     "tax" => $ITBIS,
                     "totalOrderPrice" => number_format($totalOrderRD, 2, ',', '.'),
                 ],
@@ -345,7 +345,7 @@ class CustomerOrderApiController extends AbstractController
                         'totalPrice' => number_format($sumaTotalPrecioProductosSinDescuentosUSD, 2, ',', '.'),
                     ],
                     "productDiscount" => $descuentoUSD,
-                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountUSD() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0', //esta funcion no esta habilitada todavia 27/12/2023
                     "tax" => 0, 00, //en dolares tax es 0
                     "totalOrderPrice" => number_format($totalOrderUSD, 2, ',', '.'),
                 ],
