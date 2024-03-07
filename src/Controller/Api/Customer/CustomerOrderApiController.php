@@ -740,7 +740,7 @@ class CustomerOrderApiController extends AbstractController
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscountRD() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountRD() ?: '0',
-                    "tax" => (string)$order->getTax() ?: '0',
+                    "tax" => (string)$order->getTaxRD() ?: '0',
                     "totalOrderPrice" => (string)$order->getTotalOrderRD() ?: $sumaTotalPrecioProductosRD,
                 ],
                 'detailUSD' => [
@@ -751,7 +751,7 @@ class CustomerOrderApiController extends AbstractController
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscountUSD() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscountUSD() ?: '0',
-                    "tax" => (string)$order->getTax() ?: '0',
+                    "tax" => (string)$order->getTaxUSD() ?: '0',
                     "totalOrderPrice" => (string)$order->getTotalOrderUSD() ?: $sumaTotalPrecioProductosUSD,
                 ],
                 'receiptOfPayment' => $order->getPaymentsFiles() ? ($order->getPaymentsFiles()[0] ? $order->getPaymentsFiles()[0]->getPaymentFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
