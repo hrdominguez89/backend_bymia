@@ -469,10 +469,13 @@ class CustomerOrderApiController extends AbstractController
                 $product_in_order->setProductDiscount($product_in_order->getProduct()->getDiscountActiveObject());
                 $entityManager->persist($product_in_order);
 
-                $totalProductDiscountRD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
-                $totalProductDiscountUSD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
-                $totalPreciosSinDescuentosRD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
-                $totalPreciosSinDescuentosUSD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
+                if($product_in_order->getProduct()->getCurrency()->getId() == 1 ){ //si es en RD
+                    $totalProductDiscountRD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
+                    $totalPreciosSinDescuentosRD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
+                }else{ //si es en dolares
+                    $totalProductDiscountUSD += $product_in_order->getQuantity() * ($product_in_order->getProduct()->getPrice() - $product_in_order->getProduct()->getRealPrice());
+                    $totalPreciosSinDescuentosUSD += $product_in_order->getQuantity() * $product_in_order->getProduct()->getPrice();
+                }
             }
             $entityManager->flush();
 
