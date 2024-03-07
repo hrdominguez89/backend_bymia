@@ -692,38 +692,67 @@ class CustomerOrderApiController extends AbstractController
 
         $orderToSend = [];
         foreach ($orders as $order) {
-            $sumaProductos = 0;
-            $sumaTotalPrecioProductos = 0.00;
+            $sumaProductosUSD = 0;
+            $sumaProductosRD = 0;
+            $sumaTotalPrecioProductosUSD = 0.00;
+            $sumaTotalPrecioProductosRD = 0.00;
             $orders_products_array = $order->getOrdersProducts();
-            $orders_products_result = [];
+            $orders_products_result_usd = [];
+            $orders_products_result_rd = [];
 
             foreach ($orders_products_array as $order_product) {
-                $orders_products_result[] = [
-                    'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
-                    'name' => $order_product->getProduct()->getName(),
-                    'price' => (string)$order_product->getPrice(),
-                ];
-                $sumaProductos += $order_product->getQuantity();
-                $sumaTotalPrecioProductos += ($order_product->getQuantity() * $order_product->getProduct()->getRealPrice());
+                if ($order_product->getProduct()->getCurrency()->getId() == 2) {  //productos en dolares
+                    $orders_products_result_usd[] = [
+                        'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
+                        'name' => $order_product->getProduct()->getName(),
+                        'price' => (string)$order_product->getPrice(),
+                        'currency_id' => $order_product->getProduct()->getCurrency()->getId(),
+                        'currency_sign' => $order_product->getProduct()->getCurrency()->getSign(),
+                    ];
+                    $sumaProductosUSD += $order_product->getQuantity();
+                    $sumaTotalPrecioProductosUSD += ($order_product->getQuantity() * $order_product->getProduct()->getRealPrice());
+                } else { //precio en pesos RD
+                    $orders_products_result_rd[] = [
+                        'quantity' => '(x' . $order_product->getQuantity() . ' Unit)',
+                        'name' => $order_product->getProduct()->getName(),
+                        'price' => (string)$order_product->getPrice(),
+                        'currency_id' => $order_product->getProduct()->getCurrency()->getId(),
+                        'currency_sign' => $order_product->getProduct()->getCurrency()->getSign(),
+                    ];
+                    $sumaProductosRD += $order_product->getQuantity();
+                    $sumaTotalPrecioProductosRD += ($order_product->getQuantity() * $order_product->getProduct()->getRealPrice());
+                }
             }
 
 
             $orderToSend[] = [
                 'status' => (string)$order->getStatus()->getId(),
                 'orderPlaced' => $order->getCreatedAt()->format('d-m-Y'),
-                'total' => (string) $order->getTotalOrder() ?: $sumaTotalPrecioProductos,
+                'totalRD' => (string) $order->getTotalOrder() ?: $sumaTotalPrecioProductosRD,
+                'totalUSD' => (string) $order->getTotalOrder() ?: $sumaTotalPrecioProductosUSD,
                 'sendTo' => $order->getReceiverName() ?: '',
                 'numberOrder' => (string)$order->getId(),
-                'detail' => [
-                    'items' => $orders_products_result,
+                'detailRD' => [
+                    'items' => $orders_products_result_rd,
                     'products' => [
-                        'total' => (string)$sumaProductos,
-                        'totalPrice' => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductos,
+                        'total' => (string)$sumaProductosRD,
+                        'totalPrice' => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosRD,
                     ],
                     "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
                     "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
                     "tax" => (string)$order->getTax() ?: '0',
-                    "totalOrderPrice" => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductos,
+                    "totalOrderPrice" => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosRD,
+                ],
+                'detailUSD' => [
+                    'items' => $orders_products_result_usd,
+                    'products' => [
+                        'total' => (string)$sumaProductosUSD,
+                        'totalPrice' => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosUSD,
+                    ],
+                    "productDiscount" => (string)$order->getTotalProductDiscount() ?: '0',
+                    "promocionalDiscount" => (string)$order->getPromotionalCodeDiscount() ?: '0',
+                    "tax" => (string)$order->getTax() ?: '0',
+                    "totalOrderPrice" => (string)$order->getTotalOrder() ?: $sumaTotalPrecioProductosUSD,
                 ],
                 'receiptOfPayment' => $order->getPaymentsFiles() ? ($order->getPaymentsFiles()[0] ? $order->getPaymentsFiles()[0]->getPaymentFile() : '') : '', //revisar, recibe mas de un recibo de recepcion de pago
                 'bill' => $order->getBillFile() ?: '',
