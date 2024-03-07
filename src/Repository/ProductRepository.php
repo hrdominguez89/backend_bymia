@@ -440,7 +440,7 @@ class ProductRepository extends ServiceEntityRepository
     }
 
 
-    public function findAllProductsVisibleByTag($tag)
+    public function findAllProductsVisibleByTag($tag, $limit = 4, $index = 0)
     {
 
         $today = new DateTime();
@@ -456,6 +456,10 @@ class ProductRepository extends ServiceEntityRepository
             ->setParameter('visible', true)
             ->setParameter('tag_expires', false)
             ->setParameter('today', $today);
+        if ($index) {
+            $products->setFirstResult($index);
+        }
+        $products->setMaxResults($limit);
         $products->orderBy('RANDOM()');
 
         return $products->getQuery()
@@ -469,7 +473,7 @@ class ProductRepository extends ServiceEntityRepository
         $products->andWhere('p.id3pl IS NOT NULL');
         $products->andWhere('p.tag = :tag')
             ->setParameter('tag', $tag)
-            ->orderBy('p.' . $columna, $order);
+            ->orderBy('p.'.$columna, $order);
 
         if ($index) {
             $products->setFirstResult($index);

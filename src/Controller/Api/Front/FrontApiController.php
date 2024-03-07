@@ -622,9 +622,14 @@ class FrontApiController extends AbstractController
                     //genero variable para utilizarla luego como funcion
                     $getCategoryNSectionN = "getCategory" . $j . "Section" . $i;
 
-                    if($sections->$getCategoryNSectionN() && $sections->$getCategoryNSectionN()->getNomenclature() == 'ALL'){
-                        $products = $productRepository->findAllProductsVisibleByTag($sections->$getTagSectionN());
-                    }else{
+
+                    if ($sections->$getCategoryNSectionN() && $sections->$getCategoryNSectionN()->getNomenclature() == 'ALL') {
+                        if ($j == 1 && $i == 1) {
+                            $limit = 12;
+                            $index = false;
+                        }
+                        $products = $productRepository->findAllProductsVisibleByTag($sections->$getTagSectionN(), $limit, $index);
+                    } else {
                         $products = $productRepository->findProductsVisibleByTag($sections->$getTagSectionN(), $sections->$getCategoryNSectionN(), $limit, $index);
                     }
 
@@ -932,7 +937,7 @@ class FrontApiController extends AbstractController
                 $products_in_order = $ordersProductsRepository->findBy([
                     'number_order' => $transaction->getNumberOrder(),
                 ]);
-    
+
                 $products_to_send_email = '';
                 foreach ($products_in_order as $product_in_order) {
                     $products_to_send_email = $products_to_send_email . '<br>' . $product_in_order->getProduct()->getSku() . ' - ' . $product_in_order->getProduct()->getName() . ' (x' . $product_in_order->getQuantity() . ')';
