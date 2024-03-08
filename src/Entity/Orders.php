@@ -284,7 +284,7 @@ class Orders
     private $attempts_send_crm;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $error_message_crm;
 
