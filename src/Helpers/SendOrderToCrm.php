@@ -8,6 +8,7 @@ use App\Repository\CommunicationStatesBetweenPlatformsRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
@@ -82,7 +83,7 @@ class SendOrderToCrm
                         break;
                     default:
                         //leer error
-                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response_crm['error'].'json:'.$order->generateOrderToCRM());
+                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response_crm['error'].'json:'. json_encode($order->generateOrderToCRM()));
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
                 }
