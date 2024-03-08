@@ -93,7 +93,7 @@ class SendOrderToCrm
                 $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
                 $communication_status['status_code'] = $response_crm->getStatusCode();
                 // $communication_status['message'] = $e->getMessage();
-                $communication_status['message'] = $order->getErrorMessageCrm();
+                $communication_status['message'] = $order->generateOrderToCRM();
             }
 
             //grabo en base
