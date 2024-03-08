@@ -82,7 +82,7 @@ class SendOrderToCrm
                         break;
                     default:
                         //leer error
-                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response_crm['error']);
+                        $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . @$data_response_crm['error'].'json:'.$order->generateOrderToCRM());
                         $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                         break;
                 }
@@ -92,8 +92,8 @@ class SendOrderToCrm
                 $order->setStatusSentCrm($this->communicationStatesBetweenPlatformsRepository->find(Constants::CBP_STATUS_ERROR));
                 $order->setErrorMessageCrm('code: ' . $response_crm->getStatusCode() . ' date: ' . $this->date->format('Y-m-d H:i:s') . ' - Message: ' . $e->getMessage());
                 $communication_status['status_code'] = $response_crm->getStatusCode();
-                // $communication_status['message'] = $e->getMessage();
-                $communication_status['message'] = $order->generateOrderToCRM();
+                $communication_status['message'] = $e->getMessage();
+                // $communication_status['message'] = $order->generateOrderToCRM();
             }
 
             //grabo en base
